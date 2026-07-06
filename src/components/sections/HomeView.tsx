@@ -13,11 +13,12 @@ import {
   ChevronRight,
   Activity,
 } from "lucide-react";
-import { SERVICES, STREAM_METRICS, ACTIVITY_LOG, TESTIMONIALS, CLIENT_LOGOS, type ViewKey } from "@/lib/data";
+import { SERVICES, STREAM_METRICS, ACTIVITY_LOG, TESTIMONIALS, CLIENT_LOGOS, CAPABILITIES, MARQUEE_KEYWORDS, type ViewKey } from "@/lib/data";
 import { SpotlightCard } from "@/components/SpotlightCard";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { ScrambleText } from "@/components/ScrambleText";
 import { PixelRevealTitle } from "@/components/PixelRevealTitle";
+import { Marquee } from "@/components/Marquee";
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   BrainCircuit,
@@ -296,11 +297,75 @@ export function HomeView({ onNavigate }: HomeViewProps) {
         </div>
       </section>
 
+      {/* ============ MARQUEE BAND (inspiré Armory) ============ */}
+      <Marquee
+        items={MARQUEE_KEYWORDS}
+        separator="dot"
+        direction="left"
+        speed={45}
+      />
+
+      {/* ============ CAPABILITIES — stretched text signature ============ */}
+      <section className="relative py-24 md:py-32">
+        <div className="mx-auto max-w-7xl px-4 md:px-6">
+          <SectionHeading
+            tag="// 03 — CAPABILITIES"
+            title="Un système voit. Tous savent."
+            description="Nos architectures agentiques fonctionnent en réseau coordonné. La signature d'une plateforme de classe bancaire : détection, réponse, apprentissage — en continu."
+          />
+
+          <div className="mt-14 space-y-4">
+            {CAPABILITIES.map((cap, i) => (
+              <motion.div
+                key={cap.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                className="group relative overflow-hidden rounded-2xl glass hover:border-[#F26D3D]/30 transition-colors"
+              >
+                {/* Texte étiré signature (visible au repos, révèle le contenu au hover) */}
+                <div className="p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-6">
+                  <div className="md:w-1/2">
+                    <p className="stretch-text text-sm md:text-base text-slate-400 group-hover:text-[#F26D3D] transition-colors leading-relaxed">
+                      {cap.stretch}
+                    </p>
+                    <h3 className="mt-4 font-display text-2xl md:text-3xl font-bold text-slate-50 tracking-tight">
+                      {cap.title}
+                    </h3>
+                  </div>
+                  <div className="md:w-1/2 md:border-l border-white/10 md:pl-8">
+                    <p className="text-sm text-slate-400 leading-relaxed mb-4">
+                      {cap.description}
+                    </p>
+                    <ul className="space-y-2">
+                      {cap.features.map((f) => (
+                        <li
+                          key={f}
+                          className="flex items-start gap-2 text-sm text-slate-300"
+                        >
+                          <span className="text-[#4CAF50] mt-0.5 shrink-0">✓</span>
+                          <span>{f}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                {/* Index latéral */}
+                <span className="absolute top-4 right-5 font-mono text-xs text-slate-600">
+                  0{i + 1} / 0{CAPABILITIES.length}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ============ TÉMOIGNAGES ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <SectionHeading
-            tag="// 03 — TRUST SIGNAL"
+            tag="// 04 — TRUST SIGNAL"
             title="Ils nous confient leurs systèmes critiques"
             description="Directions générales, CIO et C-Level d'organisations européennes : la confiance se construit sur la livraison."
           />

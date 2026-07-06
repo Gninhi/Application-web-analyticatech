@@ -362,3 +362,71 @@ export const CLIENT_LOGOS = [
   "VERTEX FINANCE",
   "ZENITH RETAIL",
 ];
+
+/* ============================================================
+ * CAPABILITIES — section signature "stretched text" (inspiré Armory)
+ * ============================================================ */
+
+export interface Capability {
+  id: string;
+  stretch: string; // texte étiré signature
+  title: string;
+  description: string;
+  features: string[];
+}
+
+export const CAPABILITIES: Capability[] = [
+  {
+    id: "detection",
+    stretch: "Anomalie détectée. Signature vérifiée. Réponse déployée.",
+    title: "Détection temps réel",
+    description:
+      "Surveillance continue de vos systèmes IA. Les dérives de modèle, hallucinations et anomalies de performance sont détectées et qualifiées en quelques secondes.",
+    features: [
+      "Détection multi-menaces simultanée",
+      "Monitoring 24/7 des LLM en production",
+      "Alerting configurable par criticité",
+    ],
+  },
+  {
+    id: "response",
+    stretch: "Un système voit. Tous savent. Le réseau répond.",
+    title: "Coordination distribuée",
+    description:
+      "Vos agents IA fonctionnent en réseau. L'information circule instantanément entre nœuds, garantissant une réponse cohérente à l'échelle de l'organisation.",
+    features: [
+      "Coordination multi-agents temps réel",
+      "Intelligence partagée entre unités",
+      "Awareness réseau instantané",
+    ],
+  },
+  {
+    id: "adaptation",
+    stretch: "Architecture auto-apprenante. Mises à jour régulières.",
+    title: "Apprentissage continu",
+    description:
+      "Vos systèmes s'adaptent aux nouvelles menaces et aux nouveaux cas d'usage. Mises à jour de modèles, signatures, patterns — l'architecture reste ahead of the threat.",
+    features: [
+      "Logs système intelligibles et complets",
+      "Déploiement cloud, on-prem ou edge",
+      "Threat intelligence continue",
+    ],
+  },
+];
+
+/* ============================================================
+ * MARQUEE — mots-clés du bandeau défilant
+ * ============================================================ */
+
+export const MARQUEE_KEYWORDS = [
+  "IA",
+  "Agents",
+  "Automatisation",
+  "Transformation",
+  "BI",
+  "RAG",
+  "LLM",
+  "Data",
+  "Souveraineté",
+  "Production",
+];

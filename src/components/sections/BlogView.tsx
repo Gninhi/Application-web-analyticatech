@@ -108,6 +108,13 @@ export function BlogView() {
         </div>
       </section>
 
+      {/* Article à la une — format "featured news" style Armory */}
+      <section className="pb-12">
+        <div className="mx-auto max-w-7xl px-4 md:px-6">
+          <FeaturedNews posts={filtered.slice(0, 3)} />
+        </div>
+      </section>
+
       {/* Grille d'articles */}
       <section className="pb-24">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
@@ -205,6 +212,75 @@ export function BlogView() {
           )}
         </div>
       </section>
+    </div>
+  );
+}
+
+/* === Featured News — format "news list" style Armory ===
+ * Date + titre large + catégorie + lien "Lire l'article →"
+ * Séparateurs fins entre entrées, hover révèle une barre orange.
+ */
+function FeaturedNews({ posts }: { posts: BlogPost[] }) {
+  if (posts.length === 0) return null;
+
+  return (
+    <div className="border-t border-white/10">
+      {posts.map((post, i) => (
+        <motion.a
+          key={post.id}
+          href="#"
+          onClick={(e) => e.preventDefault()}
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.4, delay: i * 0.08 }}
+          className="group relative block border-b border-white/10 py-6 md:py-8 hover:bg-white/[0.02] transition-colors"
+        >
+          <div className="grid grid-cols-12 gap-4 md:gap-8 items-center">
+            {/* Date */}
+            <div className="col-span-12 md:col-span-2">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
+                {formatDate(post.date)}
+              </p>
+              <p className="font-mono text-[10px] uppercase tracking-widest text-[#F26D3D] mt-1">
+                {post.readingTime}
+              </p>
+            </div>
+
+            {/* Titre + excerpt */}
+            <div className="col-span-12 md:col-span-8">
+              <span
+                className={cn(
+                  "inline-block rounded-full border px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-widest mb-2",
+                  CATEGORY_COLORS[post.category]
+                )}
+              >
+                {post.category}
+              </span>
+              <h3 className="font-display text-xl md:text-3xl font-bold text-slate-50 tracking-tight group-hover:text-[#F26D3D] transition-colors">
+                {post.title}
+              </h3>
+              <p className="mt-2 text-sm text-slate-400 leading-relaxed line-clamp-1">
+                {post.excerpt}
+              </p>
+            </div>
+
+            {/* Lien lire */}
+            <div className="col-span-12 md:col-span-2 flex md:justify-end">
+              <span className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-slate-400 group-hover:text-[#F26D3D] transition-colors">
+                Lire
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
+              </span>
+            </div>
+          </div>
+
+          {/* Barre orange qui se déploie au hover */}
+          <span
+            className="absolute left-0 top-0 h-px bg-[#F26D3D] w-0 group-hover:w-full transition-all duration-500"
+            aria-hidden
+          />
+        </motion.a>
+      ))}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
+import { PageLoader } from "@/components/PageLoader";
 
 /* === Typographie du Design System "Corporate Cyberpunk" === */
 const spaceGrotesk = Space_Grotesk({
@@ -67,6 +68,7 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
+        <PageLoader />
         <GlobalErrorBoundary>{children}</GlobalErrorBoundary>
         <Toaster />
       </body>

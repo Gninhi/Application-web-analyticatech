@@ -183,6 +183,62 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
+  /* === Texte étiré signature (inspiré Armory) ===
+     Lettres séparées par des espaces, uppercase, tracking large.
+     Usage : <span class="stretch-text">Threat detected.</span> */
+  .stretch-text {
+    font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.5em;
+    font-weight: 400;
+    display: inline-block;
+  }
+  .stretch-text-sm {
+    font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    font-weight: 400;
+  }
+
+  /* === Marquee horizontal infini === */
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 40s linear infinite;
+  }
+  .marquee-track-reverse {
+    display: flex;
+    width: max-content;
+    animation: marquee 50s linear infinite reverse;
+  }
+  .marquee-container:hover .marquee-track,
+  .marquee-container:hover .marquee-track-reverse {
+    animation-play-state: paused;
+  }
+
+  /* === Grille de fond technique (plus fine que military) === */
+  .grid-tech {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  /* === Lignes de balayage (scanlines subtile) === */
+  .scanlines::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.015) 2px,
+      rgba(255, 255, 255, 0.015) 3px
+    );
+  }
+
   /* Bordure lumineuse animée au focus (terminal) */
   .terminal-input:focus {
     border-color: var(--accent);
@@ -206,6 +262,12 @@
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+/* Marquee horizontal infini — keyframes au niveau racine pour priorité */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 /* Réduction des animations pour l'accessibilité (prefers-reduced-motion) */
