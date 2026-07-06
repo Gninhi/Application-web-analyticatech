@@ -77,8 +77,8 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
             <PixelRevealTitle
               text="Cinq couches d'expertise, empilées avec précision"
               as="h1"
-              className="font-display text-4xl md:text-6xl font-bold text-slate-50 tracking-tight mb-4"
-              wordClassName="text-glass-strong"
+              className="font-display text-4xl md:text-6xl font-bold text-[#F26D3D] tracking-tight mb-4"
+              wordClassName="text-glass-orange-strong"
             />
             <p className="text-slate-300 leading-relaxed text-lg">
               <span className="text-glass">

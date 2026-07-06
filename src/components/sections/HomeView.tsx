@@ -50,19 +50,19 @@ export function HomeView({ onNavigate }: HomeViewProps) {
             </span>
           </motion.div>
 
-          <h1 className="font-display font-bold tracking-tight text-slate-50 text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[0.95]">
+          <h1 className="font-display font-bold tracking-tight text-[#F26D3D] text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[0.95]">
             <PixelRevealTitle
               text="LE FUTUR DE"
               as="span"
               className="block"
-              wordClassName="text-glass"
+              wordClassName="text-glass-orange"
               delay={0.05}
             />
             <PixelRevealTitle
               text="L'INTELLIGENCE"
               as="span"
-              className="block text-gradient-accent text-neon"
-              wordClassName="text-glass-strong"
+              className="block text-neon"
+              wordClassName="text-glass-orange-strong"
               delay={0.35}
             />
           </h1>

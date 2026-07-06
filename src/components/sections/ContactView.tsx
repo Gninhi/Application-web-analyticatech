@@ -125,19 +125,19 @@ export function ContactView() {
             <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
               <span className="text-glass">{"// Secure Channel — Encrypted"}</span>
             </p>
-            <h1 className="font-display text-4xl md:text-6xl font-bold text-slate-50 tracking-tight mb-4">
+            <h1 className="font-display text-4xl md:text-6xl font-bold text-[#F26D3D] tracking-tight mb-4">
               <PixelRevealTitle
                 text="Établissons une"
                 as="span"
                 className="block"
-                wordClassName="text-glass"
+                wordClassName="text-glass-orange"
                 delay={0.1}
               />
               <PixelRevealTitle
                 text="connexion sécurisée"
                 as="span"
-                className="block text-gradient-accent"
-                wordClassName="text-glass-strong"
+                className="block text-neon"
+                wordClassName="text-glass-orange-strong"
                 delay={0.45}
               />
             </h1>
