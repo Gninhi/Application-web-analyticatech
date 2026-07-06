@@ -17,6 +17,7 @@ import {
 import { contactSchema, type ContactApiResponse } from "@/lib/validation";
 import { safeFetch, FetchError } from "@/lib/safeFetch";
 import { cn } from "@/lib/utils";
+import { PixelRevealTitle } from "@/components/PixelRevealTitle";
 
 interface FormState {
   prenom: string;
@@ -122,16 +123,29 @@ export function ContactView() {
             className="max-w-3xl"
           >
             <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
-              {"// Secure Channel — Encrypted"}
+              <span className="text-glass">{"// Secure Channel — Encrypted"}</span>
             </p>
             <h1 className="font-display text-4xl md:text-6xl font-bold text-slate-50 tracking-tight mb-4">
-              Établissons une
-              <br />
-              <span className="text-gradient-accent">connexion sécurisée</span>
+              <PixelRevealTitle
+                text="Établissons une"
+                as="span"
+                className="block"
+                wordClassName="text-glass"
+                delay={0.1}
+              />
+              <PixelRevealTitle
+                text="connexion sécurisée"
+                as="span"
+                className="block text-gradient-accent"
+                wordClassName="text-glass-strong"
+                delay={0.45}
+              />
             </h1>
-            <p className="text-slate-400 leading-relaxed text-lg">
-              Décrivez votre besoin. Un architecte Solution vous répond sous 24h
-              ouvrées. Toutes les transmissions sont chiffrées et journalisées.
+            <p className="text-slate-300 leading-relaxed text-lg">
+              <span className="text-glass">
+                Décrivez votre besoin. Un architecte Solution vous répond sous 24h
+                ouvrées. Toutes les transmissions sont chiffrées et journalisées.
+              </span>
             </p>
           </motion.div>
         </div>

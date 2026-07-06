@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Compass, Zap, ShieldCheck } from "lucide-react";
 import { SOLUTIONS, type ViewKey } from "@/lib/data";
+import { PixelRevealTitle } from "@/components/PixelRevealTitle";
 
 interface SolutionsViewProps {
   onNavigate: (view: ViewKey) => void;
@@ -39,17 +40,30 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
             className="max-w-3xl"
           >
             <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
-              {"// Solutions — Lateral Drift"}
+              <span className="text-glass">{"// Solutions — Lateral Drift"}</span>
             </p>
             <h1 className="font-display text-4xl md:text-6xl font-bold text-slate-50 tracking-tight mb-4">
-              Des solutions sectorielles,
-              <br />
-              <span className="text-gradient-accent">en orbite</span>
+              <PixelRevealTitle
+                text="Des solutions sectorielles,"
+                as="span"
+                className="block"
+                wordClassName="text-glass"
+                delay={0.1}
+              />
+              <PixelRevealTitle
+                text="en orbite"
+                as="span"
+                className="block text-gradient-accent"
+                wordClassName="text-glass-strong"
+                delay={0.45}
+              />
             </h1>
-            <p className="text-slate-400 leading-relaxed text-lg">
-              Défilez verticalement : les cas d&apos;usage défilent horizontalement
-              comme une séquence orbitale. Chaque solution est prête à être
-              adaptée à votre contexte.
+            <p className="text-slate-300 leading-relaxed text-lg">
+              <span className="text-glass">
+                Défilez verticalement : les cas d&apos;usage défilent horizontalement
+                comme une séquence orbitale. Chaque solution est prête à être
+                adaptée à votre contexte.
+              </span>
             </p>
           </motion.div>
 

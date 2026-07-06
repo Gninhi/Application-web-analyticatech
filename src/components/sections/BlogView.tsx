@@ -10,6 +10,7 @@ import {
   type BlogPost,
 } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import { PixelRevealTitle } from "@/components/PixelRevealTitle";
 
 type Filter = BlogCategory | "Tous";
 
@@ -48,16 +49,29 @@ export function BlogView() {
             className="max-w-3xl"
           >
             <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
-              {"// Insights — Technical Reports"}
+              <span className="text-glass">{"// Insights — Technical Reports"}</span>
             </p>
             <h1 className="font-display text-4xl md:text-6xl font-bold text-slate-50 tracking-tight mb-4">
-              Rapports techniques &amp;
-              <br />
-              <span className="text-gradient-accent">retours de terrain</span>
+              <PixelRevealTitle
+                text="Rapports techniques &"
+                as="span"
+                className="block"
+                wordClassName="text-glass"
+                delay={0.1}
+              />
+              <PixelRevealTitle
+                text="retours de terrain"
+                as="span"
+                className="block text-gradient-accent"
+                wordClassName="text-glass-strong"
+                delay={0.5}
+              />
             </h1>
-            <p className="text-slate-400 leading-relaxed text-lg">
-              Nos architectes partagent leurs analyses : patterns de production,
-              choix d&apos;outillage et leçons apprises sur les missions.
+            <p className="text-slate-300 leading-relaxed text-lg">
+              <span className="text-glass">
+                Nos architectes partagent leurs analyses : patterns de production,
+                choix d&apos;outillage et leçons apprises sur les missions.
+              </span>
             </p>
           </motion.div>
         </div>

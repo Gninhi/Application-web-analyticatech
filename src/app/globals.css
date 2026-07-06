@@ -148,6 +148,41 @@
     color: transparent;
   }
 
+  /* === Glassmorphism léger pour faciliter la lecture des textes === */
+  /* Usage inline sur des paragraphes / titres : le bg suit le texte
+     sur plusieurs lignes grâce à box-decoration-break: clone. */
+  .text-glass {
+    display: inline;
+    background: rgba(1, 28, 64, 0.42);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 0.08em 0.3em;
+    border-radius: 0.3em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .text-glass-strong {
+    display: inline;
+    background: rgba(2, 40, 89, 0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 0.1em 0.38em;
+    border-radius: 0.35em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  /* === Grain cinématographique pour les fonds immersifs === */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.06;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
   /* Bordure lumineuse animée au focus (terminal) */
   .terminal-input:focus {
     border-color: var(--accent);

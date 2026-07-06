@@ -17,6 +17,7 @@ import { SERVICES, STREAM_METRICS, ACTIVITY_LOG, TESTIMONIALS, CLIENT_LOGOS, typ
 import { SpotlightCard } from "@/components/SpotlightCard";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { ScrambleText } from "@/components/ScrambleText";
+import { PixelRevealTitle } from "@/components/PixelRevealTitle";
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   BrainCircuit,
@@ -48,26 +49,34 @@ export function HomeView({ onNavigate }: HomeViewProps) {
             </span>
           </motion.div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.05 }}
-            className="font-display font-bold tracking-tight text-slate-50 text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[0.95]"
-          >
-            LE FUTUR DE
-            <br />
-            <span className="text-gradient-accent text-neon">L&apos;INTELLIGENCE</span>
-          </motion.h1>
+          <h1 className="font-display font-bold tracking-tight text-slate-50 text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[0.95]">
+            <PixelRevealTitle
+              text="LE FUTUR DE"
+              as="span"
+              className="block"
+              wordClassName="text-glass"
+              delay={0.05}
+            />
+            <PixelRevealTitle
+              text="L'INTELLIGENCE"
+              as="span"
+              className="block text-gradient-accent text-neon"
+              wordClassName="text-glass-strong"
+              delay={0.35}
+            />
+          </h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="mt-7 max-w-2xl text-base md:text-lg text-slate-400 leading-relaxed"
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="mt-7 max-w-2xl text-base md:text-lg text-slate-300 leading-relaxed"
           >
-            Nous concevons et industrialisons des systèmes à base d&apos;IA, d&apos;agents
-            cognitifs et d&apos;automatisations critiques. De l&apos;architecture au déploiement,
-            nous transformons vos processus métier en avantage concurrentiel durable.
+            <span className="text-glass">
+              Nous concevons et industrialisons des systèmes à base d&apos;IA, d&apos;agents
+              cognitifs et d&apos;automatisations critiques. De l&apos;architecture au déploiement,
+              nous transformons vos processus métier en avantage concurrentiel durable.
+            </span>
           </motion.p>
 
           <motion.div

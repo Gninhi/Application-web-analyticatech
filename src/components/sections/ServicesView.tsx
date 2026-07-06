@@ -14,6 +14,7 @@ import {
   Layers,
 } from "lucide-react";
 import { SERVICES, type Service, type ViewKey } from "@/lib/data";
+import { PixelRevealTitle } from "@/components/PixelRevealTitle";
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   BrainCircuit,
@@ -23,16 +24,34 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   BarChart3,
 };
 
+/** Image de fond générée associée à chaque service. */
+const BG_IMAGES: Record<string, string> = {
+  "01": "/services/bg-01-ia.png",
+  "02": "/services/bg-02-transfo.png",
+  "03": "/services/bg-03-auto.png",
+  "04": "/services/bg-04-agents.png",
+  "05": "/services/bg-05-bi.png",
+};
+
+/** Dégradé mesh superposé à l'image pour cohérence brand. */
+const MESH_OVERLAY: Record<string, string> = {
+  "01": "radial-gradient(ellipse 70% 90% at 15% 20%, rgba(242,109,61,0.35), transparent 55%), radial-gradient(ellipse 60% 80% at 90% 90%, rgba(2,40,89,0.7), transparent 60%)",
+  "02": "radial-gradient(ellipse 70% 90% at 85% 15%, rgba(76,175,80,0.22), transparent 55%), radial-gradient(ellipse 60% 80% at 10% 85%, rgba(2,40,89,0.7), transparent 60%)",
+  "03": "radial-gradient(ellipse 70% 90% at 20% 85%, rgba(242,109,61,0.3), transparent 55%), radial-gradient(ellipse 60% 80% at 85% 15%, rgba(255,174,107,0.18), transparent 60%)",
+  "04": "radial-gradient(ellipse 70% 90% at 85% 30%, rgba(56,189,248,0.22), transparent 55%), radial-gradient(ellipse 60% 80% at 10% 80%, rgba(2,40,89,0.7), transparent 60%)",
+  "05": "radial-gradient(ellipse 70% 90% at 25% 20%, rgba(242,109,61,0.28), transparent 55%), radial-gradient(ellipse 60% 80% at 80% 85%, rgba(168,85,247,0.18), transparent 60%)",
+};
+
 interface ServicesViewProps {
   onNavigate: (view: ViewKey) => void;
 }
 
 /**
- * ServicesView — effet "Stacking Cards" :
- * - La 1ère carte est visible dès le départ.
- * - Au scroll, chaque carte suivante entre depuis le bas et vient se
- *   superposer à la précédente (qui rétrécit légèrement + perd en opacité).
- * - Chaque carte possède un contour fin (border + ring) tout autour.
+ * ServicesView — effet "Stacking Cards" premium :
+ * - Chaque carte entre depuis le bas et vient se poser sur la précédente.
+ * - Les cartes précédentes restent visibles en arrière-plan, décalées vers
+ *   le haut avec un léger retrait d'échelle → espacement visible entre cards.
+ * - Cartes agrandies (max-w-7xl, ~64vh), images de fond immersives.
  */
 export function ServicesView({ onNavigate }: ServicesViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -43,7 +62,7 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
 
   return (
     <div ref={containerRef} className="relative">
-      {/* En-tête */}
+      {/* === En-tête === */}
       <section className="pt-32 md:pt-40 pb-12">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <motion.div
@@ -53,17 +72,20 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
             className="max-w-3xl"
           >
             <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
-              {"// Services — Stacking Sequence"}
+              <span className="text-glass">{"// Services — Stacking Sequence"}</span>
             </p>
-            <h1 className="font-display text-4xl md:text-6xl font-bold text-slate-50 tracking-tight mb-4">
-              Cinq couches d&apos;expertise,
-              <br />
-              <span className="text-gradient-accent">empilées avec précision</span>
-            </h1>
-            <p className="text-slate-400 leading-relaxed text-lg">
-              Chaque service est une couche de notre monolithe. Défilez pour voir
-              l&apos;architecture se révéler progressivement — chaque carte vient
-              se superposer à la précédente.
+            <PixelRevealTitle
+              text="Cinq couches d'expertise, empilées avec précision"
+              as="h1"
+              className="font-display text-4xl md:text-6xl font-bold text-slate-50 tracking-tight mb-4"
+              wordClassName="text-glass-strong"
+            />
+            <p className="text-slate-300 leading-relaxed text-lg">
+              <span className="text-glass">
+                Chaque service est une couche de notre monolithe. Défilez pour
+                voir l&apos;architecture se révéler progressivement — chaque carte
+                vient se superposer à la précédente avec un espacement visible.
+              </span>
             </p>
 
             {/* Indicateur de progression du scroll */}
@@ -83,8 +105,7 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
         </div>
       </section>
 
-      {/* Conteneur des cartes empilées.
-          Hauteur = nb cartes * 90vh => laisse le temps de défiler. */}
+      {/* === Conteneur des cartes empilées === */}
       <section
         className="relative"
         style={{ height: `${SERVICES.length * 90}vh` }}
@@ -103,7 +124,7 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
         </div>
       </section>
 
-      {/* Section "Méthode" */}
+      {/* === Section "Méthode" === */}
       <section className="py-24 md:py-32">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <div className="grid gap-12 md:grid-cols-2 items-center">
@@ -114,15 +135,17 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
               transition={{ duration: 0.5 }}
             >
               <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
-                {"// Méthode de delivery"}
+                <span className="text-glass">{"// Méthode de delivery"}</span>
               </p>
               <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-50 mb-4 tracking-tight">
                 Du cadrage au run, sans rupture
               </h2>
-              <p className="text-slate-400 leading-relaxed mb-6">
-                Notre delivery suit un cycle itératif à 4 phases, chacune livrant
-                de la valeur observable. Aucun &ldquo;big bang&rdquo; : chaque incrément
-                est mis en production et monitoré.
+              <p className="text-slate-300 leading-relaxed mb-6">
+                <span className="text-glass">
+                  Notre delivery suit un cycle itératif à 4 phases, chacune
+                  livrant de la valeur observable. Aucun &ldquo;big bang&rdquo; :
+                  chaque incrément est mis en production et monitoré.
+                </span>
               </p>
               <button
                 onClick={() => onNavigate("contact")}
@@ -169,7 +192,7 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
   );
 }
 
-/* === Indicateur de progression textuel (00 → 05) === */
+/* === Indicateur de progression textuel === */
 function ScrollProgress({ value }: { value: MotionValue<number> }) {
   const idx = useTransform(value, (v) =>
     String(Math.min(SERVICES.length, Math.floor(v * SERVICES.length) + 1)).padStart(2, "0")
@@ -184,17 +207,13 @@ function ScrollProgress({ value }: { value: MotionValue<number> }) {
 
 /* === Carte empilée individuelle ===
  *
- * Logique d'animation :
- *  - Carte 0 : visible dès le départ (y=0, opacity=1). Rétrécit quand la carte 1 entre.
- *  - Carte i (i>0) : cachée au départ (y=+480px, opacity=0). Entre depuis le bas
- *    sur la plage [(i-1)/total, i/total], pendant que la carte i-1 rétrécit.
- *  - Toutes les cartes (sauf la dernière) rétrécissent sur [i/total, (i+1)/total]
- *    quand la carte suivante arrive par-dessus.
- *
- * Les hooks useTransform sont toujours appelés exactement 3 fois par render
- * (règle des hooks respectée). Les plages/valeurs s'adaptent selon isFirst/isLast.
+ * Logique d'animation (espacement visible entre cards) :
+ *  - La carte entre depuis le bas (y: 600 → 0) et devient opaque.
+ *  - Quand la carte suivante entre, celle-ci monte (y: 0 → -stackOffset × k)
+ *    et rétrécit légèrement (scale 1 → 1 - scaleStep × k).
+ *  - Résultat : on voit le haut de chaque carte précédente "dépasser"
+ *    au-dessus de la carte active, comme un éventail de cards espacées.
  */
-
 interface StackCardProps {
   service: Service;
   index: number;
@@ -207,97 +226,133 @@ function StackCard({ service, index, total, progress, onNavigate }: StackCardPro
   const Icon = ICONS[service.icon] ?? BrainCircuit;
   const isFirst = index === 0;
   const isLast = index === total - 1;
+  const stackOffset = 56; // espacement vertical entre cards empilées (px)
+  const scaleStep = 0.035; // retrait d'échelle par carte empilée derrière
+  const N = total;
 
-  // Plages d'animation de cette carte
-  const enterStart = isFirst ? 0 : (index - 1) / total;
-  const enterEnd = index / total; // = début du recul
-  const shrinkEnd = isLast ? 1 : (index + 1) / total;
+  // Plages du scroll dédiées à cette carte
+  const enterStart = isFirst ? 0 : (index - 1) / N;
+  const enterEnd = index / N;
+  const nextEnterEnd = isLast ? 1 : (index + 1) / N;
 
-  // --- Y : la carte entre depuis le bas (480px) vers sa position (0) ---
-  // Carte 0 : toujours à 0 (déjà en place).
-  // Autres : 480px avant enterEnd, 0 à partir de enterEnd.
+  // --- Y : entre depuis le bas puis recule vers le haut ---
   const y = useTransform(
     progress,
-    [0, enterStart, enterEnd, 1],
-    [isFirst ? 0 : 480, isFirst ? 0 : 480, 0, 0]
+    [0, enterStart, enterEnd, nextEnterEnd, 1],
+    [
+      isFirst ? 0 : 600,
+      isFirst ? 0 : 600,
+      0,
+      isLast ? 0 : -stackOffset,
+      isLast ? 0 : -stackOffset * (N - 1 - index),
+    ]
   );
 
-  // --- Opacity : 0 → 1 pendant l'entrée (carte 0 : toujours 1) ---
+  // --- Opacity : 0 → 1 à l'entrée, reste 1 ensuite ---
   const opacity = useTransform(
     progress,
-    [0, enterStart, enterEnd, 1],
-    [isFirst ? 1 : 0, isFirst ? 1 : 0, 1, 1]
+    [0, enterStart, enterEnd, nextEnterEnd, 1],
+    [isFirst ? 1 : 0, isFirst ? 1 : 0, 1, 1, 1]
   );
 
-  // --- Scale : 1 → 0.88 pendant le recul (carte suivante qui arrive) ---
-  // La dernière carte ne rétrécit jamais.
+  // --- Scale : 1 à l'entrée, rétrécit quand les suivantes arrivent ---
   const scale = useTransform(
     progress,
-    [0, enterEnd, shrinkEnd, 1],
-    [1, 1, isLast ? 1 : 0.88, isLast ? 1 : 0.88]
+    [0, enterStart, enterEnd, nextEnterEnd, 1],
+    [
+      1,
+      1,
+      1,
+      isLast ? 1 : 1 - scaleStep,
+      isLast ? 1 : 1 - scaleStep * (N - 1 - index),
+    ]
   );
+
+  const bgImage = BG_IMAGES[service.index] ?? BG_IMAGES["01"];
+  const meshOverlay = MESH_OVERLAY[service.index] ?? MESH_OVERLAY["01"];
 
   return (
     <motion.article
       style={{ y, opacity, scale, zIndex: index + 1 }}
-      className="absolute inset-0 flex items-center justify-center px-4 md:px-10"
-      // Accessibilité : masquer les cartes non visibles pour les lecteurs d'écran
-      aria-hidden={!isFirst && index > 0 ? undefined : undefined}
+      className="absolute inset-0 flex items-center justify-center px-3 md:px-6"
     >
-      <div className="w-full max-w-6xl relative">
-        {/* === Contour fin : border blanc via inline style (surcharge glass-strong)
-               + anneau orange extérieur + liserés lumineux haut/bas === */}
+      <div className="w-full max-w-7xl relative">
+        {/* === Contour : border blanc + anneau orange extérieur === */}
         <div
-          className="relative glass-strong rounded-3xl overflow-hidden shadow-2xl shadow-black/60"
+          className="relative rounded-[28px] overflow-hidden shadow-2xl shadow-black/70 grain"
           style={{ border: "1px solid rgba(255, 255, 255, 0.22)" }}
         >
-          {/* Liseré lumineux supérieur (orange néon) */}
+          {/* Image de fond immersive (cover, adaptée à l'écran) */}
           <div
-            className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#F26D3D]/70 to-transparent pointer-events-none z-10"
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${bgImage})` }}
             aria-hidden
           />
-          {/* Liseré lumineux inférieur */}
+          {/* Mesh gradient overlay pour cohérence brand */}
           <div
-            className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none z-10"
+            className="absolute inset-0"
+            style={{ background: meshOverlay }}
+            aria-hidden
+          />
+          {/* Voile sombre pour lisibilité */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(1,28,64,0.55) 0%, rgba(1,28,64,0.35) 50%, rgba(1,28,64,0.65) 100%)",
+            }}
             aria-hidden
           />
 
-          <div className="grid md:grid-cols-5">
-            {/* Colonne visuelle */}
-            <div className="relative md:col-span-2 bg-gradient-to-br from-[#022859] to-[#011C40] p-8 md:p-10 flex flex-col justify-between min-h-[300px]">
+          {/* Liseré lumineux supérieur (orange néon) */}
+          <div
+            className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#F26D3D]/70 to-transparent pointer-events-none z-20"
+            aria-hidden
+          />
+          {/* Liseré inférieur */}
+          <div
+            className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none z-20"
+            aria-hidden
+          />
+
+          {/* Watermark géant */}
+          <div
+            className="absolute -right-6 -top-16 md:-right-4 md:-top-20 font-display font-bold text-white/[0.04] select-none pointer-events-none text-[16rem] md:text-[22rem] leading-none"
+            aria-hidden
+          >
+            {service.index}
+          </div>
+
+          {/* === Contenu : grid 2 colonnes, panneau glass à droite === */}
+          <div className="relative z-10 grid md:grid-cols-5 min-h-[58vh] md:min-h-[62vh]">
+            {/* Colonne gauche : visuel + identité */}
+            <div className="md:col-span-2 p-8 md:p-12 flex flex-col justify-between">
               <div className="flex items-start justify-between">
-                <span className="font-mono text-5xl md:text-6xl font-bold text-white/10">
+                <span className="font-mono text-5xl md:text-6xl font-bold text-[#F26D3D]/30">
                   {service.index}
                 </span>
-                <span className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[#F26D3D]/40 bg-[#F26D3D]/10">
-                  <Icon className="h-7 w-7 text-[#F26D3D]" aria-hidden />
+                <span className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 backdrop-blur-sm">
+                  <Icon className="h-8 w-8 text-[#F26D3D]" aria-hidden />
                 </span>
               </div>
               <div>
                 <p className="font-mono text-[11px] uppercase tracking-widest text-[#F26D3D] mb-2">
-                  {service.tagline}
+                  <span className="text-glass">{service.tagline}</span>
                 </p>
-                <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-50 tracking-tight">
-                  {service.title}
+                <h2 className="font-display text-3xl md:text-5xl font-bold text-slate-50 tracking-tight">
+                  <span className="text-glass-strong">{service.title}</span>
                 </h2>
               </div>
-              <div
-                className="absolute inset-0 opacity-20 pointer-events-none"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(rgba(242,109,61,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(242,109,61,0.15) 1px, transparent 1px)",
-                  backgroundSize: "32px 32px",
-                }}
-                aria-hidden
-              />
             </div>
 
-            {/* Colonne contenu */}
-            <div className="md:col-span-3 p-8 md:p-10 flex flex-col">
-              <p className="text-slate-300 leading-relaxed mb-6">{service.description}</p>
+            {/* Colonne droite : panneau glass pour la lisibilité */}
+            <div className="md:col-span-3 p-8 md:p-12 flex flex-col backdrop-blur-md bg-[#011C40]/55 md:border-l border-white/10">
+              <p className="text-slate-200 leading-relaxed mb-6 text-base md:text-lg">
+                {service.description}
+              </p>
 
               <div className="mb-6">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 mb-3">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 mb-3">
                   Stack technologique
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -314,7 +369,7 @@ function StackCard({ service, index, total, progress, onNavigate }: StackCardPro
 
               <div className="grid grid-cols-2 gap-4 mb-6">
                 {service.metrics.map((m) => (
-                  <div key={m.label} className="rounded-xl border border-white/10 bg-black/20 p-3">
+                  <div key={m.label} className="rounded-xl border border-white/10 bg-black/25 p-3">
                     <p className="font-display text-2xl font-bold text-[#F26D3D]">{m.value}</p>
                     <p className="font-mono text-[9px] uppercase tracking-widest text-slate-500 mt-0.5">
                       {m.label}
@@ -334,9 +389,9 @@ function StackCard({ service, index, total, progress, onNavigate }: StackCardPro
           </div>
         </div>
 
-        {/* === Contour extérieur additionnel (double ligne cyberpunk) === */}
+        {/* Anneau orange extérieur (double ligne cyberpunk) */}
         <div
-          className="absolute -inset-px rounded-3xl border border-[#F26D3D]/25 pointer-events-none"
+          className="absolute -inset-px rounded-[28px] border border-[#F26D3D]/25 pointer-events-none"
           aria-hidden
         />
       </div>
