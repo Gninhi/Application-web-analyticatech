@@ -7,27 +7,31 @@ import { Cpu } from "lucide-react";
 /**
  * PageLoader — intro cinématographique "→ 100%" inspiré Armory.
  *
- * Affiche un écran plein écran avec :
- *  - Le logo Analyticatech
- *  - Un compteur 00 → 100 qui s'incrémente
- *  - Une barre de progression fine
- *  - Le texte "INITIALISATION" en stretch-text
- *
- * Disparaît en fade + slide-up une fois 100% atteint.
- * S'affiche une seule fois par session (sessionStorage).
+ * IMPORTANT (hydration) :
+ *  - L'état initial est TOUJOURS { progress: 0, done: false } côté serveur
+ *    ET côté client (premier rendu identique → pas de mismatch).
+ *  - La vérification de sessionStorage se fait dans useEffect (post-hydration).
+ *  - Si déjà vu dans la session, on saute le loader via un setState différé
+ *    dans requestAnimationFrame (évite le setState synchrone en effect).
  */
 export function PageLoader() {
-  // Initialise directement à "done" si déjà vu dans cette session
-  // (lazy initial state → pas de setState synchrone dans l'effect).
-  const [state, setState] = useState<{ progress: number; done: boolean }>(() => {
-    if (typeof window === "undefined") return { progress: 0, done: false };
-    const seen = sessionStorage.getItem("at-loader-seen");
-    return seen ? { progress: 100, done: true } : { progress: 0, done: false };
+  // État initial identique serveur/client → pas d'hydration mismatch
+  const [state, setState] = useState<{ progress: number; done: boolean }>({
+    progress: 0,
+    done: false,
   });
 
   useEffect(() => {
-    if (state.done) return;
+    // Si déjà vu dans cette session → on saute le loader
+    // (setState différé dans rAF pour éviter le setState synchrone en effect)
+    if (sessionStorage.getItem("at-loader-seen")) {
+      const skipRaf = requestAnimationFrame(() => {
+        setState({ progress: 100, done: true });
+      });
+      return () => cancelAnimationFrame(skipRaf);
+    }
 
+    // Sinon, on lance l'animation du compteur 0 → 100
     let raf = 0;
     const start = performance.now();
     const duration = 1800; // ms
@@ -43,6 +47,7 @@ export function PageLoader() {
         raf = requestAnimationFrame(tick);
       } else {
         setState({ progress: 100, done: false });
+        // Marque comme "vu" puis masque après un court délai
         setTimeout(() => {
           setState({ progress: 100, done: true });
           sessionStorage.setItem("at-loader-seen", "1");
