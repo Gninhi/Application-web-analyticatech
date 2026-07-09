@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowRight, Cpu } from "lucide-react";
 import { NAV_ITEMS, type ViewKey } from "@/lib/data";
@@ -15,27 +15,85 @@ interface NavbarProps {
 export function Navbar({ activeView, onNavigate }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const openerRef = useRef<HTMLButtonElement>(null);
 
-  // Effet "sticky glass" qui s'active au scroll
+  // Effet "sticky glass" qui s'active au scroll (throttle via rAF)
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16);
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 16);
+        ticking = false;
+      });
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   // Bloque le scroll body quand le command panel mobile est ouvert
+  // + Focus trap + Escape + restauration du focus sur fermeture (audit a11y)
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    if (!mobileOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    // Focus le premier élément focusable du dialog
+    const dialog = dialogRef.current;
+    if (dialog) {
+      const focusable = dialog.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      focusable?.focus();
+    }
+
+    // Focus trap : Tab et Shift+Tab restent dans le dialog
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab" || !dialogRef.current) return;
+      const focusables = dialogRef.current.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    // Escape pour fermer
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMobileOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleTab);
+    document.addEventListener("keydown", handleEscape);
+
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener("keydown", handleTab);
+      document.removeEventListener("keydown", handleEscape);
+      // Restauration du focus sur le bouton qui a ouvert le dialog
+      openerRef.current?.focus();
     };
   }, [mobileOpen]);
 
-  const handleNav = (view: ViewKey) => {
-    onNavigate(view);
-    setMobileOpen(false);
-  };
+  const handleNav = useCallback(
+    (view: ViewKey) => {
+      onNavigate(view);
+      setMobileOpen(false);
+    },
+    [onNavigate]
+  );
 
   return (
     <>
@@ -107,10 +165,12 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
 
               {/* Bouton hamburger mobile */}
               <button
+                ref={openerRef}
                 onClick={() => setMobileOpen(true)}
                 className="md:hidden flex h-10 w-10 items-center justify-center rounded-lg glass text-slate-100"
                 aria-label="Ouvrir le menu de navigation"
                 aria-expanded={mobileOpen}
+                aria-controls="mobile-menu"
               >
                 <Menu className="h-5 w-5" aria-hidden />
               </button>
@@ -128,6 +188,8 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             className="fixed inset-0 z-[60] md:hidden bg-[#011C40]/95 backdrop-blur-xl grid-military flex flex-col"
+            ref={dialogRef}
+            id="mobile-menu"
             role="dialog"
             aria-modal="true"
             aria-label="Menu de navigation mobile"

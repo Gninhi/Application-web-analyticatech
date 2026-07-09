@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, Clock, User, Hash, Newspaper } from "lucide-react";
 import {
@@ -11,6 +11,7 @@ import {
 } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { PixelRevealTitle } from "@/components/PixelRevealTitle";
+import { toast } from "@/hooks/use-toast";
 
 type Filter = BlogCategory | "Tous";
 
@@ -36,6 +37,15 @@ export function BlogView() {
     if (filter === "Tous") return BLOG_POSTS;
     return BLOG_POSTS.filter((p) => p.category === filter);
   }, [filter]);
+
+  // Handler de clic sur un article — toast "bientôt disponible"
+  // (les pages articles dédiées seront ajoutées dans une prochaine itération)
+  const handleArticleClick = useCallback((post: BlogPost) => {
+    toast({
+      title: "Article bientôt disponible",
+      description: `"${post.title}" sera publié prochainement. Inscrivez-vous à la newsletter pour être notifié.`,
+    });
+  }, []);
 
   return (
     <div className="relative">
@@ -111,7 +121,7 @@ export function BlogView() {
       {/* Article à la une — format "featured news" style Armory */}
       <section className="pb-12">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <FeaturedNews posts={filtered.slice(0, 3)} />
+          <FeaturedNews posts={filtered.slice(0, 3)} onArticleClick={handleArticleClick} />
         </div>
       </section>
 
@@ -121,14 +131,16 @@ export function BlogView() {
           <motion.div layout className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             <AnimatePresence mode="popLayout">
               {filtered.map((post) => (
-                <motion.article
+                <motion.button
                   key={post.id}
                   layout
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3 }}
-                  className="group glass rounded-2xl overflow-hidden flex flex-col hover:border-[#F26D3D]/30 transition-colors cursor-pointer"
+                  onClick={() => handleArticleClick(post)}
+                  aria-label={`Lire l'article : ${post.title}`}
+                  className="group glass rounded-2xl overflow-hidden flex flex-col text-left hover:border-[#F26D3D]/30 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-[#F26D3D] focus-visible:outline-offset-2"
                 >
                   {/* Visuel "rapport technique" avec motifs */}
                   <div className="relative h-40 overflow-hidden bg-gradient-to-br from-[#022859] to-[#011C40]">
@@ -198,7 +210,7 @@ export function BlogView() {
                       </span>
                     </div>
                   </div>
-                </motion.article>
+                </motion.button>
               ))}
             </AnimatePresence>
           </motion.div>
@@ -220,21 +232,27 @@ export function BlogView() {
  * Date + titre large + catégorie + lien "Lire l'article →"
  * Séparateurs fins entre entrées, hover révèle une barre orange.
  */
-function FeaturedNews({ posts }: { posts: BlogPost[] }) {
+function FeaturedNews({
+  posts,
+  onArticleClick,
+}: {
+  posts: BlogPost[];
+  onArticleClick: (post: BlogPost) => void;
+}) {
   if (posts.length === 0) return null;
 
   return (
     <div className="border-t border-white/10">
       {posts.map((post, i) => (
-        <motion.a
+        <motion.button
           key={post.id}
-          href="#"
-          onClick={(e) => e.preventDefault()}
+          onClick={() => onArticleClick(post)}
+          aria-label={`Lire l'article : ${post.title}`}
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.4, delay: i * 0.08 }}
-          className="group relative block border-b border-white/10 py-6 md:py-8 hover:bg-white/[0.02] transition-colors"
+          className="group relative block w-full text-left border-b border-white/10 py-6 md:py-8 hover:bg-white/[0.02] transition-colors focus-visible:outline-2 focus-visible:outline-[#F26D3D] focus-visible:outline-offset-2"
         >
           <div className="grid grid-cols-12 gap-4 md:gap-8 items-center">
             {/* Date */}
@@ -279,7 +297,7 @@ function FeaturedNews({ posts }: { posts: BlogPost[] }) {
             className="absolute left-0 top-0 h-px bg-[#F26D3D] w-0 group-hover:w-full transition-all duration-500"
             aria-hidden
           />
-        </motion.a>
+        </motion.button>
       ))}
     </div>
   );

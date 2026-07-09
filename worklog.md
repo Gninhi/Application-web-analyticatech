@@ -103,3 +103,23 @@ que le résumé.
 4. Mesurer les performances Lighthouse avant/après fixes perf.
 
 ---
+
+---
+Task ID: REFACTOR-2
+Agent: main (continuation)
+Task: Corrections post-audit (round 2) — BlogView, Navbar, next.config, validation, rateLimit
+
+Work Log:
+- BlogView : cartes articles transformées en `<motion.button>` avec aria-label + handler toast "bientôt disponible" (suppression des faux liens href="#")
+- FeaturedNews : faux liens `<motion.a href="#">` remplacés par `<motion.button>` avec handler
+- Navbar : focus trap + Escape + restauration focus sur fermeture dialog mobile (audit a11y HIGH) + throttle scroll via rAF + aria-controls
+- next.config.ts : SECURITY_HEADERS globaux (CSP, HSTS, X-Frame-Options DENY, Referrer-Policy, Permissions-Policy) sur toutes les routes
+- rateLimit : getClientIp privilégie x-real-ip (posé par Caddy, non-spoofable) au lieu de x-forwarded-for
+- validation.ts : companyUrl simplifié (suppression .or(z.literal(""))) + z.email() au lieu de regex custom (Zod v4)
+- BlogView : import toast autonome (pas de useToast hook) pour éviter les problèmes de store
+
+Stage Summary:
+- Toutes les corrections HIGH de l'audit sont appliquées
+- Lint propre (0 erreur), compilation sans erreur
+- Validation E2E : stacking bug fixed (1 seule carte visible), blog cartes cliquables + toast, menu mobile Escape, API contact avec IP hashée
+- SECURITY_HEADERS maintenant globaux via next.config (pas seulement sur /api/v1/contact)

@@ -19,15 +19,10 @@ const BLOCKED_DOMAINS = [
   "protonmail.com",
 ];
 
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
 export const contactSchema = z.object({
   // Honeypot anti-spam — doit rester vide côté client légitime.
-  companyUrl: z
-    .string()
-    .max(0, "Champ honeypot invalide")
-    .optional()
-    .or(z.literal("")),
+  // Simplifié (audit : max(0) autorise déjà "" et est plus simple que .or(z.literal("")))
+  companyUrl: z.string().max(0, "Champ honeypot invalide").optional(),
 
   prenom: z
     .string()
@@ -42,10 +37,7 @@ export const contactSchema = z.object({
     .max(60, "Le nom est trop long"),
 
   email: z
-    .string()
-    .trim()
-    .min(1, "L'email est requis")
-    .regex(emailRegex, "Format d'email invalide")
+    .email("Format d'email invalide")
     .refine((value) => {
       const domain = value.split("@")[1]?.toLowerCase();
       return domain ? !BLOCKED_DOMAINS.includes(domain) : false;
