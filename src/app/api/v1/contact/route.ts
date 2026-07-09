@@ -120,9 +120,14 @@ export async function POST(req: Request) {
     .toUpperCase()
     .slice(-6)}`;
 
+  // Log serveur structuré — IP hashée (RGPD : pas de PII en clair).
+  // Le hash non-réversible permet de détecter un même émetteur en cas
+  // d'abus sans stocker d'identifiant personnel.
+  const ipHash = await hashIp(ip);
+
   console.info("[contact] Nouvelle demande", {
     reference,
-    ip: ip.slice(0, 8) + "***",
+    ipHash,
     entreprise: sanitized.entreprise,
     sujet_len: sanitized.sujet.length,
     ts: new Date().toISOString(),
@@ -137,6 +142,24 @@ export async function POST(req: Request) {
     },
     201
   );
+}
+
+/**
+ * Hash d'IP avec sel — non-réversible, conforme RGPD.
+ * Permet la détection de récidive sans stocker de PII.
+ */
+async function hashIp(ip: string): Promise<string> {
+  try {
+    const salt = process.env.IP_SALT ?? "analyticatech-default-salt";
+    const data = new TextEncoder().encode(ip + salt);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    return Array.from(new Uint8Array(hashBuffer))
+      .slice(0, 8)
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+  } catch {
+    return "unknown";
+  }
 }
 
 export async function GET() {

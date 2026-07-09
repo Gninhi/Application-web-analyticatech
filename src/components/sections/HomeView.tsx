@@ -1,32 +1,21 @@
 "use client";
 
+import { useId } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
-  BrainCircuit,
-  Network,
-  Workflow,
-  Bot,
-  BarChart3,
   TrendingUp,
   Quote,
   ChevronRight,
   Activity,
 } from "lucide-react";
-import { SERVICES, STREAM_METRICS, ACTIVITY_LOG, TESTIMONIALS, CLIENT_LOGOS, CAPABILITIES, MARQUEE_KEYWORDS, FEATURES, STANDARDS, type ViewKey } from "@/lib/data";
+import { SERVICES, STREAM_METRICS, ACTIVITY_LOG, TESTIMONIALS, CLIENT_LOGOS, CAPABILITIES, MARQUEE_KEYWORDS, FEATURES, STANDARDS, HERO_STATS, type ViewKey } from "@/lib/data";
 import { SpotlightCard } from "@/components/SpotlightCard";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { ScrambleText } from "@/components/ScrambleText";
 import { PixelRevealTitle } from "@/components/PixelRevealTitle";
 import { Marquee } from "@/components/Marquee";
-
-const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  BrainCircuit,
-  Network,
-  Workflow,
-  Bot,
-  BarChart3,
-};
+import { getServiceIcon } from "@/lib/services";
 
 interface HomeViewProps {
   onNavigate: (view: ViewKey) => void;
@@ -107,12 +96,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-px overflow-hidden rounded-2xl glass"
           >
-            {[
-              { v: "120+", l: "Missions livrées" },
-              { v: "38%", l: "Coûts réduits" },
-              { v: "99.98%", l: "Uptime plateforme" },
-              { v: "4.9/5", l: "Satisfaction C-Level" },
-            ].map((s) => (
+            {HERO_STATS.map((s) => (
               <div key={s.l} className="bg-[#022859]/30 p-5">
                 <p className="font-display text-2xl md:text-3xl font-bold text-[#F26D3D]">{s.v}</p>
                 <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 mt-1">
@@ -135,7 +119,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
 
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {SERVICES.map((service, i) => {
-              const Icon = ICONS[service.icon] ?? BrainCircuit;
+              const Icon = getServiceIcon(service.icon);
               return (
                 <motion.div
                   key={service.index}
@@ -563,12 +547,19 @@ function SectionHeading({
 }
 
 function Sparkline({ data, className }: { data: number[]; className?: string }) {
+  // useId garantit un ID unique par instance → évite les collisions SVG
+  // (audit : id="spark-grad" était dupliqué sur les 4 sparklines).
+  const reactId = useId();
+  const gradId = `spark-grad-${reactId.replace(/[:]/g, "")}`;
+
+  // Gardes : données vides ou singleton
+  if (!data.length) return null;
   const max = Math.max(...data);
   const min = Math.min(...data);
   const range = max - min || 1;
   const points = data
     .map((v, i) => {
-      const x = (i / (data.length - 1)) * 100;
+      const x = (i / Math.max(data.length - 1, 1)) * 100;
       const y = 100 - ((v - min) / range) * 100;
       return `${x},${y}`;
     })
@@ -582,12 +573,12 @@ function Sparkline({ data, className }: { data: number[]; className?: string }) 
       aria-hidden
     >
       <defs>
-        <linearGradient id="spark-grad" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#F26D3D" stopOpacity="0.4" />
           <stop offset="100%" stopColor="#F26D3D" stopOpacity="0" />
         </linearGradient>
       </defs>
-      <polygon points={`0,100 ${points} 100,100`} fill="url(#spark-grad)" />
+      <polygon points={`0,100 ${points} 100,100`} fill={`url(#${gradId})`} />
       <polyline
         points={points}
         fill="none"

@@ -488,3 +488,19 @@ export const STANDARDS = [
   "HDS",
   "EN 301 549",
 ];
+
+/* ============================================================
+ * HERO STATS — métriques du bandeau hero (externalisées du JSX)
+ * ============================================================ */
+
+export interface HeroStat {
+  v: string;
+  l: string;
+}
+
+export const HERO_STATS: HeroStat[] = [
+  { v: "120+", l: "Missions livrées" },
+  { v: "38%", l: "Coûts réduits" },
+  { v: "99.98%", l: "Uptime plateforme" },
+  { v: "4.9/5", l: "Satisfaction C-Level" },
+];

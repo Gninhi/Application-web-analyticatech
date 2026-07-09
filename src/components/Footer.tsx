@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Cpu, Send, ShieldCheck, Github, Linkedin, Twitter } from "lucide-react";
 import { NAV_ITEMS, type ViewKey } from "@/lib/data";
@@ -9,8 +9,8 @@ interface FooterProps {
   onNavigate: (view: ViewKey) => void;
 }
 
-/** Horloge temps réel au format UTC HH:MM:SS. */
-function useUtcClock() {
+/** Horloge UTC isolée dans son propre composant pour éviter le re-render du Footer complet. */
+function UtcClock() {
   const [time, setTime] = useState<string>("");
   useEffect(() => {
     const update = () => {
@@ -24,21 +24,32 @@ function useUtcClock() {
     const id = setInterval(update, 1000);
     return () => clearInterval(id);
   }, []);
-  return time;
+  return <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400">UTC {time}</span>;
 }
 
+const SOCIAL_LINKS = [
+  { icon: Linkedin, label: "LinkedIn", url: "https://www.linkedin.com" },
+  { icon: Twitter, label: "Twitter / X", url: "https://twitter.com" },
+  { icon: Github, label: "GitHub", url: "https://github.com" },
+] as const;
+
 export function Footer({ onNavigate }: FooterProps) {
-  const utc = useUtcClock();
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || !email.includes("@")) return;
-    setSubscribed(true);
-    setEmail("");
-    setTimeout(() => setSubscribed(false), 4000);
-  };
+  const handleSubscribe = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      // Validation basique côté client (le vrai envoi se fait via API en production)
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
+      setSubscribed(true);
+      setEmail("");
+      const t = setTimeout(() => setSubscribed(false), 4000);
+      // Cleanup au unmount
+      return () => clearTimeout(t);
+    },
+    [email]
+  );
 
   return (
     <footer className="relative mt-auto border-t border-white/10 glass-strong">
@@ -71,9 +82,7 @@ export function Footer({ onNavigate }: FooterProps) {
                 System Online
               </span>
               <span className="mx-1 h-3 w-px bg-white/15" aria-hidden />
-              <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400">
-                UTC {utc}
-              </span>
+              <UtcClock />
             </div>
           </div>
 
@@ -145,13 +154,14 @@ export function Footer({ onNavigate }: FooterProps) {
             </form>
 
             <div className="flex items-center gap-3 mt-5">
-              {[Linkedin, Twitter, Github].map((Icon, i) => (
+              {SOCIAL_LINKS.map(({ icon: Icon, label, url }) => (
                 <a
-                  key={i}
-                  href="#"
-                  onClick={(e) => e.preventDefault()}
+                  key={label}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex h-9 w-9 items-center justify-center rounded-lg glass text-slate-400 hover:text-[#F26D3D] transition-colors"
-                  aria-label="Réseau social"
+                  aria-label={label}
                 >
                   <Icon className="h-4 w-4" aria-hidden />
                 </a>

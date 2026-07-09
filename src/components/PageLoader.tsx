@@ -1,29 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Cpu } from "lucide-react";
 
 /**
  * PageLoader — intro cinématographique "→ 100%" inspiré Armory.
  *
- * IMPORTANT (hydration) :
- *  - L'état initial est TOUJOURS { progress: 0, done: false } côté serveur
- *    ET côté client (premier rendu identique → pas de mismatch).
- *  - La vérification de sessionStorage se fait dans useEffect (post-hydration).
- *  - Si déjà vu dans la session, on saute le loader via un setState différé
- *    dans requestAnimationFrame (évite le setState synchrone en effect).
+ * Hydration-safe : état initial identique serveur/client.
+ * La vérification sessionStorage se fait dans useEffect (post-hydration).
+ *
+ * Accessibilité :
+ *  - `aria-busy="true"` pendant le chargement (pas de spam aria-live).
+ *  - Annonce unique "System ready" à la fin via une live region séparée.
  */
 export function PageLoader() {
-  // État initial identique serveur/client → pas d'hydration mismatch
   const [state, setState] = useState<{ progress: number; done: boolean }>({
     progress: 0,
     done: false,
   });
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
     // Si déjà vu dans cette session → on saute le loader
-    // (setState différé dans rAF pour éviter le setState synchrone en effect)
     if (sessionStorage.getItem("at-loader-seen")) {
       const skipRaf = requestAnimationFrame(() => {
         setState({ progress: 100, done: true });
@@ -31,14 +30,12 @@ export function PageLoader() {
       return () => cancelAnimationFrame(skipRaf);
     }
 
-    // Sinon, on lance l'animation du compteur 0 → 100
     let raf = 0;
     const start = performance.now();
-    const duration = 1800; // ms
+    const duration = 1800;
 
     const tick = (now: number) => {
       const t = Math.min((now - start) / duration, 1);
-      // easing easeOutQuart
       const eased = 1 - Math.pow(1 - t, 4);
       const value = Math.round(eased * 100);
 
@@ -48,15 +45,20 @@ export function PageLoader() {
       } else {
         setState({ progress: 100, done: false });
         // Marque comme "vu" puis masque après un court délai
-        setTimeout(() => {
+        const t1 = setTimeout(() => {
           setState({ progress: 100, done: true });
           sessionStorage.setItem("at-loader-seen", "1");
         }, 350);
+        timersRef.current.push(t1);
       }
     };
 
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      timersRef.current.forEach(clearTimeout);
+      timersRef.current = [];
+    };
   }, []);
 
   const { progress, done } = state;
@@ -70,7 +72,7 @@ export function PageLoader() {
           transition={{ duration: 0.5, ease: "easeInOut" }}
           className="fixed inset-0 z-[100] bg-[#011C40] grid-tech flex flex-col items-center justify-center"
           role="status"
-          aria-live="polite"
+          aria-busy={!done}
           aria-label="Chargement du site Analyticatech"
         >
           {/* Logo */}
@@ -89,7 +91,10 @@ export function PageLoader() {
           </motion.div>
 
           {/* Compteur géant */}
-          <div className="font-display text-7xl md:text-9xl font-bold tracking-tight text-slate-50 tabular-nums">
+          <div
+            className="font-display text-7xl md:text-9xl font-bold tracking-tight text-slate-50 tabular-nums"
+            aria-hidden="true"
+          >
             {String(progress).padStart(3, "0")}
             <span className="text-[#F26D3D]">%</span>
           </div>
@@ -107,13 +112,20 @@ export function PageLoader() {
             />
           </div>
 
-          {/* Logs de chargement (signature cyberpunk) */}
-          <div className="mt-6 font-mono text-[10px] text-slate-600 h-4">
+          {/* Logs de chargement (visuel seulement, aria-hidden) */}
+          <div className="mt-6 font-mono text-[10px] text-slate-600 h-4" aria-hidden="true">
             {progress < 30 && <span>› Mounting particle field…</span>}
             {progress >= 30 && progress < 60 && <span>› Calibrating neural mesh…</span>}
             {progress >= 60 && progress < 90 && <span>› Establishing secure channel…</span>}
             {progress >= 90 && <span className="text-[#4CAF50]">› System ready.</span>}
           </div>
+
+          {/* Live region silencieuse : annonce unique à la fin pour les SR */}
+          {progress >= 100 && (
+            <span className="sr-only" role="status">
+              Site Analyticatech chargé. Système prêt.
+            </span>
+          )}
         </motion.div>
       )}
     </AnimatePresence>

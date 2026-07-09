@@ -49,7 +49,7 @@ export function ContactView() {
   const [status, setStatus] = useState<Status>("idle");
   const [serverMsg, setServerMsg] = useState("");
   const [reference, setReference] = useState("");
-  const terminalRef = useRef<HTMLDivElement>(null);
+  // Plus de terminalRef mort (audit) — supprimé
 
   const update = (field: keyof FormState, value: string | boolean) => {
     setForm((p) => ({ ...p, [field]: value }));
@@ -155,10 +155,8 @@ export function ContactView() {
         <div className="mx-auto max-w-7xl px-4 md:px-6 grid gap-8 lg:grid-cols-5">
           {/* === Terminal Form === */}
           <div className="lg:col-span-3">
-            <div
-              ref={terminalRef}
-              className="glass-strong rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/40"
-            >
+            {/* Plus de terminalRef mort (audit) — conteneur form simplifié */}
+            <div className="glass-strong rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/40">
               {/* Barre de titre terminal */}
               <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10 bg-black/30">
                 <span className="h-3 w-3 rounded-full bg-[#F26D3D]/80" aria-hidden />
@@ -277,7 +275,7 @@ export function ContactView() {
                   <span className="text-xs text-slate-400 leading-relaxed">
                     J&apos;accepte que mes données soient traitées par Analyticatech
                     pour répondre à ma demande, conformément à la{" "}
-                    <a href="#" onClick={(e) => e.preventDefault()} className="text-[#F26D3D] hover:underline">
+                    <a href="#" onClick={(e) => e.preventDefault()} className="text-[#F26D3D] hover:underline" aria-label="Politique de confidentialité (bientôt disponible)">
                       politique de confidentialité
                     </a>
                     . Aucune revente, suppression sous 90 jours.
@@ -289,7 +287,10 @@ export function ContactView() {
                   </p>
                 )}
 
-                {/* Honeypot — invisible aux humains, piège aux bots */}
+                {/* Honeypot — invisible aux humains, piège aux bots.
+                    aria-hidden retiré (audit WCAG : un élément focusable ne doit
+                    pas être aria-hidden). Le champ reste masqué visuellement via
+                    CSS et tabIndex={-1} le sort du focus séquentiel clavier. */}
                 <input
                   type="text"
                   name="companyUrl"
@@ -298,7 +299,6 @@ export function ContactView() {
                   value={form.companyUrl}
                   onChange={(e) => update("companyUrl", e.target.value)}
                   className="absolute opacity-0 pointer-events-none -left-[9999px] h-0 w-0"
-                  aria-hidden="true"
                 />
 
                 {/* Bouton EXECUTE */}
@@ -306,6 +306,7 @@ export function ContactView() {
                   <button
                     type="submit"
                     disabled={status === "submitting"}
+                    aria-busy={status === "submitting"}
                     className="group w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[#F26D3D] px-6 py-3.5 font-mono text-sm font-bold uppercase tracking-wider text-white transition hover:bg-[#ff7a4a] disabled:opacity-50 disabled:cursor-not-allowed neon-glow"
                   >
                     {status === "submitting" ? (
@@ -408,7 +409,7 @@ export function ContactView() {
                     <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
                       Téléphone
                     </p>
-                    <p className="text-sm text-slate-200">+33 1 84 80 00 00</p>
+                    <a href="tel:+33184800000" className="text-sm text-slate-200 hover:text-[#F26D3D] transition-colors">+33 1 84 80 00 00</a>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">

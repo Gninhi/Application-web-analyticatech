@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useState, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -45,9 +45,11 @@ function ParticleScene({ count }: ParticleSceneProps) {
     return arr;
   }, [count]);
 
-  // Suivi souris (parallaxe)
-  useFrame((state, delta) => {
+  // Suivi souris (parallaxe) + pause sur onglet inactif + reduced-motion
+  useFrame((_state, delta) => {
     if (!pointsRef.current) return;
+    // Pause sur onglet inactif (économise batterie/CPU)
+    if (document.hidden) return;
 
     // Rotation lente continue
     pointsRef.current.rotation.y += delta * 0.03;
@@ -103,6 +105,18 @@ export function ParticleField() {
     if (w < 1024) return 1000;
     return 1600;
   }, []);
+
+  // Respect de prefers-reduced-motion : pas de canvas 3D pour les utilisateurs
+  // ayant demandé une réduction des animations (audit accessibilité).
+  // setState différé dans rAF pour éviter le setState synchrone en effect.
+  const [reducedMotion, setReducedMotion] = useState(false);
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  if (reducedMotion) return null;
 
   return (
     <Canvas

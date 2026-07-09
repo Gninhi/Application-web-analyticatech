@@ -214,7 +214,7 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
                 onClick={() => onNavigate("contact")}
                 className="inline-flex items-center gap-2 rounded-lg bg-[#F26D3D] px-6 py-3 font-mono text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-[#ff7a4a] neon-glow"
               >
-                Brifing express
+                Briefing express
                 <ArrowRight className="h-4 w-4" aria-hidden />
               </button>
             </article>
@@ -258,7 +258,7 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
  */
 function PhaseIndicator({ progress }: { progress: ReturnType<typeof useScroll>["scrollYProgress"] }) {
   const leadIn = useTransform(progress, [0, 0.15], [1, 0.3]);
-  const drift = useTransform(progress, [0.14, 0.16, 0.84, 0.86], [0.3, 1, 1, 0.3]);
+  const drift = useTransform(progress, [0.15, 0.16, 0.84, 0.85], [0.3, 1, 1, 0.3]);
   const leadOut = useTransform(progress, [0.85, 1], [0.3, 1]);
 
   return (
