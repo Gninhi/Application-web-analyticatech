@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { SERVICES, type Service, type ViewKey } from "@/lib/data";
 import { PixelRevealTitle } from "@/components/PixelRevealTitle";
+import { useMagneticHover } from "@/hooks/useMagneticHover";
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   BrainCircuit,
@@ -47,21 +48,30 @@ interface ServicesViewProps {
 }
 
 /**
- * ServicesView — effet "Stacking Cards" premium :
- * - Chaque carte entre depuis le bas et vient se poser sur la précédente.
- * - Les cartes précédentes restent visibles en arrière-plan, décalées vers
- *   le haut avec un léger retrait d'échelle → espacement visible entre cards.
- * - Cartes agrandies (max-w-7xl, ~64vh), images de fond immersives.
+ * ServicesView — stacking cards "à la cula.tech" (page About / Principles).
+ *
+ * Principe :
+ *  - Chaque carte est `position: sticky` avec un `top` décalé (0, 28px, 56px…)
+ *    pour révéler l'empilement en éventail en haut de l'écran.
+ *  - Au scroll, la carte suivante arrive naturellement par-dessus et "écrase"
+ *    les précédentes qui rétrécissent (scale) et s'assombrissent (opacity).
+ *  - Effet "aimant" : au survol, la carte suit légèrement le curseur.
+ *  - Pleine largeur (max-w-6xl), hauteur généreuse (~68vh).
+ *
+ * Le scroll global de la section pilote les animations scale/opacity :
+ *  - La carte i est "active" pendant la plage [i/N, (i+1)/N].
+ *  - Pendant cette plage, la carte i+1 arrive par-dessus et la carte i
+ *    rétrécit (scale 1 → 0.92) et s'assombrit (opacity 1 → 0.45).
  */
 export function ServicesView({ onNavigate }: ServicesViewProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
-    target: containerRef,
+    target: sectionRef,
     offset: ["start start", "end end"],
   });
 
   return (
-    <div ref={containerRef} className="relative">
+    <div className="relative">
       {/* === En-tête === */}
       <section className="pt-32 md:pt-40 pb-12">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
@@ -82,46 +92,32 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
             />
             <p className="text-slate-300 leading-relaxed text-lg">
               <span className="text-glass">
-                Chaque service est une couche de notre monolithe. Défilez pour
-                voir l&apos;architecture se révéler progressivement — chaque carte
-                vient se superposer à la précédente avec un espacement visible.
+                Chaque service est une couche de notre monolithe. Défilez : les cartes
+                se superposent et se collent en haut comme des aimants — chacune révèle
+                la précédente en arrière-plan.
               </span>
             </p>
-
-            {/* Indicateur de progression du scroll */}
-            <div className="mt-8 flex items-center gap-3">
-              <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
-                Scroll stack
-              </span>
-              <div className="relative h-px w-40 bg-white/10 overflow-hidden">
-                <motion.div
-                  style={{ scaleX: scrollYProgress, transformOrigin: "left" }}
-                  className="absolute inset-0 bg-[#F26D3D]"
-                />
-              </div>
-              <ScrollProgress value={scrollYProgress} />
-            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* === Conteneur des cartes empilées === */}
+      {/* === Piste de cartes sticky empilées ===
+          Hauteur totale = nb cartes * 100vh (amplitude de scroll). */}
       <section
+        ref={sectionRef}
         className="relative"
-        style={{ height: `${SERVICES.length * 90}vh` }}
+        style={{ height: `${SERVICES.length * 100}vh` }}
       >
-        <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center">
-          {SERVICES.map((service, i) => (
-            <StackCard
-              key={service.index}
-              service={service}
-              index={i}
-              total={SERVICES.length}
-              progress={scrollYProgress}
-              onNavigate={onNavigate}
-            />
-          ))}
-        </div>
+        {SERVICES.map((service, i) => (
+          <StickyStackCard
+            key={service.index}
+            service={service}
+            index={i}
+            total={SERVICES.length}
+            progress={scrollYProgress}
+            onNavigate={onNavigate}
+          />
+        ))}
       </section>
 
       {/* === Section "Méthode" === */}
@@ -142,9 +138,9 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
               </h2>
               <p className="text-slate-300 leading-relaxed mb-6">
                 <span className="text-glass">
-                  Notre delivery suit un cycle itératif à 4 phases, chacune
-                  livrant de la valeur observable. Aucun &ldquo;big bang&rdquo; :
-                  chaque incrément est mis en production et monitoré.
+                  Notre delivery suit un cycle itératif à 4 phases, chacune livrant
+                  de la valeur observable. Aucun &ldquo;big bang&rdquo; : chaque incrément
+                  est mis en production et monitoré.
                 </span>
               </p>
               <button
@@ -192,29 +188,17 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
   );
 }
 
-/* === Indicateur de progression textuel === */
-function ScrollProgress({ value }: { value: MotionValue<number> }) {
-  const idx = useTransform(value, (v) =>
-    String(Math.min(SERVICES.length, Math.floor(v * SERVICES.length) + 1)).padStart(2, "0")
-  );
-  return (
-    <motion.span className="font-mono text-[10px] uppercase tracking-widest text-[#F26D3D]">
-      <motion.span>{idx}</motion.span>
-      <span className="text-slate-600"> / {String(SERVICES.length).padStart(2, "0")}</span>
-    </motion.span>
-  );
-}
-
-/* === Carte empilée individuelle ===
+/* === Carte sticky empilée individuelle ===
  *
- * Logique d'animation (espacement visible entre cards) :
- *  - La carte entre depuis le bas (y: 600 → 0) et devient opaque.
- *  - Quand la carte suivante entre, celle-ci monte (y: 0 → -stackOffset × k)
- *    et rétrécit légèrement (scale 1 → 1 - scaleStep × k).
- *  - Résultat : on voit le haut de chaque carte précédente "dépasser"
- *    au-dessus de la carte active, comme un éventail de cards espacées.
+ * Pattern cula :
+ *  - position: sticky avec top décalé (i * 28px) → éventail visible en haut
+ *  - Chaque carte occupe 100vh → amplitude de scroll d'1 viewport par carte
+ *  - Au scroll, la carte suivante arrive par-dessus (z-index croissant)
+ *  - Les cartes précédentes rétrécissent (scale) et s'assombrissent (opacity)
+ *    pendant la plage de scroll [i/N, (i+1)/N] (carte suivante qui arrive).
+ *  - Effet "aimant" au survol via useMagneticHover.
  */
-interface StackCardProps {
+interface StickyStackCardProps {
   service: Service;
   index: number;
   total: number;
@@ -222,73 +206,49 @@ interface StackCardProps {
   onNavigate: (view: ViewKey) => void;
 }
 
-function StackCard({ service, index, total, progress, onNavigate }: StackCardProps) {
+function StickyStackCard({ service, index, total, progress, onNavigate }: StickyStackCardProps) {
   const Icon = ICONS[service.icon] ?? BrainCircuit;
-  const isFirst = index === 0;
+
+  // Plage de scroll dédiée à cette carte : [i/N, (i+1)/N]
+  // Pendant cette plage, la carte suivante arrive par-dessus.
+  const start = index / total;
+  const end = (index + 1) / total;
   const isLast = index === total - 1;
-  const stackOffset = 56; // espacement vertical entre cards empilées (px)
-  const scaleStep = 0.035; // retrait d'échelle par carte empilée derrière
-  const N = total;
 
-  // Plages du scroll dédiées à cette carte
-  const enterStart = isFirst ? 0 : (index - 1) / N;
-  const enterEnd = index / N;
-  const nextEnterEnd = isLast ? 1 : (index + 1) / N;
+  // Pendant que la carte suivante arrive, celle-ci rétrécit et s'assombrit.
+  // La dernière carte ne rétrécit jamais.
+  const scale = useTransform(progress, [start, end], [1, isLast ? 1 : 0.92]);
+  const opacity = useTransform(progress, [start, end], [1, isLast ? 1 : 0.45]);
 
-  // --- Y : entre depuis le bas puis recule vers le haut ---
-  const y = useTransform(
-    progress,
-    [0, enterStart, enterEnd, nextEnterEnd, 1],
-    [
-      isFirst ? 0 : 600,
-      isFirst ? 0 : 600,
-      0,
-      isLast ? 0 : -stackOffset,
-      isLast ? 0 : -stackOffset * (N - 1 - index),
-    ]
-  );
-
-  // --- Opacity : 0 → 1 à l'entrée, reste 1 ensuite ---
-  const opacity = useTransform(
-    progress,
-    [0, enterStart, enterEnd, nextEnterEnd, 1],
-    [isFirst ? 1 : 0, isFirst ? 1 : 0, 1, 1, 1]
-  );
-
-  // --- Scale : 1 à l'entrée, rétrécit quand les suivantes arrivent ---
-  const scale = useTransform(
-    progress,
-    [0, enterStart, enterEnd, nextEnterEnd, 1],
-    [
-      1,
-      1,
-      1,
-      isLast ? 1 : 1 - scaleStep,
-      isLast ? 1 : 1 - scaleStep * (N - 1 - index),
-    ]
-  );
+  // Effet aimant sur la carte
+  const magneticRef = useMagneticHover<HTMLDivElement>({ strength: 0.18, maxShift: 12 });
 
   const bgImage = BG_IMAGES[service.index] ?? BG_IMAGES["01"];
   const meshOverlay = MESH_OVERLAY[service.index] ?? MESH_OVERLAY["01"];
+  // Top décalé façon cula : chaque carte "colle" 28px plus bas que la précédente
+  const stickyTop = `${index * 28}px`;
 
   return (
-    <motion.article
-      style={{ y, opacity, scale, zIndex: index + 1 }}
-      className="absolute inset-0 flex items-center justify-center px-3 md:px-6"
+    <div
+      className="sticky h-screen flex items-center justify-center px-3 md:px-6"
+      style={{ top: stickyTop, zIndex: index + 1 }}
     >
-      <div className="w-full max-w-7xl relative">
-        {/* === Contour : border blanc + anneau orange extérieur === */}
-        <div
-          className="relative rounded-[28px] overflow-hidden shadow-2xl shadow-black/70 grain"
-          style={{ border: "1px solid rgba(255, 255, 255, 0.22)" }}
-        >
-          {/* Image de fond immersive (cover, adaptée à l'écran) */}
+      {/* motion.div gère scale + opacity (Framer Motion) */}
+      <motion.div style={{ scale, opacity }} className="w-full max-w-6xl">
+        {/* Wrapper intérieur pour l'effet magnétique (transform séparé) */}
+        <div ref={magneticRef} className="relative">
+          {/* === Contour : border blanc + anneau orange extérieur === */}
+          <div
+            className="relative rounded-[28px] overflow-hidden shadow-2xl shadow-black/70 grain"
+            style={{ border: "1px solid rgba(255, 255, 255, 0.22)" }}
+          >
+          {/* Image de fond immersive */}
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${bgImage})` }}
             aria-hidden
           />
-          {/* Mesh gradient overlay pour cohérence brand */}
+          {/* Mesh gradient overlay */}
           <div
             className="absolute inset-0"
             style={{ background: meshOverlay }}
@@ -304,12 +264,11 @@ function StackCard({ service, index, total, progress, onNavigate }: StackCardPro
             aria-hidden
           />
 
-          {/* Liseré lumineux supérieur (orange néon) */}
+          {/* Liserés lumineux */}
           <div
             className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#F26D3D]/70 to-transparent pointer-events-none z-20"
             aria-hidden
           />
-          {/* Liseré inférieur */}
           <div
             className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none z-20"
             aria-hidden
@@ -324,7 +283,7 @@ function StackCard({ service, index, total, progress, onNavigate }: StackCardPro
           </div>
 
           {/* === Contenu : grid 2 colonnes, panneau glass à droite === */}
-          <div className="relative z-10 grid md:grid-cols-5 min-h-[58vh] md:min-h-[62vh]">
+          <div className="relative z-10 grid md:grid-cols-5 min-h-[64vh] md:min-h-[68vh]">
             {/* Colonne gauche : visuel + identité */}
             <div className="md:col-span-2 p-8 md:p-12 flex flex-col justify-between">
               <div className="flex items-start justify-between">
@@ -389,12 +348,13 @@ function StackCard({ service, index, total, progress, onNavigate }: StackCardPro
           </div>
         </div>
 
-        {/* Anneau orange extérieur (double ligne cyberpunk) */}
-        <div
-          className="absolute -inset-px rounded-[28px] border border-[#F26D3D]/25 pointer-events-none"
-          aria-hidden
-        />
-      </div>
-    </motion.article>
+          {/* Anneau orange extérieur */}
+          <div
+            className="absolute -inset-px rounded-[28px] border border-[#F26D3D]/25 pointer-events-none"
+            aria-hidden
+          />
+        </div>
+      </motion.div>
+    </div>
   );
 }
