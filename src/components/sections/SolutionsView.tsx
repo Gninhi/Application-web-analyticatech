@@ -12,8 +12,17 @@ interface SolutionsViewProps {
 
 /**
  * SolutionsView — catalogue interactif en scroll horizontal.
- * Le défilement vertical pilote la translation horizontale d'une
- * piste de cartes "spatiale", comme un carrousel inertiel.
+ *
+ * Structure du scroll (3 phases) :
+ *  1. LEAD-IN  (0% → 15%) : la section se met en place, la piste
+ *     horizontale est immobile, la 1ère carte est centrée/staged.
+ *  2. DRIFT    (15% → 85%): la piste horizontale translate de gauche
+ *     à droite, révélant les cartes successives.
+ *  3. LEAD-OUT (85% → 100%): la piste est immobile sur la dernière
+ *     carte, puis la section libère le scroll vertical.
+ *
+ * La hauteur totale du conteneur = (nb cartes + 1) * 100vh donne
+ * assez d'amplitude pour ces 3 phases sans précipitation.
  */
 export function SolutionsView({ onNavigate }: SolutionsViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -22,15 +31,25 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
     offset: ["start start", "end end"],
   });
 
-  // La piste horizontale se déplace de 0 à -(75% de sa largeur)
-  // ajusté pour s'arrêter sur la dernière carte.
-  const x = useTransform(scrollYProgress, [0, 1], ["2%", "-72%"]);
-  // Indicateur de progression
-  const progressWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  // x mappé sur la portion centrale [0.15, 0.85] → lead-in & lead-out
+  // La piste part légèrement à droite pour "center" la 1ère carte au démarrage.
+  const x = useTransform(scrollYProgress, [0.15, 0.85], ["8%", "-78%"]);
+  // Indicateur de progression (même plage que x)
+  const progressWidth = useTransform(scrollYProgress, [0.15, 0.85], ["0%", "100%"]);
+  // Opacité de l'en-tête de la piste (fond progress qui s'allume pendant le drift)
+  const driftActive = useTransform(
+    scrollYProgress,
+    [0.14, 0.16, 0.84, 0.86],
+    [0.3, 1, 1, 0.3]
+  );
+
+  // Hauteur totale : lead-in + drift + lead-out
+  // (nb cartes + 1) * 100vh donne assez d'amplitude
+  const totalHeight = `${(SOLUTIONS.length + 1) * 100}vh`;
 
   return (
     <div ref={containerRef} className="relative">
-      {/* En-tête */}
+      {/* === En-tête === */}
       <section className="pt-32 md:pt-40 pb-10">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <motion.div
@@ -67,8 +86,11 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
             </p>
           </motion.div>
 
-          {/* Barre de progression horizontale */}
-          <div className="mt-10 flex items-center gap-3">
+          {/* Barre de progression horizontale (style cula) */}
+          <motion.div
+            style={{ opacity: driftActive }}
+            className="mt-10 flex items-center gap-3"
+          >
             <Compass className="h-4 w-4 text-[#F26D3D]" aria-hidden />
             <div className="relative h-px flex-1 bg-white/10 overflow-hidden">
               <motion.div
@@ -79,24 +101,25 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
             <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
               Drift Sequence
             </span>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Piste horizontale — hauteur = nb cartes * 80vh pour laisser le temps de défiler */}
-      <section
-        className="relative"
-        style={{ height: `${SOLUTIONS.length * 80}vh` }}
-      >
+      {/* === Piste horizontale pin === */}
+      <section className="relative" style={{ height: totalHeight }}>
         <div className="sticky top-0 h-screen flex items-center overflow-hidden">
+          {/* Indicateur de phase (subtil, en haut) */}
+          <PhaseIndicator progress={scrollYProgress} />
+
           <motion.div
             style={{ x }}
-            className="flex gap-6 md:gap-8 pl-4 md:pl-10 pr-10"
+            className="flex gap-6 md:gap-10 pl-[8vw] md:pl-[12vw] pr-10"
           >
             {SOLUTIONS.map((sol, i) => (
               <article
                 key={sol.id}
-                className="relative shrink-0 w-[85vw] sm:w-[70vw] md:w-[58vw] lg:w-[44vw] h-[68vh] glass-strong rounded-3xl overflow-hidden flex flex-col"
+                className="relative shrink-0 w-[78vw] sm:w-[64vw] md:w-[52vw] lg:w-[40vw] h-[68vh] glass-strong rounded-3xl overflow-hidden flex flex-col"
+                style={{ border: "1px solid rgba(255,255,255,0.18)" }}
               >
                 {/* Visuel de fond avec dégradé sectoriel */}
                 <div
@@ -178,7 +201,7 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
             ))}
 
             {/* Carte finale CTA */}
-            <article className="shrink-0 w-[85vw] sm:w-[70vw] md:w-[50vw] h-[68vh] rounded-3xl border border-dashed border-[#F26D3D]/40 flex flex-col items-center justify-center text-center p-8">
+            <article className="shrink-0 w-[78vw] sm:w-[64vw] md:w-[52vw] lg:w-[40vw] h-[68vh] rounded-3xl border border-dashed border-[#F26D3D]/40 flex flex-col items-center justify-center text-center p-8">
               <Zap className="h-10 w-10 text-[#F26D3D] mb-4" aria-hidden />
               <h3 className="font-display text-3xl font-bold text-slate-50 mb-3">
                 Votre secteur n&apos;est pas listé ?
@@ -199,7 +222,7 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
         </div>
       </section>
 
-      {/* Bandeau confiance */}
+      {/* === Bandeau confiance === */}
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <div className="grid gap-5 md:grid-cols-3">
@@ -226,6 +249,40 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
           </div>
         </div>
       </section>
+    </div>
+  );
+}
+
+/* === Indicateur de phase (lead-in / drift / lead-out) ===
+ * Trois segments qui s'illuminent selon la position du scroll.
+ */
+function PhaseIndicator({ progress }: { progress: ReturnType<typeof useScroll>["scrollYProgress"] }) {
+  const leadIn = useTransform(progress, [0, 0.15], [1, 0.3]);
+  const drift = useTransform(progress, [0.14, 0.16, 0.84, 0.86], [0.3, 1, 1, 0.3]);
+  const leadOut = useTransform(progress, [0.85, 1], [0.3, 1]);
+
+  return (
+    <div className="absolute top-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20 pointer-events-none">
+      <motion.span
+        style={{ opacity: leadIn }}
+        className="font-mono text-[9px] uppercase tracking-widest text-slate-400"
+      >
+        Staging
+      </motion.span>
+      <span className="h-px w-4 bg-white/20" aria-hidden />
+      <motion.span
+        style={{ opacity: drift }}
+        className="font-mono text-[9px] uppercase tracking-widest text-[#F26D3D]"
+      >
+        Drift
+      </motion.span>
+      <span className="h-px w-4 bg-white/20" aria-hidden />
+      <motion.span
+        style={{ opacity: leadOut }}
+        className="font-mono text-[9px] uppercase tracking-widest text-slate-400"
+      >
+        Release
+      </motion.span>
     </div>
   );
 }

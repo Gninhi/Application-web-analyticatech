@@ -13,7 +13,7 @@ import {
   ChevronRight,
   Activity,
 } from "lucide-react";
-import { SERVICES, STREAM_METRICS, ACTIVITY_LOG, TESTIMONIALS, CLIENT_LOGOS, CAPABILITIES, MARQUEE_KEYWORDS, type ViewKey } from "@/lib/data";
+import { SERVICES, STREAM_METRICS, ACTIVITY_LOG, TESTIMONIALS, CLIENT_LOGOS, CAPABILITIES, MARQUEE_KEYWORDS, FEATURES, STANDARDS, type ViewKey } from "@/lib/data";
 import { SpotlightCard } from "@/components/SpotlightCard";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { ScrambleText } from "@/components/ScrambleText";
@@ -297,6 +297,77 @@ export function HomeView({ onNavigate }: HomeViewProps) {
         </div>
       </section>
 
+      {/* ============ FEATURES — section précise style cula.tech ============ */}
+      <section className="relative py-24 md:py-32">
+        <div className="mx-auto max-w-7xl px-4 md:px-6">
+          {/* En-tête minimaliste type cula */}
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
+            <div className="max-w-xl">
+              <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
+                <span className="text-glass">{"// 03 — Capabilities"}</span>
+              </p>
+              <h2 className="font-display text-3xl md:text-5xl font-bold text-slate-50 tracking-tight">
+                <span className="text-glass-strong">
+                  Grounded in precision.
+                  <br />
+                  Built to scale.
+                </span>
+              </h2>
+            </div>
+            <p className="md:max-w-sm text-sm text-slate-400 leading-relaxed">
+              <span className="text-glass">
+                Quatre capacités fondamentales, instrumentées et auditables.
+                Chaque déploiement s&apos;appuie sur ce socle opérationnel.
+              </span>
+            </p>
+          </div>
+
+          {/* Liste features — layout liste (cula style) */}
+          <div className="border-t border-white/10">
+            {FEATURES.map((feature, i) => (
+              <motion.div
+                key={feature.id}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                className="group relative grid grid-cols-12 gap-4 md:gap-8 items-start py-8 md:py-10 border-b border-white/10 hover:bg-white/[0.02] transition-colors"
+              >
+                {/* Index + tag */}
+                <div className="col-span-3 md:col-span-2">
+                  <span className="font-mono text-2xl md:text-3xl font-bold text-[#F26D3D]/40 group-hover:text-[#F26D3D] transition-colors">
+                    {feature.index}
+                  </span>
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 mt-2">
+                    {feature.tag}
+                  </p>
+                </div>
+
+                {/* Titre */}
+                <div className="col-span-9 md:col-span-4">
+                  <h3 className="font-display text-2xl md:text-3xl font-bold text-slate-50 tracking-tight group-hover:text-[#F26D3D] transition-colors">
+                    {feature.title}
+                  </h3>
+                </div>
+
+                {/* Description */}
+                <div className="col-span-12 md:col-span-6">
+                  <p className="text-sm md:text-base text-slate-400 leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
+
+                {/* Barre orange qui se déploie au hover */}
+                <span
+                  className="absolute left-0 top-0 h-px bg-[#F26D3D] w-0 group-hover:w-full transition-all duration-500"
+                  aria-hidden
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ============ MARQUEE BAND (inspiré Armory) ============ */}
       <Marquee
         items={MARQUEE_KEYWORDS}
@@ -309,7 +380,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
       <section className="relative py-24 md:py-32">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <SectionHeading
-            tag="// 03 — CAPABILITIES"
+            tag="// 04 — CAPABILITIES"
             title="Un système voit. Tous savent."
             description="Nos architectures agentiques fonctionnent en réseau coordonné. La signature d'une plateforme de classe bancaire : détection, réponse, apprentissage — en continu."
           />
@@ -365,7 +436,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <SectionHeading
-            tag="// 04 — TRUST SIGNAL"
+            tag="// 05 — TRUST SIGNAL"
             title="Ils nous confient leurs systèmes critiques"
             description="Directions générales, CIO et C-Level d'organisations européennes : la confiance se construit sur la livraison."
           />
@@ -403,6 +474,27 @@ export function HomeView({ onNavigate }: HomeViewProps) {
                 </figcaption>
               </motion.figure>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============ STANDARDS — bandeau certifications style cula ============ */}
+      <section className="relative py-16 border-y border-white/10">
+        <div className="mx-auto max-w-7xl px-4 md:px-6">
+          <div className="flex flex-col md:flex-row md:items-center gap-8">
+            <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-slate-500 md:w-48 shrink-0">
+              <span className="text-glass">Standards &amp; certifications</span>
+            </p>
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
+              {STANDARDS.map((std) => (
+                <span
+                  key={std}
+                  className="font-display text-lg md:text-xl font-bold tracking-tight text-slate-400 hover:text-[#F26D3D] transition-colors cursor-default"
+                >
+                  {std}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </section>
