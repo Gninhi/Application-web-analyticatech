@@ -6,6 +6,7 @@ import { Menu, X, ArrowRight, Cpu } from "lucide-react";
 import { NAV_ITEMS, type ViewKey } from "@/lib/data";
 import { ScrambleText } from "./ScrambleText";
 import { SnakeButton } from "@/components/SnakeButton";
+import { NavLink } from "@/components/NavLink";
 import { cn } from "@/lib/utils";
 
 interface NavbarProps {
@@ -103,16 +104,11 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
             {/* Liens desktop */}
             <div className="hidden md:flex items-center gap-1">
               {NAV_ITEMS.map((item) => (
-                <button
+                <NavLink
                   key={item.key}
+                  active={activeView === item.key}
                   onClick={() => handleNav(item.key)}
-                  className={cn(
-                    "relative px-3.5 py-2 font-mono text-xs uppercase tracking-widest transition-colors rounded-md",
-                    activeView === item.key
-                      ? "text-[#F26D3D]"
-                      : "text-slate-300 hover:text-white"
-                  )}
-                  aria-current={activeView === item.key ? "page" : undefined}
+                  className={activeView === item.key ? "" : "text-slate-300 hover:text-white"}
                 >
                   <ScrambleText text={item.label} />
                   {activeView === item.key && (
@@ -122,7 +118,7 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
                       transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}
-                </button>
+                </NavLink>
               ))}
             </div>
 

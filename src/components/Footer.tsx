@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Cpu, Send, ShieldCheck, Github, Linkedin, Twitter } from "lucide-react";
 import { NAV_ITEMS, type ViewKey } from "@/lib/data";
+import { NavLink } from "@/components/NavLink";
 
 interface FooterProps {
   onNavigate: (view: ViewKey) => void;
@@ -85,12 +86,12 @@ export function Footer({ onNavigate }: FooterProps) {
             <ul className="space-y-2.5">
               {NAV_ITEMS.map((item) => (
                 <li key={item.key}>
-                  <button
+                  <NavLink
+                    variant="footer"
                     onClick={() => onNavigate(item.key)}
-                    className="text-sm text-slate-400 hover:text-white transition-colors"
                   >
                     {item.label}
-                  </button>
+                  </NavLink>
                 </li>
               ))}
             </ul>

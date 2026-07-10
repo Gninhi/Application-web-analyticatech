@@ -228,3 +228,27 @@ Stage Summary:
 - 10 SnakeButtons avec animation snake-rotate (4s, accélère à 1.5s au hover)
 - 4 fichiers morts supprimés (ServiceTicker, ClientMarquee, useDynamicData, useMagneticHover)
 - Code DRY : 1 composant Marquee unifié, 1 composant SnakeButton réutilisable
+
+---
+Task ID: BUTTON-CENTRALIZE
+Agent: main
+Task: Vérification défilement + fix SnakeButton flèche + centralisation boutons
+
+Work Log:
+- Vérifié défilement marquee : 4 pistes actives, delta -62px/s (scrolling: true)
+- Corrigé SnakeButton : span interne maintenant `inline-flex items-center gap-2` (était `relative z-10` sans flex) → les icônes SVG restent alignées horizontalement avec le texte
+- Ajouté variante `subtle` au SnakeButton (bg-white/5 + border)
+- Créé composant `NavLink` centralisé (variantes navbar + footer)
+- Créé composant `FilterPill` centralisé (filtres Blog catégories)
+- Remplacé 5 boutons nav Navbar par NavLink
+- Remplacé 5 boutons nav Footer par NavLink (variant="footer")
+- Remplacé 5 boutons filtres Blog par FilterPill
+- 5 boutons restants sont légitimement spécifiques (logo, hamburger, close, submit newsletter, marquee item)
+
+Stage Summary:
+- Défilement marquee : validé E2E (4 pistes, delta -62px/s)
+- SnakeButton : flèche alignée (svgSameLine: true sur 10 boutons, spanDisplay: flex)
+- 3 composants centralisés : SnakeButton, NavLink, FilterPill
+- 15 boutons migrés vers composants centralisés
+- Lint : 0 erreur, 0 warning
+- 0 dead code

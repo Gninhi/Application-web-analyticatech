@@ -11,6 +11,7 @@ import {
 } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { PixelRevealTitle } from "@/components/PixelRevealTitle";
+import { FilterPill } from "@/components/FilterPill";
 
 type Filter = BlogCategory | "Tous";
 
@@ -82,20 +83,13 @@ export function BlogView() {
             aria-label="Filtrer par catégorie"
           >
             {BLOG_CATEGORIES.map((cat) => (
-              <button
+              <FilterPill
                 key={cat}
-                role="tab"
-                aria-selected={filter === cat}
+                active={filter === cat}
                 onClick={() => setFilter(cat)}
-                className={cn(
-                  "rounded-full border px-4 py-2 font-mono text-[11px] uppercase tracking-widest transition-all",
-                  filter === cat
-                    ? "border-[#F26D3D] bg-[#F26D3D] text-white"
-                    : "border-white/15 text-slate-400 hover:border-white/40 hover:text-slate-200"
-                )}
               >
                 {cat === "Tous" ? "Tous les rapports" : cat}
-              </button>
+              </FilterPill>
             ))}
             <span className="ml-auto font-mono text-[11px] uppercase tracking-widest text-slate-400">
               {filtered.length} entrée{filtered.length > 1 ? "s" : ""}
