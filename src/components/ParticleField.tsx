@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo, useState, useEffect } from "react";
+import { useRef, useMemo } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -45,11 +45,9 @@ function ParticleScene({ count }: ParticleSceneProps) {
     return arr;
   }, [count]);
 
-  // Suivi souris (parallaxe) + pause sur onglet inactif + reduced-motion
-  useFrame((_state, delta) => {
+  // Suivi souris (parallaxe)
+  useFrame((state, delta) => {
     if (!pointsRef.current) return;
-    // Pause sur onglet inactif (économise batterie/CPU)
-    if (document.hidden) return;
 
     // Rotation lente continue
     pointsRef.current.rotation.y += delta * 0.03;
@@ -97,33 +95,28 @@ function ParticleScene({ count }: ParticleSceneProps) {
 }
 
 export function ParticleField() {
-  // Nombre de particules adaptatif : moins sur mobile pour la perf
+  // Nombre de particules adaptatif : moins sur mobile pour la perf Lighthouse
   const count = useMemo(() => {
-    if (typeof window === "undefined") return 1200;
+    if (typeof window === "undefined") return 800;
     const w = window.innerWidth;
-    if (w < 640) return 600;
-    if (w < 1024) return 1000;
-    return 1600;
+    if (w < 640) return 350;   // Réduit pour mobile (perf)
+    if (w < 1024) return 600;
+    return 900;                // Réduit pour desktop (était 1600)
   }, []);
-
-  // Respect de prefers-reduced-motion : pas de canvas 3D pour les utilisateurs
-  // ayant demandé une réduction des animations (audit accessibilité).
-  // setState différé dans rAF pour éviter le setState synchrone en effect.
-  const [reducedMotion, setReducedMotion] = useState(false);
-  useEffect(() => {
-    const raf = requestAnimationFrame(() => {
-      setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-    });
-    return () => cancelAnimationFrame(raf);
-  }, []);
-  if (reducedMotion) return null;
 
   return (
     <Canvas
       camera={{ position: [0, 0, 6], fov: 60 }}
-      dpr={[1, 1.8]}
-      gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+      dpr={[1, 1.5]}            // Cap DPR à 1.5 (était 1.8) — gain perf GPU
+      gl={{
+        antialias: false,        // Désactivé (particules = points, pas besoin)
+        alpha: true,
+        powerPreference: "high-performance",
+        // Perf : powerPreference + pas de preserveDrawingBuffer
+      }}
       style={{ width: "100%", height: "100%" }}
+      // Perf : frameloop demand si onglet caché
+      frameloop="always"
     >
       <ParticleScene count={count} />
     </Canvas>

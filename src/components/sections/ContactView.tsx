@@ -18,6 +18,7 @@ import { contactSchema, type ContactApiResponse } from "@/lib/validation";
 import { safeFetch, FetchError } from "@/lib/safeFetch";
 import { cn } from "@/lib/utils";
 import { PixelRevealTitle } from "@/components/PixelRevealTitle";
+import { SnakeButton } from "@/components/SnakeButton";
 
 interface FormState {
   prenom: string;
@@ -27,7 +28,9 @@ interface FormState {
   sujet: string;
   message: string;
   consent: boolean;
-  companyUrl: string; // honeypot
+  companyUrl: string; // honeypot 1
+  website: string;    // honeypot 2
+  fax: string;        // honeypot 3
 }
 
 const EMPTY: FormState = {
@@ -39,6 +42,8 @@ const EMPTY: FormState = {
   message: "",
   consent: false,
   companyUrl: "",
+  website: "",
+  fax: "",
 };
 
 type Status = "idle" | "submitting" | "success" | "error";
@@ -49,7 +54,7 @@ export function ContactView() {
   const [status, setStatus] = useState<Status>("idle");
   const [serverMsg, setServerMsg] = useState("");
   const [reference, setReference] = useState("");
-  // Plus de terminalRef mort (audit) — supprimé
+  const terminalRef = useRef<HTMLDivElement>(null);
 
   const update = (field: keyof FormState, value: string | boolean) => {
     setForm((p) => ({ ...p, [field]: value }));
@@ -78,11 +83,20 @@ export function ContactView() {
     setServerMsg("");
 
     try {
+      // Lecture du token CSRF depuis le cookie (posé par le middleware)
+      const csrfToken = document.cookie
+        .split("; ")
+        .find((c) => c.startsWith("at-csrf="))
+        ?.split("=")[1] ?? "";
+
       const res = await safeFetch<ContactApiResponse>("/api/v1/contact", {
         method: "POST",
         body: JSON.stringify(result.data),
         timeoutMs: 12000,
         retries: 1,
+        headers: {
+          "x-csrf-token": csrfToken,
+        },
       });
 
       if (res.success) {
@@ -123,29 +137,25 @@ export function ContactView() {
             className="max-w-3xl"
           >
             <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
-              <span className="text-glass">{"// Secure Channel — Encrypted"}</span>
+              {"// Secure Channel — Encrypted"}
             </p>
             <h1 className="font-display text-4xl md:text-6xl font-bold text-[#F26D3D] tracking-tight mb-4">
               <PixelRevealTitle
                 text="Établissons une"
                 as="span"
                 className="block"
-                wordClassName="text-glass-orange"
                 delay={0.1}
               />
               <PixelRevealTitle
                 text="connexion sécurisée"
                 as="span"
                 className="block text-neon"
-                wordClassName="text-glass-orange-strong"
                 delay={0.45}
               />
             </h1>
             <p className="text-slate-300 leading-relaxed text-lg">
-              <span className="text-glass">
-                Décrivez votre besoin. Un architecte Solution vous répond sous 24h
-                ouvrées. Toutes les transmissions sont chiffrées et journalisées.
-              </span>
+              Décrivez votre besoin. Un architecte Solution vous répond sous 24h
+              ouvrées. Toutes les transmissions sont chiffrées et journalisées.
             </p>
           </motion.div>
         </div>
@@ -155,26 +165,28 @@ export function ContactView() {
         <div className="mx-auto max-w-7xl px-4 md:px-6 grid gap-8 lg:grid-cols-5">
           {/* === Terminal Form === */}
           <div className="lg:col-span-3">
-            {/* Plus de terminalRef mort (audit) — conteneur form simplifié */}
-            <div className="glass-strong rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/40">
+            <div
+              ref={terminalRef}
+              className="glass-card rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/40"
+            >
               {/* Barre de titre terminal */}
               <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10 bg-black/30">
                 <span className="h-3 w-3 rounded-full bg-[#F26D3D]/80" aria-hidden />
                 <span className="h-3 w-3 rounded-full bg-[#4CAF50]/70" aria-hidden />
                 <span className="h-3 w-3 rounded-full bg-slate-500/60" aria-hidden />
-                <span className="ml-3 font-mono text-[11px] uppercase tracking-widest text-slate-400">
+                <span className="ml-3 font-mono text-[11px] uppercase tracking-widest text-slate-300">
                   analyticatech@secure ~ % contact --new
                 </span>
-                <Terminal className="ml-auto h-4 w-4 text-slate-500" aria-hidden />
+                <Terminal className="ml-auto h-4 w-4 text-slate-400" aria-hidden />
               </div>
 
               <form onSubmit={handleSubmit} className="p-5 md:p-7 space-y-5" noValidate>
                 {/* Ligne de commande simulée */}
-                <p className="font-mono text-xs text-slate-500">
+                <p className="font-mono text-xs text-slate-400">
                   <span className="text-[#4CAF50]">root@analyticatech</span>
-                  <span className="text-slate-600">:</span>
+                  <span className="text-slate-500">:</span>
                   <span className="text-sky-400">~/contact</span>
-                  <span className="text-slate-600">$</span>{" "}
+                  <span className="text-slate-500">$</span>{" "}
                   <span className="text-slate-300">initier_session --encrypted</span>
                   <span className="blink-cursor" />
                 </p>
@@ -236,7 +248,7 @@ export function ContactView() {
                 <div>
                   <label
                     htmlFor="message"
-                    className="block font-mono text-[10px] uppercase tracking-[0.25em] text-slate-400 mb-2"
+                    className="block font-mono text-[10px] uppercase tracking-[0.25em] text-slate-300 mb-2"
                   >
                     MESSAGE <span className="text-[#F26D3D]">*</span>
                   </label>
@@ -249,7 +261,7 @@ export function ContactView() {
                     aria-invalid={!!errors.message}
                     aria-describedby={errors.message ? "message-err" : undefined}
                     className={cn(
-                      "terminal-input w-full rounded-lg bg-black/30 border px-3.5 py-3 font-mono text-sm text-slate-100 placeholder:text-slate-600 outline-none transition resize-y min-h-[120px]",
+                      "terminal-input w-full rounded-lg bg-black/30 border px-3.5 py-3 font-mono text-sm text-slate-100 placeholder:text-slate-500 outline-none transition resize-y min-h-[120px]",
                       errors.message ? "border-[#F26D3D]/60" : "border-white/10"
                     )}
                   />
@@ -258,7 +270,7 @@ export function ContactView() {
                       <AlertTriangle className="h-3 w-3" aria-hidden /> {errors.message}
                     </p>
                   )}
-                  <p className="mt-1.5 font-mono text-[10px] text-slate-600 text-right">
+                  <p className="mt-1.5 font-mono text-[10px] text-slate-500 text-right">
                     {form.message.length}/2000
                   </p>
                 </div>
@@ -272,10 +284,10 @@ export function ContactView() {
                     className="mt-0.5 h-4 w-4 shrink-0 accent-[#F26D3D]"
                     aria-invalid={!!errors.consent}
                   />
-                  <span className="text-xs text-slate-400 leading-relaxed">
+                  <span className="text-xs text-slate-300 leading-relaxed">
                     J&apos;accepte que mes données soient traitées par Analyticatech
                     pour répondre à ma demande, conformément à la{" "}
-                    <a href="#" onClick={(e) => e.preventDefault()} className="text-[#F26D3D] hover:underline" aria-label="Politique de confidentialité (bientôt disponible)">
+                    <a href="#" onClick={(e) => e.preventDefault()} className="text-[#F26D3D] hover:underline">
                       politique de confidentialité
                     </a>
                     . Aucune revente, suppression sous 90 jours.
@@ -287,10 +299,10 @@ export function ContactView() {
                   </p>
                 )}
 
-                {/* Honeypot — invisible aux humains, piège aux bots.
-                    aria-hidden retiré (audit WCAG : un élément focusable ne doit
-                    pas être aria-hidden). Le champ reste masqué visuellement via
-                    CSS et tabIndex={-1} le sort du focus séquentiel clavier. */}
+                {/* Multi-honeypot — invisible aux humains, piège aux bots.
+                    aria-hidden retiré (audit WCAG : élément focusable ne doit
+                    pas être aria-hidden). Masqué visuellement via CSS +
+                    tabIndex={-1} sort du focus séquentiel clavier. */}
                 <input
                   type="text"
                   name="companyUrl"
@@ -300,14 +312,33 @@ export function ContactView() {
                   onChange={(e) => update("companyUrl", e.target.value)}
                   className="absolute opacity-0 pointer-events-none -left-[9999px] h-0 w-0"
                 />
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={form.website}
+                  onChange={(e) => update("website", e.target.value)}
+                  className="absolute opacity-0 pointer-events-none -left-[9999px] h-0 w-0"
+                />
+                <input
+                  type="text"
+                  name="fax"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={form.fax}
+                  onChange={(e) => update("fax", e.target.value)}
+                  className="absolute opacity-0 pointer-events-none -left-[9999px] h-0 w-0"
+                />
 
                 {/* Bouton EXECUTE */}
                 <div className="pt-2">
-                  <button
+                  <SnakeButton
                     type="submit"
                     disabled={status === "submitting"}
-                    aria-busy={status === "submitting"}
-                    className="group w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[#F26D3D] px-6 py-3.5 font-mono text-sm font-bold uppercase tracking-wider text-white transition hover:bg-[#ff7a4a] disabled:opacity-50 disabled:cursor-not-allowed neon-glow"
+                    variant="primary"
+                    size="lg"
+                    className="group w-full neon-glow font-bold"
                   >
                     {status === "submitting" ? (
                       <>
@@ -321,7 +352,7 @@ export function ContactView() {
                         <ChevronRight className="h-4 w-4 rotate-180" aria-hidden />
                       </>
                     )}
-                  </button>
+                  </SnakeButton>
                 </div>
 
                 {/* Message serveur */}
@@ -338,7 +369,7 @@ export function ContactView() {
                         {serverMsg}
                       </p>
                       {reference && (
-                        <p className="mt-1.5 font-mono text-[11px] text-slate-400">
+                        <p className="mt-1.5 font-mono text-[11px] text-slate-300">
                           Référence ticket :{" "}
                           <span className="text-[#F26D3D]">{reference}</span>
                         </p>
@@ -372,7 +403,7 @@ export function ContactView() {
               ].map((b) => (
                 <span
                   key={b.t}
-                  className="inline-flex items-center gap-1.5 rounded-full glass px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-slate-400"
+                  className="inline-flex items-center gap-1.5 rounded-full glass px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-slate-300"
                 >
                   <b.icon className="h-3 w-3 text-[#4CAF50]" aria-hidden />
                   {b.t}
@@ -383,7 +414,7 @@ export function ContactView() {
 
           {/* === Panneau latéral — infos & SLA === */}
           <aside className="lg:col-span-2 space-y-5">
-            <div className="glass rounded-2xl p-6">
+            <div className="glass-card rounded-2xl p-6">
               <h3 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] mb-4">
                 Canaux alternatifs
               </h3>
@@ -393,7 +424,7 @@ export function ContactView() {
                     <Mail className="h-4 w-4 text-[#F26D3D]" aria-hidden />
                   </span>
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400">
                       Email
                     </p>
                     <a href="mailto:contact@analyticatech.com" className="text-sm text-slate-200 hover:text-[#F26D3D] transition-colors">
@@ -406,10 +437,10 @@ export function ContactView() {
                     <Phone className="h-4 w-4 text-[#F26D3D]" aria-hidden />
                   </span>
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400">
                       Téléphone
                     </p>
-                    <a href="tel:+33184800000" className="text-sm text-slate-200 hover:text-[#F26D3D] transition-colors">+33 1 84 80 00 00</a>
+                    <p className="text-sm text-slate-200">+33 1 84 80 00 00</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
@@ -417,7 +448,7 @@ export function ContactView() {
                     <MapPin className="h-4 w-4 text-[#F26D3D]" aria-hidden />
                   </span>
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400">
                       Siège
                     </p>
                     <p className="text-sm text-slate-200">
@@ -428,7 +459,7 @@ export function ContactView() {
               </ul>
             </div>
 
-            <div className="glass rounded-2xl p-6">
+            <div className="glass-card rounded-2xl p-6">
               <h3 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] mb-4">
                 Engagement de réponse
               </h3>
@@ -443,7 +474,7 @@ export function ContactView() {
                     key={s.l}
                     className="flex items-center justify-between py-2 border-b border-white/10 last:border-0"
                   >
-                    <span className="text-sm text-slate-400">{s.l}</span>
+                    <span className="text-sm text-slate-300">{s.l}</span>
                     <span className="font-mono text-xs text-[#4CAF50] uppercase tracking-wider">
                       {s.v}
                     </span>
@@ -452,14 +483,14 @@ export function ContactView() {
               </div>
             </div>
 
-            <div className="glass rounded-2xl p-6">
+            <div className="glass-card rounded-2xl p-6">
               <div className="flex items-center gap-2 mb-3">
                 <ShieldCheck className="h-5 w-5 text-[#4CAF50]" aria-hidden />
                 <h3 className="font-display font-bold text-slate-100">
                   Confidentialité garantie
                 </h3>
               </div>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <p className="text-xs text-slate-300 leading-relaxed">
                 Vos informations sont traitées en toute confidentialité. Nous
                 signons systématiquement un NDA avant tout échange technique
                 détaillé. Données supprimées sous 90 jours en l&apos;absence de suite.
@@ -498,7 +529,7 @@ function TerminalField({
     <div>
       <label
         htmlFor={name}
-        className="block font-mono text-[10px] uppercase tracking-[0.25em] text-slate-400 mb-2"
+        className="block font-mono text-[10px] uppercase tracking-[0.25em] text-slate-300 mb-2"
       >
         {label} {required && <span className="text-[#F26D3D]">*</span>}
       </label>
@@ -512,7 +543,7 @@ function TerminalField({
         aria-invalid={!!error}
         aria-describedby={error ? `${name}-err` : undefined}
         className={cn(
-          "terminal-input w-full rounded-lg bg-black/30 border px-3.5 py-2.5 font-mono text-sm text-slate-100 placeholder:text-slate-600 outline-none transition",
+          "terminal-input w-full rounded-lg bg-black/30 border px-3.5 py-2.5 font-mono text-sm text-slate-100 placeholder:text-slate-500 outline-none transition",
           error ? "border-[#F26D3D]/60" : "border-white/10"
         )}
       />

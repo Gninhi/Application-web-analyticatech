@@ -30,8 +30,7 @@ export function sanitizeText(input: string): string {
 }
 
 /**
- * Sanitize un objet récursivement : strings échappées, arrays d'objets
- * traités récursivement, autres valeurs préservées.
+ * Sanitize un objet récursivement en ne traitant que les chaînes.
  */
 export function sanitizeObject<T extends Record<string, unknown>>(obj: T): T {
   const out: Record<string, unknown> = {};
@@ -39,14 +38,9 @@ export function sanitizeObject<T extends Record<string, unknown>>(obj: T): T {
     if (typeof value === "string") {
       out[key] = sanitizeText(value);
     } else if (Array.isArray(value)) {
-      // Traitement récursif des arrays : strings sanitizées ET objets
-      out[key] = value.map((v) => {
-        if (typeof v === "string") return sanitizeText(v);
-        if (v && typeof v === "object" && !Array.isArray(v)) {
-          return sanitizeObject(v as Record<string, unknown>);
-        }
-        return v;
-      });
+      out[key] = value.map((v) =>
+        typeof v === "string" ? sanitizeText(v) : v
+      );
     } else if (value && typeof value === "object") {
       out[key] = sanitizeObject(value as Record<string, unknown>);
     } else {

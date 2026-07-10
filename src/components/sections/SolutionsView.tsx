@@ -1,10 +1,11 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { ArrowRight, Compass, Zap, ShieldCheck } from "lucide-react";
 import { SOLUTIONS, type ViewKey } from "@/lib/data";
 import { PixelRevealTitle } from "@/components/PixelRevealTitle";
+import { SnakeButton } from "@/components/SnakeButton";
 
 interface SolutionsViewProps {
   onNavigate: (view: ViewKey) => void;
@@ -13,16 +14,16 @@ interface SolutionsViewProps {
 /**
  * SolutionsView — catalogue interactif en scroll horizontal.
  *
- * Structure du scroll (3 phases) :
- *  1. LEAD-IN  (0% → 15%) : la section se met en place, la piste
+ * Structure du scroll (3 phases restaurée) :
+ *  1. STAGING (0% → 15%) : la section se met en place, la piste
  *     horizontale est immobile, la 1ère carte est centrée/staged.
- *  2. DRIFT    (15% → 85%): la piste horizontale translate de gauche
+ *  2. DRIFT   (15% → 85%): la piste horizontale translate de gauche
  *     à droite, révélant les cartes successives.
- *  3. LEAD-OUT (85% → 100%): la piste est immobile sur la dernière
+ *  3. RELEASE (85% → 100%): la piste est immobile sur la dernière
  *     carte, puis la section libère le scroll vertical.
  *
- * La hauteur totale du conteneur = (nb cartes + 1) * 100vh donne
- * assez d'amplitude pour ces 3 phases sans précipitation.
+ * La hauteur totale = (nb cartes + 1) * 100vh donne assez d'amplitude
+ * pour ces 3 phases sans précipitation.
  */
 export function SolutionsView({ onNavigate }: SolutionsViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -36,7 +37,7 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
   const x = useTransform(scrollYProgress, [0.15, 0.85], ["8%", "-78%"]);
   // Indicateur de progression (même plage que x)
   const progressWidth = useTransform(scrollYProgress, [0.15, 0.85], ["0%", "100%"]);
-  // Opacité de l'en-tête de la piste (fond progress qui s'allume pendant le drift)
+  // Opacité de la barre de progression (s'allume pendant le drift)
   const driftActive = useTransform(
     scrollYProgress,
     [0.14, 0.16, 0.84, 0.86],
@@ -44,7 +45,6 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
   );
 
   // Hauteur totale : lead-in + drift + lead-out
-  // (nb cartes + 1) * 100vh donne assez d'amplitude
   const totalHeight = `${(SOLUTIONS.length + 1) * 100}vh`;
 
   return (
@@ -59,30 +59,26 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
             className="max-w-3xl"
           >
             <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
-              <span className="text-glass">{"// Solutions — Lateral Drift"}</span>
+              {"// Solutions — Lateral Drift"}
             </p>
             <h1 className="font-display text-4xl md:text-6xl font-bold text-[#F26D3D] tracking-tight mb-4">
               <PixelRevealTitle
                 text="Des solutions sectorielles,"
                 as="span"
                 className="block"
-                wordClassName="text-glass-orange"
                 delay={0.1}
               />
               <PixelRevealTitle
                 text="en orbite"
                 as="span"
                 className="block text-neon"
-                wordClassName="text-glass-orange-strong"
                 delay={0.45}
               />
             </h1>
             <p className="text-slate-300 leading-relaxed text-lg">
-              <span className="text-glass">
-                Défilez verticalement : les cas d&apos;usage défilent horizontalement
-                comme une séquence orbitale. Chaque solution est prête à être
-                adaptée à votre contexte.
-              </span>
+              Défilez verticalement : les cas d&apos;usage défilent horizontalement
+              comme une séquence orbitale. Chaque solution est prête à être
+              adaptée à votre contexte.
             </p>
           </motion.div>
 
@@ -98,7 +94,7 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
                 className="absolute inset-y-0 left-0 bg-[#F26D3D]"
               />
             </div>
-            <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400">
               Drift Sequence
             </span>
           </motion.div>
@@ -118,7 +114,7 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
             {SOLUTIONS.map((sol, i) => (
               <article
                 key={sol.id}
-                className="relative shrink-0 w-[78vw] sm:w-[64vw] md:w-[52vw] lg:w-[40vw] h-[68vh] glass-strong rounded-3xl overflow-hidden flex flex-col"
+                className="relative shrink-0 w-[78vw] sm:w-[64vw] md:w-[52vw] lg:w-[40vw] h-[68vh] glass-card rounded-3xl overflow-hidden flex flex-col"
                 style={{ border: "1px solid rgba(255,255,255,0.18)" }}
               >
                 {/* Visuel de fond avec dégradé sectoriel */}
@@ -163,13 +159,13 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
                   <h3 className="font-display text-2xl md:text-3xl font-bold text-slate-50 mb-3 tracking-tight">
                     {sol.title}
                   </h3>
-                  <p className="text-sm text-slate-400 leading-relaxed mb-5 flex-1">
+                  <p className="text-sm text-slate-300 leading-relaxed mb-5 flex-1">
                     {sol.summary}
                   </p>
 
                   {/* Impact */}
                   <div className="rounded-xl border border-[#F26D3D]/25 bg-[#F26D3D]/5 p-3 mb-5">
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 mb-1">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 mb-1">
                       Impact mesuré
                     </p>
                     <p className="font-display text-lg font-bold text-[#F26D3D]">
@@ -189,13 +185,15 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
                     ))}
                   </div>
 
-                  <button
+                  <SnakeButton
                     onClick={() => onNavigate("contact")}
-                    className="group inline-flex items-center gap-2 self-start rounded-lg border border-white/15 px-4 py-2.5 font-mono text-xs font-semibold uppercase tracking-wider text-slate-100 transition hover:border-[#F26D3D] hover:text-[#F26D3D]"
+                    variant="outline"
+                    size="sm"
+                    className="group self-start"
                   >
                     En savoir plus
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden />
-                  </button>
+                  </SnakeButton>
                 </div>
               </article>
             ))}
@@ -210,13 +208,15 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
                 Nous concevons des solutions sur-mesure. Expliquons-nous votre
                 cas d&apos;usage en 30 minutes.
               </p>
-              <button
+              <SnakeButton
                 onClick={() => onNavigate("contact")}
-                className="inline-flex items-center gap-2 rounded-lg bg-[#F26D3D] px-6 py-3 font-mono text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-[#ff7a4a] neon-glow"
+                variant="primary"
+                size="lg"
+                className="neon-glow"
               >
                 Briefing express
                 <ArrowRight className="h-4 w-4" aria-hidden />
-              </button>
+              </SnakeButton>
             </article>
           </motion.div>
         </div>
@@ -237,13 +237,13 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4 }}
-                className="glass rounded-2xl p-6"
+                className="glass-card rounded-2xl p-6"
               >
                 <f.icon className="h-7 w-7 text-[#F26D3D] mb-3" aria-hidden />
                 <h4 className="font-display text-lg font-bold text-slate-50 mb-1.5">
                   {f.t}
                 </h4>
-                <p className="text-sm text-slate-400 leading-relaxed">{f.d}</p>
+                <p className="text-sm text-slate-300 leading-relaxed">{f.d}</p>
               </motion.div>
             ))}
           </div>
@@ -256,7 +256,7 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
 /* === Indicateur de phase (lead-in / drift / lead-out) ===
  * Trois segments qui s'illuminent selon la position du scroll.
  */
-function PhaseIndicator({ progress }: { progress: ReturnType<typeof useScroll>["scrollYProgress"] }) {
+function PhaseIndicator({ progress }: { progress: MotionValue<number> }) {
   const leadIn = useTransform(progress, [0, 0.15], [1, 0.3]);
   const drift = useTransform(progress, [0.15, 0.16, 0.84, 0.85], [0.3, 1, 1, 0.3]);
   const leadOut = useTransform(progress, [0.85, 1], [0.3, 1]);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, Clock, User, Hash, Newspaper } from "lucide-react";
 import {
@@ -11,7 +11,6 @@ import {
 } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { PixelRevealTitle } from "@/components/PixelRevealTitle";
-import { toast } from "@/hooks/use-toast";
 
 type Filter = BlogCategory | "Tous";
 
@@ -38,15 +37,6 @@ export function BlogView() {
     return BLOG_POSTS.filter((p) => p.category === filter);
   }, [filter]);
 
-  // Handler de clic sur un article — toast "bientôt disponible"
-  // (les pages articles dédiées seront ajoutées dans une prochaine itération)
-  const handleArticleClick = useCallback((post: BlogPost) => {
-    toast({
-      title: "Article bientôt disponible",
-      description: `"${post.title}" sera publié prochainement. Inscrivez-vous à la newsletter pour être notifié.`,
-    });
-  }, []);
-
   return (
     <div className="relative">
       {/* En-tête */}
@@ -59,29 +49,25 @@ export function BlogView() {
             className="max-w-3xl"
           >
             <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
-              <span className="text-glass">{"// Insights — Technical Reports"}</span>
+              {"// Insights — Technical Reports"}
             </p>
             <h1 className="font-display text-4xl md:text-6xl font-bold text-[#F26D3D] tracking-tight mb-4">
               <PixelRevealTitle
                 text="Rapports techniques &"
                 as="span"
                 className="block"
-                wordClassName="text-glass-orange"
                 delay={0.1}
               />
               <PixelRevealTitle
                 text="retours de terrain"
                 as="span"
                 className="block text-neon"
-                wordClassName="text-glass-orange-strong"
                 delay={0.5}
               />
             </h1>
             <p className="text-slate-300 leading-relaxed text-lg">
-              <span className="text-glass">
-                Nos architectes partagent leurs analyses : patterns de production,
-                choix d&apos;outillage et leçons apprises sur les missions.
-              </span>
+              Nos architectes partagent leurs analyses : patterns de production,
+              choix d&apos;outillage et leçons apprises sur les missions.
             </p>
           </motion.div>
         </div>
@@ -111,7 +97,7 @@ export function BlogView() {
                 {cat === "Tous" ? "Tous les rapports" : cat}
               </button>
             ))}
-            <span className="ml-auto font-mono text-[11px] uppercase tracking-widest text-slate-500">
+            <span className="ml-auto font-mono text-[11px] uppercase tracking-widest text-slate-400">
               {filtered.length} entrée{filtered.length > 1 ? "s" : ""}
             </span>
           </div>
@@ -121,7 +107,7 @@ export function BlogView() {
       {/* Article à la une — format "featured news" style Armory */}
       <section className="pb-12">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <FeaturedNews posts={filtered.slice(0, 3)} onArticleClick={handleArticleClick} />
+          <FeaturedNews posts={filtered.slice(0, 3)} />
         </div>
       </section>
 
@@ -131,16 +117,14 @@ export function BlogView() {
           <motion.div layout className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             <AnimatePresence mode="popLayout">
               {filtered.map((post) => (
-                <motion.button
+                <motion.article
                   key={post.id}
                   layout
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3 }}
-                  onClick={() => handleArticleClick(post)}
-                  aria-label={`Lire l'article : ${post.title}`}
-                  className="group glass rounded-2xl overflow-hidden flex flex-col text-left hover:border-[#F26D3D]/30 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-[#F26D3D] focus-visible:outline-offset-2"
+                  className="group glass-card rounded-2xl overflow-hidden flex flex-col hover:border-[#F26D3D]/30 transition-colors cursor-pointer"
                 >
                   {/* Visuel "rapport technique" avec motifs */}
                   <div className="relative h-40 overflow-hidden bg-gradient-to-br from-[#022859] to-[#011C40]">
@@ -154,12 +138,12 @@ export function BlogView() {
                       aria-hidden
                     />
                     {/* Métadonnées type terminal */}
-                    <div className="absolute inset-0 p-4 flex flex-col justify-between font-mono text-[10px] text-slate-400">
+                    <div className="absolute inset-0 p-4 flex flex-col justify-between font-mono text-[10px] text-slate-300">
                       <div className="flex items-center justify-between">
                         <span className="rounded-full border border-white/15 bg-black/40 px-2 py-0.5 uppercase tracking-widest text-[#F26D3D]">
                           {post.category}
                         </span>
-                        <span className="text-slate-500">REPORT_{post.id.slice(0, 6).toUpperCase()}</span>
+                        <span className="text-slate-400">REPORT_{post.id.slice(0, 6).toUpperCase()}</span>
                       </div>
                       <div className="space-y-1">
                         <p className="flex items-center gap-1.5"><Clock className="h-3 w-3" aria-hidden /> {post.readingTime}</p>
@@ -172,13 +156,13 @@ export function BlogView() {
 
                   {/* Corps */}
                   <div className="p-5 flex flex-col flex-1">
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 mb-2">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 mb-2">
                       {formatDate(post.date)}
                     </p>
                     <h3 className="font-display text-lg font-bold text-slate-50 mb-2 leading-snug group-hover:text-[#F26D3D] transition-colors">
                       {post.title}
                     </h3>
-                    <p className="text-sm text-slate-400 leading-relaxed mb-4 flex-1">
+                    <p className="text-sm text-slate-300 leading-relaxed mb-4 flex-1">
                       {post.excerpt}
                     </p>
 
@@ -187,7 +171,7 @@ export function BlogView() {
                       {post.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="inline-flex items-center gap-0.5 rounded-md border border-white/10 bg-black/20 px-1.5 py-0.5 font-mono text-[9px] text-slate-400"
+                          className="inline-flex items-center gap-0.5 rounded-md border border-white/10 bg-black/20 px-1.5 py-0.5 font-mono text-[9px] text-slate-300"
                         >
                           <Hash className="h-2.5 w-2.5" aria-hidden />
                           {tag}
@@ -204,20 +188,20 @@ export function BlogView() {
                       >
                         {post.category}
                       </span>
-                      <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-widest text-slate-400 group-hover:text-[#F26D3D] transition-colors">
+                      <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-widest text-slate-300 group-hover:text-[#F26D3D] transition-colors">
                         Lire
                         <ArrowUpRight className="h-3 w-3" aria-hidden />
                       </span>
                     </div>
                   </div>
-                </motion.button>
+                </motion.article>
               ))}
             </AnimatePresence>
           </motion.div>
 
           {filtered.length === 0 && (
             <div className="text-center py-20">
-              <p className="font-mono text-sm text-slate-500 uppercase tracking-widest">
+              <p className="font-mono text-sm text-slate-400 uppercase tracking-widest">
                 Aucun rapport dans cette catégorie.
               </p>
             </div>
@@ -232,32 +216,26 @@ export function BlogView() {
  * Date + titre large + catégorie + lien "Lire l'article →"
  * Séparateurs fins entre entrées, hover révèle une barre orange.
  */
-function FeaturedNews({
-  posts,
-  onArticleClick,
-}: {
-  posts: BlogPost[];
-  onArticleClick: (post: BlogPost) => void;
-}) {
+function FeaturedNews({ posts }: { posts: BlogPost[] }) {
   if (posts.length === 0) return null;
 
   return (
     <div className="border-t border-white/10">
       {posts.map((post, i) => (
-        <motion.button
+        <motion.a
           key={post.id}
-          onClick={() => onArticleClick(post)}
-          aria-label={`Lire l'article : ${post.title}`}
+          href="#"
+          onClick={(e) => e.preventDefault()}
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.4, delay: i * 0.08 }}
-          className="group relative block w-full text-left border-b border-white/10 py-6 md:py-8 hover:bg-white/[0.02] transition-colors focus-visible:outline-2 focus-visible:outline-[#F26D3D] focus-visible:outline-offset-2"
+          className="group relative block border-b border-white/10 py-6 md:py-8 hover:bg-white/[0.02] transition-colors"
         >
           <div className="grid grid-cols-12 gap-4 md:gap-8 items-center">
             {/* Date */}
             <div className="col-span-12 md:col-span-2">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400">
                 {formatDate(post.date)}
               </p>
               <p className="font-mono text-[10px] uppercase tracking-widest text-[#F26D3D] mt-1">
@@ -297,7 +275,7 @@ function FeaturedNews({
             className="absolute left-0 top-0 h-px bg-[#F26D3D] w-0 group-hover:w-full transition-all duration-500"
             aria-hidden
           />
-        </motion.button>
+        </motion.a>
       ))}
     </div>
   );

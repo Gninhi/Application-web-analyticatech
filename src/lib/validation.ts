@@ -20,9 +20,10 @@ const BLOCKED_DOMAINS = [
 ];
 
 export const contactSchema = z.object({
-  // Honeypot anti-spam — doit rester vide côté client légitime.
-  // Simplifié (audit : max(0) autorise déjà "" et est plus simple que .or(z.literal("")))
+  // Multi-honeypot anti-spam — tous doivent rester vides côté client légitime.
   companyUrl: z.string().max(0, "Champ honeypot invalide").optional(),
+  website: z.string().max(0, "Champ honeypot invalide").optional(),
+  fax: z.string().max(0, "Champ honeypot invalide").optional(),
 
   prenom: z
     .string()

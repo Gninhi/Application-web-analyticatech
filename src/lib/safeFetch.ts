@@ -40,15 +40,13 @@ export async function safeFetch<T = unknown>(
     const timer = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
-      // Construction robuste des headers : on utilise l'API Headers qui
-      // accepte HeadersInit (Record, Headers ou array de paires).
-      const headers = new Headers(init.headers);
-      headers.set("Content-Type", "application/json");
-
       const res = await fetch(input, {
         ...init,
         signal: controller.signal,
-        headers,
+        headers: {
+          "Content-Type": "application/json",
+          ...(init.headers ?? {}),
+        },
       });
 
       clearTimeout(timer);
@@ -70,25 +68,15 @@ export async function safeFetch<T = unknown>(
       clearTimeout(timer);
       lastError = err;
 
-      // JSON invalide (réponse HTML d'un proxy, etc.) → non-retryable
-      if (err instanceof SyntaxError) {
-        throw new FetchError(
-          `Réponse non-JSON reçue de ${input}`,
-          0,
-          input
-        );
-      }
-
-      // Ne pas retry sur les erreurs client 4xx (sauf 408 timeout et 429 trop de requêtes)
-      if (err instanceof FetchError && err.status >= 400 && err.status < 500 && err.status !== 429 && err.status !== 408) {
+      // Ne pas retry sur les erreurs client 4xx (sauf 429 trop de requêtes)
+      if (err instanceof FetchError && err.status >= 400 && err.status < 500 && err.status !== 429) {
         throw err;
       }
 
-      // Backoff exponentiel avec jitter avant la prochaine tentative
+      // Backoff exponentiel avant la prochaine tentative
       if (attempt < retries) {
-        const base = Math.min(1000 * 2 ** attempt, 4000);
-        const jitter = Math.random() * 400;
-        await new Promise((r) => setTimeout(r, base + jitter));
+        const delay = Math.min(1000 * 2 ** attempt, 4000);
+        await new Promise((r) => setTimeout(r, delay));
       }
     }
   }

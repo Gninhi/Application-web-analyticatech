@@ -40,7 +40,7 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div className="min-h-screen flex flex-col items-center justify-center px-6 grid-military bg-[#011C40]">
-          <div className="glass-strong rounded-2xl p-8 md:p-12 max-w-lg w-full text-center">
+          <div className="glass-card rounded-2xl p-8 md:p-12 max-w-lg w-full text-center">
             <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10">
               <AlertTriangle className="h-8 w-8 text-[#F26D3D]" aria-hidden />
             </div>
@@ -52,7 +52,7 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
             <h1 className="font-display text-2xl md:text-3xl font-bold text-slate-100 mb-3">
               Défaillance système détectée
             </h1>
-            <p className="text-slate-400 text-sm mb-2">
+            <p className="text-slate-300 text-sm mb-2">
               Une erreur inattendue est survenue lors du rendu de l&apos;interface.
               L&apos;incident a été journalisé pour analyse.
             </p>

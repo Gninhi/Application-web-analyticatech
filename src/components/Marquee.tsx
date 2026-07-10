@@ -3,63 +3,69 @@
 import { cn } from "@/lib/utils";
 
 interface MarqueeProps {
-  items: string[];
-  /** Icône séparateur entre items (défaut: point orange). */
-  separator?: "dot" | "slash" | "arrow";
-  /** Sens du défilement. */
+  /** Items à afficher en boucle. Chaque item est rendu via `renderItem`. */
+  items: unknown[];
+  /** Fonction de rendu pour chaque item (reçoit l'item + l'index). */
+  renderItem: (item: unknown, index: number) => React.ReactNode;
+  /** Sens du défilement. Défaut : "left". */
   direction?: "left" | "right";
-  /** Classes du texte. */
-  className?: string;
-  /** Vitesse (durée de l'animation en s, défaut 40). */
+  /** Vitesse (durée de l'animation en s). Défaut : 40. */
   speed?: number;
+  /** Classes additionnelles sur le conteneur. */
+  className?: string;
+  /** Afficher les dégradés de fondu sur les bords. Défaut : true. */
+  fadeEdges?: boolean;
 }
 
 /**
- * Marquee — bandeau horizontal défilant infini.
- * Les items sont dupliqués pour une boucle sans coupure.
- * Pause au survol (via .marquee-container dans globals.css).
+ * Marquee — composant unifié de défilement horizontal infini.
+ * Type "données boursières" : fluide, GPU-only, pause au survol.
+ *
+ * L'animation est définie en inline style pour garantir la priorité
+ * sur Tailwind v4 (qui peut écraser les styles au niveau racine).
  */
 export function Marquee({
   items,
-  separator = "dot",
+  renderItem,
   direction = "left",
-  className,
   speed = 40,
+  className,
+  fadeEdges = true,
 }: MarqueeProps) {
-  // Duplication pour la boucle continue
+  if (!items.length) return null;
+
+  // Duplication pour la boucle continue (translateX -50%)
   const doubled = [...items, ...items];
 
-  const sep = {
-    dot: <span className="text-[#F26D3D] text-xs">●</span>,
-    slash: <span className="text-[#F26D3D]">/</span>,
-    arrow: <span className="text-[#F26D3D]">→</span>,
-  }[separator];
-
-  const trackClass = direction === "left" ? "marquee-track" : "marquee-track-reverse";
+  // Animation inline pour contourner les problèmes de priorité CSS Tailwind v4
+  const animationName = direction === "left" ? "marquee" : "marquee-reverse";
+  const trackStyle: React.CSSProperties = {
+    display: "flex",
+    width: "max-content",
+    animationName,
+    animationDuration: `${speed}s`,
+    animationTimingFunction: "linear",
+    animationIterationCount: "infinite",
+    willChange: "transform",
+  };
 
   return (
     <div
-      className={cn(
-        "marquee-container relative overflow-hidden py-4 border-y border-white/10",
-        className
-      )}
+      className={cn("marquee-container relative overflow-hidden group", className)}
     >
-      <div
-        className={trackClass}
-        style={{ animationDuration: `${speed}s` }}
-      >
+      <div className="marquee-track" style={trackStyle}>
         {doubled.map((item, i) => (
-          <span key={i} className="flex items-center gap-6 px-6 shrink-0">
-            <span className="font-display text-2xl md:text-4xl font-bold tracking-tight text-slate-100/80">
-              {item}
-            </span>
-            <span className="mx-2" aria-hidden>{sep}</span>
-          </span>
+          <div key={i} className="shrink-0">
+            {renderItem(item, i)}
+          </div>
         ))}
       </div>
-      {/* Dégradés de fondu sur les bords */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#011C40] to-transparent" aria-hidden />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#011C40] to-transparent" aria-hidden />
+      {fadeEdges && (
+        <>
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#011C40] to-transparent" aria-hidden />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#011C40] to-transparent" aria-hidden />
+        </>
+      )}
     </div>
   );
 }

@@ -34,13 +34,14 @@ export function getServiceIcon(name: string): LucideIcon {
   return ICONS[name] ?? BrainCircuit;
 }
 
-/** Images de fond générées par IA, associées à chaque service. */
+/** Images de fond générées par IA, associées à chaque service.
+ *  Format WebP pour optimiser Lighthouse (30% plus léger que PNG). */
 const BG_IMAGES: Record<string, string> = {
-  "01": "/services/bg-01-ia.png",
-  "02": "/services/bg-02-transfo.png",
-  "03": "/services/bg-03-auto.png",
-  "04": "/services/bg-04-agents.png",
-  "05": "/services/bg-05-bi.png",
+  "01": "/services/bg-01-ia.webp",
+  "02": "/services/bg-02-transfo.webp",
+  "03": "/services/bg-03-auto.webp",
+  "04": "/services/bg-04-agents.webp",
+  "05": "/services/bg-05-bi.webp",
 };
 
 /** Retourne l'URL de l'image de fond pour un index de service. */

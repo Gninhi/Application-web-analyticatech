@@ -67,22 +67,12 @@ export function checkRateLimit(
   };
 }
 
-/**
- * Récupère l'IP cliente de manière fiable.
- *
- * Sécurité (audit) :
- *  - On privilégie `x-real-ip` (posé par Caddy, non-spoofable car Caddy
- *    override systématiquement cet header avec {remote_host}).
- *  - `x-forwarded-for` est aussi override par Caddy mais on le met en second
- *    pour défense en profondeur.
- *  - Le fallback "unknown" shared bucket est acceptable dans notre config
- *    mono-instance Caddy (toutes les requêtes passent par le reverse proxy).
- */
+/** Récupère l'IP cliente de manière fiable (Headers standards + fallback). */
 export function getClientIp(req: Request): string {
   const headers = req.headers;
   return (
-    headers.get("x-real-ip") ||
     headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    headers.get("x-real-ip") ||
     headers.get("cf-connecting-ip") ||
     "unknown"
   );

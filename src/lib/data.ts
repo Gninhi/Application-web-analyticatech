@@ -432,65 +432,7 @@ export const MARQUEE_KEYWORDS = [
 ];
 
 /* ============================================================
- * FEATURES — section précise style cula.tech
- * Liste numérotée de capacités clés avec descriptions concises.
- * ============================================================ */
-
-export interface Feature {
-  id: string;
-  index: string;
-  title: string;
-  description: string;
-  tag: string;
-}
-
-export const FEATURES: Feature[] = [
-  {
-    id: "inventory",
-    index: "01",
-    title: "Inventory tracking",
-    description:
-      "Suivi en temps réel des unités IA, des flux de données et des processus automatisés. Traçabilité complète de bout en bout, prête à l'audit.",
-    tag: "Temps réel",
-  },
-  {
-    id: "integrations",
-    index: "02",
-    title: "On-site integrations",
-    description:
-      "Connexion directe aux capteurs, APIs et systèmes existants. Capture automatique des données opérationnelles, sans saisie manuelle.",
-    tag: "API-first",
-  },
-  {
-    id: "quality",
-    index: "03",
-    title: "Unit quality management",
-    description:
-      "Paramètres qualité documentés et vérifiés pour chaque unité. Toutes les données justificatives stockées pour conformité régulateur.",
-    tag: "Conformité",
-  },
-  {
-    id: "monitoring",
-    index: "04",
-    title: "Real-time production monitoring",
-    description:
-      "Performance suivie via dashboards live et KPI. Détection des déviations, reporting fiable pour vérification et émission de crédits.",
-    tag: "Observability",
-  },
-];
-
-/* Normes & certifications affichées dans la section "Standards" */
-export const STANDARDS = [
-  "ISO 27001",
-  "SecNumCloud",
-  "RGPD",
-  "SOC 2",
-  "HDS",
-  "EN 301 549",
-];
-
-/* ============================================================
- * HERO STATS — métriques du bandeau hero (externalisées du JSX)
+ * HERO STATS — métriques du bandeau hero (fallback statique)
  * ============================================================ */
 
 export interface HeroStat {
@@ -499,7 +441,7 @@ export interface HeroStat {
 }
 
 export const HERO_STATS: HeroStat[] = [
-  { v: "120+", l: "Missions livrées" },
+  { v: "127+", l: "Missions livrées" },
   { v: "38%", l: "Coûts réduits" },
   { v: "99.98%", l: "Uptime plateforme" },
   { v: "4.9/5", l: "Satisfaction C-Level" },

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Cpu, Send, ShieldCheck, Github, Linkedin, Twitter } from "lucide-react";
 import { NAV_ITEMS, type ViewKey } from "@/lib/data";
@@ -9,8 +9,8 @@ interface FooterProps {
   onNavigate: (view: ViewKey) => void;
 }
 
-/** Horloge UTC isolée dans son propre composant pour éviter le re-render du Footer complet. */
-function UtcClock() {
+/** Horloge temps réel au format UTC HH:MM:SS. */
+function useUtcClock() {
   const [time, setTime] = useState<string>("");
   useEffect(() => {
     const update = () => {
@@ -24,35 +24,24 @@ function UtcClock() {
     const id = setInterval(update, 1000);
     return () => clearInterval(id);
   }, []);
-  return <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400">UTC {time}</span>;
+  return time;
 }
 
-const SOCIAL_LINKS = [
-  { icon: Linkedin, label: "LinkedIn", url: "https://www.linkedin.com" },
-  { icon: Twitter, label: "Twitter / X", url: "https://twitter.com" },
-  { icon: Github, label: "GitHub", url: "https://github.com" },
-] as const;
-
 export function Footer({ onNavigate }: FooterProps) {
+  const utc = useUtcClock();
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
-  const handleSubscribe = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-      // Validation basique côté client (le vrai envoi se fait via API en production)
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
-      setSubscribed(true);
-      setEmail("");
-      const t = setTimeout(() => setSubscribed(false), 4000);
-      // Cleanup au unmount
-      return () => clearTimeout(t);
-    },
-    [email]
-  );
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !email.includes("@")) return;
+    setSubscribed(true);
+    setEmail("");
+    setTimeout(() => setSubscribed(false), 4000);
+  };
 
   return (
-    <footer className="relative mt-auto border-t border-white/10 glass-strong">
+    <footer className="relative mt-auto border-t border-white/10 glass-card">
       <div className="mx-auto max-w-7xl px-4 md:px-6 py-12 md:py-16">
         <div className="grid gap-10 md:grid-cols-12">
           {/* Marque + statut */}
@@ -82,7 +71,9 @@ export function Footer({ onNavigate }: FooterProps) {
                 System Online
               </span>
               <span className="mx-1 h-3 w-px bg-white/15" aria-hidden />
-              <UtcClock />
+              <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400">
+                UTC {utc}
+              </span>
             </div>
           </div>
 
@@ -136,7 +127,7 @@ export function Footer({ onNavigate }: FooterProps) {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="vous@entreprise.com"
                   aria-label="Adresse email pour la newsletter"
-                  className="terminal-input flex-1 min-w-0 rounded-lg bg-black/30 border border-white/10 px-3 py-2 font-mono text-xs text-slate-100 placeholder:text-slate-600 outline-none transition"
+                  className="terminal-input flex-1 min-w-0 rounded-lg bg-black/30 border border-white/10 px-3 py-2 font-mono text-xs text-slate-100 placeholder:text-slate-500 outline-none transition"
                 />
                 <button
                   type="submit"
@@ -154,14 +145,13 @@ export function Footer({ onNavigate }: FooterProps) {
             </form>
 
             <div className="flex items-center gap-3 mt-5">
-              {SOCIAL_LINKS.map(({ icon: Icon, label, url }) => (
+              {[Linkedin, Twitter, Github].map((Icon, i) => (
                 <a
-                  key={label}
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  key={i}
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
                   className="flex h-9 w-9 items-center justify-center rounded-lg glass text-slate-400 hover:text-[#F26D3D] transition-colors"
-                  aria-label={label}
+                  aria-label="Réseau social"
                 >
                   <Icon className="h-4 w-4" aria-hidden />
                 </a>
@@ -172,15 +162,15 @@ export function Footer({ onNavigate }: FooterProps) {
 
         {/* Barre inférieure */}
         <div className="mt-12 pt-6 border-t border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400">
             © {new Date().getFullYear()} Analyticatech — Tous droits réservés
           </p>
           <div className="flex items-center gap-4">
-            <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-slate-500">
+            <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-slate-400">
               <ShieldCheck className="h-3.5 w-3.5 text-[#4CAF50]" aria-hidden />
               ISO 27001 · RGPD
             </span>
-            <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400">
               v2.4.1
             </span>
           </div>

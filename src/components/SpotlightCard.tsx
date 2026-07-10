@@ -44,7 +44,7 @@ export function SpotlightCard({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "group relative overflow-hidden rounded-2xl glass transition-all duration-300",
+        "group relative overflow-hidden rounded-2xl glass-card transition-all duration-300",
         className
       )}
       style={

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowRight, Cpu } from "lucide-react";
 import { NAV_ITEMS, type ViewKey } from "@/lib/data";
 import { ScrambleText } from "./ScrambleText";
+import { SnakeButton } from "@/components/SnakeButton";
 import { cn } from "@/lib/utils";
 
 interface NavbarProps {
@@ -12,95 +13,67 @@ interface NavbarProps {
   onNavigate: (view: ViewKey) => void;
 }
 
+const SCROLL_THRESHOLD = 16; // px avant d'activer le glass
+const HIDE_THRESHOLD = 120;  // px avant d'activer l'auto-hide
+const SCROLL_DELTA = 6;      // delta min pour détecter une direction
+
 export function Navbar({ activeView, onNavigate }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const dialogRef = useRef<HTMLDivElement>(null);
-  const openerRef = useRef<HTMLButtonElement>(null);
+  const lastScrollY = useRef(0);
 
-  // Effet "sticky glass" qui s'active au scroll (throttle via rAF)
+  // Auto-hide on scroll down, show on scroll up (throttle rAF)
   useEffect(() => {
     let ticking = false;
+
     const onScroll = () => {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
-        setScrolled(window.scrollY > 16);
+        const currentY = window.scrollY;
+        const delta = currentY - lastScrollY.current;
+
+        setScrolled(currentY > SCROLL_THRESHOLD);
+
+        // Auto-hide : masque si on scroll vers le bas (après HIDE_THRESHOLD)
+        // et que le menu mobile n'est pas ouvert.
+        if (!mobileOpen && currentY > HIDE_THRESHOLD && delta > SCROLL_DELTA) {
+          setHidden(true);
+        } else if (delta < -SCROLL_DELTA || currentY < HIDE_THRESHOLD) {
+          setHidden(false);
+        }
+
+        lastScrollY.current = currentY;
         ticking = false;
       });
     };
+
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [mobileOpen]);
 
   // Bloque le scroll body quand le command panel mobile est ouvert
-  // + Focus trap + Escape + restauration du focus sur fermeture (audit a11y)
   useEffect(() => {
-    if (!mobileOpen) return;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    // Focus le premier élément focusable du dialog
-    const dialog = dialogRef.current;
-    if (dialog) {
-      const focusable = dialog.querySelector<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      focusable?.focus();
-    }
-
-    // Focus trap : Tab et Shift+Tab restent dans le dialog
-    const handleTab = (e: KeyboardEvent) => {
-      if (e.key !== "Tab" || !dialogRef.current) return;
-      const focusables = dialogRef.current.querySelectorAll<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      if (focusables.length === 0) return;
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-
-    // Escape pour fermer
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setMobileOpen(false);
-      }
-    };
-
-    document.addEventListener("keydown", handleTab);
-    document.addEventListener("keydown", handleEscape);
-
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => {
-      document.body.style.overflow = prevOverflow;
-      document.removeEventListener("keydown", handleTab);
-      document.removeEventListener("keydown", handleEscape);
-      // Restauration du focus sur le bouton qui a ouvert le dialog
-      openerRef.current?.focus();
+      document.body.style.overflow = "";
     };
   }, [mobileOpen]);
 
-  const handleNav = useCallback(
-    (view: ViewKey) => {
-      onNavigate(view);
-      setMobileOpen(false);
-    },
-    [onNavigate]
-  );
+  const handleNav = (view: ViewKey) => {
+    onNavigate(view);
+    setMobileOpen(false);
+  };
 
   return (
     <>
       <header
         className={cn(
-          "fixed top-0 inset-x-0 z-50 transition-all duration-300",
-          scrolled ? "py-2" : "py-4"
+          "fixed top-0 inset-x-0 z-50 transition-transform duration-300 ease-out",
+          scrolled ? "py-2" : "py-4",
+          hidden ? "-translate-y-full" : "translate-y-0"
         )}
       >
         <div className="mx-auto max-w-7xl px-4 md:px-6">
@@ -155,22 +128,22 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
 
             {/* CTA desktop + bouton mobile */}
             <div className="flex items-center gap-2">
-              <button
+              <SnakeButton
                 onClick={() => handleNav("contact")}
-                className="hidden md:inline-flex items-center gap-2 rounded-lg bg-[#F26D3D] px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-[#ff7a4a] neon-glow"
+                variant="primary"
+                size="sm"
+                className="hidden md:inline-flex neon-glow"
               >
                 Demander un devis
                 <ArrowRight className="h-3.5 w-3.5" aria-hidden />
-              </button>
+              </SnakeButton>
 
               {/* Bouton hamburger mobile */}
               <button
-                ref={openerRef}
                 onClick={() => setMobileOpen(true)}
                 className="md:hidden flex h-10 w-10 items-center justify-center rounded-lg glass text-slate-100"
                 aria-label="Ouvrir le menu de navigation"
                 aria-expanded={mobileOpen}
-                aria-controls="mobile-menu"
               >
                 <Menu className="h-5 w-5" aria-hidden />
               </button>
@@ -188,8 +161,6 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             className="fixed inset-0 z-[60] md:hidden bg-[#011C40]/95 backdrop-blur-xl grid-military flex flex-col"
-            ref={dialogRef}
-            id="mobile-menu"
             role="dialog"
             aria-modal="true"
             aria-label="Menu de navigation mobile"
@@ -229,7 +200,7 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
                   <span className="font-display text-3xl font-bold tracking-tight">
                     {item.label}
                   </span>
-                  <span className="font-mono text-[11px] uppercase tracking-widest text-slate-500 group-hover:text-[#F26D3D] transition-colors">
+                  <span className="font-mono text-[11px] uppercase tracking-widest text-slate-400 group-hover:text-[#F26D3D] transition-colors">
                     {item.hint}
                   </span>
                 </motion.button>
@@ -238,14 +209,16 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
 
             {/* CTA bas de panel */}
             <div className="px-6 py-6 border-t border-white/10">
-              <button
+              <SnakeButton
                 onClick={() => handleNav("contact")}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[#F26D3D] px-5 py-3.5 font-mono text-sm font-semibold uppercase tracking-wider text-white neon-glow"
+                variant="primary"
+                size="lg"
+                className="w-full neon-glow"
               >
                 Demander un devis
                 <ArrowRight className="h-4 w-4" aria-hidden />
-              </button>
-              <p className="mt-4 text-center font-mono text-[10px] uppercase tracking-widest text-slate-600">
+              </SnakeButton>
+              <p className="mt-4 text-center font-mono text-[10px] uppercase tracking-widest text-slate-400">
                 Analyticatech — Secure Connection Established
               </p>
             </div>
