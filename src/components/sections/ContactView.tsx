@@ -137,7 +137,7 @@ export function ContactView() {
             className="max-w-3xl"
           >
             <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
-              {"// Secure Channel — Encrypted"}
+              {"// Canal Sécurisé — Chiffré"}
             </p>
             <h1 className="font-display text-4xl md:text-6xl font-bold text-[#F26D3D] tracking-tight mb-4">
               <PixelRevealTitle
@@ -175,7 +175,7 @@ export function ContactView() {
                 <span className="h-3 w-3 rounded-full bg-[#4CAF50]/70" aria-hidden />
                 <span className="h-3 w-3 rounded-full bg-slate-500/60" aria-hidden />
                 <span className="ml-3 font-mono text-[11px] uppercase tracking-widest text-slate-300">
-                  analyticatech@secure ~ % contact --new
+                  analyticatech@sécurisé ~ % contact --nouveau
                 </span>
                 <Terminal className="ml-auto h-4 w-4 text-slate-400" aria-hidden />
               </div>
@@ -187,7 +187,7 @@ export function ContactView() {
                   <span className="text-slate-500">:</span>
                   <span className="text-sky-400">~/contact</span>
                   <span className="text-slate-500">$</span>{" "}
-                  <span className="text-slate-300">initier_session --encrypted</span>
+                  <span className="text-slate-300">initier_session --chiffré</span>
                   <span className="blink-cursor" />
                 </p>
 
@@ -331,7 +331,7 @@ export function ContactView() {
                   className="absolute opacity-0 pointer-events-none -left-[9999px] h-0 w-0"
                 />
 
-                {/* Bouton EXECUTE */}
+                {/* Bouton EXÉCUTER */}
                 <div className="pt-2">
                   <SnakeButton
                     type="submit"
@@ -343,12 +343,12 @@ export function ContactView() {
                     {status === "submitting" ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-                        ENCRYPTION... TRANSMISSION...
+                        CHIFFREMENT... TRANSMISSION...
                       </>
                     ) : (
                       <>
                         <ChevronRight className="h-4 w-4" aria-hidden />
-                        EXECUTE
+                        EXÉCUTER
                         <ChevronRight className="h-4 w-4 rotate-180" aria-hidden />
                       </>
                     )}
@@ -397,9 +397,9 @@ export function ContactView() {
             <div className="mt-4 flex flex-wrap items-center gap-2">
               {[
                 { icon: Lock, t: "TLS 1.3" },
-                { icon: ShieldCheck, t: "RGPD compliant" },
+                { icon: ShieldCheck, t: "Conforme RGPD" },
                 { icon: Lock, t: "Chiffré bout-en-bout" },
-                { icon: ShieldCheck, t: "Anti-spam honeypot" },
+                { icon: ShieldCheck, t: "Pot-de-miel anti-spam" },
               ].map((b) => (
                 <span
                   key={b.t}

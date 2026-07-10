@@ -109,10 +109,10 @@ export function PageLoader() {
 
           {/* Logs de chargement (signature cyberpunk) */}
           <div className="mt-6 font-mono text-[10px] text-slate-500 h-4">
-            {progress < 30 && <span>› Mounting particle field…</span>}
-            {progress >= 30 && progress < 60 && <span>› Calibrating neural mesh…</span>}
-            {progress >= 60 && progress < 90 && <span>› Establishing secure channel…</span>}
-            {progress >= 90 && <span className="text-[#4CAF50]">› System ready.</span>}
+            {progress < 30 && <span>› Initialisation du champ de particules…</span>}
+            {progress >= 30 && progress < 60 && <span>› Calibrage du maillage neuronal…</span>}
+            {progress >= 60 && progress < 90 && <span>› Établissement du canal sécurisé…</span>}
+            {progress >= 90 && <span className="text-[#4CAF50]">› Système prêt.</span>}
           </div>
         </motion.div>
       )}

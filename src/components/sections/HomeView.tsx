@@ -145,7 +145,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
         </div>
       </section>
 
-      {/* ============ SERVICE TICKER — défilement dynamique des services ============ */}
+      {/* ============ BANDEAU DE SERVICES — défilement dynamique des services ============ */}
       <Marquee
         items={SERVICES}
         speed={35}
@@ -172,11 +172,11 @@ export function HomeView({ onNavigate }: HomeViewProps) {
         }}
       />
 
-      {/* ============ MONOLITH ============ */}
+      {/* ============ MONOLITHE ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <SectionHeading
-            tag="// 01 — MONOLITH"
+            tag="// 01 — MONOLITHE"
             title="Une expertise, cinq piliers technologiques"
             description="Un monolithe d'expertise couvrant l'ensemble de la chaîne de valeur de l'IA appliquée — de la donnée brute à la décision autonome."
           />
@@ -266,11 +266,11 @@ export function HomeView({ onNavigate }: HomeViewProps) {
         </div>
       </section>
 
-      {/* ============ DATA STREAM ============ */}
+      {/* ============ FLUX DE DONNÉES ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <SectionHeading
-            tag="// 02 — DATA STREAM"
+            tag="// 02 — FLUX DE DONNÉES"
             title="La donnée, en flux continu"
             description="Un aperçu live de notre infrastructure de monitoring. Chaque mission alimente une télémétrie partagée et observable."
           />
@@ -317,7 +317,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
               <div className="flex items-center gap-2 mb-4 pb-3 border-b border-white/10">
                 <Activity className="h-4 w-4 text-[#F26D3D]" aria-hidden />
                 <span className="font-mono text-[11px] uppercase tracking-widest text-slate-300">
-                  Live Activity Stream
+                  Flux d'activité en direct
                 </span>
                 <span className="ml-auto h-2 w-2 rounded-full bg-[#4CAF50] animate-pulse" aria-hidden />
               </div>
@@ -345,7 +345,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
         </div>
       </section>
 
-      {/* ============ MARQUEE BAND (mots-clés signature) ============ */}
+      {/* ============ BANDEAU DÉFILANT (mots-clés signature) ============ */}
       <Marquee
         items={MARQUEE_KEYWORDS}
         speed={45}
@@ -360,11 +360,11 @@ export function HomeView({ onNavigate }: HomeViewProps) {
         )}
       />
 
-      {/* ============ CAPABILITIES — stretched text signature ============ */}
+      {/* ============ CAPACITÉS — texte étiré signature ============ */}
       <section className="relative py-24 md:py-32">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <SectionHeading
-            tag="// 03 — CAPABILITIES"
+            tag="// 03 — CAPACITÉS"
             title="Un système voit. Tous savent."
             description="Nos architectures agentiques fonctionnent en réseau coordonné. La signature d'une plateforme de classe bancaire : détection, réponse, apprentissage — en continu."
           />
@@ -379,7 +379,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
                 transition={{ duration: 0.5, delay: i * 0.08 }}
                 className="group relative overflow-hidden rounded-2xl glass-card hover:border-[#F26D3D]/30 transition-colors"
               >
-                {/* Texte étiré signature (visible au repos, révèle le contenu au hover) */}
+                {/* Texte étiré signature (visible au repos, révèle le contenu au survol) */}
                 <div className="p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-6">
                   <div className="md:w-1/2">
                     <p className="stretch-text text-sm md:text-base text-slate-300 group-hover:text-[#F26D3D] transition-colors leading-relaxed">
@@ -420,7 +420,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <SectionHeading
-            tag="// 04 — TRUST SIGNAL"
+            tag="// 04 — SIGNAL DE CONFIANCE"
             title="Ils nous confient leurs systèmes critiques"
             description="Directions générales, CIO et C-Level d'organisations européennes : la confiance se construit sur la livraison."
           />

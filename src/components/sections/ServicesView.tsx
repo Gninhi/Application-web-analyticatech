@@ -56,7 +56,7 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
             className="max-w-3xl"
           >
             <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
-              {"// Services — Stacking Sequence"}
+              {"// Services — Séquence d'Empilement"}
             </p>
             <PixelRevealTitle
               text="Cinq couches d'expertise, empilées avec précision"
@@ -99,13 +99,13 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
               transition={{ duration: 0.5 }}
             >
               <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
-                {"// Méthode de delivery"}
+                {"// Méthode de livraison"}
               </p>
               <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-50 mb-4 tracking-tight">
                 Du cadrage au run, sans rupture
               </h2>
               <p className="text-slate-300 leading-relaxed mb-6">
-                Notre delivery suit un cycle itératif à 4 phases, chacune livrant
+                Notre livraison suit un cycle itératif à 4 phases, chacune livrant
                 de la valeur observable. Aucun &ldquo;big bang&rdquo; : chaque incrément
                 est mis en production et monitoré.
               </p>

@@ -14,7 +14,7 @@ interface State {
 
 /**
  * ErrorBoundary global — capture les crashes React et affiche
- * un écran "System Alert" stylisé dans l'esthétique cyberpunk.
+ * un écran "Alerte Système" stylisé dans l'esthétique cyberpunk.
  */
 export class GlobalErrorBoundary extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -47,7 +47,7 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
             <p
               className="font-mono text-xs uppercase tracking-[0.3em] text-[#F26D3D] mb-3"
             >
-              System Alert // 0xERR_FATAL
+              Alerte Système // 0xERR_FATAL
             </p>
             <h1 className="font-display text-2xl md:text-3xl font-bold text-slate-100 mb-3">
               Défaillance système détectée
@@ -66,7 +66,7 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
               className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[#F26D3D] px-5 py-2.5 font-mono text-sm font-semibold text-white transition hover:bg-[#ff7a4a] focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               <RefreshCw className="h-4 w-4" aria-hidden />
-              REINITIALISER LE SYSTEME
+              RÉINITIALISER LE SYSTÈME
             </button>
           </div>
         </div>

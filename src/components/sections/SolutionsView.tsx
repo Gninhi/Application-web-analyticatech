@@ -59,7 +59,7 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
             className="max-w-3xl"
           >
             <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
-              {"// Solutions — Lateral Drift"}
+              {"// Solutions — Dérive Latérale"}
             </p>
             <h1 className="font-display text-4xl md:text-6xl font-bold text-[#F26D3D] tracking-tight mb-4">
               <PixelRevealTitle
@@ -95,7 +95,7 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
               />
             </div>
             <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400">
-              Drift Sequence
+              Séquence de Dérive
             </span>
           </motion.div>
         </div>
@@ -267,21 +267,21 @@ function PhaseIndicator({ progress }: { progress: MotionValue<number> }) {
         style={{ opacity: leadIn }}
         className="font-mono text-[9px] uppercase tracking-widest text-slate-400"
       >
-        Staging
+        Préparation
       </motion.span>
       <span className="h-px w-4 bg-white/20" aria-hidden />
       <motion.span
         style={{ opacity: drift }}
         className="font-mono text-[9px] uppercase tracking-widest text-[#F26D3D]"
       >
-        Drift
+        Dérive
       </motion.span>
       <span className="h-px w-4 bg-white/20" aria-hidden />
       <motion.span
         style={{ opacity: leadOut }}
         className="font-mono text-[9px] uppercase tracking-widest text-slate-400"
       >
-        Release
+        Libération
       </motion.span>
     </div>
   );
