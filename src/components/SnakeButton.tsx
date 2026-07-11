@@ -15,8 +15,8 @@ interface SnakeButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
 const VARIANTS = {
   primary: "bg-[#F26D3D] text-white hover:bg-[#ff7a4a]",
   outline: "bg-[#F26D3D]/10 text-[#F26D3D] hover:bg-[#F26D3D] hover:text-white",
-  ghost: "bg-transparent text-slate-100 hover:bg-white/10",
-  subtle: "bg-white/5 text-slate-200 hover:bg-white/10 border border-white/15",
+  ghost: "bg-white/8 text-slate-100 hover:bg-white/15 border border-white/20",
+  subtle: "bg-white/10 text-slate-100 hover:bg-white/20 border border-white/25",
 } as const;
 
 const SIZES = {

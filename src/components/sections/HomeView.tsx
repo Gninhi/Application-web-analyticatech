@@ -4,7 +4,6 @@ import { useId, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
-  ArrowUpRight,
   TrendingUp,
   Quote,
   ChevronRight,
@@ -144,33 +143,6 @@ export function HomeView({ onNavigate }: HomeViewProps) {
           </motion.div>
         </div>
       </section>
-
-      {/* ============ BANDEAU DE SERVICES — défilement dynamique des services ============ */}
-      <Marquee
-        items={SERVICES}
-        speed={35}
-        className="border-y border-white/10 bg-[#011C40]/60 backdrop-blur-sm py-4"
-        renderItem={(item) => {
-          const service = item as typeof SERVICES[number];
-          const Icon = SERVICE_ICONS[service.icon] ?? SERVICE_ICONS.BrainCircuit;
-          return (
-            <button
-              onClick={() => onNavigate("services")}
-              className="group flex items-center gap-3 px-6 text-slate-200 hover:text-[#F26D3D] transition-colors"
-              aria-label={`Voir le service : ${service.title}`}
-            >
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#F26D3D]/30 bg-[#F26D3D]/10">
-                <Icon className="h-4 w-4 text-[#F26D3D]" aria-hidden />
-              </span>
-              <span className="font-display text-lg md:text-xl font-bold tracking-tight whitespace-nowrap">
-                {service.title}
-              </span>
-              <ArrowUpRight className="h-4 w-4 text-slate-500 group-hover:text-[#F26D3D] transition-colors" aria-hidden />
-              <span className="text-slate-600 mx-2" aria-hidden>|</span>
-            </button>
-          );
-        }}
-      />
 
       {/* ============ MONOLITHE ============ */}
       <section className="relative">
@@ -348,11 +320,11 @@ export function HomeView({ onNavigate }: HomeViewProps) {
       {/* ============ BANDEAU DÉFILANT (mots-clés signature) ============ */}
       <Marquee
         items={MARQUEE_KEYWORDS}
-        speed={45}
-        className="border-y border-white/10 py-4"
+        speed={25}
+        className="border-y border-white/10 py-3"
         renderItem={(item) => (
-          <span className="flex items-center gap-6 px-6">
-            <span className="font-display text-2xl md:text-4xl font-bold tracking-tight text-slate-100/80">
+          <span className="flex items-center gap-4 px-4">
+            <span className="font-display text-xl md:text-2xl font-bold tracking-tight text-slate-100/80">
               {item as string}
             </span>
             <span className="text-[#F26D3D] text-xs" aria-hidden>●</span>
@@ -429,13 +401,13 @@ export function HomeView({ onNavigate }: HomeViewProps) {
             {/* Piste 1 — gauche → droite */}
             <Marquee
               items={displayClients}
-              speed={45}
+              speed={30}
               className="py-2"
               renderItem={(item) => {
                 const client = item as { name: string; sector: string };
                 return (
-                  <span className="group flex items-center gap-3 px-6">
-                    <span className="font-display text-xl md:text-2xl font-bold tracking-tight text-slate-300 group-hover:text-[#F26D3D] transition-colors whitespace-nowrap">
+                  <span className="group flex items-center gap-3 px-5">
+                    <span className="font-display text-lg md:text-xl font-bold tracking-tight text-slate-300 group-hover:text-[#F26D3D] transition-colors whitespace-nowrap">
                       {client.name}
                     </span>
                     {client.sector && (
@@ -452,12 +424,12 @@ export function HomeView({ onNavigate }: HomeViewProps) {
               <Marquee
                 items={[...displayClients].reverse()}
                 direction="right"
-                speed={50}
+                speed={35}
                 className="py-2"
                 renderItem={(item) => {
                   const client = item as { name: string; sector: string };
                   return (
-                    <span className="group flex items-center gap-3 px-6">
+                    <span className="group flex items-center gap-3 px-5">
                       {client.sector && (
                         <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400 group-hover:text-[#F26D3D] transition-colors whitespace-nowrap">
                           {client.sector}
