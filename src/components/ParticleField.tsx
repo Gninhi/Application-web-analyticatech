@@ -1,20 +1,23 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useState, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 /**
- * ParticleField — champ de particules blanches lumineuses sur fond #011C40.
+ * ParticleField — champ de particules lumineuses.
+ * - Thème sombre : particules blanches sur fond #011C40
+ * - Thème clair : particules bleu foncé sur fond #f5f7fa
  * Rotation lente + parallaxe subtile pilotée par la souris.
  * Le nombre de particules s'adapte à la largeur d'écran (optimisation mobile).
  */
 
 interface ParticleSceneProps {
   count: number;
+  isDark: boolean;
 }
 
-function ParticleScene({ count }: ParticleSceneProps) {
+function ParticleScene({ count, isDark }: ParticleSceneProps) {
   const pointsRef = useRef<THREE.Points>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
   const { size, gl } = useThree();
@@ -32,18 +35,26 @@ function ParticleScene({ count }: ParticleSceneProps) {
     return arr;
   }, [count]);
 
-  // Couleurs légèrement variables (blanc cassé -> bleuté)
+  // Couleurs légèrement variables selon le thème
+  // Sombre : blanc cassé → bleuté (0.85-1.0)
+  // Clair : bleu foncé (0.1-0.25) pour contraste sur fond clair
   const colors = useMemo(() => {
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
       const tint = Math.random();
-      arr[i3] = 0.85 + tint * 0.15;     // R
-      arr[i3 + 1] = 0.9 + tint * 0.1;   // G
-      arr[i3 + 2] = 1.0;                // B
+      if (isDark) {
+        arr[i3] = 0.85 + tint * 0.15;     // R
+        arr[i3 + 1] = 0.9 + tint * 0.1;   // G
+        arr[i3 + 2] = 1.0;                // B
+      } else {
+        arr[i3] = 0.1 + tint * 0.1;       // R (bleu foncé)
+        arr[i3 + 1] = 0.15 + tint * 0.1;  // G
+        arr[i3 + 2] = 0.25 + tint * 0.1;  // B
+      }
     }
     return arr;
-  }, [count]);
+  }, [count, isDark]);
 
   // Suivi souris (parallaxe)
   useFrame((state, delta) => {
@@ -95,6 +106,25 @@ function ParticleScene({ count }: ParticleSceneProps) {
 }
 
 export function ParticleField() {
+  const [isDark, setIsDark] = useState(true);
+
+  // Détecte le thème via la classe sur <html> (posée par next-themes)
+  useEffect(() => {
+    const checkTheme = () => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    };
+    checkTheme();
+
+    // Observer les changements de classe sur <html>
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   // Nombre de particules adaptatif : moins sur mobile pour la perf Lighthouse
   const count = useMemo(() => {
     if (typeof window === "undefined") return 800;
@@ -112,13 +142,11 @@ export function ParticleField() {
         antialias: false,        // Désactivé (particules = points, pas besoin)
         alpha: true,
         powerPreference: "high-performance",
-        // Perf : powerPreference + pas de preserveDrawingBuffer
       }}
       style={{ width: "100%", height: "100%" }}
-      // Perf : frameloop demand si onglet caché
       frameloop="always"
     >
-      <ParticleScene count={count} />
+      <ParticleScene count={count} isDark={isDark} />
     </Canvas>
   );
 }

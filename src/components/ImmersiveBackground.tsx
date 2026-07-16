@@ -7,8 +7,9 @@ import { Suspense } from "react";
  * ImmersiveBackground — système de particules Three.js en arrière-plan.
  * Rendu fixed, z-index -1, derrière tout le contenu.
  *
- * Le Canvas lourd est chargé dynamiquement (ssr:false) pour ne pas
- * pénaliser le First Contentful Paint et éviter les erreurs SSR Three.js.
+ * Le fond s'adapte au thème via les variables CSS (--fade-from, --overlay-bg).
+ * - Thème sombre : fond bleu foncé #011C40 + particules blanches
+ * - Thème clair : fond gris clair #f5f7fa + particules bleu foncé
  */
 const ParticleField = dynamic(() => import("./ParticleField").then((m) => m.ParticleField), {
   ssr: false,
@@ -22,19 +23,15 @@ export function ImmersiveBackground() {
       aria-hidden="true"
       role="presentation"
     >
-      {/* Dégradé radial de fond (complément des particules) */}
+      {/* Dégradé radial de fond (s'adapte au thème via CSS) */}
       <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(2,40,89,0.6) 0%, rgba(1,28,64,1) 60%), #011C40",
-        }}
+        className="absolute inset-0 theme-bg-gradient"
       />
       <Suspense fallback={null}>
         <ParticleField />
       </Suspense>
-      {/* Voile subtil pour la lisibilité du texte */}
-      <div className="absolute inset-0 bg-[#011C40]/30" />
+      {/* Voile subtil pour la lisibilité du texte (s'adapte au thème) */}
+      <div className="absolute inset-0 theme-overlay" />
     </div>
   );
 }

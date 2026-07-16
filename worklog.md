@@ -343,3 +343,151 @@ Stage Summary:
     * ServicesView DELIVERY_STEPS : spec ne mentionnait pas la traduction de "Discovery", "Build", "Hardening", "Run & Scale" — conservés comme vocabulaire DevOps standard français.
     * SolutionsView JSDoc "STAGING/DRIFT/RELEASE" : conservé en anglais dans les commentaires techniques (non visibles UI) pour cohérence avec les variables TypeScript `leadIn`/`drift`/`leadOut`.
 
+---
+Task ID: THEME-HARMONIZE
+Agent: theme-agent
+Task: Harmonisation couleurs thème clair/sombre
+
+Work Log:
+- HomeView.tsx : 29 remplacements
+    * text-slate-50 (6 occ) → text-slate-900 dark:text-slate-50 (titres h2/h3, big metric)
+    * text-slate-100 (2 occ) → text-slate-800 dark:text-slate-100 (author, metric value)
+    * text-slate-100/80 (1 occ) → text-slate-800/80 dark:text-slate-100/80 (marquee keyword)
+    * text-slate-300 (14 occ) → text-slate-600 dark:text-slate-300 (descriptions, labels, log event)
+    * text-slate-400 (6 occ) → text-slate-500 dark:text-slate-400 (secondary labels, sectors)
+    * border-white/10 (6 occ) → border-black/10 dark:border-white/10 (tech pill, figcaption, marquee, capabilities, activity stream)
+    * bg-[#022859]/30 (1 occ) → bg-slate-200/40 dark:bg-[#022859]/30 (stats grid cell)
+    * bg-black/20 (1 occ) → bg-black/5 dark:bg-black/20 (tech pill bg, harmonisé avec border)
+    * CONSERVÉ : text-slate-500 (2 occ L299, L382) — déjà OK per rule
+    * CONSERVÉ : text-white/10 (2 occ L169, L223) — décoratif (gros index "01."), hors scope rules
+    * CONSERVÉ : text-[#F26D3D], bg-[#F26D3D], text-[#4CAF50], bg-[#4CAF50] — accent/status colors
+
+- ServicesView.tsx : 7 remplacements
+    * bg-[#011C40] (2 occ L50, L92) → bg-background (header + méthode section, pas d'image de fond)
+    * text-slate-50 (1 occ L104) → text-slate-900 dark:text-slate-50 (méthode title)
+    * text-slate-200 (1 occ L139) → text-slate-700 dark:text-slate-200 (delivery step title)
+    * text-slate-300 (3 occ L66, L107, L142) → text-slate-600 dark:text-slate-300
+    * CONSERVÉ : StickyServiceCard (L194-L311) — carte à image de fond, reste sombre dans les 2 thèmes per rule ("Pour les fonds de cartes Services qui ont une image de fond, garde bg-[#011C40]")
+    * CONSERVÉ : L218 bg-[#011C40] (depth overlay) — statique sur image bg
+    * CONSERVÉ : L266 bg-[#011C40]/85 + border-white/10 (panneau glass sombre) — sur image bg
+    * CONSERVÉ : L259 text-slate-50, L267 text-slate-200, L272 text-slate-300, L279 text-slate-300 + border-white/10, L291 text-slate-400 (contenu StickyServiceCard) — sur panneau sombre
+
+- SolutionsView.tsx : 12 remplacements
+    * text-slate-50 (3 occ L159, L204, L243) → text-slate-900 dark:text-slate-50 (titres)
+    * text-slate-300 (3 occ L78, L162, L246) → text-slate-600 dark:text-slate-300 (descriptions)
+    * text-slate-400 (5 occ L97, L168, L207, L268, L282) → text-slate-500 dark:text-slate-400 (labels)
+    * border-white/10 (1 occ L181) + bg-black/20 → border-black/10 dark:border-white/10 + bg-black/5 dark:bg-black/20 (tag pill)
+    * CONSERVÉ : bg-white/10 (L91 progress bar), bg-white/20 (L272, L279 phase dividers) — hors scope rules (bg-white/ non listé)
+    * CONSERVÉ : text-white/10 (L145 big number watermark) — décoratif
+
+- BlogView.tsx : 12 remplacements
+    * text-slate-50 (2 occ L156, L250) → text-slate-900 dark:text-slate-50 (post titles)
+    * text-slate-300 (2 occ L69, L159) → text-slate-600 dark:text-slate-300 (description, excerpt)
+    * text-slate-400 (6 occ L94, L153, L198, L232, L253, L260) → text-slate-500 dark:text-slate-400 (labels, dates, links)
+    * border-white/10 (4 occ L168, L176, L217, L227) → border-black/10 dark:border-white/10
+    * bg-black/20 (1 occ L168) → bg-black/5 dark:bg-black/20 (tag pill)
+    * CONSERVÉ : L124 from-[#022859] to-[#011C40] (thumbnail gradient) — preview image-like, reste sombre
+    * CONSERVÉ : L135 text-slate-300, L137 border-white/15, L140 text-slate-400 (sur thumbnail sombre)
+    * CONSERVÉ : L227 hover:bg-white/[0.02] — hors scope (bg-white/ non listé)
+
+- ContactView.tsx : 19 remplacements
+    * text-slate-100 (4 occ L264, L430, L443, L454, L489, L546) → text-slate-800 dark:text-slate-100 (inputs, links, title)
+    * text-slate-200 (3 occ L430, L443, L454) → text-slate-700 dark:text-slate-200 (email, phone, address)
+    * text-slate-300 (8 occ L156, L177, L190, L251, L287, L372, L406, L477, L493, L532) → text-slate-600 dark:text-slate-300
+    * text-slate-400 (5 occ L180, L185, L427, L440, L451, L532) → text-slate-500 dark:text-slate-400
+    * border-white/10 (8 occ L170, L173, L265, L423, L436, L447, L475, L547) → border-black/10 dark:border-white/10
+    * bg-black/20 (3 occ L423, L436, L447) → bg-black/5 dark:bg-black/20 (icon containers)
+    * CONSERVÉ : text-slate-500 (L187, L189, L273) — déjà OK per rule
+    * CONSERVÉ : bg-black/30 (terminal title bar, inputs) — hors scope rules (bg-black/)
+    * CONSERVÉ : text-[#F26D3D], text-[#4CAF50], text-sky-400 — accent/status colors
+
+- Navbar.tsx : 11 remplacements
+    * text-slate-100 (5 occ L99, L143, L177, L195) → text-slate-800 dark:text-slate-100 (logo, buttons, mobile nav)
+    * text-slate-300 (1 occ L111) → text-slate-600 dark:text-slate-300 (inactive nav links)
+    * text-slate-400 (3 occ L171, L202, L220) → text-slate-500 dark:text-slate-400 (labels)
+    * hover:text-white (1 occ L111) → hover:text-slate-900 dark:hover:text-white
+    * border-white/10 (3 occ L168, L194, L210) → border-black/10 dark:border-white/10 (mobile panel borders)
+    * bg-[#011C40]/95 (1 occ L162) → bg-background/95 (mobile command panel)
+
+- Footer.tsx : 11 remplacements
+    * text-slate-100 (2 occ L53, L130) → text-slate-800 dark:text-slate-100 (logo, newsletter input)
+    * text-slate-300 (1 occ L70) → text-slate-600 dark:text-slate-300 (System Online)
+    * text-slate-400 (8 occ L57, L74, L104, L118, L153, L165, L169, L173) → text-slate-500 dark:text-slate-400
+    * border-white/10 (2 occ L46, L164) → border-black/10 dark:border-white/10 (footer borders)
+    * CONSERVÉ : bg-white/15 (L73 vertical divider) — hors scope (bg-white/ non listé)
+    * CONSERVÉ : bg-[#F26D3D] text-white (L135 subscribe button) — accent + white-on-accent per rule
+
+- PageLoader.tsx : 4 remplacements
+    * bg-[#011C40] (1 occ L71) → bg-background (loader full bg)
+    * text-slate-100 (1 occ L84) → text-slate-800 dark:text-slate-100 (logo text)
+    * text-slate-50 (1 occ L90) → text-slate-900 dark:text-slate-50 (big counter)
+    * text-slate-400 (1 occ L96) → text-slate-500 dark:text-slate-400 (label)
+    * CONSERVÉ : bg-white/10 (L101 progress bar bg) — hors scope
+    * CONSERVÉ : text-slate-500 (L109 logs) — déjà OK per rule
+
+- GlobalErrorBoundary.tsx : 3 remplacements
+    * bg-[#011C40] (1 occ L42) → bg-background (error screen bg)
+    * text-slate-100 (1 occ L52) → text-slate-800 dark:text-slate-100 (error title)
+    * text-slate-300 (1 occ L55) → text-slate-600 dark:text-slate-300 (error description)
+    * border-white/10 (1 occ L60) → border-black/10 dark:border-white/10 (pre border)
+    * CONSERVÉ : bg-black/30 (L60 pre bg) — hors scope
+
+- CookieConsent.tsx : 5 remplacements
+    * text-slate-50 (1 occ L88) → text-slate-900 dark:text-slate-50 (banner title)
+    * text-slate-400 (2 occ L91, L101) → text-slate-500 dark:text-slate-400 (description, close button)
+    * text-slate-300 (1 occ L117) → text-slate-600 dark:text-slate-300 (refuse button text)
+    * border-white/15 (2 occ L82, L117) → border-black/15 dark:border-white/15 (banner border, refuse button)
+    * hover:text-slate-300 (1 occ L101) → hover:text-slate-600 dark:hover:text-slate-300
+    * hover:border-white/40 (1 occ L117) → hover:border-black/40 dark:hover:border-white/40
+    * hover:text-white (1 occ L117) → hover:text-slate-900 dark:hover:text-white
+    * CONSERVÉ : text-slate-500 (L124 RGPD text) — déjà OK per rule
+    * CONSERVÉ : bg-[#F26D3D] text-white (L110 accept button) — accent + white-on-accent per rule
+
+- BackToTop.tsx : 0 remplacement
+    * CONSERVÉ : bg-[#F26D3D] text-white (L50) — accent + white-on-accent per rule. Aucun pattern dans le scope des rules.
+
+- SnakeButton.tsx : 2 remplacements (variants ghost + subtle)
+    * ghost : text-slate-100 → text-slate-800 dark:text-slate-100, border-white/20 → border-black/20 dark:border-white/20
+    * subtle : text-slate-100 → text-slate-800 dark:text-slate-100, border-white/25 → border-black/25 dark:border-white/25 (extension de la règle /20 → /25)
+    * CONSERVÉ : primary variant (bg-[#F26D3D] text-white) — accent per rule
+    * CONSERVÉ : outline variant (bg-[#F26D3D]/10 text-[#F26D3D]) — accent per rule
+    * CONSERVÉ : bg-white/8, bg-white/10, hover:bg-white/15, hover:bg-white/20 — hors scope rules (bg-white/ non listé). En thème clair : bg white très subtil = quasi-transparent, OK pour boutons ghost/subtle.
+
+- Marquee.tsx : 2 remplacements
+    * from-[#011C40] (2 occ L65, L66) → from-background (edge fade gradients). Utilise la variable CSS --bg via la couleur Tailwind `background`. Adapter le dégradé pour fondre vers la couleur de fond du thème actif.
+
+- NavLink.tsx : 1 remplacement
+    * text-slate-400 hover:text-white (footer variant L35) → text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white
+
+- FilterPill.tsx : 1 remplacement
+    * border-white/15 text-slate-400 hover:border-white/40 hover:text-slate-200 (inactive L33) → border-black/15 dark:border-white/15 text-slate-500 dark:text-slate-400 hover:border-black/40 dark:hover:border-white/40 hover:text-slate-700 dark:hover:text-slate-200
+    * CONSERVÉ : border-[#F26D3D] bg-[#F26D3D] text-white (active state) — accent per rule
+
+Stage Summary:
+- Total remplacements : ~110 substitutions de classes Tailwind sur 14 fichiers (BackToTop.tsx = 0, aucun pattern en scope)
+- Lint final : `bun run lint` ✅ — 0 erreur, 0 warning (vérifié après chaque fichier)
+- Build final : `bun run build` ✅ — Compiled successfully in 43s, 10/10 static pages générées
+- Couleurs adaptées :
+    * text-slate-* (50, 100, 200, 300, 400, 600) → variantes dark: avec contrepartie claire (slate-900, 800, 700, 600, 500, 400)
+    * bg-[#011C40] (surfaces pures) → bg-background (variable CSS --bg)
+    * bg-[#011C40]/95 (overlay navbar mobile) → bg-background/95
+    * from-[#011C40] (gradient marquee) → from-background
+    * border-white/10, /15, /20, /25 → border-black/X dark:border-white/X
+    * bg-black/20 (surfaces adaptatives) → bg-black/5 dark:bg-black/20 (où pertinent pour contraste)
+    * bg-[#022859]/30 (stats grid) → bg-slate-200/40 dark:bg-[#022859]/30 (alternative claire)
+- Couleurs conservées (per rules) :
+    * Accent orange #F26D3D (text + bg) — marque Analyticatech, OK dans les 2 thèmes
+    * Statut vert #4CAF50 — OK status, OK dans les 2 thèmes
+    * text-white sur bg-[#F26D3D] (boutons accent) — OK dans les 2 thèmes
+    * text-slate-500 (déjà adaptatif per rule)
+- Hors scope (non listé dans les rules, conservé tel quel) :
+    * bg-white/X (subtle tints) — non listé dans les règles. Apparaît dans : HomeView text-white/10 (watermarks), SolutionsView bg-white/10, bg-white/20 (dividers), BlogView hover:bg-white/[0.02], PageLoader bg-white/10 (progress bar), Footer bg-white/15 (divider), SnakeButton bg-white/8, bg-white/10, hover:bg-white/15, hover:bg-white/20 (variantes ghost/subtle). En thème clair : quasi-invisibles mais non cassants.
+    * bg-black/X (subtle darks) — non listé. Conservé sur surfaces statiquement sombres (terminal title bar, inputs, sticky card panels).
+    * bg-[#011C40] sur StickyServiceCard (L194, L218, L266) — per rule "Pour les fonds de cartes Services qui ont une image de fond, garde bg-[#011C40]"
+    * Contenu StickyServiceCard (ServicesView L259-L291) — sur panneau sombre bg-[#011C40]/85, reste en texte clair dans les 2 thèmes
+    * Contenu thumbnail BlogView (L135, L137, L140) — sur gradient sombre from-[#022859] to-[#011C40], reste en texte clair
+- Variables CSS utilisées (depuis globals.css @theme inline) :
+    * `bg-background` → maps to `--bg` (#011C40 dark / #f5f7fa light)
+    * `from-background` → même mapping pour gradients
+- Logique JavaScript/TypeScript : aucun changement (variables, types, props, handlers, API routes préservés)
+- Imports : aucun changement

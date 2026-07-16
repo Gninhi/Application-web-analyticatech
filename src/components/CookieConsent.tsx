@@ -79,16 +79,16 @@ export function CookieConsent() {
           aria-label="Consentement aux cookies"
           aria-live="polite"
         >
-          <div className="glass-card rounded-2xl border border-white/15 shadow-2xl shadow-black/50 p-5 md:p-6">
+          <div className="glass-card rounded-2xl border border-black/15 dark:border-black/15 dark:border-white/15 shadow-2xl shadow-black/50 p-5 md:p-6">
             <div className="flex items-start gap-3 mb-3">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#F26D3D]/40 bg-[#F26D3D]/10">
                 <Cookie className="h-5 w-5 text-[#F26D3D]" aria-hidden />
               </span>
               <div className="flex-1">
-                <h2 className="font-display text-base font-bold text-slate-50 mb-1">
+                <h2 className="font-display text-base font-bold text-slate-900 dark:text-slate-900 dark:text-slate-50 mb-1">
                   Cookies &amp; confidentialité
                 </h2>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-slate-500 dark:text-slate-500 dark:text-slate-400 leading-relaxed">
                   Nous utilisons des cookies essentiels au fonctionnement du site
                   (sécurité, session). Avec votre accord, nous utilisons aussi des
                   cookies d&apos;analyse pour améliorer l&apos;expérience. Vous
@@ -98,7 +98,7 @@ export function CookieConsent() {
               <button
                 onClick={() => saveChoice("refused")}
                 aria-label="Fermer le bandeau (refuser)"
-                className="shrink-0 text-slate-400 hover:text-slate-300 transition-colors"
+                className="shrink-0 text-slate-500 dark:text-slate-500 dark:text-slate-400 hover:text-slate-400 dark:text-slate-600 dark:hover:text-slate-400 dark:text-slate-600 dark:text-slate-300 transition-colors"
               >
                 <X className="h-4 w-4" aria-hidden />
               </button>
@@ -114,7 +114,7 @@ export function CookieConsent() {
               </button>
               <button
                 onClick={() => saveChoice("refused")}
-                className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 px-4 py-2.5 font-mono text-xs font-semibold uppercase tracking-wider text-slate-300 transition hover:border-white/40 hover:text-white"
+                className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-black/15 dark:border-black/15 dark:border-white/15 px-4 py-2.5 font-mono text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 transition hover:border-black/40 dark:hover:border-white/40 hover:text-slate-900 dark:hover:text-white"
               >
                 <X className="h-4 w-4" aria-hidden />
                 Tout refuser

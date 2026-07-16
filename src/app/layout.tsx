@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
@@ -131,7 +132,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" suppressHydrationWarning className="dark">
+    <html lang="fr" suppressHydrationWarning>
       <head>
         {/* Structured data JSON-LD pour SEO + GEO (LLMs) */}
         <JsonLd />
@@ -139,9 +140,16 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <PageLoader />
-        <GlobalErrorBoundary>{children}</GlobalErrorBoundary>
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          <PageLoader />
+          <GlobalErrorBoundary>{children}</GlobalErrorBoundary>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

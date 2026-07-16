@@ -47,7 +47,7 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
   return (
     <div className="relative">
       {/* === En-tête === */}
-      <section className="pt-32 md:pt-40 pb-12 bg-[#011C40] relative z-10">
+      <section className="pt-32 md:pt-40 pb-12 bg-background relative z-10">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <motion.div
             initial={{ opacity: 0, y: 18 }}
@@ -63,7 +63,7 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
               as="h1"
               className="font-display text-4xl md:text-6xl font-bold text-[#F26D3D] tracking-tight mb-4"
             />
-            <p className="text-slate-300 leading-relaxed text-lg">
+            <p className="text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 leading-relaxed text-lg">
               Chaque service est une couche de notre monolithe. Défilez : les cartes
               se superposent et se collent en haut — la précédente disparaît sous
               la suivante, révélation par révélation.
@@ -89,7 +89,7 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
       </section>
 
       {/* === Section "Méthode" === */}
-      <section className="py-24 md:py-32 bg-[#011C40] relative">
+      <section className="py-24 md:py-32 bg-background relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <div className="grid gap-12 md:grid-cols-2 items-center">
             <motion.div
@@ -101,10 +101,10 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
               <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
                 {"// Méthode de livraison"}
               </p>
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-50 mb-4 tracking-tight">
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-900 dark:text-slate-50 mb-4 tracking-tight">
                 Du cadrage au run, sans rupture
               </h2>
-              <p className="text-slate-300 leading-relaxed mb-6">
+              <p className="text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
                 Notre livraison suit un cycle itératif à 4 phases, chacune livrant
                 de la valeur observable. Aucun &ldquo;big bang&rdquo; : chaque incrément
                 est mis en production et monitoré.
@@ -136,10 +136,10 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
                     <step.icon className="h-5 w-5 text-[#F26D3D]" aria-hidden />
                   </span>
                   <div>
-                    <p className="font-mono text-xs uppercase tracking-widest text-slate-200">
+                    <p className="font-mono text-xs uppercase tracking-widest text-slate-700 dark:text-slate-700 dark:text-slate-200">
                       {step.t}
                     </p>
-                    <p className="text-sm text-slate-300 mt-0.5">{step.d}</p>
+                    <p className="text-sm text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 mt-0.5">{step.d}</p>
                   </div>
                 </div>
               ))}
@@ -256,27 +256,27 @@ function StickyServiceCard({ service, index, total, scrollProgress, onNavigate }
                 <p className="font-mono text-[11px] uppercase tracking-widest text-[#F26D3D] mb-2">
                   {service.tagline}
                 </p>
-                <h2 className="font-display text-3xl md:text-5xl font-bold text-slate-50 tracking-tight">
+                <h2 className="font-display text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
                   {service.title}
                 </h2>
               </div>
             </div>
 
             {/* Colonne droite : panneau glass pour la lisibilité */}
-            <div className="md:col-span-3 p-8 md:p-12 flex flex-col bg-[#011C40]/85 backdrop-blur-md md:border-l border-white/10">
-              <p className="text-slate-200 leading-relaxed mb-6 text-base md:text-lg">
+            <div className="md:col-span-3 p-8 md:p-12 flex flex-col bg-[#011C40]/85 backdrop-blur-md md:border-l border-black/10 dark:border-white/10">
+              <p className="text-slate-700 dark:text-slate-200 leading-relaxed mb-6 text-base md:text-lg">
                 {service.description}
               </p>
 
               <div className="mb-6">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-300 mb-3">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-600 dark:text-slate-300 mb-3">
                   Stack technologique
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {service.technologies.map((tech) => (
                     <span
                       key={tech}
-                      className="rounded-md border border-white/10 bg-black/30 px-2.5 py-1 font-mono text-[11px] text-slate-300"
+                      className="rounded-md border border-black/10 dark:border-white/10 bg-black/30 px-2.5 py-1 font-mono text-[11px] text-slate-400 dark:text-slate-600 dark:text-slate-300"
                     >
                       {tech}
                     </span>
@@ -286,9 +286,9 @@ function StickyServiceCard({ service, index, total, scrollProgress, onNavigate }
 
               <div className="grid grid-cols-2 gap-4 mb-6">
                 {service.metrics.map((m) => (
-                  <div key={m.label} className="rounded-xl border border-white/10 bg-black/25 p-3">
+                  <div key={m.label} className="rounded-xl border border-black/10 dark:border-white/10 bg-black/25 p-3">
                     <p className="font-display text-2xl font-bold text-[#F26D3D]">{m.value}</p>
-                    <p className="font-mono text-[9px] uppercase tracking-widest text-slate-400 mt-0.5">
+                    <p className="font-mono text-[9px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mt-0.5">
                       {m.label}
                     </p>
                   </div>

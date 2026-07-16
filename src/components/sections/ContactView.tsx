@@ -153,7 +153,7 @@ export function ContactView() {
                 delay={0.45}
               />
             </h1>
-            <p className="text-slate-300 leading-relaxed text-lg">
+            <p className="text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 leading-relaxed text-lg">
               Décrivez votre besoin. Un architecte Solution vous répond sous 24h
               ouvrées. Toutes les transmissions sont chiffrées et journalisées.
             </p>
@@ -167,27 +167,27 @@ export function ContactView() {
           <div className="lg:col-span-3">
             <div
               ref={terminalRef}
-              className="glass-card rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/40"
+              className="glass-card rounded-2xl overflow-hidden border border-black/10 dark:border-black/10 dark:border-white/10 shadow-2xl shadow-black/40"
             >
               {/* Barre de titre terminal */}
-              <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10 bg-black/30">
+              <div className="flex items-center gap-2 px-4 py-3 border-b border-black/10 dark:border-black/10 dark:border-white/10 bg-black/30">
                 <span className="h-3 w-3 rounded-full bg-[#F26D3D]/80" aria-hidden />
                 <span className="h-3 w-3 rounded-full bg-[#4CAF50]/70" aria-hidden />
                 <span className="h-3 w-3 rounded-full bg-slate-500/60" aria-hidden />
-                <span className="ml-3 font-mono text-[11px] uppercase tracking-widest text-slate-300">
+                <span className="ml-3 font-mono text-[11px] uppercase tracking-widest text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300">
                   analyticatech@sécurisé ~ % contact --nouveau
                 </span>
-                <Terminal className="ml-auto h-4 w-4 text-slate-400" aria-hidden />
+                <Terminal className="ml-auto h-4 w-4 text-slate-500 dark:text-slate-500 dark:text-slate-400" aria-hidden />
               </div>
 
               <form onSubmit={handleSubmit} className="p-5 md:p-7 space-y-5" noValidate>
                 {/* Ligne de commande simulée */}
-                <p className="font-mono text-xs text-slate-400">
+                <p className="font-mono text-xs text-slate-500 dark:text-slate-500 dark:text-slate-400">
                   <span className="text-[#4CAF50]">root@analyticatech</span>
                   <span className="text-slate-500">:</span>
                   <span className="text-sky-400">~/contact</span>
                   <span className="text-slate-500">$</span>{" "}
-                  <span className="text-slate-300">initier_session --chiffré</span>
+                  <span className="text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300">initier_session --chiffré</span>
                   <span className="blink-cursor" />
                 </p>
 
@@ -248,7 +248,7 @@ export function ContactView() {
                 <div>
                   <label
                     htmlFor="message"
-                    className="block font-mono text-[10px] uppercase tracking-[0.25em] text-slate-300 mb-2"
+                    className="block font-mono text-[10px] uppercase tracking-[0.25em] text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 mb-2"
                   >
                     MESSAGE <span className="text-[#F26D3D]">*</span>
                   </label>
@@ -261,8 +261,8 @@ export function ContactView() {
                     aria-invalid={!!errors.message}
                     aria-describedby={errors.message ? "message-err" : undefined}
                     className={cn(
-                      "terminal-input w-full rounded-lg bg-black/30 border px-3.5 py-3 font-mono text-sm text-slate-100 placeholder:text-slate-500 outline-none transition resize-y min-h-[120px]",
-                      errors.message ? "border-[#F26D3D]/60" : "border-white/10"
+                      "terminal-input w-full rounded-lg bg-black/30 border px-3.5 py-3 font-mono text-sm text-slate-800 dark:text-slate-800 dark:text-slate-100 placeholder:text-slate-500 outline-none transition resize-y min-h-[120px]",
+                      errors.message ? "border-[#F26D3D]/60" : "border-black/10 dark:border-black/10 dark:border-white/10"
                     )}
                   />
                   {errors.message && (
@@ -284,7 +284,7 @@ export function ContactView() {
                     className="mt-0.5 h-4 w-4 shrink-0 accent-[#F26D3D]"
                     aria-invalid={!!errors.consent}
                   />
-                  <span className="text-xs text-slate-300 leading-relaxed">
+                  <span className="text-xs text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 leading-relaxed">
                     J&apos;accepte que mes données soient traitées par Analyticatech
                     pour répondre à ma demande, conformément à la{" "}
                     <a href="#" onClick={(e) => e.preventDefault()} className="text-[#F26D3D] hover:underline">
@@ -369,7 +369,7 @@ export function ContactView() {
                         {serverMsg}
                       </p>
                       {reference && (
-                        <p className="mt-1.5 font-mono text-[11px] text-slate-300">
+                        <p className="mt-1.5 font-mono text-[11px] text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300">
                           Référence ticket :{" "}
                           <span className="text-[#F26D3D]">{reference}</span>
                         </p>
@@ -403,7 +403,7 @@ export function ContactView() {
               ].map((b) => (
                 <span
                   key={b.t}
-                  className="inline-flex items-center gap-1.5 rounded-full glass px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-slate-300"
+                  className="inline-flex items-center gap-1.5 rounded-full glass px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300"
                 >
                   <b.icon className="h-3 w-3 text-[#4CAF50]" aria-hidden />
                   {b.t}
@@ -420,38 +420,38 @@ export function ContactView() {
               </h3>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-black/20">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-black/10 dark:border-black/10 dark:border-white/10 bg-black/5 dark:bg-black/20">
                     <Mail className="h-4 w-4 text-[#F26D3D]" aria-hidden />
                   </span>
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-500 dark:text-slate-400">
                       Email
                     </p>
-                    <a href="mailto:contact@analyticatech.com" className="text-sm text-slate-200 hover:text-[#F26D3D] transition-colors">
+                    <a href="mailto:contact@analyticatech.com" className="text-sm text-slate-700 dark:text-slate-700 dark:text-slate-200 hover:text-[#F26D3D] transition-colors">
                       contact@analyticatech.com
                     </a>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-black/20">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-black/10 dark:border-black/10 dark:border-white/10 bg-black/5 dark:bg-black/20">
                     <Phone className="h-4 w-4 text-[#F26D3D]" aria-hidden />
                   </span>
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-500 dark:text-slate-400">
                       Téléphone
                     </p>
-                    <p className="text-sm text-slate-200">+33 1 84 80 00 00</p>
+                    <p className="text-sm text-slate-700 dark:text-slate-700 dark:text-slate-200">+33 1 84 80 00 00</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-black/20">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-black/10 dark:border-black/10 dark:border-white/10 bg-black/5 dark:bg-black/20">
                     <MapPin className="h-4 w-4 text-[#F26D3D]" aria-hidden />
                   </span>
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-500 dark:text-slate-400">
                       Siège
                     </p>
-                    <p className="text-sm text-slate-200">
+                    <p className="text-sm text-slate-700 dark:text-slate-700 dark:text-slate-200">
                       12 rue de la Paix, 75002 Paris
                     </p>
                   </div>
@@ -472,9 +472,9 @@ export function ContactView() {
                 ].map((s) => (
                   <div
                     key={s.l}
-                    className="flex items-center justify-between py-2 border-b border-white/10 last:border-0"
+                    className="flex items-center justify-between py-2 border-b border-black/10 dark:border-black/10 dark:border-white/10 last:border-0"
                   >
-                    <span className="text-sm text-slate-300">{s.l}</span>
+                    <span className="text-sm text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300">{s.l}</span>
                     <span className="font-mono text-xs text-[#4CAF50] uppercase tracking-wider">
                       {s.v}
                     </span>
@@ -486,11 +486,11 @@ export function ContactView() {
             <div className="glass-card rounded-2xl p-6">
               <div className="flex items-center gap-2 mb-3">
                 <ShieldCheck className="h-5 w-5 text-[#4CAF50]" aria-hidden />
-                <h3 className="font-display font-bold text-slate-100">
+                <h3 className="font-display font-bold text-slate-800 dark:text-slate-800 dark:text-slate-100">
                   Confidentialité garantie
                 </h3>
               </div>
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <p className="text-xs text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 leading-relaxed">
                 Vos informations sont traitées en toute confidentialité. Nous
                 signons systématiquement un NDA avant tout échange technique
                 détaillé. Données supprimées sous 90 jours en l&apos;absence de suite.
@@ -529,7 +529,7 @@ function TerminalField({
     <div>
       <label
         htmlFor={name}
-        className="block font-mono text-[10px] uppercase tracking-[0.25em] text-slate-300 mb-2"
+        className="block font-mono text-[10px] uppercase tracking-[0.25em] text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 mb-2"
       >
         {label} {required && <span className="text-[#F26D3D]">*</span>}
       </label>
@@ -543,8 +543,8 @@ function TerminalField({
         aria-invalid={!!error}
         aria-describedby={error ? `${name}-err` : undefined}
         className={cn(
-          "terminal-input w-full rounded-lg bg-black/30 border px-3.5 py-2.5 font-mono text-sm text-slate-100 placeholder:text-slate-500 outline-none transition",
-          error ? "border-[#F26D3D]/60" : "border-white/10"
+          "terminal-input w-full rounded-lg bg-black/30 border px-3.5 py-2.5 font-mono text-sm text-slate-800 dark:text-slate-800 dark:text-slate-100 placeholder:text-slate-500 outline-none transition",
+          error ? "border-[#F26D3D]/60" : "border-black/10 dark:border-black/10 dark:border-white/10"
         )}
       />
       {error && (

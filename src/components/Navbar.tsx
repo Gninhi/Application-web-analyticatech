@@ -8,6 +8,7 @@ import { ScrambleText } from "./ScrambleText";
 import { SnakeButton } from "@/components/SnakeButton";
 import { NavLink } from "@/components/NavLink";
 import { Logo } from "@/components/Logo";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 
 interface NavbarProps {
@@ -95,7 +96,7 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
               aria-label="Retour à l'accueil Analyticatech"
             >
               <Logo size={32} delay={0.2} />
-              <span className="font-display text-base font-bold tracking-tight text-slate-100">
+              <span className="font-display text-base font-bold tracking-tight text-slate-800 dark:text-slate-800 dark:text-slate-100">
                 Analytica<span className="text-[#F26D3D]">tech</span>
               </span>
             </button>
@@ -107,7 +108,7 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
                   key={item.key}
                   active={activeView === item.key}
                   onClick={() => handleNav(item.key)}
-                  className={activeView === item.key ? "" : "text-slate-300 hover:text-white"}
+                  className={activeView === item.key ? "" : "text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"}
                 >
                   <ScrambleText text={item.label} />
                   {activeView === item.key && (
@@ -123,6 +124,9 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
 
             {/* CTA desktop + bouton mobile */}
             <div className="flex items-center gap-2">
+              {/* Bouton changement de thème */}
+              <ThemeToggle />
+
               <SnakeButton
                 onClick={() => handleNav("contact")}
                 variant="primary"
@@ -136,7 +140,7 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
               {/* Bouton hamburger mobile */}
               <button
                 onClick={() => setMobileOpen(true)}
-                className="md:hidden flex h-10 w-10 items-center justify-center rounded-lg glass text-slate-100"
+                className="md:hidden flex h-10 w-10 items-center justify-center rounded-lg glass text-slate-800 dark:text-slate-800 dark:text-slate-100"
                 aria-label="Ouvrir le menu de navigation"
                 aria-expanded={mobileOpen}
               >
@@ -155,22 +159,22 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-[60] md:hidden bg-[#011C40]/95 backdrop-blur-xl grid-military flex flex-col"
+            className="fixed inset-0 z-[60] md:hidden bg-background/95 backdrop-blur-xl grid-military flex flex-col"
             role="dialog"
             aria-modal="true"
             aria-label="Menu de navigation mobile"
           >
             {/* En-tête du panel */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-black/10 dark:border-black/10 dark:border-white/10">
               <div className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-[#4CAF50] animate-pulse" />
-                <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-slate-400">
+                <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-slate-500 dark:text-slate-500 dark:text-slate-400">
                   Command Panel // ACTIVE
                 </span>
               </div>
               <button
                 onClick={() => setMobileOpen(false)}
-                className="flex h-10 w-10 items-center justify-center rounded-lg glass text-slate-100"
+                className="flex h-10 w-10 items-center justify-center rounded-lg glass text-slate-800 dark:text-slate-800 dark:text-slate-100"
                 aria-label="Fermer le menu"
               >
                 <X className="h-5 w-5" aria-hidden />
@@ -187,15 +191,15 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
                   transition={{ delay: 0.05 * i + 0.05, duration: 0.3 }}
                   onClick={() => handleNav(item.key)}
                   className={cn(
-                    "group flex items-baseline justify-between border-b border-white/10 py-4 text-left transition-colors",
-                    activeView === item.key ? "text-[#F26D3D]" : "text-slate-100"
+                    "group flex items-baseline justify-between border-b border-black/10 dark:border-black/10 dark:border-white/10 py-4 text-left transition-colors",
+                    activeView === item.key ? "text-[#F26D3D]" : "text-slate-800 dark:text-slate-800 dark:text-slate-100"
                   )}
                   aria-current={activeView === item.key ? "page" : undefined}
                 >
                   <span className="font-display text-3xl font-bold tracking-tight">
                     {item.label}
                   </span>
-                  <span className="font-mono text-[11px] uppercase tracking-widest text-slate-400 group-hover:text-[#F26D3D] transition-colors">
+                  <span className="font-mono text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-500 dark:text-slate-400 group-hover:text-[#F26D3D] transition-colors">
                     {item.hint}
                   </span>
                 </motion.button>
@@ -203,7 +207,7 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
             </nav>
 
             {/* CTA bas de panel */}
-            <div className="px-6 py-6 border-t border-white/10">
+            <div className="px-6 py-6 border-t border-black/10 dark:border-black/10 dark:border-white/10">
               <SnakeButton
                 onClick={() => handleNav("contact")}
                 variant="primary"
@@ -213,7 +217,7 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
                 Demander un devis
                 <ArrowRight className="h-4 w-4" aria-hidden />
               </SnakeButton>
-              <p className="mt-4 text-center font-mono text-[10px] uppercase tracking-widest text-slate-400">
+              <p className="mt-4 text-center font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-500 dark:text-slate-400">
                 Analyticatech — Secure Connection Established
               </p>
             </div>

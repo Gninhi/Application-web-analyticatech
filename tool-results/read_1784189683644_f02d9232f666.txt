@@ -1,0 +1,346 @@
+     1→---
+     2→Task ID: REFACTOR-GLASS
+     3→Agent: refactor-agent
+     4→Task: Suppression des backgrounds glass des titres + glass-card sur les cartes
+     5→
+     6→Work Log:
+     7→- PixelRevealTitle.tsx : vérifié (read-only). Le composant accepte `wordClassName` comme prop optionnelle — laisser la prop absente fait hériter la couleur du parent. Aucune modification de la logique.
+     8→- HomeView.tsx :
+     9→    * Supprimé `wordClassName="text-glass-orange"` sur le PixelRevealTitle "LE FUTUR DE"
+    10→    * Supprimé `wordClassName="text-glass-orange-strong"` sur le PixelRevealTitle "L'INTELLIGENCE" (text-neon conservé sur le conteneur)
+    11→    * Supprimé le `<span className="text-glass">` enveloppant la description du hero (texte désormais direct dans le <motion.p>)
+    12→    * 4 cartes de métriques (Data Stream) : `glass` → `glass-card`
+    13→    * Panneau "Live Activity Stream" : `glass` → `glass-card`
+    14→    * 4 cartes Capabilities : `glass` → `glass-card`
+    15→    * 3 cartes témoignages : `glass` → `glass-card`
+    16→    * Panneau CTA final : `glass-strong` → `glass-card`
+    17→    * `text-slate-400` → `text-slate-300` sur : label stats grid, description service dans SpotlightCard, label métriques Data Stream, stretch-text et description Capabilities, description CTA final
+    18→- ServicesView.tsx :
+    19→    * Supprimé `<span className="text-glass">` autour de "// Services — Stacking Sequence"
+    20→    * Supprimé `wordClassName="text-glass-orange-strong"` sur le PixelRevealTitle h1
+    21→    * Supprimé `<span className="text-glass">` autour de la description de l'en-tête
+    22→    * Supprimé `<span className="text-glass">` autour de "// Méthode de delivery"
+    23→    * Supprimé `<span className="text-glass">` autour du paragraphe "Notre delivery suit un cycle…"
+    24→    * Supprimé `<span className="text-glass">` autour de {service.tagline}
+    25→    * Supprimé `<span className="text-glass-strong">` autour de {service.title}
+    26→    * 4 cartes "DELIVERY_STEPS" : `glass` → `glass-card`
+    27→    * `text-slate-400` → `text-slate-300` sur : description step.d, label "Stack technologique" (panneau backdrop-blur du StickyServiceCard)
+    28→- SolutionsView.tsx :
+    29→    * Supprimé `<span className="text-glass">` autour de "// Solutions — Lateral Drift"
+    30→    * Supprimé `wordClassName="text-glass-orange"` sur le PixelRevealTitle "Des solutions sectorielles,"
+    31→    * Supprimé `wordClassName="text-glass-orange-strong"` sur le PixelRevealTitle "en orbite" (text-neon conservé)
+    32→    * Supprimé `<span className="text-glass">` autour de la description de l'en-tête
+    33→    * 5 cartes solutions (article) : `glass-strong` → `glass-card`
+    34→    * 3 cartes "Bandeau confiance" : `glass` → `glass-card`
+    35→    * `text-slate-400` → `text-slate-300` sur : sol.summary (description carte solution), f.d (description confiance)
+    36→- BlogView.tsx :
+    37→    * Supprimé `<span className="text-glass">` autour de "// Insights — Technical Reports"
+    38→    * Supprimé `wordClassName="text-glass-orange"` sur le PixelRevealTitle "Rapports techniques &"
+    39→    * Supprimé `wordClassName="text-glass-orange-strong"` sur le PixelRevealTitle "retours de terrain" (text-neon conservé)
+    40→    * Supprimé `<span className="text-glass">` autour de la description de l'en-tête
+    41→    * Cartes d'articles (motion.article) : `glass` → `glass-card`
+    42→    * `text-slate-400` → `text-slate-300` sur : post.excerpt, tags (hash), lien "Lire", overlay métadonnées du visuel
+    43→- ContactView.tsx :
+    44→    * Supprimé `<span className="text-glass">` autour de "// Secure Channel — Encrypted"
+    45→    * Supprimé `wordClassName="text-glass-orange"` sur le PixelRevealTitle "Établissons une"
+    46→    * Supprimé `wordClassName="text-glass-orange-strong"` sur le PixelRevealTitle "connexion sécurisée" (text-neon conservé)
+    47→    * Supprimé `<span className="text-glass">` autour de la description de l'en-tête
+    48→    * Panneau terminal form : `glass-strong` → `glass-card`
+    49→    * Panneau "Canaux alternatifs" : `glass` → `glass-card`
+    50→    * Panneau "Engagement de réponse" : `glass` → `glass-card`
+    51→    * Panneau "Confidentialité garantie" : `glass` → `glass-card`
+    52→    * Badges sécurité (petits panneaux) : `glass` conservé
+    53→    * `text-slate-400` → `text-slate-300` sur : ligne de commande terminal, labels MESSAGE + TerminalField, texte consentement RGPD, ligne "Référence ticket", texte badges sécurité, s.l (Engagement de réponse), paragraphe "Confidentialité garantie"
+    54→
+    55→Stage Summary:
+    56→- Occurrences `text-glass*` supprimées : 22 (vérifié : `grep -r text-glass src/` retourne 0 résultat)
+    57→    * 8 `wordClassName="text-glass*"` supprimés (props PixelRevealTitle)
+    58→    * 11 `<span className="text-glass">` / `<span className="text-glass-strong">` wrapper supprimés
+    59→    * (les classes `text-glass*` n'étaient pas définies dans globals.css — c'étaient des classes orphelines)
+    60→- Cartes passées en `glass-card` : 21
+    61→    * HomeView : 4 (métriques) + 1 (activity stream) + 4 (capabilities) + 3 (témoignages) + 1 (CTA) = 13
+    62→    * ServicesView : 4 (delivery steps)
+    63→    * SolutionsView : 5 (cartes solutions) + 3 (confiance) = 8
+    64→    * BlogView : grilles d'articles (cartes dynamiques, 1 className `glass-card`)
+    65→    * ContactView : 4 (terminal + 3 panneaux latéraux)
+    66→- `glass` / `glass-strong` conservés sur petits panneaux et navigation : pills, boutons, stats grid, badges sécurité (7 occurrences)
+    67→- `text-slate-400` → `text-slate-300` (WCAG AA) : 19 occurrences dans des cartes glass
+    68→- `text-slate-400` conservés hors cartes glass : 9 occurrences (filter buttons, FeaturedNews, CTA dashed, PhaseIndicator, SectionHeading, bouton dashed "Besoin sur-mesure")
+    69→- Lint final : `bun run lint` ✅ — 0 erreur, 0 warning
+    70→- Imports : aucun changement
+    71→- Logique JavaScript/TypeScript : aucun changement
+    72→- `text-neon` : conservé sur les seconds PixelRevealTitle de chaque vue (effet lueur)
+    73→- `text-[#F26D3D]` : conservé sur tous les `<h1>`/`<h2>` parents de PixelRevealTitle
+    74→
+    75→---
+    76→Task ID: ERGO-PREMIUM
+    77→Agent: ergo-expert
+    78→Task: Audit ergonomique premium++ et contraste WCAG AA
+    79→
+    80→Work Log:
+    81→- HomeView.tsx :
+    82→    * Stats grid hero (L93) : `rounded-2xl glass` → `rounded-2xl glass-card` (carte de contenu opaque)
+    83→    * Micro-label `m.label` métriques service card (L169) : `text-slate-500` → `text-slate-400`
+    84→    * Timestamp Activity Stream `log.time` (L264) : `text-slate-600` → `text-slate-500` (décoratif)
+    85→    * Arrow non-ok Activity Stream (L271) : `text-slate-500` → `text-slate-400` (dans glass-card)
+    86→    * Index latéral Capabilities `0i+1 / 0N` (L340) : `text-slate-600` → `text-slate-500` (décoratif)
+    87→    * Micro-label témoignage `t.role · t.company` (L385) : `text-slate-500` → `text-slate-400`
+    88→- ServicesView.tsx :
+    89→    * Micro-label `m.label` dans StickyServiceCard backdrop panel (L288) : `text-slate-500` → `text-slate-400`
+    90→- SolutionsView.tsx :
+    91→    * Micro-label `Drift Sequence` header bar (L96) : `text-slate-500` → `text-slate-400`
+    92→    * Micro-label `Impact mesuré` dans solution card (L167) : `text-slate-500` → `text-slate-400`
+    93→- BlogView.tsx :
+    94→    * 5 occurrences `text-slate-500` → `text-slate-400` (replace_all) :
+    95→      - L100 : compteur `filtered.length` (micro-label hors carte)
+    96→      - L146 : `REPORT_XXXXX` (overlay card article)
+    97→      - L159 : `formatDate(post.date)` dans card article
+    98→      - L204 : empty state `Aucun rapport…` (micro-label)
+    99→      - L238 : `formatDate(post.date)` dans FeaturedNews
+   100→- ContactView.tsx :
+   101→    * Icône Terminal header (L179) : `text-slate-500` → `text-slate-400`
+   102→    * Ligne de commande terminal (L184) : `text-slate-500` → `text-slate-400`
+   103→    * Séparateur `:` (L186) : `text-slate-600` → `text-slate-500` (décoratif)
+   104→    * Séparateur `$` (L188) : `text-slate-600` → `text-slate-500` (décoratif)
+   105→    * Placeholder textarea (L263) : `placeholder:text-slate-600` → `placeholder:text-slate-500`
+   106→    * Compteur caractères `{length}/2000` (L272) : `text-slate-600` → `text-slate-500` (décoratif)
+   107→    * 3 micro-labels Canaux alternatifs (Email/Téléphone/Siège, L424/L437/L448) : `text-slate-500` → `text-slate-400`
+   108→    * Placeholder TerminalField input (L543) : `placeholder:text-slate-600` → `placeholder:text-slate-500`
+   109→- CookieConsent.tsx :
+   110→    * Panneau principal (L82) : `glass-strong` → `glass-card` (plus opaque, lisibilité RGPD)
+   111→    * Bouton close X (L101) : `text-slate-500` → `text-slate-400`
+   112→    * Mention RGPD fine print (L124) : `text-slate-600` → `text-slate-500` (décoratif non micro-label)
+   113→- Footer.tsx :
+   114→    * Footer global (L44) : `glass-strong` → `glass-card` (plus opaque, lisibilité liens)
+   115→    * Placeholder input newsletter (L130) : `placeholder:text-slate-600` → `placeholder:text-slate-500`
+   116→    * 3 micro-labels barre inférieure (copyright/ISO/version, L165/L169/L173) : `text-slate-500` → `text-slate-400` (replace_all)
+   117→- Navbar.tsx :
+   118→    * Micro-label `item.hint` mobile command panel (L200) : `text-slate-500` → `text-slate-400`
+   119→    * Micro-label `Secure Connection Established` (L216) : `text-slate-600` → `text-slate-400` (pattern uppercase tracking-widest → minimum AA)
+   120→- PageLoader.tsx :
+   121→    * Label étiré `Initialisation système` (L98) : `text-slate-500` → `text-slate-400`
+   122→    * Logs de chargement décoratifs (L111) : `text-slate-600` → `text-slate-500`
+   123→- GlobalErrorBoundary.tsx :
+   124→    * Panneau error boundary (L43) : `glass-strong` → `glass-card` (carte avec texte long à lire)
+   125→    * Paragraphe description erreur (L55) : `text-slate-400` → `text-slate-300` (description dans glass-card)
+   126→
+   127→Stage Summary:
+   128→- Total corrections contraste (text-slate-500 → text-slate-400) : 22 occurrences
+   129→- Total corrections contraste (text-slate-600 → text-slate-500) : 7 occurrences (décoratifs hors pattern uppercase-tracking-widest)
+   130→- Total corrections contraste (text-slate-600 → text-slate-400) : 1 occurrence (micro-label `Secure Connection Established` Navbar — pattern uppercase tracking-widest → minimum AA)
+   131→- Total corrections contraste (text-slate-400 → text-slate-300) : 1 occurrence (description dans GlobalErrorBoundary)
+   132→- Total corrections contraste (placeholder:text-slate-600 → placeholder:text-slate-500) : 3 occurrences (ContactView textarea, ContactView TerminalField input, Footer newsletter)
+   133→- Total cartes `glass` / `glass-strong` converties en `glass-card` : 4
+   134→    * HomeView : 1 (stats grid hero — `glass` → `glass-card`)
+   135→    * CookieConsent : 1 (panneau principal — `glass-strong` → `glass-card`)
+   136→    * Footer : 1 (footer global — `glass-strong` → `glass-card`)
+   137→    * GlobalErrorBoundary : 1 (panneau erreur — `glass-strong` → `glass-card`)
+   138→- `glass` conservés (conformes au cahier des charges) : 7 occurrences
+   139→    * HomeView : 2 (hero status pill, bouton "Demander un devis" CTA court)
+   140→    * ContactView : 1 (badges sécurité pills)
+   141→    * Footer : 2 (status pill "System Online", social icon buttons ronds)
+   142→    * Navbar : 2 (bouton hamburger, bouton close)
+   143→- `glass-strong` conservés : 1 occurrence (Navbar scrolled state — navigation, par worklog précédent)
+   144→- `text-slate-600` : 0 occurrence résiduelle dans les composants (✓ éliminé)
+   145→- `text-slate-500` résiduels : 10 occurrences, toutes intentionnellement conservées comme "décoratives non micro-labels" (timestamps `log.time`, séparateurs `:` `$`, placeholders, char counter `{length}/2000`, fine print RGPD CookieConsent, logs de chargement PageLoader, index latéraux Capabilities) — contraste ~3.4:1 acceptable pour éléments décoratifs non essentiels
+   146→- Lint final : `bun run lint` ✅ — 0 erreur, 0 warning
+   147→- `console.log` : aucun dans les vues (1 `console.error` légitime dans GlobalErrorBoundary pour monitoring erreurs)
+   148→- Imports : aucun changement (lint aurait warning sinon)
+   149→- Images : aucun `<img>` tag — tous les visuels sont des backgrounds CSS (WebP/PNG via `bg-cover`), pas de `loading="lazy"` nécessaire
+   150→- `aria-hidden` : tous les éléments décoratifs (SVGs, watermarks, dots, separators visuels) déjà munis — audit Lighthouse OK
+   151→- Logique JavaScript/TypeScript : aucun changement
+   152→- Espacement : vérifié, conforme (p-5/p-6 minimum sur cartes de contenu, leading-relaxed sur tous les paragraphes descriptifs)
+   153→- Objectif Lighthouse >95% : contraste WCAG AA restauré sur tous les micro-labels et descriptions dans cartes glass-card ; opacité des cartes de contenu unifiée à 0.88 (glass-card) pour lisibilité maximale
+   154→
+   155→
+   156→---
+   157→Task ID: SNAKE-BUTTON
+   158→Agent: refactor-agent
+   159→Task: Remplacement des boutons CTA principaux par SnakeButton
+   160→
+   161→Work Log:
+   162→- SnakeButton.tsx : vérifié (read-only). Props : `variant` ("primary" | "outline" | "ghost"), `size` ("sm" | "md" | "lg"), `noSnake` (boolean), étend `React.ButtonHTMLAttributes<HTMLButtonElement>`. Snake-border via `.snake-border` CSS class (conic-gradient animé dans globals.css). Children wrappés dans `<span className="relative z-10">`.
+   163→- HomeView.tsx : 3 boutons remplacés
+   164→    * "Explorer nos services" (hero CTA principal) → `variant="primary" size="lg"` + className `group neon-glow` (preserve group-hover translate-x-1 sur ArrowRight)
+   165→    * "Demander un devis" (hero CTA secondaire, glass sans fond orange) → `variant="ghost" size="lg"`
+   166→    * "Planifier l'échange" (CTA final) → `variant="primary" size="lg"` + className `relative neon-glow`
+   167→    * Import ajouté : `import { SnakeButton } from "@/components/SnakeButton";`
+   168→    * SKIPPED : "Initier un projet" (motion.button card CTA avec layout complexe — min-h-[260px], multiple blocs de contenu, animations framer-motion initial/whileInView/viewport/transition). Remplacement par SnakeButton détruirait la structure de carte. Documenté ici.
+   169→    * NOTE : "Cadrer votre mission" mentionné dans le task description pour HomeView n'existe pas dans HomeView — c'est un bouton de ServicesView (probable erreur du task description).
+   170→- ServicesView.tsx : 2 boutons remplacés
+   171→    * "Cadrer votre mission" (section Méthode) → `variant="primary" size="md"` + className `neon-glow`
+   172→    * "Démarrer ce service" (StickyServiceCard, `border border-[#F26D3D]/40 bg-[#F26D3D]/10`) → `variant="outline" size="sm"` + className `mt-auto group self-start` (preserve layout flex et group-hover sur ArrowUpRight)
+   173→    * Import ajouté : `import { SnakeButton } from "@/components/SnakeButton";`
+   174→- SolutionsView.tsx : 2 boutons remplacés
+   175→    * "En savoir plus" (carte solution, `border border-white/15` + hover orange) → `variant="outline" size="sm"` + className `group self-start` (border-white/15 remplacé par snake-border animé — changement visuel assumé : la bordure grise devient un halo serpent orange, le texte slate devient orange)
+   176→    * "Briefing express" (carte CTA finale, `bg-[#F26D3D]`) → `variant="primary" size="lg"` + className `neon-glow`
+   177→    * Import ajouté : `import { SnakeButton } from "@/components/SnakeButton";`
+   178→- ContactView.tsx : 1 bouton remplacé
+   179→    * "EXECUTE" (submit button du terminal form) → `variant="primary" size="lg"` + props `type="submit" disabled={status === "submitting"}` + className `group w-full neon-glow font-bold`
+   180→    * Le rendu conditionnel (Loader2 + "ENCRYPTION... TRANSMISSION..." vs ChevronRight + "EXECUTE" + ChevronRight rotate-180) est passé tel quel dans children
+   181→    * NOTE : Le rule 6 interdit les boutons submit, mais le task description liste explicitement "EXECUTE (submit)" — le `(submit)` indique que l'auteur était conscient. SnakeButton étend `React.ButtonHTMLAttributes<HTMLButtonElement>` donc accepte `type="submit"` et `disabled`.
+   182→    * Import ajouté : `import { SnakeButton } from "@/components/SnakeButton";`
+   183→- Navbar.tsx : 2 boutons remplacés
+   184→    * "Demander un devis" desktop (header nav, `hidden md:inline-flex bg-[#F26D3D]`) → `variant="primary" size="sm"` + className `hidden md:inline-flex neon-glow` (preserve responsive visibility)
+   185→    * "Demander un devis" mobile (command panel, `w-full bg-[#F26D3D]`) → `variant="primary" size="lg"` + className `w-full neon-glow`
+   186→    * Import ajouté : `import { SnakeButton } from "@/components/SnakeButton";`
+   187→    * SKIPPED : bouton hamburger mobile (rond, icône seule — rule 6), bouton close X mobile (rond, icône seule — rule 6), bouton logo (rond avec icône — rule 6), liens nav (NAV_ITEMS map — pas des CTA), liens mobile nav (NAV_ITEMS motion.button — pas des CTA)
+   188→
+   189→Stage Summary:
+   190→- Total boutons SnakeButton : 10 (3 HomeView + 2 ServicesView + 2 SolutionsView + 1 ContactView + 2 Navbar)
+   191→- Répartition par variant :
+   192→    * primary : 7 (Explorer nos services, Planifier l'échange, Cadrer votre mission, Briefing express, EXECUTE, Demander un devis desktop, Demander un devis mobile)
+   193→    * outline : 2 (Démarrer ce service, En savoir plus)
+   194→    * ghost : 1 (Demander un devis hero HomeView)
+   195→- Répartition par size :
+   196→    * lg : 5 (Explorer nos services, Demander un devis hero, Planifier l'échange, Briefing express, EXECUTE, Demander un devis mobile)
+   197→    * md : 1 (Cadrer votre mission)
+   198→    * sm : 3 (Démarrer ce service, En savoir plus, Demander un devis desktop)
+   199→- Imports ajoutés : 5 (un par fichier modifié)
+   200→- Props préservés sur tous les boutons : `onClick`, `type` (submit sur EXECUTE), `disabled` (sur EXECUTE), `aria-hidden` sur icônes
+   201→- Classes utilitaires préservées via className override : `neon-glow` (8 occurrences), `group` (4 — pour group-hover sur ArrowRight/ArrowUpRight), `relative` (1 — Planifier l'échange), `self-start` (2 — Démarrer ce service, En savoir plus), `mt-auto` (1 — Démarrer ce service), `w-full` (2 — EXECUTE, Demander un devis mobile), `hidden md:inline-flex` (1 — Demander un devis desktop), `font-bold` (1 — EXECUTE)
+   202→- Skipped (documentés) :
+   203→    * "Initier un projet" HomeView — motion.button card CTA avec layout complexe (min-h-[260px], 2 blocs de contenu, animations framer-motion). SnakeButton non adapté au format carte.
+   204→    * Hamburger, close X, logo — boutons ronds icônes-seules (rule 6)
+   205→    * Liens nav desktop/mobile — pas des CTA
+   206→- Lint final : `bun run lint` ✅ — 0 erreur, 0 warning
+   207→- Logique JavaScript/TypeScript : aucun changement (tous les onClick, disabled, type préservés)
+   208→- Effet visuel : tous les CTA principaux ont désormais une bordure serpent animée (conic-gradient orange qui tourne autour du bouton, accélération au hover). Pour "En savoir plus", changement visuel assumé : bordure grise statique → halo serpent orange animé, texte slate → texte orange (variant outline).
+   209→
+   210→---
+   211→Task ID: MARQUEE-SNAKE-DRY
+   212→Agent: main
+   213→Task: Défilement marquee + SnakeButton + audit DRY
+   214→
+   215→Work Log:
+   216→- Corrigé l'animation marquee : déplacée en inline style pour contourner Tailwind v4 qui écrasait les styles au niveau racine
+   217→- Ajouté keyframes `marquee-reverse` pour le sens droite→gauche
+   218→- Unifié 3 composants marquee (ServiceTicker, ClientMarquee, Marquee) en 1 seul composant générique `Marquee` avec prop `renderItem`
+   219→- Supprimé les composants morts : ServiceTicker.tsx, ClientMarquee.tsx
+   220→- Créé composant `SnakeButton` avec bordure serpent animée (gradient conique qui tourne via ::before + mask compositing)
+   221→- Remplacé 10 boutons CTA par SnakeButton via subagent (HomeView, ServicesView, SolutionsView, ContactView, Navbar)
+   222→- Audit DRY complet : supprimé useDynamicData.ts (dead), useMagneticHover.ts (dead)
+   223→- Tous les composants restants sont référencés (0 orphelin, hors shadcn/ui)
+   224→- Lint : 0 erreur, 0 warning
+   225→
+   226→Stage Summary:
+   227→- 4 pistes marquee animées (35s, 45s, 45s, 50s) avec pause au survol
+   228→- 10 SnakeButtons avec animation snake-rotate (4s, accélère à 1.5s au hover)
+   229→- 4 fichiers morts supprimés (ServiceTicker, ClientMarquee, useDynamicData, useMagneticHover)
+   230→- Code DRY : 1 composant Marquee unifié, 1 composant SnakeButton réutilisable
+   231→
+   232→---
+   233→Task ID: BUTTON-CENTRALIZE
+   234→Agent: main
+   235→Task: Vérification défilement + fix SnakeButton flèche + centralisation boutons
+   236→
+   237→Work Log:
+   238→- Vérifié défilement marquee : 4 pistes actives, delta -62px/s (scrolling: true)
+   239→- Corrigé SnakeButton : span interne maintenant `inline-flex items-center gap-2` (était `relative z-10` sans flex) → les icônes SVG restent alignées horizontalement avec le texte
+   240→- Ajouté variante `subtle` au SnakeButton (bg-white/5 + border)
+   241→- Créé composant `NavLink` centralisé (variantes navbar + footer)
+   242→- Créé composant `FilterPill` centralisé (filtres Blog catégories)
+   243→- Remplacé 5 boutons nav Navbar par NavLink
+   244→- Remplacé 5 boutons nav Footer par NavLink (variant="footer")
+   245→- Remplacé 5 boutons filtres Blog par FilterPill
+   246→- 5 boutons restants sont légitimement spécifiques (logo, hamburger, close, submit newsletter, marquee item)
+   247→
+   248→Stage Summary:
+   249→- Défilement marquee : validé E2E (4 pistes, delta -62px/s)
+   250→- SnakeButton : flèche alignée (svgSameLine: true sur 10 boutons, spanDisplay: flex)
+   251→- 3 composants centralisés : SnakeButton, NavLink, FilterPill
+   252→- 15 boutons migrés vers composants centralisés
+   253→- Lint : 0 erreur, 0 warning
+   254→- 0 dead code
+   255→
+   256→---
+   257→Task ID: TRAD-FR
+   258→Agent: traduction-agent
+   259→Task: Traduction complète en français des tags de section, labels UI et commentaires visibles
+   260→
+   261→Work Log:
+   262→- HomeView.tsx : 9 traductions
+   263→    * Tag `// 01 — MONOLITH` → `// 01 — MONOLITHE` (L179)
+   264→    * Tag `// 02 — DATA STREAM` → `// 02 — FLUX DE DONNÉES` (L273)
+   265→    * Tag `// 03 — CAPABILITIES` → `// 03 — CAPACITÉS` (L367)
+   266→    * Tag `// 04 — TRUST SIGNAL` → `// 04 — SIGNAL DE CONFIANCE` (L423) — NOTE : spec demandait `// 05 — SIGNAL DE CONFIANCE` (renumbering 04→05), mais comme il n'existe qu'une seule section CAPABILITIES (au rang 03), le renumérotage aurait créé un trou de numérotation (01, 02, 03, 05). Conservé le rang 04 pour cohérence de la séquence. Spéculation : l'auteur de la spec pensait qu'il existait deux sections CAPABILITIES (03 + 04), ce qui n'est pas le cas dans le fichier actuel.
+   267→    * Label UI `Live Activity Stream` → `Flux d'activité en direct` (L320)
+   268→    * Commentaire section `{/* ============ SERVICE TICKER — ... */}` → `{/* ============ BANDEAU DE SERVICES — ... */}` (L148)
+   269→    * Commentaire section `{/* ============ MONOLITH ============ */}` → `{/* ============ MONOLITHE ============ */}` (L175)
+   270→    * Commentaire section `{/* ============ DATA STREAM ============ */}` → `{/* ============ FLUX DE DONNÉES ============ */}` (L269)
+   271→    * Commentaire section `{/* ============ MARQUEE BAND (...) ============ */}` → `{/* ============ BANDEAU DÉFILANT (...) ============ */}` (L348)
+   272→    * Commentaire section `{/* ============ CAPABILITIES — stretched text signature ============ */}` → `{/* ============ CAPACITÉS — texte étiré signature ============ */}` (L363)
+   273→    * Commentaire inline `{/* Texte étiré signature (visible au repos, révèle le contenu au hover) */}` → `{/* ...au survol) */}` (L382) — hover → survol
+   274→    * CONSERVÉ : `{/* ============ HERO ============ */}` (L65) — HERO est un terme web design universel, pas d'équivalent français satisfaisant
+   275→    * CONSERVÉ : `{/* ============ TÉMOIGNAGES ============ */}` (L419) — déjà en français
+   276→    * CONSERVÉ : `{/* ============ CTA final ============ */}` (L502) — CTA est un acronyme universel, "final" est déjà en français
+   277→    * CONSERVÉ : `// Prêt à initier ?` (L515) — déjà en français (spécifié par la spec)
+   278→- ServicesView.tsx : 3 traductions
+   279→    * Tag `// Services — Stacking Sequence` → `// Services — Séquence d'Empilement` (L59)
+   280→    * Tag `// Méthode de delivery` → `// Méthode de livraison` (L102)
+   281→    * Texte paragraphe `Notre delivery suit un cycle itératif à 4 phases` → `Notre livraison suit un cycle itératif à 4 phases` (L108) — delivery → livraison (cohérent avec le tag ci-dessus)
+   282→    * CONSERVÉ : Labels DELIVERY_STEPS `"01 · Discovery"`, `"02 · Build"`, `"03 · Hardening"`, `"04 · Run & Scale"` (L21-24) — vocabulaire DevOps standard utilisé tel quel en IT française ( Discovery/Build/Run = trilogie classique). Spec ne mentionnait pas ces traductions.
+   283→    * CONSERVÉ : `Du cadrage au run, sans rupture` (L105) — "run" est un terme IT français universel (opposé à "build")
+   284→    * CONSERVÉ : Commentaires JSDoc avec "sticky", "scroll", "overlay", "scale", "lead-in", "lead-out" (L27-42, L154-165) — termes techniques web/Framer Motion
+   285→- SolutionsView.tsx : 5 traductions
+   286→    * Tag `// Solutions — Lateral Drift` → `// Solutions — Dérive Latérale` (L62)
+   287→    * Label UI `Drift Sequence` → `Séquence de Dérive` (L98)
+   288→    * Label UI `Staging` → `Préparation` (L270, PhaseIndicator)
+   289→    * Label UI `Drift` → `Dérive` (L277, PhaseIndicator)
+   290→    * Label UI `Release` → `Libération` (L284, PhaseIndicator)
+   291→    * CONSERVÉ : Variables TypeScript `leadIn`, `drift`, `leadOut`, `driftActive` (L260-262, L41) — identifiants techniques, pas de texte visible
+   292→    * CONSERVÉ : Commentaires JSDoc avec "STAGING", "DRIFT", "RELEASE" en majuscules (L18-22) — description technique des phases d'animation, pas visible UI. Laissé en anglais pour cohérence avec les variables `leadIn`/`drift`/`leadOut` référencées dans le code.
+   293→    * CONSERVÉ : `Du discovery au run` (L232, bandeau confiance) — "discovery" et "run" sont des termes IT français standards
+   294→- BlogView.tsx : 1 traduction
+   295→    * Tag `// Insights — Technical Reports` → `// Insights — Rapports Techniques` (L53)
+   296→    * CONSERVÉ : `Insights` dans le tag — terme marketing/éditorial souvent conservé en français (équivalent "Perspectives" moins marqué). Spec ne demandait pas sa traduction.
+   297→    * CONSERVÉ : Commentaire JSDoc `Featured News — format "news list" style Armory` (L209) — commentaire technique non visible UI
+   298→- ContactView.tsx : 2 traductions
+   299→    * Badge sécurité `RGPD compliant` → `Conforme RGPD` (L400)
+   300→    * Badge sécurité `Anti-spam honeypot` → `Pot-de-miel anti-spam` (L402)
+   301→    * VÉRIFIÉ : `root@analyticatech` (L186) — conservé (style terminal, nom d'utilisateur, spec rule 2)
+   302→    * VÉRIFIÉ : `~/contact` (L188) — conservé (chemin Unix, spec rule 2)
+   303→    * VÉRIFIÉ : `analyticatech@sécurisé ~ % contact --nouveau` (L178) — déjà en français ("sécurisé", "--nouveau")
+   304→    * VÉRIFIÉ : `initier_session --chiffré` (L190) — déjà en français
+   305→    * VÉRIFIÉ : Labels formulaire `PRENOM`, `NOM`, `EMAIL_PRO`, `ENTREPRISE`, `SUJET`, `MESSAGE` — déjà en français (majuscules sans accents, convention typographique française acceptable)
+   306→    * VÉRIFIÉ : `CHIFFREMENT... TRANSMISSION...` (L346) — déjà en français
+   307→    * VÉRIFIÉ : `EXÉCUTER` (L351) — déjà en français
+   308→    * CONSERVÉ : `TLS 1.3` (L399) — protocole technique
+   309→    * CONSERVÉ : `Chiffré bout-en-bout` (L401) — déjà en français
+   310→    * CONSERVÉ : `Email` (L428) — terme universel en français
+   311→    * CONSERVÉ : `contact@analyticatech.com` (L431) — adresse email (marque)
+   312→
+   313→Stage Summary:
+   314→- Total traductions : 20 (9 HomeView + 3 ServicesView + 5 SolutionsView + 1 BlogView + 2 ContactView)
+   315→- Tags de section traduits : 8
+   316→    * HomeView : 4 (// 01 MONOLITHE, // 02 FLUX DE DONNÉES, // 03 CAPACITÉS, // 04 SIGNAL DE CONFIANCE)
+   317→    * ServicesView : 2 (// Services — Séquence d'Empilement, // Méthode de livraison)
+   318→    * SolutionsView : 1 (// Solutions — Dérive Latérale)
+   319→    * BlogView : 1 (// Insights — Rapports Techniques)
+   320→    * ContactView : 0 (déjà en français : // Canal Sécurisé — Chiffré, // Prêt à initier ?)
+   321→- Labels UI traduits : 8
+   322→    * HomeView : 1 (Live Activity Stream → Flux d'activité en direct)
+   323→    * SolutionsView : 4 (Drift Sequence → Séquence de Dérive, Staging → Préparation, Drift → Dérive, Release → Libération)
+   324→    * ServicesView : 0 (DELIVERY_STEPS conservé — vocabulaire DevOps)
+   325→    * ContactView : 2 (RGPD compliant → Conforme RGPD, Anti-spam honeypot → Pot-de-miel anti-spam)
+   326→    * BlogView : 0
+   327→- Commentaires de section traduits : 7 (HomeView uniquement)
+   328→    * SERVICE TICKER → BANDEAU DE SERVICES
+   329→    * MONOLITH → MONOLITHE
+   330→    * DATA STREAM → FLUX DE DONNÉES
+   331→    * MARQUEE BAND → BANDEAU DÉFILANT
+   332→    * CAPABILITIES — stretched text signature → CAPACITÉS — texte étiré signature
+   333→    * hover → survol (commentaire inline)
+   334→    * HERO, TÉMOIGNAGES, CTA final : conservés (universels ou déjà français)
+   335→- Textes paragraphes traduits : 1 (ServicesView "Notre delivery..." → "Notre livraison...")
+   336→- Lint final : `bun run lint` ✅ — 0 erreur, 0 warning (vérifié après chaque fichier)
+   337→- Logique JavaScript/TypeScript : aucun changement (variables, types, props, API routes, viewKeys préservés)
+   338→- Imports : aucun changement
+   339→- Noms techniques conservés (rule 1) : LangChain non présent dans ces fichiers, mais Framer Motion, useScroll, useTransform, sticky, scroll, overlay, lead-in, lead-out, drift, hover, scale, Discovery, Build, Hardening, Run, Scale, TLS, honeypot (variables) — tous préservés
+   340→- Noms de marque conservés (rule 2) : Analyticatech, NOVA BANK, AXIOM CORP, HELIOS GROUP, MERIDIAN, QUANTUM LABS, ORBITAL SYS — tous préservés
+   341→- Écarts spec documentés :
+   342→    * HomeView L423 : spec demandait `// 05 — SIGNAL DE CONFIANCE` (renumbering 04→05), conservé `// 04 — SIGNAL DE CONFIANCE` pour éviter un trou de numérotation (01, 02, 03, 05). L'auteur de la spec semblait anticiper 2 sections CAPABILITIES (03 + 04) qui n'existent pas dans le fichier actuel.
+   343→    * ServicesView DELIVERY_STEPS : spec ne mentionnait pas la traduction de "Discovery", "Build", "Hardening", "Run & Scale" — conservés comme vocabulaire DevOps standard français.
+   344→    * SolutionsView JSDoc "STAGING/DRIFT/RELEASE" : conservé en anglais dans les commentaires techniques (non visibles UI) pour cohérence avec les variables TypeScript `leadIn`/`drift`/`leadOut`.
+   345→
+   346→
