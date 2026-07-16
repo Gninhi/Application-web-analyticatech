@@ -30,7 +30,7 @@ export function FilterPill({
         "rounded-full border px-4 py-2 font-mono text-[11px] uppercase tracking-widest transition-all focus-visible:outline-2 focus-visible:outline-offset-2",
         active
           ? "border-[#F26D3D] bg-[#F26D3D] text-white"
-          : "border-black/15 dark:border-black/15 dark:border-white/15 text-slate-500 dark:text-slate-500 dark:text-slate-400 hover:border-black/40 dark:hover:border-white/40 hover:text-slate-700 dark:hover:text-slate-700 dark:text-slate-200",
+          : "border-black/15 dark:border-white/15 text-slate-500 dark:text-slate-300 hover:border-black/40 dark:hover:border-white/40 hover:text-slate-700 dark:hover:text-slate-700 dark:text-slate-200",
         className
       )}
       {...props}

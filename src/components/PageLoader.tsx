@@ -81,19 +81,19 @@ export function PageLoader() {
             className="flex items-center gap-3 mb-12"
           >
             <Logo size={48} delay={0.3} />
-            <span className="font-display text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-800 dark:text-slate-100">
+            <span className="font-display text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100">
               Analytica<span className="text-[#F26D3D]">tech</span>
             </span>
           </motion.div>
 
           {/* Compteur géant */}
-          <div className="font-display text-7xl md:text-9xl font-bold tracking-tight text-slate-900 dark:text-slate-900 dark:text-slate-50 tabular-nums">
+          <div className="font-display text-7xl md:text-9xl font-bold tracking-tight text-slate-900 dark:text-slate-50 tabular-nums">
             {String(progress).padStart(3, "0")}
             <span className="text-[#F26D3D]">%</span>
           </div>
 
           {/* Label étiré */}
-          <p className="stretch-text text-[10px] md:text-xs text-slate-500 dark:text-slate-500 dark:text-slate-400 mt-4">
+          <p className="stretch-text text-[10px] md:text-xs text-slate-500 dark:text-slate-400 mt-4">
             Initialisation système
           </p>
 

@@ -49,15 +49,15 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
             >
               Alerte Système // 0xERR_FATAL
             </p>
-            <h1 className="font-display text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-800 dark:text-slate-100 mb-3">
+            <h1 className="font-display text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100 mb-3">
               Défaillance système détectée
             </h1>
-            <p className="text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 text-sm mb-2">
+            <p className="text-slate-400 dark:text-slate-300 text-sm mb-2">
               Une erreur inattendue est survenue lors du rendu de l&apos;interface.
               L&apos;incident a été journalisé pour analyse.
             </p>
             {this.state.error && (
-              <pre className="font-mono text-[11px] text-[#F26D3D]/80 bg-black/30 border border-black/10 dark:border-black/10 dark:border-white/10 rounded-lg p-3 mt-4 overflow-auto max-h-32 text-left">
+              <pre className="font-mono text-[11px] text-[#F26D3D]/80 bg-black/30 border border-black/10 dark:border-white/10 rounded-lg p-3 mt-4 overflow-auto max-h-32 text-left">
                 {this.state.error.message}
               </pre>
             )}

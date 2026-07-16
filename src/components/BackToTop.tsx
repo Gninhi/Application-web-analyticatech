@@ -1,38 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
-
-const SHOW_THRESHOLD = 600; // px avant d'afficher le bouton
+import { useScrollVisibility } from "@/hooks/useScrollState";
 
 /**
  * BackToTop — bouton flottant "retour vers le haut".
  *
- * Apparaît après un scroll de SHOW_THRESHOLD px.
+ * Apparaît après un scroll de 600px (SCROLL_THRESHOLDS.backToTop).
  * Disparaît en animation quand l'utilisateur remonte en haut.
  * Smooth scroll natif du navigateur (respecte prefers-reduced-motion).
+ *
+ * Utilise le hook centralisé useScrollVisibility.
  */
 export function BackToTop() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        setVisible(window.scrollY > SHOW_THRESHOLD);
-        ticking = false;
-      });
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const visible = useScrollVisibility();
 
   const scrollToTop = () => {
-    // Respecte prefers-reduced-motion
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({ top: 0, behavior: prefersReduced ? "auto" : "smooth" });
   };

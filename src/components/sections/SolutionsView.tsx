@@ -75,7 +75,7 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
                 delay={0.45}
               />
             </h1>
-            <p className="text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 leading-relaxed text-lg">
+            <p className="text-slate-400 dark:text-slate-300 leading-relaxed text-lg">
               Défilez verticalement : les cas d&apos;usage défilent horizontalement
               comme une séquence orbitale. Chaque solution est prête à être
               adaptée à votre contexte.
@@ -94,7 +94,7 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
                 className="absolute inset-y-0 left-0 bg-[#F26D3D]"
               />
             </div>
-            <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-500 dark:text-slate-400">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
               Séquence de Dérive
             </span>
           </motion.div>
@@ -156,16 +156,16 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
 
                 {/* Contenu */}
                 <div className="flex-1 p-6 md:p-8 flex flex-col">
-                  <h3 className="font-display text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-900 dark:text-slate-50 mb-3 tracking-tight">
+                  <h3 className="font-display text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-50 mb-3 tracking-tight">
                     {sol.title}
                   </h3>
-                  <p className="text-sm text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 leading-relaxed mb-5 flex-1">
+                  <p className="text-sm text-slate-400 dark:text-slate-300 leading-relaxed mb-5 flex-1">
                     {sol.summary}
                   </p>
 
                   {/* Impact */}
                   <div className="rounded-xl border border-[#F26D3D]/25 bg-[#F26D3D]/5 p-3 mb-5">
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-500 dark:text-slate-400 mb-1">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
                       Impact mesuré
                     </p>
                     <p className="font-display text-lg font-bold text-[#F26D3D]">
@@ -178,7 +178,7 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
                     {sol.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-md border border-black/10 dark:border-black/10 dark:border-white/10 bg-black/5 dark:bg-black/20 px-2 py-1 font-mono text-[10px] text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300"
+                        className="rounded-md border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/20 px-2 py-1 font-mono text-[10px] text-slate-400 dark:text-slate-300"
                       >
                         #{tag}
                       </span>
@@ -201,10 +201,10 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
             {/* Carte finale CTA */}
             <article className="shrink-0 w-[78vw] sm:w-[64vw] md:w-[52vw] lg:w-[40vw] h-[68vh] rounded-3xl border border-dashed border-[#F26D3D]/40 flex flex-col items-center justify-center text-center p-8">
               <Zap className="h-10 w-10 text-[#F26D3D] mb-4" aria-hidden />
-              <h3 className="font-display text-3xl font-bold text-slate-900 dark:text-slate-900 dark:text-slate-50 mb-3">
+              <h3 className="font-display text-3xl font-bold text-slate-900 dark:text-slate-50 mb-3">
                 Votre secteur n&apos;est pas listé ?
               </h3>
-              <p className="text-slate-500 dark:text-slate-500 dark:text-slate-400 mb-6 max-w-sm">
+              <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-sm">
                 Nous concevons des solutions sur-mesure. Expliquons-nous votre
                 cas d&apos;usage en 30 minutes.
               </p>
@@ -240,10 +240,10 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
                 className="glass-card rounded-2xl p-6"
               >
                 <f.icon className="h-7 w-7 text-[#F26D3D] mb-3" aria-hidden />
-                <h4 className="font-display text-lg font-bold text-slate-900 dark:text-slate-900 dark:text-slate-50 mb-1.5">
+                <h4 className="font-display text-lg font-bold text-slate-900 dark:text-slate-50 mb-1.5">
                   {f.t}
                 </h4>
-                <p className="text-sm text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 leading-relaxed">{f.d}</p>
+                <p className="text-sm text-slate-400 dark:text-slate-300 leading-relaxed">{f.d}</p>
               </motion.div>
             ))}
           </div>
@@ -265,7 +265,7 @@ function PhaseIndicator({ progress }: { progress: MotionValue<number> }) {
     <div className="absolute top-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20 pointer-events-none">
       <motion.span
         style={{ opacity: leadIn }}
-        className="font-mono text-[9px] uppercase tracking-widest text-slate-500 dark:text-slate-500 dark:text-slate-400"
+        className="font-mono text-[9px] uppercase tracking-widest text-slate-500 dark:text-slate-400"
       >
         Préparation
       </motion.span>
@@ -279,7 +279,7 @@ function PhaseIndicator({ progress }: { progress: MotionValue<number> }) {
       <span className="h-px w-4 bg-white/20" aria-hidden />
       <motion.span
         style={{ opacity: leadOut }}
-        className="font-mono text-[9px] uppercase tracking-widest text-slate-500 dark:text-slate-500 dark:text-slate-400"
+        className="font-mono text-[9px] uppercase tracking-widest text-slate-500 dark:text-slate-400"
       >
         Libération
       </motion.span>

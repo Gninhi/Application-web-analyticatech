@@ -66,7 +66,7 @@ export function BlogView() {
                 delay={0.5}
               />
             </h1>
-            <p className="text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 leading-relaxed text-lg">
+            <p className="text-slate-400 dark:text-slate-300 leading-relaxed text-lg">
               Nos architectes partagent leurs analyses : patterns de production,
               choix d&apos;outillage et leçons apprises sur les missions.
             </p>
@@ -91,7 +91,7 @@ export function BlogView() {
                 {cat === "Tous" ? "Tous les rapports" : cat}
               </FilterPill>
             ))}
-            <span className="ml-auto font-mono text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-500 dark:text-slate-400">
+            <span className="ml-auto font-mono text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
               {filtered.length} entrée{filtered.length > 1 ? "s" : ""}
             </span>
           </div>
@@ -132,7 +132,7 @@ export function BlogView() {
                       aria-hidden
                     />
                     {/* Métadonnées type terminal */}
-                    <div className="absolute inset-0 p-4 flex flex-col justify-between font-mono text-[10px] text-slate-400 dark:text-slate-600 dark:text-slate-300">
+                    <div className="absolute inset-0 p-4 flex flex-col justify-between font-mono text-[10px] text-slate-400 dark:text-slate-300">
                       <div className="flex items-center justify-between">
                         <span className="rounded-full border border-black/15 dark:border-white/15 bg-black/40 px-2 py-0.5 uppercase tracking-widest text-[#F26D3D]">
                           {post.category}
@@ -150,13 +150,13 @@ export function BlogView() {
 
                   {/* Corps */}
                   <div className="p-5 flex flex-col flex-1">
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-500 dark:text-slate-400 mb-2">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">
                       {formatDate(post.date)}
                     </p>
-                    <h3 className="font-display text-lg font-bold text-slate-900 dark:text-slate-900 dark:text-slate-50 mb-2 leading-snug group-hover:text-[#F26D3D] transition-colors">
+                    <h3 className="font-display text-lg font-bold text-slate-900 dark:text-slate-50 mb-2 leading-snug group-hover:text-[#F26D3D] transition-colors">
                       {post.title}
                     </h3>
-                    <p className="text-sm text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 leading-relaxed mb-4 flex-1">
+                    <p className="text-sm text-slate-400 dark:text-slate-300 leading-relaxed mb-4 flex-1">
                       {post.excerpt}
                     </p>
 
@@ -165,7 +165,7 @@ export function BlogView() {
                       {post.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="inline-flex items-center gap-0.5 rounded-md border border-black/10 dark:border-black/10 dark:border-white/10 bg-black/5 dark:bg-black/20 px-1.5 py-0.5 font-mono text-[9px] text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300"
+                          className="inline-flex items-center gap-0.5 rounded-md border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/20 px-1.5 py-0.5 font-mono text-[9px] text-slate-400 dark:text-slate-300"
                         >
                           <Hash className="h-2.5 w-2.5" aria-hidden />
                           {tag}
@@ -173,7 +173,7 @@ export function BlogView() {
                       ))}
                     </div>
 
-                    <div className="flex items-center justify-between pt-3 border-t border-black/10 dark:border-black/10 dark:border-white/10">
+                    <div className="flex items-center justify-between pt-3 border-t border-black/10 dark:border-white/10">
                       <span
                         className={cn(
                           "rounded-full border px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-widest",
@@ -182,7 +182,7 @@ export function BlogView() {
                       >
                         {post.category}
                       </span>
-                      <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 group-hover:text-[#F26D3D] transition-colors">
+                      <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-300 group-hover:text-[#F26D3D] transition-colors">
                         Lire
                         <ArrowUpRight className="h-3 w-3" aria-hidden />
                       </span>
@@ -195,7 +195,7 @@ export function BlogView() {
 
           {filtered.length === 0 && (
             <div className="text-center py-20">
-              <p className="font-mono text-sm text-slate-500 dark:text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+              <p className="font-mono text-sm text-slate-500 dark:text-slate-400 uppercase tracking-widest">
                 Aucun rapport dans cette catégorie.
               </p>
             </div>
@@ -214,7 +214,7 @@ function FeaturedNews({ posts }: { posts: BlogPost[] }) {
   if (posts.length === 0) return null;
 
   return (
-    <div className="border-t border-black/10 dark:border-black/10 dark:border-white/10">
+    <div className="border-t border-black/10 dark:border-white/10">
       {posts.map((post, i) => (
         <motion.a
           key={post.id}
@@ -224,12 +224,12 @@ function FeaturedNews({ posts }: { posts: BlogPost[] }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.4, delay: i * 0.08 }}
-          className="group relative block border-b border-black/10 dark:border-black/10 dark:border-white/10 py-6 md:py-8 hover:bg-white/[0.02] transition-colors"
+          className="group relative block border-b border-black/10 dark:border-white/10 py-6 md:py-8 hover:bg-white/[0.02] transition-colors"
         >
           <div className="grid grid-cols-12 gap-4 md:gap-8 items-center">
             {/* Date */}
             <div className="col-span-12 md:col-span-2">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-500 dark:text-slate-400">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
                 {formatDate(post.date)}
               </p>
               <p className="font-mono text-[10px] uppercase tracking-widest text-[#F26D3D] mt-1">
@@ -247,17 +247,17 @@ function FeaturedNews({ posts }: { posts: BlogPost[] }) {
               >
                 {post.category}
               </span>
-              <h3 className="font-display text-xl md:text-3xl font-bold text-slate-900 dark:text-slate-900 dark:text-slate-50 tracking-tight group-hover:text-[#F26D3D] transition-colors">
+              <h3 className="font-display text-xl md:text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight group-hover:text-[#F26D3D] transition-colors">
                 {post.title}
               </h3>
-              <p className="mt-2 text-sm text-slate-500 dark:text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-1">
+              <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-1">
                 {post.excerpt}
               </p>
             </div>
 
             {/* Lien lire */}
             <div className="col-span-12 md:col-span-2 flex md:justify-end">
-              <span className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-slate-500 dark:text-slate-500 dark:text-slate-400 group-hover:text-[#F26D3D] transition-colors">
+              <span className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400 group-hover:text-[#F26D3D] transition-colors">
                 Lire
                 <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
               </span>

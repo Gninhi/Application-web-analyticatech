@@ -63,7 +63,7 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
               as="h1"
               className="font-display text-4xl md:text-6xl font-bold text-[#F26D3D] tracking-tight mb-4"
             />
-            <p className="text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 leading-relaxed text-lg">
+            <p className="text-slate-400 dark:text-slate-300 leading-relaxed text-lg">
               Chaque service est une couche de notre monolithe. Défilez : les cartes
               se superposent et se collent en haut — la précédente disparaît sous
               la suivante, révélation par révélation.
@@ -101,10 +101,10 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
               <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
                 {"// Méthode de livraison"}
               </p>
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-900 dark:text-slate-50 mb-4 tracking-tight">
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-50 mb-4 tracking-tight">
                 Du cadrage au run, sans rupture
               </h2>
-              <p className="text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
+              <p className="text-slate-400 dark:text-slate-300 leading-relaxed mb-6">
                 Notre livraison suit un cycle itératif à 4 phases, chacune livrant
                 de la valeur observable. Aucun &ldquo;big bang&rdquo; : chaque incrément
                 est mis en production et monitoré.
@@ -136,10 +136,10 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
                     <step.icon className="h-5 w-5 text-[#F26D3D]" aria-hidden />
                   </span>
                   <div>
-                    <p className="font-mono text-xs uppercase tracking-widest text-slate-700 dark:text-slate-700 dark:text-slate-200">
+                    <p className="font-mono text-xs uppercase tracking-widest text-slate-700 dark:text-slate-200">
                       {step.t}
                     </p>
-                    <p className="text-sm text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 mt-0.5">{step.d}</p>
+                    <p className="text-sm text-slate-400 dark:text-slate-300 mt-0.5">{step.d}</p>
                   </div>
                 </div>
               ))}
@@ -269,14 +269,14 @@ function StickyServiceCard({ service, index, total, scrollProgress, onNavigate }
               </p>
 
               <div className="mb-6">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-600 dark:text-slate-300 mb-3">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-300 mb-3">
                   Stack technologique
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {service.technologies.map((tech) => (
                     <span
                       key={tech}
-                      className="rounded-md border border-black/10 dark:border-white/10 bg-black/30 px-2.5 py-1 font-mono text-[11px] text-slate-400 dark:text-slate-600 dark:text-slate-300"
+                      className="rounded-md border border-black/10 dark:border-white/10 bg-black/30 px-2.5 py-1 font-mono text-[11px] text-slate-400 dark:text-slate-300"
                     >
                       {tech}
                     </span>

@@ -1,0 +1,197 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { ArrowLeft, Target, Eye, Heart, Users } from "lucide-react";
+import type { ViewKey } from "@/lib/data";
+import { SnakeButton } from "@/components/SnakeButton";
+import { Logo } from "@/components/Logo";
+
+interface AboutViewProps {
+  onNavigate: (view: ViewKey) => void;
+}
+
+const VALUES = [
+  {
+    icon: Target,
+    title: "Précision",
+    description: "Chaque décision est fondée sur des données. Nous mesurons, validons et itérons — jamais d'à-peu-près.",
+  },
+  {
+    icon: Eye,
+    title: "Transparence",
+    description: "Code auditable, logs intelligibles, métriques partagées. Vous savez toujours ce qui se passe dans vos systèmes.",
+  },
+  {
+    icon: Heart,
+    title: "Engagement",
+    description: "Une équipe dédiée, sans rotation. Nous portons vos objectifs comme les nôtres, du cadrage au run.",
+  },
+  {
+    icon: Users,
+    title: "Souveraineté",
+    description: "Vos données restent les vôtres. Hébergement SecNumCloud, code ouvert, aucune dépendance fournisseur.",
+  },
+] as const;
+
+const STATS = [
+  { v: "127+", l: "Missions livrées" },
+  { v: "38%", l: "Coûts réduits" },
+  { v: "24h", l: "Temps de réponse" },
+  { v: "4.9/5", l: "Satisfaction" },
+];
+
+/**
+ * AboutView — page "À propos" d'Analyticatech.
+ * Mission, vision, valeurs et statistiques clés.
+ */
+export function AboutView({ onNavigate }: AboutViewProps) {
+  return (
+    <div className="pt-28 md:pt-36 pb-20">
+      <div className="mx-auto max-w-5xl px-4 md:px-6">
+        {/* Retour */}
+        <SnakeButton
+          variant="ghost"
+          size="sm"
+          onClick={() => onNavigate("home")}
+          className="mb-8"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden />
+          Retour à l'accueil
+        </SnakeButton>
+
+        {/* Hero */}
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
+          <div className="flex justify-center mb-6">
+            <Logo size={64} delay={0.2} />
+          </div>
+          <h1 className="font-display text-4xl md:text-6xl font-bold text-[#F26D3D] tracking-tight mb-4">
+            À propos d'Analyticatech
+          </h1>
+          <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto">
+            Cabinet de conseil de haut niveau en IA, Transformation Digitale et Automatisation.
+            Nous concevons et industrialisons des systèmes intelligents à l'échelle.
+          </p>
+        </motion.div>
+
+        {/* Mission & Vision */}
+        <div className="grid md:grid-cols-2 gap-6 mb-16">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="glass-card rounded-2xl p-8"
+          >
+            <h2 className="font-display text-2xl font-bold text-slate-900 dark:text-slate-50 mb-3">
+              Notre Mission
+            </h2>
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+              Rendre l'intelligence artificielle opérationnelle et souveraine pour les
+              organisations européennes. Du POC à la production, nous transformons
+              l'IA en avantage concurrentiel durable — avec précision, sécurité et
+              impact mesurable.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="glass-card rounded-2xl p-8"
+          >
+            <h2 className="font-display text-2xl font-bold text-slate-900 dark:text-slate-50 mb-3">
+              Notre Vision
+            </h2>
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+              Un futur où chaque organisation maîtrise ses systèmes agentiques,
+              où la donnée est un levier et non une contrainte, et où l'IA
+              sert l'humain — pas l'inverse. Nous bâtissons cette souveraineté
+              technologique, une mission à la fois.
+            </p>
+          </motion.div>
+        </div>
+
+        {/* Valeurs */}
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-16"
+        >
+          <h2 className="font-display text-3xl font-bold text-slate-900 dark:text-slate-50 mb-8 text-center">
+            Nos Valeurs
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {VALUES.map((value, i) => (
+              <motion.div
+                key={value.title}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+                className="glass-card rounded-2xl p-6 text-center"
+              >
+                <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 mb-4">
+                  <value.icon className="h-6 w-6 text-[#F26D3D]" aria-hidden />
+                </span>
+                <h3 className="font-display text-lg font-bold text-slate-900 dark:text-slate-50 mb-2">
+                  {value.title}
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {value.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="glass-card rounded-3xl p-8 md:p-12 mb-16"
+        >
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            {STATS.map((stat) => (
+              <div key={stat.l}>
+                <p className="font-display text-3xl md:text-4xl font-bold text-[#F26D3D]">
+                  {stat.v}
+                </p>
+                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mt-2">
+                  {stat.l}
+                </p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4 }}
+          className="text-center"
+        >
+          <SnakeButton
+            variant="primary"
+            size="lg"
+            onClick={() => onNavigate("contact")}
+            className="neon-glow"
+          >
+            Travaillons ensemble
+          </SnakeButton>
+        </motion.div>
+      </div>
+    </div>
+  );
+}

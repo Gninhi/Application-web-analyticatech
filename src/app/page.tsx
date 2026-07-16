@@ -12,6 +12,8 @@ import { ServicesView } from "@/components/sections/ServicesView";
 import { SolutionsView } from "@/components/sections/SolutionsView";
 import { BlogView } from "@/components/sections/BlogView";
 import { ContactView } from "@/components/sections/ContactView";
+import { LegalView } from "@/components/sections/LegalView";
+import { AboutView } from "@/components/sections/AboutView";
 import type { ViewKey } from "@/lib/data";
 
 /**
@@ -45,8 +47,9 @@ export default function Home() {
 
       {/* Contenu principal — transitions entre vues */}
       <main
-        className="flex-1 relative"
+        className="flex-1 relative outline-none"
         id="main-content"
+        tabIndex={-1}
       >
         <AnimatePresence mode="wait">
           <motion.div
@@ -61,6 +64,9 @@ export default function Home() {
             {view === "solutions" && <SolutionsView onNavigate={handleNavigate} />}
             {view === "blog" && <BlogView />}
             {view === "contact" && <ContactView />}
+            {view === "rgpd" && <LegalView type="rgpd" onNavigate={handleNavigate} />}
+            {view === "legal" && <LegalView type="legal" onNavigate={handleNavigate} />}
+            {view === "about" && <AboutView onNavigate={handleNavigate} />}
           </motion.div>
         </AnimatePresence>
       </main>

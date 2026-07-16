@@ -71,7 +71,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
             className="inline-flex items-center gap-2 rounded-full glass px-3 py-1.5 mb-7"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-[#F26D3D] animate-pulse" aria-hidden />
-            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300">
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-slate-400 dark:text-slate-300">
               Cabinet IA · Transformation · Automatisation
             </span>
           </motion.div>
@@ -95,7 +95,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
-            className="mt-7 max-w-2xl text-base md:text-lg text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 leading-relaxed"
+            className="mt-7 max-w-2xl text-base md:text-lg text-slate-400 dark:text-slate-300 leading-relaxed"
           >
             Nous concevons et industrialisons des systèmes à base d&apos;IA, d&apos;agents
             cognitifs et d&apos;automatisations critiques. De l&apos;architecture au déploiement,
@@ -135,7 +135,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
             {displayStats.map((s) => (
               <div key={s.l} className="bg-slate-200/40 dark:bg-[#022859]/30 p-5">
                 <p className="font-display text-2xl md:text-3xl font-bold text-[#F26D3D]">{s.v}</p>
-                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 mt-1">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-300 mt-1">
                   {s.l}
                 </p>
               </div>
@@ -174,13 +174,13 @@ export function HomeView({ onNavigate }: HomeViewProps) {
                       </span>
                     </div>
 
-                    <h3 className="font-display text-xl font-bold text-slate-900 dark:text-slate-900 dark:text-slate-50 mb-1.5">
+                    <h3 className="font-display text-xl font-bold text-slate-900 dark:text-slate-50 mb-1.5">
                       {service.title}
                     </h3>
                     <p className="font-mono text-[11px] uppercase tracking-widest text-[#F26D3D] mb-3">
                       {service.tagline}
                     </p>
-                    <p className="text-sm text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 leading-relaxed mb-5">
+                    <p className="text-sm text-slate-400 dark:text-slate-300 leading-relaxed mb-5">
                       {service.description}
                     </p>
 
@@ -188,20 +188,20 @@ export function HomeView({ onNavigate }: HomeViewProps) {
                       {service.technologies.map((tech) => (
                         <span
                           key={tech}
-                          className="rounded-md border border-black/10 dark:border-black/10 dark:border-white/10 bg-black/5 dark:bg-black/20 px-2 py-1 font-mono text-[10px] text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300"
+                          className="rounded-md border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/20 px-2 py-1 font-mono text-[10px] text-slate-400 dark:text-slate-300"
                         >
                           {tech}
                         </span>
                       ))}
                     </div>
 
-                    <div className="mt-auto grid grid-cols-2 gap-3 pt-4 border-t border-black/10 dark:border-black/10 dark:border-white/10">
+                    <div className="mt-auto grid grid-cols-2 gap-3 pt-4 border-t border-black/10 dark:border-white/10">
                       {service.metrics.map((m) => (
                         <div key={m.label}>
-                          <p className="font-display text-lg font-bold text-slate-800 dark:text-slate-800 dark:text-slate-100">
+                          <p className="font-display text-lg font-bold text-slate-800 dark:text-slate-100">
                             {m.value}
                           </p>
-                          <p className="font-mono text-[9px] uppercase tracking-widest text-slate-500 dark:text-slate-500 dark:text-slate-400">
+                          <p className="font-mono text-[9px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
                             {m.label}
                           </p>
                         </div>
@@ -222,10 +222,10 @@ export function HomeView({ onNavigate }: HomeViewProps) {
             >
               <span className="font-mono text-3xl font-bold text-white/10">06.</span>
               <div>
-                <h3 className="font-display text-xl font-bold text-slate-900 dark:text-slate-900 dark:text-slate-50 mb-2">
+                <h3 className="font-display text-xl font-bold text-slate-900 dark:text-slate-50 mb-2">
                   Besoin sur-mesure ?
                 </h3>
-                <p className="text-sm text-slate-500 dark:text-slate-500 dark:text-slate-400 mb-4">
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
                   Co-construisons votre architecture cible avec nos architectes Solution.
                 </p>
                 <span className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-[#F26D3D]">
@@ -259,7 +259,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
                   className="glass-card rounded-2xl p-5 relative overflow-hidden"
                 >
                   <div className="flex items-start justify-between mb-3">
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-300">
                       {metric.label}
                     </p>
                     <span className="inline-flex items-center gap-1 font-mono text-[10px] text-[#4CAF50]">
@@ -267,7 +267,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
                       +{metric.trend}%
                     </span>
                   </div>
-                  <p className="font-display text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-900 dark:text-slate-50">
+                  <p className="font-display text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-50">
                     <AnimatedCounter
                       value={metric.value}
                       suffix={metric.suffix}
@@ -286,9 +286,9 @@ export function HomeView({ onNavigate }: HomeViewProps) {
               transition={{ duration: 0.4, delay: 0.2 }}
               className="glass-card rounded-2xl p-5 flex flex-col"
             >
-              <div className="flex items-center gap-2 mb-4 pb-3 border-b border-black/10 dark:border-black/10 dark:border-white/10">
+              <div className="flex items-center gap-2 mb-4 pb-3 border-b border-black/10 dark:border-white/10">
                 <Activity className="h-4 w-4 text-[#F26D3D]" aria-hidden />
-                <span className="font-mono text-[11px] uppercase tracking-widest text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300">
+                <span className="font-mono text-[11px] uppercase tracking-widest text-slate-400 dark:text-slate-300">
                   Flux d'activité en direct
                 </span>
                 <span className="ml-auto h-2 w-2 rounded-full bg-[#4CAF50] animate-pulse" aria-hidden />
@@ -303,12 +303,12 @@ export function HomeView({ onNavigate }: HomeViewProps) {
                           ? "text-[#4CAF50] shrink-0"
                           : log.level === "warn"
                           ? "text-[#F26D3D] shrink-0"
-                          : "text-slate-500 dark:text-slate-500 dark:text-slate-400 shrink-0"
+                          : "text-slate-500 dark:text-slate-400 shrink-0"
                       }
                     >
                       {log.level === "ok" ? "✓" : log.level === "warn" ? "!" : "→"}
                     </span>
-                    <span className="text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300">{log.event}</span>
+                    <span className="text-slate-400 dark:text-slate-300">{log.event}</span>
                   </div>
                 ))}
               </div>
@@ -321,10 +321,10 @@ export function HomeView({ onNavigate }: HomeViewProps) {
       <Marquee
         items={MARQUEE_KEYWORDS}
         speed={25}
-        className="border-y border-black/10 dark:border-black/10 dark:border-white/10 py-3"
+        className="border-y border-black/10 dark:border-white/10 py-3"
         renderItem={(item) => (
           <span className="flex items-center gap-4 px-4">
-            <span className="font-display text-xl md:text-2xl font-bold tracking-tight text-slate-800/80 dark:text-slate-800 dark:text-slate-100/80">
+            <span className="font-display text-xl md:text-2xl font-bold tracking-tight text-slate-800/80 dark:text-slate-100/80">
               {item as string}
             </span>
             <span className="text-[#F26D3D] text-xs" aria-hidden>●</span>
@@ -354,22 +354,22 @@ export function HomeView({ onNavigate }: HomeViewProps) {
                 {/* Texte étiré signature (visible au repos, révèle le contenu au survol) */}
                 <div className="p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-6">
                   <div className="md:w-1/2">
-                    <p className="stretch-text text-sm md:text-base text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 group-hover:text-[#F26D3D] transition-colors leading-relaxed">
+                    <p className="stretch-text text-sm md:text-base text-slate-400 dark:text-slate-300 group-hover:text-[#F26D3D] transition-colors leading-relaxed">
                       {cap.stretch}
                     </p>
-                    <h3 className="mt-4 font-display text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-900 dark:text-slate-50 tracking-tight">
+                    <h3 className="mt-4 font-display text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
                       {cap.title}
                     </h3>
                   </div>
-                  <div className="md:w-1/2 md:border-l border-black/10 dark:border-black/10 dark:border-white/10 md:pl-8">
-                    <p className="text-sm text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+                  <div className="md:w-1/2 md:border-l border-black/10 dark:border-white/10 md:pl-8">
+                    <p className="text-sm text-slate-400 dark:text-slate-300 leading-relaxed mb-4">
                       {cap.description}
                     </p>
                     <ul className="space-y-2">
                       {cap.features.map((f) => (
                         <li
                           key={f}
-                          className="flex items-start gap-2 text-sm text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300"
+                          className="flex items-start gap-2 text-sm text-slate-400 dark:text-slate-300"
                         >
                           <span className="text-[#4CAF50] mt-0.5 shrink-0">✓</span>
                           <span>{f}</span>
@@ -407,11 +407,11 @@ export function HomeView({ onNavigate }: HomeViewProps) {
                 const client = item as { name: string; sector: string };
                 return (
                   <span className="group flex items-center gap-3 px-5">
-                    <span className="font-display text-lg md:text-xl font-bold tracking-tight text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 group-hover:text-[#F26D3D] transition-colors whitespace-nowrap">
+                    <span className="font-display text-lg md:text-xl font-bold tracking-tight text-slate-400 dark:text-slate-300 group-hover:text-[#F26D3D] transition-colors whitespace-nowrap">
                       {client.name}
                     </span>
                     {client.sector && (
-                      <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-500 dark:text-slate-400 group-hover:text-[#F26D3D] transition-colors whitespace-nowrap">
+                      <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 group-hover:text-[#F26D3D] transition-colors whitespace-nowrap">
                         {client.sector}
                       </span>
                     )}
@@ -431,11 +431,11 @@ export function HomeView({ onNavigate }: HomeViewProps) {
                   return (
                     <span className="group flex items-center gap-3 px-5">
                       {client.sector && (
-                        <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-500 dark:text-slate-400 group-hover:text-[#F26D3D] transition-colors whitespace-nowrap">
+                        <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 group-hover:text-[#F26D3D] transition-colors whitespace-nowrap">
                           {client.sector}
                         </span>
                       )}
-                      <span className="font-display text-xl md:text-2xl font-bold tracking-tight text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 group-hover:text-[#F26D3D] transition-colors whitespace-nowrap">
+                      <span className="font-display text-xl md:text-2xl font-bold tracking-tight text-slate-400 dark:text-slate-300 group-hover:text-[#F26D3D] transition-colors whitespace-nowrap">
                         {client.name}
                       </span>
                     </span>
@@ -456,12 +456,12 @@ export function HomeView({ onNavigate }: HomeViewProps) {
                 className="glass-card rounded-2xl p-6 flex flex-col"
               >
                 <Quote className="h-6 w-6 text-[#F26D3D]/60 mb-3" aria-hidden />
-                <blockquote className="text-sm text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 leading-relaxed flex-1">
+                <blockquote className="text-sm text-slate-400 dark:text-slate-300 leading-relaxed flex-1">
                   &ldquo;{t.quote}&rdquo;
                 </blockquote>
-                <figcaption className="mt-5 pt-4 border-t border-black/10 dark:border-black/10 dark:border-white/10">
-                  <p className="font-display font-bold text-slate-800 dark:text-slate-800 dark:text-slate-100">{t.author}</p>
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-500 dark:text-slate-400">
+                <figcaption className="mt-5 pt-4 border-t border-black/10 dark:border-white/10">
+                  <p className="font-display font-bold text-slate-800 dark:text-slate-100">{t.author}</p>
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
                     {t.role} · {t.company}
                   </p>
                 </figcaption>
@@ -486,10 +486,10 @@ export function HomeView({ onNavigate }: HomeViewProps) {
             <p className="relative font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-4">
               {"// Prêt à initier ?"}
             </p>
-            <h2 className="relative font-display text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-900 dark:text-slate-50 mb-4">
+            <h2 className="relative font-display text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 mb-4">
               Construisons votre architecture IA
             </h2>
-            <p className="relative max-w-xl mx-auto text-slate-400 dark:text-slate-600 dark:text-slate-400 dark:text-slate-600 dark:text-slate-300 mb-8">
+            <p className="relative max-w-xl mx-auto text-slate-400 dark:text-slate-300 mb-8">
               Un échange d&apos;une heure avec un architecte Solution pour cadrer votre besoin.
             </p>
             <SnakeButton
@@ -528,10 +528,10 @@ function SectionHeading({
       <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
         {tag}
       </p>
-      <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-900 dark:text-slate-50 mb-3 tracking-tight">
+      <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-50 mb-3 tracking-tight">
         {title}
       </h2>
-      <p className="text-slate-500 dark:text-slate-500 dark:text-slate-400 leading-relaxed">{description}</p>
+      <p className="text-slate-500 dark:text-slate-400 leading-relaxed">{description}</p>
     </motion.div>
   );
 }
