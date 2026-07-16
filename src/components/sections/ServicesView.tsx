@@ -15,6 +15,7 @@ import { SnakeButton } from "@/components/SnakeButton";
 
 interface ServicesViewProps {
   onNavigate: (view: ViewKey) => void;
+  onNavigateDetail: (view: ViewKey, id: string) => void;
 }
 
 const DELIVERY_STEPS = [
@@ -40,7 +41,7 @@ const DELIVERY_STEPS = [
  *
  * Chaque carte occupe 100vh → amplitude totale = nb cartes * 100vh.
  */
-export function ServicesView({ onNavigate }: ServicesViewProps) {
+export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps) {
   // Scroll progress global pour l'overlay de profondeur (subtil, non-bloquant)
   const { scrollYProgress } = useScroll();
 
@@ -84,6 +85,7 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
             total={SERVICES.length}
             scrollProgress={scrollYProgress}
             onNavigate={onNavigate}
+            onNavigateDetail={onNavigateDetail}
           />
         ))}
       </section>
@@ -169,9 +171,10 @@ interface StickyServiceCardProps {
   total: number;
   scrollProgress: ReturnType<typeof useScroll>["scrollYProgress"];
   onNavigate: (view: ViewKey) => void;
+  onNavigateDetail: (view: ViewKey, id: string) => void;
 }
 
-function StickyServiceCard({ service, index, total, scrollProgress, onNavigate }: StickyServiceCardProps) {
+function StickyServiceCard({ service, index, total, scrollProgress, onNavigate, onNavigateDetail }: StickyServiceCardProps) {
   const IconComponent = SERVICE_ICONS[service.icon] ?? SERVICE_ICONS.BrainCircuit;
   const bgImage = getServiceBgImage(service.index);
   const meshOverlay = getServiceMeshOverlay(service.index);
@@ -296,7 +299,7 @@ function StickyServiceCard({ service, index, total, scrollProgress, onNavigate }
               </div>
 
               <SnakeButton
-                onClick={() => onNavigate("contact")}
+                onClick={() => onNavigateDetail("service-detail", service.index)}
                 variant="outline"
                 size="sm"
                 className="mt-auto group self-start"

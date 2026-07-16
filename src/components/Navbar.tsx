@@ -17,22 +17,65 @@ interface NavbarProps {
   onNavigate: (view: ViewKey) => void;
 }
 
+/**
+ * Sélecteur d'éléments focusables dans un conteneur (pour le focus trap).
+ */
+const FOCUSABLE_SELECTOR =
+  'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
 export function Navbar({ activeView, onNavigate }: NavbarProps) {
   const { scrolled, hidden } = useScrollState();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const openerRef = useRef<HTMLButtonElement>(null);
 
-  // Bloque le scroll body quand le command panel mobile est ouvert
+  // Bloque le scroll body + focus trap + Escape quand le dialog mobile est ouvert
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    if (!mobileOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    // Focus le premier élément focusable du dialog
+    const dialog = dialogRef.current;
+    dialog?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)?.focus();
+
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab" || !dialogRef.current) return;
+      const focusables = dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+
+    document.addEventListener("keydown", handleTab);
+    document.addEventListener("keydown", handleEscape);
+
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener("keydown", handleTab);
+      document.removeEventListener("keydown", handleEscape);
+      openerRef.current?.focus();
     };
   }, [mobileOpen]);
 
-  const handleNav = (view: ViewKey) => {
-    onNavigate(view);
-    setMobileOpen(false);
-  };
+  const handleNav = useCallback(
+    (view: ViewKey) => {
+      onNavigate(view);
+      setMobileOpen(false);
+    },
+    [onNavigate]
+  );
 
   return (
     <>
@@ -86,7 +129,7 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
               ))}
             </div>
 
-            {/* CTA desktop + bouton mobile */}
+            {/* CTA desktop + bouton thème + bouton mobile */}
             <div className="flex items-center gap-2">
               {/* Bouton changement de thème */}
               <ThemeToggle />
@@ -103,10 +146,12 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
 
               {/* Bouton hamburger mobile */}
               <button
+                ref={openerRef}
                 onClick={() => setMobileOpen(true)}
                 className="md:hidden flex h-10 w-10 items-center justify-center rounded-lg glass text-slate-800 dark:text-slate-100"
                 aria-label="Ouvrir le menu de navigation"
                 aria-expanded={mobileOpen}
+                aria-controls="mobile-menu"
               >
                 <Menu className="h-5 w-5" aria-hidden />
               </button>
@@ -124,6 +169,8 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             className="fixed inset-0 z-[60] md:hidden bg-background/95 backdrop-blur-xl grid-military flex flex-col"
+            ref={dialogRef}
+            id="mobile-menu"
             role="dialog"
             aria-modal="true"
             aria-label="Menu de navigation mobile"
@@ -133,7 +180,7 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
               <div className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-[#4CAF50] animate-pulse" />
                 <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400">
-                  Command Panel // ACTIVE
+                  Panel de Commande // ACTIF
                 </span>
               </div>
               <button
@@ -182,7 +229,7 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
                 <ArrowRight className="h-4 w-4" aria-hidden />
               </SnakeButton>
               <p className="mt-4 text-center font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
-                Analyticatech — Secure Connection Established
+                Analyticatech — Connexion Sécurisée Établie
               </p>
             </div>
           </motion.div>

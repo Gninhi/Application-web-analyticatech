@@ -3,7 +3,7 @@
  * Source de vérité unique pour les services, solutions, articles, etc.
  */
 
-export type ViewKey = "home" | "services" | "solutions" | "blog" | "contact" | "rgpd" | "legal" | "about";
+export type ViewKey = "home" | "services" | "solutions" | "blog" | "contact" | "rgpd" | "legal" | "about" | "service-detail" | "solution-detail" | "blog-detail";
 
 export interface NavItem {
   key: ViewKey;

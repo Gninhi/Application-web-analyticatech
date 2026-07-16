@@ -9,6 +9,7 @@ import { SnakeButton } from "@/components/SnakeButton";
 
 interface SolutionsViewProps {
   onNavigate: (view: ViewKey) => void;
+  onNavigateDetail: (view: ViewKey, id: string) => void;
 }
 
 /**
@@ -25,7 +26,7 @@ interface SolutionsViewProps {
  * La hauteur totale = (nb cartes + 1) * 100vh donne assez d'amplitude
  * pour ces 3 phases sans précipitation.
  */
-export function SolutionsView({ onNavigate }: SolutionsViewProps) {
+export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -186,7 +187,7 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
                   </div>
 
                   <SnakeButton
-                    onClick={() => onNavigate("contact")}
+                    onClick={() => onNavigateDetail("solution-detail", sol.id)}
                     variant="outline"
                     size="sm"
                     className="group self-start"
