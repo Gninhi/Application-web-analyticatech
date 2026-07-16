@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Cpu, Send, ShieldCheck, Github, Linkedin, Twitter } from "lucide-react";
+import { Send, ShieldCheck, Github, Linkedin, Twitter } from "lucide-react";
 import { NAV_ITEMS, type ViewKey } from "@/lib/data";
 import { NavLink } from "@/components/NavLink";
+import { Logo } from "@/components/Logo";
 
 interface FooterProps {
   onNavigate: (view: ViewKey) => void;
@@ -48,9 +49,7 @@ export function Footer({ onNavigate }: FooterProps) {
           {/* Marque + statut */}
           <div className="md:col-span-4">
             <div className="flex items-center gap-2.5 mb-4">
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#F26D3D]/40 bg-[#F26D3D]/10">
-                <Cpu className="h-4 w-4 text-[#F26D3D]" aria-hidden />
-              </span>
+              <Logo size={36} delay={0.3} />
               <span className="font-display text-lg font-bold tracking-tight text-slate-100">
                 Analytica<span className="text-[#F26D3D]">tech</span>
               </span>

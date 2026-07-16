@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Cpu } from "lucide-react";
+import { Logo } from "@/components/Logo";
 
 /**
  * PageLoader — intro cinématographique "→ 100%" inspiré Armory.
@@ -80,9 +80,7 @@ export function PageLoader() {
             transition={{ duration: 0.4 }}
             className="flex items-center gap-3 mb-12"
           >
-            <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-[#F26D3D]/40 bg-[#F26D3D]/10">
-              <Cpu className="h-6 w-6 text-[#F26D3D]" aria-hidden />
-            </span>
+            <Logo size={48} delay={0.3} />
             <span className="font-display text-2xl font-bold tracking-tight text-slate-100">
               Analytica<span className="text-[#F26D3D]">tech</span>
             </span>

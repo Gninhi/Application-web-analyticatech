@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ArrowRight, Cpu } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 import { NAV_ITEMS, type ViewKey } from "@/lib/data";
 import { ScrambleText } from "./ScrambleText";
 import { SnakeButton } from "@/components/SnakeButton";
 import { NavLink } from "@/components/NavLink";
+import { Logo } from "@/components/Logo";
 import { cn } from "@/lib/utils";
 
 interface NavbarProps {
@@ -93,9 +94,7 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
               className="group flex items-center gap-2.5 focus-visible:outline-2 focus-visible:outline-offset-4 rounded-md"
               aria-label="Retour à l'accueil Analyticatech"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#F26D3D]/40 bg-[#F26D3D]/10">
-                <Cpu className="h-4 w-4 text-[#F26D3D]" aria-hidden />
-              </span>
+              <Logo size={32} delay={0.2} />
               <span className="font-display text-base font-bold tracking-tight text-slate-100">
                 Analytica<span className="text-[#F26D3D]">tech</span>
               </span>
