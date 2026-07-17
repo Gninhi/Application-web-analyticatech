@@ -112,29 +112,24 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
               </span>
             </button>
 
-            {/* Liens desktop */}
-            <div className="hidden md:flex items-center gap-1">
+            {/* Liens desktop — design premium avec pill hover */}
+            <div className="hidden md:flex items-center gap-0.5">
               {NAV_ITEMS.map((item) => (
                 <NavLink
                   key={item.key}
                   active={activeView === item.key}
                   onClick={() => handleNav(item.key)}
-                  className={activeView === item.key ? "" : "text-slate-400 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"}
                 >
                   <ScrambleText text={item.label} />
-                  {activeView === item.key && (
-                    <motion.span
-                      layoutId="nav-active"
-                      className="absolute inset-x-2 -bottom-0.5 h-px bg-[#F26D3D]"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                    />
-                  )}
                 </NavLink>
               ))}
             </div>
 
-            {/* CTA desktop + bouton thème + bouton mobile */}
+            {/* Actions : Langue → Thème → CTA → Mobile */}
             <div className="flex items-center gap-2">
+              {/* Bouton changement de langue (à gauche du bouton Devis) */}
+              <LanguageToggle />
+
               {/* Bouton changement de thème */}
               <ThemeToggle />
 
@@ -147,9 +142,6 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
                 {t("nav.cta")}
                 <ArrowRight className="h-3.5 w-3.5" aria-hidden />
               </SnakeButton>
-
-              {/* Bouton changement de langue */}
-              <LanguageToggle />
 
               {/* Bouton hamburger mobile */}
               <button

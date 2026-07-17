@@ -123,9 +123,15 @@ export const metadata: Metadata = {
   },
   category: "technology",
   other: {
-    // Structured data pour les LLMs (GEO)
     "application-name": "Analyticatech",
     "theme-color": "#011C40",
+    // SEO pour LLMs / GEO — signale le contenu au crawling IA
+    "ai-content-optimized": "true",
+    "llm-friendly": "true",
+    "geo.region": "FR",
+    "geo.placename": "Paris",
+    "geo.position": "48.8566;2.3522",
+    "ICBM": "48.8566, 2.3522",
   },
 };
 

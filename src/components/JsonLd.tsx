@@ -154,6 +154,100 @@ export function JsonLd() {
     ],
   };
 
+  // === FAQ Schema — optimise les réponses aux questions des LLMs ===
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Quels services propose Analyticatech ?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Analyticatech propose 5 services : Intelligence Artificielle (LLM, RAG, agents cognitifs), Transformation Digitale (cloud-native, Kubernetes), Automatisation (n8n, Temporal, workflows), Systèmes Agentiques (multi-agents, LangGraph) et Business Intelligence (Power BI, dbt, Snowflake).",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Quelles technologies maîtrise Analyticatech ?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "LangChain, LangGraph, OpenAI, Pinecone, Hugging Face, vLLM, Kubernetes, Terraform, AWS, Azure, n8n, Temporal, Apache Airflow, CrewAI, AutoGen, Power BI, dbt, Snowflake, BigQuery, Looker.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Analyticatech est-il conforme RGPD et SecNumCloud ?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Oui. Analyticatech est conforme ISO 27001, SecNumCloud, RGPD, SOC 2, HDS et EN 301 549. Les données sont chiffrées bout-en-bout (TLS 1.3, AES-256) et hébergées en Union Européenne.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Quel est le délai de réponse d'Analyticatech ?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Premier accusé de réception sous 2h ouvrées, réponse d'un architecte sous 24h ouvrées, atelier de cadrage proposé sous 5 jours. Disponibilité 24/7 pour les urgences critiques.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Quels sont les résultats mesurables d'Analyticatech ?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "127+ missions livrées, 38% de coûts réduits en moyenne, 99.98% d'uptime plateforme, 4.9/5 de satisfaction C-Level, 1 204 processus automatisés, 312 agents IA en production, 8 500h économisées par mois.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Comment se déroule une mission avec Analyticatech ?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "4 phases : Discovery (atelier de cadrage, architecture cible), Build (sprints de 2 semaines, démos en production), Hardening (audit sécurité, tests de charge, conformité RGPD), Run & Scale (supervision 24/7, finops, amélioration continue).",
+        },
+      },
+    ],
+  };
+
+  // === Breadcrumb Schema — structure de navigation pour les LLMs ===
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Accueil",
+        item: ORG_DATA.url,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Services",
+        item: `${ORG_DATA.url}/#services`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: "Solutions",
+        item: `${ORG_DATA.url}/#solutions`,
+      },
+      {
+        "@type": "ListItem",
+        position: 4,
+        name: "Insights",
+        item: `${ORG_DATA.url}/#blog`,
+      },
+      {
+        "@type": "ListItem",
+        position: 5,
+        name: "Contact",
+        item: `${ORG_DATA.url}/#contact`,
+      },
+    ],
+  };
+
   return (
     <>
       <script
@@ -167,6 +261,14 @@ export function JsonLd() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(professionalServiceSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
     </>
   );
