@@ -248,27 +248,34 @@ export function JsonLd() {
     ],
   };
 
+  // Validation anti-XSS : les données sont hardcoded mais on sanitise par précaution.
+  // Supprime les balises script et les événements on* si jamais une donnée change.
+  const sanitize = (obj: unknown): string => {
+    const json = JSON.stringify(obj);
+    return json.replace(/<script|<\/script|on\w+\s*=/gi, "");
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+        dangerouslySetInnerHTML={{ __html: sanitize(orgSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        dangerouslySetInnerHTML={{ __html: sanitize(websiteSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(professionalServiceSchema) }}
+        dangerouslySetInnerHTML={{ __html: sanitize(professionalServiceSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: sanitize(faqSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: sanitize(breadcrumbSchema) }}
       />
     </>
   );

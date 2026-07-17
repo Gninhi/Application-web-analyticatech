@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
+/** Headers de sécurité communs à toutes les réponses API. */
+const API_HEADERS: Record<string, string> = {
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+};
+
 /**
  * GET /api/metrics
  * Retourne les métriques dynamiques affichées sur la home.
@@ -21,19 +28,12 @@ export async function GET() {
 
     return NextResponse.json(
       { success: true, metrics },
-      {
-        status: 200,
-        headers: {
-          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
-          "X-Content-Type-Options": "nosniff",
-        },
-      }
+      { status: 200, headers: API_HEADERS }
     );
-  } catch (error) {
-    console.error("[metrics] Error:", error);
+  } catch {
     return NextResponse.json(
       { success: false, message: "Erreur lors de la récupération des métriques" },
-      { status: 500 }
+      { status: 500, headers: API_HEADERS }
     );
   }
 }

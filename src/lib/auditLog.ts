@@ -45,7 +45,7 @@ export interface AuditEntry {
  */
 export function hashIp(ip: string): string {
   try {
-    const salt = process.env.IP_SALT ?? "analyticatech-default-salt";
+    const salt = process.env.IP_SALT ?? "analyticatech-v2";
     return createHash("sha256").update(ip + salt).digest("hex").slice(0, 16);
   } catch {
     return "unknown";
