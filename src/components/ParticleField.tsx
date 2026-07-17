@@ -35,22 +35,29 @@ function ParticleScene({ count, isDark }: ParticleSceneProps) {
     return arr;
   }, [count]);
 
-  // Couleurs légèrement variables selon le thème
-  // Sombre : blanc cassé → bleuté (0.85-1.0)
-  // Clair : bleu foncé (0.1-0.25) pour contraste sur fond clair
+  // Couleurs des particules : palette entreprise (bleu #03318C + orange #F26D3D)
+  // 70% bleu, 30% orange pour un rendu dynamique et on-brand.
+  // En sombre : particules plus lumineuses (éclat sur fond sombre)
+  // En clair : particules plus saturées (contraste sur fond clair)
   const colors = useMemo(() => {
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
       const tint = Math.random();
-      if (isDark) {
-        arr[i3] = 0.85 + tint * 0.15;     // R
-        arr[i3 + 1] = 0.9 + tint * 0.1;   // G
-        arr[i3 + 2] = 1.0;                // B
+      const isOrange = tint > 0.7; // 30% des particules sont orange
+
+      if (isOrange) {
+        // Orange #F26D3D — (242, 109, 61) / 255
+        const brightness = isDark ? 0.85 + tint * 0.15 : 0.95;
+        arr[i3] = 0.95 * brightness;      // R
+        arr[i3 + 1] = 0.43 * brightness;  // G
+        arr[i3 + 2] = 0.24 * brightness;  // B
       } else {
-        arr[i3] = 0.1 + tint * 0.1;       // R (bleu foncé)
-        arr[i3 + 1] = 0.15 + tint * 0.1;  // G
-        arr[i3 + 2] = 0.25 + tint * 0.1;  // B
+        // Bleu #03318C — (3, 49, 140) / 255
+        const brightness = isDark ? 0.5 + tint * 0.3 : 0.4 + tint * 0.3;
+        arr[i3] = 0.01 * brightness;      // R
+        arr[i3 + 1] = 0.19 * brightness;  // G
+        arr[i3 + 2] = 0.55 * brightness;  // B
       }
     }
     return arr;

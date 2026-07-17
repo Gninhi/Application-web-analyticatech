@@ -30,9 +30,9 @@ export function NavLink({
         "relative transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 rounded-lg",
         variant === "navbar"
           ? "px-3.5 py-2 font-mono text-xs uppercase tracking-widest group"
-          : "text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white",
+          : "text-sm text-[#022873] dark:text-slate-400 hover:text-[#03318C] dark:hover:text-white",
         active && variant === "navbar" && "text-[#F26D3D]",
-        !active && variant === "navbar" && "text-slate-500 dark:text-slate-300 hover:text-[#F26D3D]",
+        !active && variant === "navbar" && "text-[#022873] dark:text-slate-300 hover:text-[#03318C] dark:hover:text-[#F26D3D]",
         className
       )}
       aria-current={active ? "page" : undefined}
