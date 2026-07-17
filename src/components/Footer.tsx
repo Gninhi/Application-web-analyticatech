@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Send, ShieldCheck, Github, Linkedin, Twitter } from "lucide-react";
-import { NAV_ITEMS, type ViewKey } from "@/lib/data";
+import { type ViewKey } from "@/lib/data";
 import { NavLink } from "@/components/NavLink";
 import { Logo } from "@/components/Logo";
 import { SOCIAL_LINKS } from "@/lib/constants";
+import { useI18n, useLocalizedData } from "@/lib/i18n";
 
 const SOCIAL_ICONS = { Linkedin, Twitter, Github };
 
@@ -34,6 +35,8 @@ function useUtcClock() {
 
 export function Footer({ onNavigate }: FooterProps) {
   const utc = useUtcClock();
+  const { t } = useI18n();
+  const { NAV_ITEMS } = useLocalizedData();
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
@@ -81,9 +84,9 @@ export function Footer({ onNavigate }: FooterProps) {
           </div>
 
           {/* Navigation secondaire */}
-          <nav className="md:col-span-2" aria-label="Navigation pied de page">
+          <nav className="md:col-span-2" aria-label={t("footer.nav.title")}>
             <h3 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] mb-4">
-              Navigation
+              {t("footer.nav.title")}
             </h3>
             <ul className="space-y-2.5">
               {NAV_ITEMS.map((item) => (
@@ -102,7 +105,7 @@ export function Footer({ onNavigate }: FooterProps) {
           {/* Expertises */}
           <div className="md:col-span-3">
             <h3 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] mb-4">
-              Expertises
+              {t("footer.expertises.title")}
             </h3>
             <ul className="space-y-2.5 text-sm text-slate-500 dark:text-slate-400">
               <li>Intelligence Artificielle &amp; LLM</li>
@@ -116,10 +119,10 @@ export function Footer({ onNavigate }: FooterProps) {
           {/* Newsletter */}
           <div className="md:col-span-3">
             <h3 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] mb-4">
-              Newsletter Insights
+              {t("footer.newsletter.title")}
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
-              Recevez nos analyses techniques sur l&apos;IA en production.
+              {t("footer.newsletter.desc")}
             </p>
             <form onSubmit={handleSubscribe} className="space-y-2">
               <div className="flex items-center gap-1.5">
@@ -128,7 +131,7 @@ export function Footer({ onNavigate }: FooterProps) {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="vous@entreprise.com"
+                  placeholder={t("footer.newsletter.placeholder")}
                   aria-label="Adresse email pour la newsletter"
                   className="terminal-input flex-1 min-w-0 rounded-lg bg-black/30 border border-black/10 dark:border-white/10 px-3 py-2 font-mono text-xs text-slate-800 dark:text-slate-100 placeholder:text-slate-500 outline-none transition"
                 />
@@ -142,7 +145,7 @@ export function Footer({ onNavigate }: FooterProps) {
               </div>
               {subscribed && (
                 <p className="font-mono text-[10px] text-[#4CAF50] uppercase tracking-wider">
-                  ✓ Abonnement confirmé
+                  {t("footer.newsletter.confirmed")}
                 </p>
               )}
             </form>
@@ -171,31 +174,31 @@ export function Footer({ onNavigate }: FooterProps) {
         <div className="mt-12 pt-6 border-t border-black/10 dark:border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
-              © {new Date().getFullYear()} Analyticatech — Tous droits réservés
+              © {new Date().getFullYear()} Analyticatech — {t("footer.copyright")}
             </p>
             <button
               onClick={() => onNavigate("rgpd")}
               className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] transition-colors"
             >
-              Confidentialité
+              {t("footer.confidentiality")}
             </button>
             <button
               onClick={() => onNavigate("legal")}
               className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] transition-colors"
             >
-              Mentions légales
+              {t("footer.legal")}
             </button>
             <button
               onClick={() => onNavigate("about")}
               className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] transition-colors"
             >
-              À propos
+              {t("footer.about")}
             </button>
           </div>
           <div className="flex items-center gap-4">
             <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
               <ShieldCheck className="h-3.5 w-3.5 text-[#4CAF50]" aria-hidden />
-              ISO 27001 · RGPD
+              {t("footer.compliance")}
             </span>
             <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
               v2.4.1

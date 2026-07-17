@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
 import { PageLoader } from "@/components/PageLoader";
 import { JsonLd } from "@/components/JsonLd";
+import { I18nProvider } from "@/lib/i18n";
 
 /* === Typographie du Design System "Corporate Cyberpunk" ===
  * Optimisé Lighthouse : preload + display swap + adjustFontFallback
@@ -116,6 +117,8 @@ export const metadata: Metadata = {
     canonical: "https://analyticatech.com",
     languages: {
       "fr-FR": "https://analyticatech.com",
+      "en-US": "https://analyticatech.com/en",
+      "x-default": "https://analyticatech.com",
     },
   },
   category: "technology",
@@ -146,9 +149,11 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <PageLoader />
-          <GlobalErrorBoundary>{children}</GlobalErrorBoundary>
-          <Toaster />
+          <I18nProvider>
+            <PageLoader />
+            <GlobalErrorBoundary>{children}</GlobalErrorBoundary>
+            <Toaster />
+          </I18nProvider>
         </ThemeProvider>
       </body>
     </html>

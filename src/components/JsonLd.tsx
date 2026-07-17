@@ -26,7 +26,7 @@ const ORG_DATA: OrganizationData = {
   url: "https://analyticatech.com",
   logo: "https://analyticatech.com/logo.svg",
   description:
-    "Cabinet de conseil en IA, Transformation Digitale et Automatisation. Architecture d'agents LLM, RAG, automatisation workflows et industrialisation à l'échelle.",
+    "Consulting firm in AI, Digital Transformation and Automation. LLM agent architecture, RAG, workflow automation and industrialization at scale.",
   email: "contact@analyticatech.com",
   telephone: "+33184800000",
   address: {
@@ -85,6 +85,7 @@ export function JsonLd() {
       addressCountry: ORG_DATA.address.country,
     },
     sameAs: ORG_DATA.sameAs,
+    availableLanguage: ["fr", "en"],
     knowsAbout: [
       "Intelligence Artificielle",
       "Large Language Models",

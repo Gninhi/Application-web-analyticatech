@@ -491,3 +491,51 @@ Stage Summary:
     * `from-background` → même mapping pour gradients
 - Logique JavaScript/TypeScript : aucun changement (variables, types, props, handlers, API routes préservés)
 - Imports : aucun changement
+
+---
+Task ID: I18N-DATA-EN
+Agent: translation-agent
+Task: Création data-en.ts
+
+Work Log:
+- Lu /home/z/my-project/src/lib/data.ts (448 lignes) — source de vérité FR identifiée : 12 exports nommés (NAV_ITEMS, SERVICES, SOLUTIONS, BLOG_POSTS, BLOG_CATEGORIES, STREAM_METRICS, ACTIVITY_LOG, TESTIMONIALS, CLIENT_LOGOS, CAPABILITIES, MARQUEE_KEYWORDS, HERO_STATS) + 9 types/interfaces (ViewKey, NavItem, Service, Solution, BlogCategory, BlogPost, StreamMetric, Testimonial, Capability, HeroStat).
+- Lu /home/z/my-project/src/lib/i18n.tsx pour aligner le ton (consulting firm premium) et les conventions de traduction (« Intelligence Artificielle » → « Artificial Intelligence », « Transformation Digitale » → « Digital Transformation », « Automatisation » → « Automation », « Systèmes Agentiques » → « Agentic Systems »).
+- Créé /home/z/my-project/src/lib/data-en.ts (≈ 330 lignes) avec exactement la même structure que data.ts :
+    * Imports `type` depuis "./data" : ViewKey, NavItem, Service, Solution, StreamMetric, Testimonial, Capability, HeroStat, BlogPost (alias BlogPostFR).
+    * Re-export des types locale-agnostiques (ViewKey, NavItem, Service, Solution, StreamMetric, Testimonial, Capability, HeroStat) — data-en.ts est un module drop-in complet.
+    * `BlogCategory` redéfini localement : `"AI" | "Automation" | "BI" | "Architecture"` (les valeurs littérales du FR ne peuvent pas être réutilisées : `"IA"`, `"Automatisation"` ne typecheckeraient pas en EN).
+    * `BlogPost` dérivé via `Omit<BlogPostFR, "category"> & { category: BlogCategory }` — conserve la forme FR en retypant uniquement le champ localisé.
+- Conventions de traduction appliquées :
+    * Identifiateurs techniques préservés : `id`, `index`, `icon`, `date`, `readingTime`, `tags`, `technologies` (tous identiques au FR).
+    * Marques préservées : CLIENT_LOGOS (NOVA BANK, AXIOM CORP…), noms de stack (LangChain, LangGraph, OpenAI, Pinecone, Hugging Face, vLLM, Kubernetes, Terraform, AWS, Azure, GitOps, n8n, Zapier, Temporal, Apache Airflow, Make, CrewAI, AutoGen, MCP, Redis, Qdrant, Power BI, dbt, Snowflake, BigQuery, Looker, Superset, Kafka, SecNumCloud).
+    * Auteurs (personnes physiques) préservés : L. Marchand, S. Benali, T. Nguyen, C. Roth, K. Moreau, J. Favier, N. Haddad.
+    * Format numérique EN : "1 204" → "1,204" (séparateur de milliers), "8 500 h" → "8,500 h", "94.2 %" → "94.2%" (sans espace avant %), "-38 %" → "-38%", "99.98 %" → "99.98%". "320 ms", "1.2s" conservés (unités SI standardisées).
+    * Tags : conservés à l'identique strict (ex: ["RAG", "Évaluation", "LLM"], ["IoT", "Jumeau numérique", "Prédictif"], ["Agents", "Compliance", "Temps réel"]) — conformément à l'instruction « tags restent identiques ».
+    * Rôles traduits en équivalents C-Suite standard : « Directrice des Risques » → « Chief Risk Officer », « DSI Secteur Public » → « Public Sector CIO ». « CIO » conservé (déjà EN).
+    * Companies descriptives traduites : « Banque Européenne » → « European Bank », « Groupe Logistique FR » → « Logistics Group FR », « Collectivité Territoriale » → « Local Authority ».
+    * Secteurs : Logistique → Logistics, Finance → Finance, Retail → Retail, Santé → Healthcare, Industrie → Industry, Public → Public Sector.
+    * BlogCategory : « IA » → « AI », « Automatisation » → « Automation », « BI » → « BI », « Architecture » → « Architecture », « Tous » → « All ».
+    * Ton consulting/technique premium préservé : « Industrialiser les agents IA » → « Industrializing AI Agents », « La couche sémantique : le chaînon manquant » → « The Semantic Layer: The Missing Link », etc.
+- Lint : `bunx eslint src/lib/data-en.ts` → 0 erreur, 0 warning (clean).
+- Type-check : `bunx tsc --noEmit` → 0 erreur référençant data-en.ts (les erreurs pré-existantes dans i18n.tsx, layout.tsx, Logo.tsx, PixelRevealTitle.tsx, ScrambleText.tsx, examples/, skills/ ne sont PAS causées par ce fichier — vérifié par `rg "data-en"` sur la sortie tsc : aucun match).
+- Lint global `bun run lint` : 1 erreur PRÉ-EXISTANTE dans src/lib/i18n.tsx (règle `react-hooks/set-state-in-effect` ligne 34 — `setLocaleState(stored)` dans useEffect). Cette erreur existait avant ce ticket et n'est pas introduite par data-en.ts.
+
+Stage Summary:
+- Total entrées traduites : 65
+    * NAV_ITEMS : 5
+    * SERVICES : 5 (10 metrics label/value traduits)
+    * SOLUTIONS : 6
+    * BLOG_POSTS : 6 (category FR→EN)
+    * BLOG_CATEGORIES : 5
+    * STREAM_METRICS : 4 (labels traduits, valeurs/sparklines/trends identiques)
+    * ACTIVITY_LOG : 6 (events traduits, timestamps/levels identiques)
+    * TESTIMONIALS : 3 (quote/role/company traduits, author conservé)
+    * CLIENT_LOGOS : 8 (identiques — noms de marque)
+    * CAPABILITIES : 3 (stretch/title/description/features traduits)
+    * MARQUEE_KEYWORDS : 10
+    * HERO_STATS : 4 (labels traduits, valeurs identiques)
+- Lint final sur data-en.ts : ✅ 0 erreur, 0 warning
+- Type-check sur data-en.ts : ✅ 0 erreur
+- Lint global (bun run lint) : 1 erreur pré-existante dans i18n.tsx (hors scope)
+- Structure : identique à data.ts (mêmes noms d'exports, mêmes interfaces, même ordre, mêmes séparateurs de section)
+- Prochaine étape recommandée : brancher les composants consommateurs (Navbar, Footer, HomeView, ServicesView, SolutionsView, BlogView, ContactView, DetailView) sur data-en.ts via un sélecteur `locale === "en" ? import("@/lib/data-en") : import("@/lib/data")` ou via un wrapper `getLocaleData(locale)`.

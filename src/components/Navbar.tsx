@@ -3,13 +3,15 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowRight } from "lucide-react";
-import { NAV_ITEMS, type ViewKey } from "@/lib/data";
+import { type ViewKey } from "@/lib/data";
 import { ScrambleText } from "./ScrambleText";
 import { SnakeButton } from "@/components/SnakeButton";
 import { NavLink } from "@/components/NavLink";
 import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { useScrollState } from "@/hooks/useScrollState";
+import { useI18n, useLocalizedData } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 interface NavbarProps {
@@ -25,6 +27,8 @@ const FOCUSABLE_SELECTOR =
 
 export function Navbar({ activeView, onNavigate }: NavbarProps) {
   const { scrolled, hidden } = useScrollState();
+  const { t } = useI18n();
+  const { NAV_ITEMS } = useLocalizedData();
   const [mobileOpen, setMobileOpen] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const openerRef = useRef<HTMLButtonElement>(null);
@@ -100,7 +104,7 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
             <button
               onClick={() => handleNav("home")}
               className="group flex items-center gap-2.5 focus-visible:outline-2 focus-visible:outline-offset-4 rounded-md"
-              aria-label="Retour à l'accueil Analyticatech"
+              aria-label={t("nav.home")}
             >
               <Logo size={32} delay={0.2} />
               <span className="font-display text-base font-bold tracking-tight text-slate-800 dark:text-slate-100">
@@ -140,16 +144,19 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
                 size="sm"
                 className="hidden md:inline-flex neon-glow"
               >
-                Demander un devis
+                {t("nav.cta")}
                 <ArrowRight className="h-3.5 w-3.5" aria-hidden />
               </SnakeButton>
+
+              {/* Bouton changement de langue */}
+              <LanguageToggle />
 
               {/* Bouton hamburger mobile */}
               <button
                 ref={openerRef}
                 onClick={() => setMobileOpen(true)}
                 className="md:hidden flex h-10 w-10 items-center justify-center rounded-lg glass text-slate-800 dark:text-slate-100"
-                aria-label="Ouvrir le menu de navigation"
+                aria-label={t("nav.menu.open")}
                 aria-expanded={mobileOpen}
                 aria-controls="mobile-menu"
               >
@@ -180,13 +187,13 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
               <div className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-[#4CAF50] animate-pulse" />
                 <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400">
-                  Panel de Commande // ACTIF
+                  {t("nav.menu.status")}
                 </span>
               </div>
               <button
                 onClick={() => setMobileOpen(false)}
                 className="flex h-10 w-10 items-center justify-center rounded-lg glass text-slate-800 dark:text-slate-100"
-                aria-label="Fermer le menu"
+                aria-label={t("nav.menu.close")}
               >
                 <X className="h-5 w-5" aria-hidden />
               </button>
@@ -225,11 +232,11 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
                 size="lg"
                 className="w-full neon-glow"
               >
-                Demander un devis
+                {t("nav.cta")}
                 <ArrowRight className="h-4 w-4" aria-hidden />
               </SnakeButton>
               <p className="mt-4 text-center font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
-                Analyticatech — Connexion Sécurisée Établie
+                {t("nav.menu.footer")}
               </p>
             </div>
           </motion.div>
