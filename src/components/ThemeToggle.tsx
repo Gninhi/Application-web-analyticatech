@@ -10,7 +10,10 @@ import { motion, AnimatePresence } from "framer-motion";
  *
  * Utilise next-themes pour persister le choix (localStorage).
  * Animation Framer Motion sur l'icône (rotation + fondu).
- * Hydration-safe : ne rend l'icône qu'après le montage.
+ *
+ * Hydration-safe : l'aria-label et l'icône ne dépendent du thème
+ * qu'après le montage (mounted=true). Avant, on utilise des valeurs
+ * par défaut neutres pour garantir un rendu identique serveur/client.
  */
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -22,17 +25,25 @@ export function ThemeToggle() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  const isDark = theme === "dark";
+  // isDark n'est fiable qu'après le montage (theme est undefined en SSR)
+  const isDark = mounted ? theme === "dark" : true; // défaut: dark (cohérent avec defaultTheme)
 
   const toggle = () => {
     setTheme(isDark ? "light" : "dark");
   };
 
+  // aria-label neutre avant montage pour éviter le mismatch
+  const ariaLabel = mounted
+    ? isDark
+      ? "Activer le thème clair"
+      : "Activer le thème sombre"
+    : "Changer de thème";
+
   return (
     <button
       onClick={toggle}
-      aria-label={isDark ? "Activer le thème clair" : "Activer le thème sombre"}
-      className="flex h-10 w-10 items-center justify-center rounded-lg glass text-slate-100 dark:text-slate-100 hover:text-[#F26D3D] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
+      aria-label={ariaLabel}
+      className="flex h-10 w-10 items-center justify-center rounded-lg glass text-slate-800 dark:text-slate-100 hover:text-[#F26D3D] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
     >
       {mounted && (
         <AnimatePresence mode="wait" initial={false}>
