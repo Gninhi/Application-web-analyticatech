@@ -17,7 +17,7 @@ interface ServiceDetailViewProps {
  * Accessible via ViewKey "service-detail" + serviceIndex.
  */
 export function ServiceDetailView({ serviceIndex, onNavigate }: ServiceDetailViewProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { SERVICES } = useLocalizedData();
   const service = SERVICES.find((s) => s.index === serviceIndex) ?? SERVICES[0];
   const IconComponent = SERVICE_ICONS[service.icon] ?? SERVICE_ICONS.BrainCircuit;
@@ -135,7 +135,7 @@ interface SolutionDetailViewProps {
 }
 
 export function SolutionDetailView({ solutionId, onNavigate }: SolutionDetailViewProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { SOLUTIONS } = useLocalizedData();
   const solution = SOLUTIONS.find((s) => s.id === solutionId) ?? SOLUTIONS[0];
 
@@ -207,7 +207,7 @@ interface BlogDetailViewProps {
 }
 
 export function BlogDetailView({ postId, onNavigate }: BlogDetailViewProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { BLOG_POSTS } = useLocalizedData();
   const post = BLOG_POSTS.find((p) => p.id === postId) ?? BLOG_POSTS[0];
 
@@ -266,7 +266,7 @@ export function BlogDetailView({ postId, onNavigate }: BlogDetailViewProps) {
               {post.tags.map((tag: string) => (
                 <li key={tag} className="flex items-start gap-3 text-slate-600 dark:text-slate-300">
                   <Check className="h-5 w-5 text-[#4CAF50] shrink-0 mt-0.5" aria-hidden />
-                  <span>Approche {tag} : méthodologie, outils et retour d'expérience</span>
+                  <span>{locale === "fr" ? `Approche ${tag} : méthodologie, outils et retour d'expérience` : `${tag} approach: methodology, tools and field feedback`}</span>
                 </li>
               ))}
             </ul>
