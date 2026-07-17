@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowLeft, ShieldCheck, FileText } from "lucide-react";
 import type { ViewKey } from "@/lib/data";
+import { useI18n } from "@/lib/i18n";
 import { SnakeButton } from "@/components/SnakeButton";
 import { CONTACT_INFO, SITE_CONFIG } from "@/lib/constants";
 
@@ -97,8 +98,11 @@ const LEGAL_CONTENT = {
  * Contenu structuré en sections, design premium cohérent avec le site.
  */
 export function LegalView({ type, onNavigate }: LegalViewProps) {
+  const { t } = useI18n();
   const content = LEGAL_CONTENT[type];
   const Icon = content.icon;
+  const title = type === "rgpd" ? t("legal.rgpd.title") : t("legal.legal.title");
+  const subtitle = type === "rgpd" ? t("legal.rgpd.subtitle") : t("legal.legal.subtitle");
 
   return (
     <div className="pt-28 md:pt-36 pb-20">
@@ -111,7 +115,7 @@ export function LegalView({ type, onNavigate }: LegalViewProps) {
           className="mb-8"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden />
-          Retour à l'accueil
+          {t("legal.back")}
         </SnakeButton>
 
         {/* En-tête */}
@@ -127,10 +131,10 @@ export function LegalView({ type, onNavigate }: LegalViewProps) {
             </span>
             <div>
               <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D]">
-                {content.subtitle}
+                {subtitle}
               </p>
               <h1 className="font-display text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-50 tracking-tight">
-                {content.title}
+                {title}
               </h1>
             </div>
           </div>
@@ -167,14 +171,14 @@ export function LegalView({ type, onNavigate }: LegalViewProps) {
           className="mt-10 glass-card rounded-2xl p-6 md:p-8 text-center"
         >
           <p className="text-slate-600 dark:text-slate-300 mb-4">
-            Une question sur ce document ?
+            {t("legal.contact.question")}
           </p>
           <SnakeButton
             variant="primary"
             size="md"
             onClick={() => onNavigate("contact")}
           >
-            Nous contacter
+            {t("legal.contact.cta")}
           </SnakeButton>
         </motion.div>
       </div>

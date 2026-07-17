@@ -3,7 +3,8 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { ArrowRight, Compass, Zap, ShieldCheck } from "lucide-react";
-import { SOLUTIONS, type ViewKey } from "@/lib/data";
+import { type ViewKey } from "@/lib/data";
+import { useI18n, useLocalizedData } from "@/lib/i18n";
 import { PixelRevealTitle } from "@/components/PixelRevealTitle";
 import { SnakeButton } from "@/components/SnakeButton";
 
@@ -27,6 +28,9 @@ interface SolutionsViewProps {
  * pour ces 3 phases sans précipitation.
  */
 export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewProps) {
+  const { t } = useI18n();
+  const { SOLUTIONS } = useLocalizedData();
+
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -64,22 +68,20 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
             </p>
             <h1 className="font-display text-4xl md:text-6xl font-bold text-[#F26D3D] tracking-tight mb-4">
               <PixelRevealTitle
-                text="Des solutions sectorielles,"
+                text={t("solutions.title1")}
                 as="span"
                 className="block"
                 delay={0.1}
               />
               <PixelRevealTitle
-                text="en orbite"
+                text={t("solutions.title2")}
                 as="span"
                 className="block text-neon"
                 delay={0.45}
               />
             </h1>
             <p className="text-slate-400 dark:text-slate-300 leading-relaxed text-lg">
-              Défilez verticalement : les cas d&apos;usage défilent horizontalement
-              comme une séquence orbitale. Chaque solution est prête à être
-              adaptée à votre contexte.
+              {t("solutions.desc")}
             </p>
           </motion.div>
 
@@ -150,7 +152,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
                   <div className="absolute bottom-4 left-5">
                     <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-[#4CAF50]">
                       <span className="h-1.5 w-1.5 rounded-full bg-[#4CAF50] animate-pulse" />
-                      Déployé en production
+                      {t("common.deployed")}
                     </span>
                   </div>
                 </div>
@@ -167,7 +169,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
                   {/* Impact */}
                   <div className="rounded-xl border border-[#F26D3D]/25 bg-[#F26D3D]/5 p-3 mb-5">
                     <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
-                      Impact mesuré
+                      {t("common.impact")}
                     </p>
                     <p className="font-display text-lg font-bold text-[#F26D3D]">
                       {sol.impact}
@@ -192,7 +194,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
                     size="sm"
                     className="group self-start"
                   >
-                    En savoir plus
+                    {t("solutions.card.cta")}
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden />
                   </SnakeButton>
                 </div>
@@ -203,11 +205,10 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
             <article className="shrink-0 w-[78vw] sm:w-[64vw] md:w-[52vw] lg:w-[40vw] h-[68vh] rounded-3xl border border-dashed border-[#F26D3D]/40 flex flex-col items-center justify-center text-center p-8">
               <Zap className="h-10 w-10 text-[#F26D3D] mb-4" aria-hidden />
               <h3 className="font-display text-3xl font-bold text-slate-900 dark:text-slate-50 mb-3">
-                Votre secteur n&apos;est pas listé ?
+                {t("solutions.final.title")}
               </h3>
               <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-sm">
-                Nous concevons des solutions sur-mesure. Expliquons-nous votre
-                cas d&apos;usage en 30 minutes.
+                {t("solutions.final.desc")}
               </p>
               <SnakeButton
                 onClick={() => onNavigate("contact")}
@@ -215,7 +216,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
                 size="lg"
                 className="neon-glow"
               >
-                Briefing express
+                {t("solutions.final.cta")}
                 <ArrowRight className="h-4 w-4" aria-hidden />
               </SnakeButton>
             </article>
@@ -228,9 +229,9 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <div className="grid gap-5 md:grid-cols-3">
             {[
-              { icon: ShieldCheck, t: "Souveraineté garantie", d: "Hébergement SecNumCloud, données chiffrées bout-en-bout, code audité." },
-              { icon: Zap, t: "Time-to-value court", d: "Premier incrément en production sous 6 semaines, en moyenne." },
-              { icon: Compass, t: "Accompagnement long", d: "Du discovery au run : une équipe dédiée, sans rotation intempestive." },
+              { icon: ShieldCheck, t: t("solutions.confiance.sovereignty"), d: t("solutions.confiance.sovereignty.desc") },
+              { icon: Zap, t: t("solutions.confiance.time"), d: t("solutions.confiance.time.desc") },
+              { icon: Compass, t: t("solutions.confiance.long"), d: t("solutions.confiance.long.desc") },
             ].map((f) => (
               <motion.div
                 key={f.t}

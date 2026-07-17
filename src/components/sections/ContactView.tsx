@@ -17,6 +17,7 @@ import {
 import { contactSchema, type ContactApiResponse } from "@/lib/validation";
 import { safeFetch, FetchError } from "@/lib/safeFetch";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 import { PixelRevealTitle } from "@/components/PixelRevealTitle";
 import { SnakeButton } from "@/components/SnakeButton";
 
@@ -49,6 +50,7 @@ const EMPTY: FormState = {
 type Status = "idle" | "submitting" | "success" | "error";
 
 export function ContactView() {
+  const { t } = useI18n();
   const [form, setForm] = useState<FormState>(EMPTY);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [status, setStatus] = useState<Status>("idle");
@@ -141,21 +143,20 @@ export function ContactView() {
             </p>
             <h1 className="font-display text-4xl md:text-6xl font-bold text-[#F26D3D] tracking-tight mb-4">
               <PixelRevealTitle
-                text="Établissons une"
+                text={t("contact.title1")}
                 as="span"
                 className="block"
                 delay={0.1}
               />
               <PixelRevealTitle
-                text="connexion sécurisée"
+                text={t("contact.title2")}
                 as="span"
                 className="block text-neon"
                 delay={0.45}
               />
             </h1>
             <p className="text-slate-400 dark:text-slate-300 leading-relaxed text-lg">
-              Décrivez votre besoin. Un architecte Solution vous répond sous 24h
-              ouvrées. Toutes les transmissions sont chiffrées et journalisées.
+              {t("contact.desc")}
             </p>
           </motion.div>
         </div>
@@ -193,7 +194,7 @@ export function ContactView() {
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <TerminalField
-                    label="PRENOM"
+                    label={t("contact.fields.prenom")}
                     name="prenom"
                     placeholder="Aïcha"
                     value={form.prenom}
@@ -202,7 +203,7 @@ export function ContactView() {
                     required
                   />
                   <TerminalField
-                    label="NOM"
+                    label={t("contact.fields.nom")}
                     name="nom"
                     placeholder="Benkacem"
                     value={form.nom}
@@ -214,7 +215,7 @@ export function ContactView() {
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <TerminalField
-                    label="EMAIL_PRO"
+                    label={t("contact.fields.email")}
                     name="email"
                     type="email"
                     placeholder="a.benkacem@entreprise.com"
@@ -224,7 +225,7 @@ export function ContactView() {
                     required
                   />
                   <TerminalField
-                    label="ENTREPRISE"
+                    label={t("contact.fields.entreprise")}
                     name="entreprise"
                     placeholder="Novabank SA"
                     value={form.entreprise}
@@ -235,7 +236,7 @@ export function ContactView() {
                 </div>
 
                 <TerminalField
-                  label="SUJET"
+                  label={t("contact.fields.sujet")}
                   name="sujet"
                   placeholder="Cadrage d'une plateforme agentique souveraine"
                   value={form.sujet}
@@ -250,7 +251,7 @@ export function ContactView() {
                     htmlFor="message"
                     className="block font-mono text-[10px] uppercase tracking-[0.25em] text-slate-400 dark:text-slate-300 mb-2"
                   >
-                    MESSAGE <span className="text-[#F26D3D]">*</span>
+                    {t("contact.fields.message")} <span className="text-[#F26D3D]">*</span>
                   </label>
                   <textarea
                     id="message"
@@ -285,12 +286,7 @@ export function ContactView() {
                     aria-invalid={!!errors.consent}
                   />
                   <span className="text-xs text-slate-400 dark:text-slate-300 leading-relaxed">
-                    J&apos;accepte que mes données soient traitées par Analyticatech
-                    pour répondre à ma demande, conformément à la{" "}
-                    <a href="#" onClick={(e) => e.preventDefault()} className="text-[#F26D3D] hover:underline">
-                      politique de confidentialité
-                    </a>
-                    . Aucune revente, suppression sous 90 jours.
+                    {t("contact.consent")}
                   </span>
                 </label>
                 {errors.consent && (
@@ -343,12 +339,12 @@ export function ContactView() {
                     {status === "submitting" ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-                        CHIFFREMENT... TRANSMISSION...
+                        {t("contact.encrypting")}
                       </>
                     ) : (
                       <>
                         <ChevronRight className="h-4 w-4" aria-hidden />
-                        EXÉCUTER
+                        {t("contact.execute")}
                         <ChevronRight className="h-4 w-4 rotate-180" aria-hidden />
                       </>
                     )}
@@ -366,7 +362,7 @@ export function ContactView() {
                     >
                       <p className="flex items-center gap-2 font-mono text-sm text-[#4CAF50]">
                         <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden />
-                        {serverMsg}
+                        {status === "success" && serverMsg ? serverMsg : t("contact.success")}
                       </p>
                       {reference && (
                         <p className="mt-1.5 font-mono text-[11px] text-slate-400 dark:text-slate-300">
@@ -416,7 +412,7 @@ export function ContactView() {
           <aside className="lg:col-span-2 space-y-5">
             <div className="glass-card rounded-2xl p-6">
               <h3 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] mb-4">
-                Canaux alternatifs
+                {t("contact.channels")}
               </h3>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
@@ -461,14 +457,14 @@ export function ContactView() {
 
             <div className="glass-card rounded-2xl p-6">
               <h3 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] mb-4">
-                Engagement de réponse
+                {t("contact.sla.title")}
               </h3>
               <div className="space-y-3">
                 {[
-                  { l: "Premier accusé de réception", v: "< 2h ouvrées" },
-                  { l: "Réponse d'un architecte", v: "< 24h ouvrées" },
-                  { l: "Atelier de cadrage proposé", v: "< 5 jours" },
-                  { l: "Disponibilités d'urgence", v: "24/7 critique" },
+                  { l: t("contact.sla.ack"), v: t("contact.sla.ack.v") },
+                  { l: t("contact.sla.architect"), v: t("contact.sla.architect.v") },
+                  { l: t("contact.sla.workshop"), v: t("contact.sla.workshop.v") },
+                  { l: t("contact.sla.urgent"), v: t("contact.sla.urgent.v") },
                 ].map((s) => (
                   <div
                     key={s.l}
@@ -487,13 +483,11 @@ export function ContactView() {
               <div className="flex items-center gap-2 mb-3">
                 <ShieldCheck className="h-5 w-5 text-[#4CAF50]" aria-hidden />
                 <h3 className="font-display font-bold text-slate-800 dark:text-slate-100">
-                  Confidentialité garantie
+                  {t("contact.confidentiality.title")}
                 </h3>
               </div>
               <p className="text-xs text-slate-400 dark:text-slate-300 leading-relaxed">
-                Vos informations sont traitées en toute confidentialité. Nous
-                signons systématiquement un NDA avant tout échange technique
-                détaillé. Données supprimées sous 90 jours en l&apos;absence de suite.
+                {t("contact.confidentiality.desc")}
               </p>
             </div>
           </aside>

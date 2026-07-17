@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowLeft, Target, Eye, Heart, Users } from "lucide-react";
 import type { ViewKey } from "@/lib/data";
+import { useI18n } from "@/lib/i18n";
 import { SnakeButton } from "@/components/SnakeButton";
 import { Logo } from "@/components/Logo";
 
@@ -45,6 +46,8 @@ const STATS = [
  * Mission, vision, valeurs et statistiques clés.
  */
 export function AboutView({ onNavigate }: AboutViewProps) {
+  const { t } = useI18n();
+
   return (
     <div className="pt-28 md:pt-36 pb-20">
       <div className="mx-auto max-w-5xl px-4 md:px-6">
@@ -56,7 +59,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
           className="mb-8"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden />
-          Retour à l'accueil
+          {t("legal.back")}
         </SnakeButton>
 
         {/* Hero */}
@@ -70,11 +73,10 @@ export function AboutView({ onNavigate }: AboutViewProps) {
             <Logo size={64} delay={0.2} />
           </div>
           <h1 className="font-display text-4xl md:text-6xl font-bold text-[#F26D3D] tracking-tight mb-4">
-            À propos d'Analyticatech
+            {t("about.title")}
           </h1>
           <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto">
-            Cabinet de conseil de haut niveau en IA, Transformation Digitale et Automatisation.
-            Nous concevons et industrialisons des systèmes intelligents à l'échelle.
+            {t("about.desc")}
           </p>
         </motion.div>
 
@@ -88,7 +90,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
             className="glass-card rounded-2xl p-8"
           >
             <h2 className="font-display text-2xl font-bold text-slate-900 dark:text-slate-50 mb-3">
-              Notre Mission
+              {t("about.mission.title")}
             </h2>
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               Rendre l'intelligence artificielle opérationnelle et souveraine pour les
@@ -106,7 +108,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
             className="glass-card rounded-2xl p-8"
           >
             <h2 className="font-display text-2xl font-bold text-slate-900 dark:text-slate-50 mb-3">
-              Notre Vision
+              {t("about.vision.title")}
             </h2>
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               Un futur où chaque organisation maîtrise ses systèmes agentiques,
@@ -126,7 +128,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
           className="mb-16"
         >
           <h2 className="font-display text-3xl font-bold text-slate-900 dark:text-slate-50 mb-8 text-center">
-            Nos Valeurs
+            {t("about.values.title")}
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {VALUES.map((value, i) => (
@@ -188,7 +190,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
             onClick={() => onNavigate("contact")}
             className="neon-glow"
           >
-            Travaillons ensemble
+            {t("about.cta")}
           </SnakeButton>
         </motion.div>
       </div>

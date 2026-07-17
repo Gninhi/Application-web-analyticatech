@@ -9,7 +9,8 @@ import {
   ChevronRight,
   Activity,
 } from "lucide-react";
-import { SERVICES, STREAM_METRICS, ACTIVITY_LOG, TESTIMONIALS, CAPABILITIES, MARQUEE_KEYWORDS, HERO_STATS, type ViewKey } from "@/lib/data";
+import { type ViewKey } from "@/lib/data";
+import { useI18n, useLocalizedData } from "@/lib/i18n";
 import { SpotlightCard } from "@/components/SpotlightCard";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { ScrambleText } from "@/components/ScrambleText";
@@ -35,6 +36,9 @@ interface DynamicClient {
 }
 
 export function HomeView({ onNavigate }: HomeViewProps) {
+  const { t } = useI18n();
+  const { SERVICES, STREAM_METRICS, ACTIVITY_LOG, TESTIMONIALS, CAPABILITIES, MARQUEE_KEYWORDS, HERO_STATS } = useLocalizedData();
+
   // État pour les données dynamiques (métriques + clients)
   const [dynamicMetrics, setDynamicMetrics] = useState<DynamicMetric[]>([]);
   const [dynamicClients, setDynamicClients] = useState<DynamicClient[]>([]);
@@ -72,19 +76,19 @@ export function HomeView({ onNavigate }: HomeViewProps) {
           >
             <span className="h-1.5 w-1.5 rounded-full bg-[#F26D3D] animate-pulse" aria-hidden />
             <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-slate-400 dark:text-slate-300">
-              Cabinet IA · Transformation · Automatisation
+              {t("home.badge")}
             </span>
           </motion.div>
 
           <h1 className="font-display font-bold tracking-tight text-[#F26D3D] text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[0.95]">
             <PixelRevealTitle
-              text="LE FUTUR DE"
+              text={t("home.hero.title1")}
               as="span"
               className="block"
               delay={0.05}
             />
             <PixelRevealTitle
-              text="L'INTELLIGENCE"
+              text={t("home.hero.title2")}
               as="span"
               className="block text-neon"
               delay={0.35}
@@ -97,9 +101,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
             transition={{ duration: 0.6, delay: 0.7 }}
             className="mt-7 max-w-2xl text-base md:text-lg text-slate-400 dark:text-slate-300 leading-relaxed"
           >
-            Nous concevons et industrialisons des systèmes à base d&apos;IA, d&apos;agents
-            cognitifs et d&apos;automatisations critiques. De l&apos;architecture au déploiement,
-            nous transformons vos processus métier en avantage concurrentiel durable.
+            {t("home.hero.desc")}
           </motion.p>
 
           <motion.div
@@ -114,7 +116,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
               size="lg"
               className="group neon-glow"
             >
-              Explorer nos services
+              {t("home.hero.cta1")}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
             </SnakeButton>
             <SnakeButton
@@ -122,7 +124,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
               variant="ghost"
               size="lg"
             >
-              Demander un devis
+              {t("home.hero.cta2")}
             </SnakeButton>
           </motion.div>
 
@@ -148,9 +150,9 @@ export function HomeView({ onNavigate }: HomeViewProps) {
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <SectionHeading
-            tag="// 01 — MONOLITHE"
-            title="Une expertise, cinq piliers technologiques"
-            description="Un monolithe d'expertise couvrant l'ensemble de la chaîne de valeur de l'IA appliquée — de la donnée brute à la décision autonome."
+            tag={t("home.section.monolith")}
+            title={t("home.section.monolith.title")}
+            description={t("home.section.monolith.desc")}
           />
 
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -223,13 +225,13 @@ export function HomeView({ onNavigate }: HomeViewProps) {
               <span className="font-mono text-3xl font-bold text-white/10">06.</span>
               <div>
                 <h3 className="font-display text-xl font-bold text-slate-900 dark:text-slate-50 mb-2">
-                  Besoin sur-mesure ?
+                  {t("home.bespoke.title")}
                 </h3>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
-                  Co-construisons votre architecture cible avec nos architectes Solution.
+                  {t("home.bespoke.desc")}
                 </p>
                 <span className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-[#F26D3D]">
-                  <ScrambleText text="Initier un projet" />
+                  <ScrambleText text={t("home.bespoke.cta")} />
                   <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden />
                 </span>
               </div>
@@ -242,9 +244,9 @@ export function HomeView({ onNavigate }: HomeViewProps) {
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <SectionHeading
-            tag="// 02 — FLUX DE DONNÉES"
-            title="La donnée, en flux continu"
-            description="Un aperçu live de notre infrastructure de monitoring. Chaque mission alimente une télémétrie partagée et observable."
+            tag={t("home.section.datastream")}
+            title={t("home.section.datastream.title")}
+            description={t("home.section.datastream.desc")}
           />
 
           <div className="mt-12 grid gap-5 lg:grid-cols-3">
@@ -336,9 +338,9 @@ export function HomeView({ onNavigate }: HomeViewProps) {
       <section className="relative py-24 md:py-32">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <SectionHeading
-            tag="// 03 — CAPACITÉS"
-            title="Un système voit. Tous savent."
-            description="Nos architectures agentiques fonctionnent en réseau coordonné. La signature d'une plateforme de classe bancaire : détection, réponse, apprentissage — en continu."
+            tag={t("home.section.capabilities")}
+            title={t("home.section.capabilities.title")}
+            description={t("home.section.capabilities.desc")}
           />
 
           <div className="mt-14 space-y-4">
@@ -392,9 +394,9 @@ export function HomeView({ onNavigate }: HomeViewProps) {
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <SectionHeading
-            tag="// 04 — SIGNAL DE CONFIANCE"
-            title="Ils nous confient leurs systèmes critiques"
-            description="Directions générales, CIO et C-Level d'organisations européennes : la confiance se construit sur la livraison."
+            tag={t("home.section.trust")}
+            title={t("home.section.trust.title")}
+            description={t("home.section.trust.desc")}
           />
 
           <div className="mt-10 space-y-4">
@@ -484,13 +486,13 @@ export function HomeView({ onNavigate }: HomeViewProps) {
               aria-hidden
             />
             <p className="relative font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-4">
-              {"// Prêt à initier ?"}
+              {t("home.section.cta.tag")}
             </p>
             <h2 className="relative font-display text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 mb-4">
-              Construisons votre architecture IA
+              {t("home.section.cta.title")}
             </h2>
             <p className="relative max-w-xl mx-auto text-slate-400 dark:text-slate-300 mb-8">
-              Un échange d&apos;une heure avec un architecte Solution pour cadrer votre besoin.
+              {t("home.section.cta.desc")}
             </p>
             <SnakeButton
               onClick={() => onNavigate("contact")}
@@ -498,7 +500,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
               size="lg"
               className="relative neon-glow"
             >
-              Planifier l&apos;échange
+              {t("home.section.cta.button")}
               <ArrowRight className="h-4 w-4" aria-hidden />
             </SnakeButton>
           </div>

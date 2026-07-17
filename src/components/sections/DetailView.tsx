@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
 import type { ViewKey } from "@/lib/data";
-import { SERVICES, SOLUTIONS, BLOG_POSTS } from "@/lib/data";
+import { useI18n, useLocalizedData } from "@/lib/i18n";
 import { SnakeButton } from "@/components/SnakeButton";
 import { SERVICE_ICONS, getServiceBgImage, getServiceMeshOverlay } from "@/lib/services";
 
@@ -17,6 +17,8 @@ interface ServiceDetailViewProps {
  * Accessible via ViewKey "service-detail" + serviceIndex.
  */
 export function ServiceDetailView({ serviceIndex, onNavigate }: ServiceDetailViewProps) {
+  const { t } = useI18n();
+  const { SERVICES } = useLocalizedData();
   const service = SERVICES.find((s) => s.index === serviceIndex) ?? SERVICES[0];
   const IconComponent = SERVICE_ICONS[service.icon] ?? SERVICE_ICONS.BrainCircuit;
   const bgImage = getServiceBgImage(service.index);
@@ -33,7 +35,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate }: ServiceDetailVie
           className="mb-8"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden />
-          Retour aux services
+          {`${t("common.back")} ${t("nav.services")}`}
         </SnakeButton>
 
         {/* Hero du service */}
@@ -72,14 +74,14 @@ export function ServiceDetailView({ serviceIndex, onNavigate }: ServiceDetailVie
           className="glass-card rounded-2xl p-6 md:p-8 mb-8"
         >
           <h2 className="font-display text-xl font-bold text-slate-900 dark:text-slate-50 mb-4">
-            Présentation
+            {t("common.presentation")}
           </h2>
           <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-base md:text-lg mb-6">
             {service.description}
           </p>
 
           <h3 className="font-mono text-[11px] uppercase tracking-widest text-[#F26D3D] mb-3">
-            Stack technologique
+            {t("common.techStack")}
           </h3>
           <div className="flex flex-wrap gap-2 mb-6">
             {service.technologies.map((tech) => (
@@ -90,7 +92,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate }: ServiceDetailVie
           </div>
 
           <h3 className="font-mono text-[11px] uppercase tracking-widest text-[#F26D3D] mb-3">
-            Métriques clés
+            {t("common.metrics")}
           </h3>
           <div className="grid grid-cols-2 gap-4">
             {service.metrics.map((m) => (
@@ -115,7 +117,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate }: ServiceDetailVie
             Prêt à démarrer ce service pour votre organisation ?
           </p>
           <SnakeButton variant="primary" size="lg" onClick={() => onNavigate("contact")} className="neon-glow">
-            Demander un devis
+            {t("nav.cta")}
             <ArrowUpRight className="h-4 w-4" aria-hidden />
           </SnakeButton>
         </motion.div>
@@ -133,6 +135,8 @@ interface SolutionDetailViewProps {
 }
 
 export function SolutionDetailView({ solutionId, onNavigate }: SolutionDetailViewProps) {
+  const { t } = useI18n();
+  const { SOLUTIONS } = useLocalizedData();
   const solution = SOLUTIONS.find((s) => s.id === solutionId) ?? SOLUTIONS[0];
 
   return (
@@ -140,7 +144,7 @@ export function SolutionDetailView({ solutionId, onNavigate }: SolutionDetailVie
       <div className="mx-auto max-w-4xl px-4 md:px-6">
         <SnakeButton variant="ghost" size="sm" onClick={() => onNavigate("solutions")} className="mb-8">
           <ArrowLeft className="h-4 w-4" aria-hidden />
-          Retour aux solutions
+          {`${t("common.back")} ${t("nav.solutions")}`}
         </SnakeButton>
 
         <motion.div
@@ -161,7 +165,7 @@ export function SolutionDetailView({ solutionId, onNavigate }: SolutionDetailVie
 
           <div className="rounded-xl border border-[#F26D3D]/25 bg-[#F26D3D]/5 p-4 mb-6">
             <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
-              Impact mesuré
+              {t("common.impact")}
             </p>
             <p className="font-display text-xl font-bold text-[#F26D3D]">{solution.impact}</p>
           </div>
@@ -185,7 +189,7 @@ export function SolutionDetailView({ solutionId, onNavigate }: SolutionDetailVie
             Cette solution correspond à votre besoin ?
           </p>
           <SnakeButton variant="primary" size="lg" onClick={() => onNavigate("contact")} className="neon-glow">
-            En discuter
+            {t("common.contact")}
             <ArrowUpRight className="h-4 w-4" aria-hidden />
           </SnakeButton>
         </motion.div>
@@ -203,6 +207,8 @@ interface BlogDetailViewProps {
 }
 
 export function BlogDetailView({ postId, onNavigate }: BlogDetailViewProps) {
+  const { t } = useI18n();
+  const { BLOG_POSTS } = useLocalizedData();
   const post = BLOG_POSTS.find((p) => p.id === postId) ?? BLOG_POSTS[0];
 
   const formatDate = (iso: string) =>
@@ -213,7 +219,7 @@ export function BlogDetailView({ postId, onNavigate }: BlogDetailViewProps) {
       <div className="mx-auto max-w-3xl px-4 md:px-6">
         <SnakeButton variant="ghost" size="sm" onClick={() => onNavigate("blog")} className="mb-8">
           <ArrowLeft className="h-4 w-4" aria-hidden />
-          Retour aux articles
+          {`${t("common.back")} ${t("nav.blog")}`}
         </SnakeButton>
 
         <motion.article
@@ -245,7 +251,7 @@ export function BlogDetailView({ postId, onNavigate }: BlogDetailViewProps) {
           {/* Contenu (placeholder — l'article complet serait ici) */}
           <div className="glass-card rounded-2xl p-6 md:p-8 mb-8">
             <h2 className="font-display text-xl font-bold text-slate-900 dark:text-slate-50 mb-4">
-              Contexte
+              {t("common.context")}
             </h2>
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
               {post.excerpt} Dans cet article, nous explorons en détail les enjeux techniques,
@@ -254,7 +260,7 @@ export function BlogDetailView({ postId, onNavigate }: BlogDetailViewProps) {
             </p>
 
             <h2 className="font-display text-xl font-bold text-slate-900 dark:text-slate-50 mb-4">
-              Points clés
+              {t("common.keyPoints")}
             </h2>
             <ul className="space-y-3 mb-6">
               {post.tags.map((tag: string) => (
@@ -280,7 +286,7 @@ export function BlogDetailView({ postId, onNavigate }: BlogDetailViewProps) {
               Cet article vous a intéressé ? Échangeons sur votre projet.
             </p>
             <SnakeButton variant="primary" size="lg" onClick={() => onNavigate("contact")} className="neon-glow">
-              Contacter un architecte
+              {t("common.contact")}
               <ArrowUpRight className="h-4 w-4" aria-hidden />
             </SnakeButton>
           </div>

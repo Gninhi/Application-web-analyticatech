@@ -8,7 +8,8 @@ import {
   Layers,
   Workflow,
 } from "lucide-react";
-import { SERVICES, type ViewKey } from "@/lib/data";
+import { type Service, type ViewKey } from "@/lib/data";
+import { useI18n, useLocalizedData } from "@/lib/i18n";
 import { PixelRevealTitle } from "@/components/PixelRevealTitle";
 import { SERVICE_ICONS, getServiceBgImage, getServiceMeshOverlay } from "@/lib/services";
 import { SnakeButton } from "@/components/SnakeButton";
@@ -42,6 +43,9 @@ const DELIVERY_STEPS = [
  * Chaque carte occupe 100vh → amplitude totale = nb cartes * 100vh.
  */
 export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps) {
+  const { t } = useI18n();
+  const { SERVICES } = useLocalizedData();
+
   // Scroll progress global pour l'overlay de profondeur (subtil, non-bloquant)
   const { scrollYProgress } = useScroll();
 
@@ -60,14 +64,12 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
               {"// Services — Séquence d'Empilement"}
             </p>
             <PixelRevealTitle
-              text="Cinq couches d'expertise, empilées avec précision"
+              text={t("services.title")}
               as="h1"
               className="font-display text-4xl md:text-6xl font-bold text-[#F26D3D] tracking-tight mb-4"
             />
             <p className="text-slate-400 dark:text-slate-300 leading-relaxed text-lg">
-              Chaque service est une couche de notre monolithe. Défilez : les cartes
-              se superposent et se collent en haut — la précédente disparaît sous
-              la suivante, révélation par révélation.
+              {t("services.desc")}
             </p>
           </motion.div>
         </div>
@@ -104,12 +106,10 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
                 {"// Méthode de livraison"}
               </p>
               <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-50 mb-4 tracking-tight">
-                Du cadrage au run, sans rupture
+                {t("services.method.title")}
               </h2>
               <p className="text-slate-400 dark:text-slate-300 leading-relaxed mb-6">
-                Notre livraison suit un cycle itératif à 4 phases, chacune livrant
-                de la valeur observable. Aucun &ldquo;big bang&rdquo; : chaque incrément
-                est mis en production et monitoré.
+                {t("services.method.desc")}
               </p>
               <SnakeButton
                 onClick={() => onNavigate("contact")}
@@ -117,7 +117,7 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
                 size="md"
                 className="neon-glow"
               >
-                Cadrer votre mission
+                {t("services.method.cta")}
                 <ArrowUpRight className="h-4 w-4" aria-hidden />
               </SnakeButton>
             </motion.div>
@@ -166,7 +166,7 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
  * qui ne déclenche pas de repaint du contenu principal.
  */
 interface StickyServiceCardProps {
-  service: typeof SERVICES[number];
+  service: Service;
   index: number;
   total: number;
   scrollProgress: ReturnType<typeof useScroll>["scrollYProgress"];
@@ -175,6 +175,7 @@ interface StickyServiceCardProps {
 }
 
 function StickyServiceCard({ service, index, total, scrollProgress, onNavigate, onNavigateDetail }: StickyServiceCardProps) {
+  const { t } = useI18n();
   const IconComponent = SERVICE_ICONS[service.icon] ?? SERVICE_ICONS.BrainCircuit;
   const bgImage = getServiceBgImage(service.index);
   const meshOverlay = getServiceMeshOverlay(service.index);
@@ -273,7 +274,7 @@ function StickyServiceCard({ service, index, total, scrollProgress, onNavigate, 
 
               <div className="mb-6">
                 <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-300 mb-3">
-                  Stack technologique
+                  {t("common.techStack")}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {service.technologies.map((tech) => (
@@ -304,7 +305,7 @@ function StickyServiceCard({ service, index, total, scrollProgress, onNavigate, 
                 size="sm"
                 className="mt-auto group self-start"
               >
-                Démarrer ce service
+                {t("services.card.cta")}
                 <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
               </SnakeButton>
             </div>

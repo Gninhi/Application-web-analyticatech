@@ -4,23 +4,35 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, Clock, User, Hash, Newspaper } from "lucide-react";
 import {
-  BLOG_POSTS,
-  BLOG_CATEGORIES,
-  type BlogCategory,
-  type BlogPost,
   type ViewKey,
 } from "@/lib/data";
+import { useI18n, useLocalizedData } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { PixelRevealTitle } from "@/components/PixelRevealTitle";
 import { FilterPill } from "@/components/FilterPill";
 
-type Filter = BlogCategory | "Tous";
+type Filter = string;
 
-const CATEGORY_COLORS: Record<BlogCategory, string> = {
+// Couleurs par catégorie — couvre les libellés FR (IA, Automatisation) et EN (AI, Automation)
+const CATEGORY_COLORS: Record<string, string> = {
   IA: "text-[#F26D3D] border-[#F26D3D]/40 bg-[#F26D3D]/10",
+  AI: "text-[#F26D3D] border-[#F26D3D]/40 bg-[#F26D3D]/10",
   Automatisation: "text-[#4CAF50] border-[#4CAF50]/40 bg-[#4CAF50]/10",
+  Automation: "text-[#4CAF50] border-[#4CAF50]/40 bg-[#4CAF50]/10",
   BI: "text-sky-300 border-sky-300/40 bg-sky-300/10",
   Architecture: "text-violet-300 border-violet-300/40 bg-violet-300/10",
+};
+
+// Type structurel commun aux posts FR et EN (les littéraux category diffèrent).
+type AnyBlogPost = {
+  id: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  date: string;
+  readingTime: string;
+  author: string;
+  tags: string[];
 };
 
 function formatDate(iso: string): string {
@@ -36,12 +48,15 @@ interface BlogViewProps {
 }
 
 export function BlogView({ onNavigateDetail }: BlogViewProps) {
-  const [filter, setFilter] = useState<Filter>("Tous");
+  const { t } = useI18n();
+  const { BLOG_POSTS, BLOG_CATEGORIES } = useLocalizedData();
+  const allValue = BLOG_CATEGORIES[0] as string;
+  const [filter, setFilter] = useState<Filter>("all");
 
-  const filtered = useMemo<BlogPost[]>(() => {
-    if (filter === "Tous") return BLOG_POSTS;
-    return BLOG_POSTS.filter((p) => p.category === filter);
-  }, [filter]);
+  const filtered = useMemo<AnyBlogPost[]>(() => {
+    if (filter === "all") return BLOG_POSTS as AnyBlogPost[];
+    return (BLOG_POSTS as AnyBlogPost[]).filter((p) => p.category === filter);
+  }, [filter, BLOG_POSTS]);
 
   return (
     <div className="relative">
@@ -59,21 +74,20 @@ export function BlogView({ onNavigateDetail }: BlogViewProps) {
             </p>
             <h1 className="font-display text-4xl md:text-6xl font-bold text-[#F26D3D] tracking-tight mb-4">
               <PixelRevealTitle
-                text="Rapports techniques &"
+                text={t("blog.title1")}
                 as="span"
                 className="block"
                 delay={0.1}
               />
               <PixelRevealTitle
-                text="retours de terrain"
+                text={t("blog.title2")}
                 as="span"
                 className="block text-neon"
                 delay={0.5}
               />
             </h1>
             <p className="text-slate-400 dark:text-slate-300 leading-relaxed text-lg">
-              Nos architectes partagent leurs analyses : patterns de production,
-              choix d&apos;outillage et leçons apprises sur les missions.
+              {t("blog.desc")}
             </p>
           </motion.div>
         </div>
@@ -87,15 +101,19 @@ export function BlogView({ onNavigateDetail }: BlogViewProps) {
             role="tablist"
             aria-label="Filtrer par catégorie"
           >
-            {BLOG_CATEGORIES.map((cat) => (
-              <FilterPill
-                key={cat}
-                active={filter === cat}
-                onClick={() => setFilter(cat)}
-              >
-                {cat === "Tous" ? "Tous les rapports" : cat}
-              </FilterPill>
-            ))}
+            {BLOG_CATEGORIES.map((cat) => {
+              const isAll = cat === allValue;
+              const value: Filter = isAll ? "all" : cat;
+              return (
+                <FilterPill
+                  key={cat}
+                  active={filter === value}
+                  onClick={() => setFilter(value)}
+                >
+                  {isAll ? t("blog.filter.all") : cat}
+                </FilterPill>
+              );
+            })}
             <span className="ml-auto font-mono text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
               {filtered.length} entrée{filtered.length > 1 ? "s" : ""}
             </span>
@@ -203,7 +221,7 @@ export function BlogView({ onNavigateDetail }: BlogViewProps) {
           {filtered.length === 0 && (
             <div className="text-center py-20">
               <p className="font-mono text-sm text-slate-500 dark:text-slate-400 uppercase tracking-widest">
-                Aucun rapport dans cette catégorie.
+                {t("blog.empty")}
               </p>
             </div>
           )}
@@ -221,7 +239,7 @@ function FeaturedNews({
   posts,
   onNavigateDetail,
 }: {
-  posts: BlogPost[];
+  posts: AnyBlogPost[];
   onNavigateDetail: (view: ViewKey, id: string) => void;
 }) {
   if (posts.length === 0) return null;
