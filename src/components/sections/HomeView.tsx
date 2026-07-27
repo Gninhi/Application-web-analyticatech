@@ -319,14 +319,15 @@ export function HomeView({ onNavigate }: HomeViewProps) {
         </div>
       </section>
 
-      {/* ============ BANDEAU DÉFILANT (mots-clés signature) ============ */}
+      {/* ============ BANDEAU DÉFILANT (mots-clés signature — gauche vers droite) ============ */}
       <Marquee
         items={MARQUEE_KEYWORDS}
-        speed={25}
+        direction="right"
+        speed={30}
         className="border-y border-black/10 dark:border-white/10 py-3"
         renderItem={(item) => (
           <span className="flex items-center gap-4 px-4">
-            <span className="font-display text-xl md:text-2xl font-bold tracking-tight text-slate-800/80 dark:text-slate-100/80">
+            <span className="font-display text-xl md:text-2xl font-bold tracking-tight text-[#022873] dark:text-slate-100/80">
               {item as string}
             </span>
             <span className="text-[#F26D3D] text-xs" aria-hidden>●</span>
@@ -399,52 +400,29 @@ export function HomeView({ onNavigate }: HomeViewProps) {
             description={t("home.section.trust.desc")}
           />
 
-          <div className="mt-10 space-y-4">
-            {/* Piste 1 — gauche → droite */}
+          <div className="mt-10">
+            {/* Logos clients — défilement continu droite vers gauche */}
             <Marquee
               items={displayClients}
               speed={30}
-              className="py-2"
+              className="py-3"
               renderItem={(item) => {
                 const client = item as { name: string; sector: string };
                 return (
-                  <span className="group flex items-center gap-3 px-5">
-                    <span className="font-display text-lg md:text-xl font-bold tracking-tight text-slate-400 dark:text-slate-300 group-hover:text-[#F26D3D] transition-colors whitespace-nowrap">
+                  <span className="group flex items-center gap-3 px-6">
+                    <span className="font-display text-lg md:text-xl font-bold tracking-tight text-[#022873] dark:text-slate-300 group-hover:text-[#F26D3D] transition-colors whitespace-nowrap">
                       {client.name}
                     </span>
                     {client.sector && (
-                      <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 group-hover:text-[#F26D3D] transition-colors whitespace-nowrap">
+                      <span className="font-mono text-[10px] uppercase tracking-widest text-[#03318C]/60 dark:text-slate-400 group-hover:text-[#F26D3D] transition-colors whitespace-nowrap">
                         {client.sector}
                       </span>
                     )}
+                    <span className="text-[#F26D3D]/40 text-xs ml-2" aria-hidden>●</span>
                   </span>
                 );
               }}
             />
-            {/* Piste 2 — droite → gauche (sens inverse) */}
-            {displayClients.length > 6 && (
-              <Marquee
-                items={[...displayClients].reverse()}
-                direction="right"
-                speed={35}
-                className="py-2"
-                renderItem={(item) => {
-                  const client = item as { name: string; sector: string };
-                  return (
-                    <span className="group flex items-center gap-3 px-5">
-                      {client.sector && (
-                        <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 group-hover:text-[#F26D3D] transition-colors whitespace-nowrap">
-                          {client.sector}
-                        </span>
-                      )}
-                      <span className="font-display text-xl md:text-2xl font-bold tracking-tight text-slate-400 dark:text-slate-300 group-hover:text-[#F26D3D] transition-colors whitespace-nowrap">
-                        {client.name}
-                      </span>
-                    </span>
-                  );
-                }}
-              />
-            )}
           </div>
 
           <div className="mt-12 grid gap-5 md:grid-cols-3">
