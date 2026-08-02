@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { SCROLL_THRESHOLDS } from "@/lib/constants";
+import { SCROLL_THRESHOLDS } from "@/lib/content/site";
 
 interface ScrollState {
   scrollY: number;

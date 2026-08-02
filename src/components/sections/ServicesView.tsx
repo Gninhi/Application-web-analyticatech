@@ -8,43 +8,29 @@ import {
   Layers,
   Workflow,
 } from "lucide-react";
-import { type Service, type ViewKey } from "@/lib/data";
-import { useI18n, useLocalizedData } from "@/lib/i18n";
-import { PixelRevealTitle } from "@/components/PixelRevealTitle";
-import { SERVICE_ICONS, getServiceBgImage, getServiceMeshOverlay } from "@/lib/services";
-import { SnakeButton } from "@/components/SnakeButton";
+import { type ViewKey } from "@/lib/i18n/data-fr";
+import { useI18n } from "@/lib/i18n/provider";
+import { useAppContent } from "@/components/providers/ContentProvider";
+import { PixelRevealTitle } from "@/components/interactive/PixelRevealTitle";
+import { SERVICE_ICONS, getServiceBgImage, getServiceMeshOverlay } from "@/lib/content/services";
+import { MovingButton } from "@/components/interactive/MovingButton";
 
 interface ServicesViewProps {
   onNavigate: (view: ViewKey) => void;
   onNavigateDetail: (view: ViewKey, id: string) => void;
 }
 
-const DELIVERY_STEPS = [
-  { icon: Layers, t: "01 · Discovery", d: "Atelier de cadrage, architecture cible, ROI projet" },
-  { icon: Cpu, t: "02 · Build", d: "Sprints de 2 semaines, démos en production, observabilité" },
-  { icon: ShieldCheck, t: "03 · Hardening", d: "Audit sécurité, tests de charge, conformité RGPD" },
-  { icon: Workflow, t: "04 · Run & Scale", d: "Supervision 24/7, finops, amélioration continue" },
-] as const;
+const STEP_ICONS: Record<string, any> = { Layers, Cpu, ShieldCheck, Workflow };
 
-/**
- * ServicesView — empilement sticky pur CSS inspiré cula.tech.
- *
- * Principe (simplicité = fluidité) :
- *  - Chaque carte est `position: sticky; top: 0` avec `height: 100vh`
- *    et un fond opaque (#011C40 + image de fond).
- *  - Les cartes se superposent naturellement via le scroll natif du
- *    navigateur — aucune transformation Framer Motion sur y/opacity/scale
- *    pendant l'empilement (c'est ce qui garantit la fluidité 60fps).
- *  - La carte suivante arrive par-dessus (z-index croissant) et recouvre
- *    intégralement la précédente grâce au fond opaque.
- *  - Un overlay sombre progressif sur les cartes précédentes (via
- *    useScroll global) ajoute de la profondeur sans casser la fluidité.
- *
- * Chaque carte occupe 100vh → amplitude totale = nb cartes * 100vh.
- */
 export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps) {
   const { t } = useI18n();
-  const { SERVICES } = useLocalizedData();
+  const { services: SERVICES, deliverySteps: DB_STEPS } = useAppContent();
+
+  const deliverySteps = DB_STEPS.map((s) => ({
+    icon: STEP_ICONS[s.iconKey] || Layers,
+    t: s.label,
+    d: s.description,
+  }));
 
   // Scroll progress global pour l'overlay de profondeur (subtil, non-bloquant)
   const { scrollYProgress } = useScroll();
@@ -111,7 +97,7 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
               <p className="text-slate-400 dark:text-slate-300 leading-relaxed mb-6">
                 {t("services.method.desc")}
               </p>
-              <SnakeButton
+              <MovingButton
                 onClick={() => onNavigate("contact")}
                 variant="primary"
                 size="md"
@@ -119,7 +105,7 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
               >
                 {t("services.method.cta")}
                 <ArrowUpRight className="h-4 w-4" aria-hidden />
-              </SnakeButton>
+              </MovingButton>
             </motion.div>
 
             <motion.div
@@ -129,7 +115,7 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
               transition={{ duration: 0.5 }}
               className="space-y-3"
             >
-              {DELIVERY_STEPS.map((step) => (
+              {deliverySteps.map((step) => (
                 <div
                   key={step.t}
                   className="flex items-start gap-4 rounded-xl glass-card p-4 hover:border-[#F26D3D]/30 transition-colors"
@@ -156,7 +142,7 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
 /* === Carte sticky individuelle (pur CSS, fluide) ===
  *
  * Approche cula.tech :
- *  - position: sticky; top: 0 → la carte se "colle" en haut
+ *  - position: sticky; top: 0 → la carte se \"colle\" en haut
  *  - height: 100vh → occupe tout le viewport
  *  - Fond opaque (image + mesh + voile) → recouvre intégralement la précédente
  *  - z-index croissant → la carte suivante passe au-dessus
@@ -166,7 +152,7 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
  * qui ne déclenche pas de repaint du contenu principal.
  */
 interface StickyServiceCardProps {
-  service: Service;
+  service: any;
   index: number;
   total: number;
   scrollProgress: ReturnType<typeof useScroll>["scrollYProgress"];
@@ -174,6 +160,7 @@ interface StickyServiceCardProps {
   onNavigateDetail: (view: ViewKey, id: string) => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function StickyServiceCard({ service, index, total, scrollProgress, onNavigate, onNavigateDetail }: StickyServiceCardProps) {
   const { t } = useI18n();
   const IconComponent = SERVICE_ICONS[service.icon] ?? SERVICE_ICONS.BrainCircuit;
@@ -299,7 +286,7 @@ function StickyServiceCard({ service, index, total, scrollProgress, onNavigate, 
                 ))}
               </div>
 
-              <SnakeButton
+              <MovingButton
                 onClick={() => onNavigateDetail("service-detail", service.index)}
                 variant="outline"
                 size="sm"
@@ -307,7 +294,7 @@ function StickyServiceCard({ service, index, total, scrollProgress, onNavigate, 
               >
                 {t("services.card.cta")}
                 <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
-              </SnakeButton>
+              </MovingButton>
             </div>
           </div>
         </div>

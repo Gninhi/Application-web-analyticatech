@@ -14,12 +14,13 @@ import {
   Phone,
   MapPin,
 } from "lucide-react";
-import { contactSchema, type ContactApiResponse } from "@/lib/validation";
-import { safeFetch, FetchError } from "@/lib/safeFetch";
-import { cn } from "@/lib/utils";
-import { useI18n } from "@/lib/i18n";
-import { PixelRevealTitle } from "@/components/PixelRevealTitle";
-import { SnakeButton } from "@/components/SnakeButton";
+import { contactSchema, type ContactApiResponse } from "@/lib/validation/schemas";
+import { safeFetch, FetchError } from "@/lib/http/safe-fetch";
+import { cn } from "@/lib/utils/cn";
+import { useI18n } from "@/lib/i18n/provider";
+import { useAppContent } from "@/components/providers/ContentProvider";
+import { PixelRevealTitle } from "@/components/interactive/PixelRevealTitle";
+import { MovingButton } from "@/components/interactive/MovingButton";
 
 interface FormState {
   prenom: string;
@@ -51,6 +52,7 @@ type Status = "idle" | "submitting" | "success" | "error";
 
 export function ContactView() {
   const { t } = useI18n();
+  const { siteConfig } = useAppContent();
   const [form, setForm] = useState<FormState>(EMPTY);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [status, setStatus] = useState<Status>("idle");
@@ -329,7 +331,7 @@ export function ContactView() {
 
                 {/* Bouton EXÉCUTER */}
                 <div className="pt-2">
-                  <SnakeButton
+                  <MovingButton
                     type="submit"
                     disabled={status === "submitting"}
                     variant="primary"
@@ -348,7 +350,7 @@ export function ContactView() {
                         <ChevronRight className="h-4 w-4 rotate-180" aria-hidden />
                       </>
                     )}
-                  </SnakeButton>
+                  </MovingButton>
                 </div>
 
                 {/* Message serveur */}
@@ -423,8 +425,8 @@ export function ContactView() {
                     <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
                       Email
                     </p>
-                    <a href="mailto:contact@analyticatech.com" className="text-sm text-slate-700 dark:text-slate-200 hover:text-[#F26D3D] transition-colors">
-                      contact@analyticatech.com
+                    <a href={`mailto:${siteConfig.email}`} className="text-sm text-slate-700 dark:text-slate-200 hover:text-[#F26D3D] transition-colors">
+                      {siteConfig.email}
                     </a>
                   </div>
                 </li>
@@ -436,7 +438,7 @@ export function ContactView() {
                     <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
                       Téléphone
                     </p>
-                    <p className="text-sm text-slate-700 dark:text-slate-200">+33 1 84 80 00 00</p>
+                    <p className="text-sm text-slate-700 dark:text-slate-200">{siteConfig.phone}</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
@@ -448,7 +450,7 @@ export function ContactView() {
                       Siège
                     </p>
                     <p className="text-sm text-slate-700 dark:text-slate-200">
-                      12 rue de la Paix, 75002 Paris
+                      {siteConfig.streetAddress}, {siteConfig.postalCode} {siteConfig.city}
                     </p>
                   </div>
                 </li>

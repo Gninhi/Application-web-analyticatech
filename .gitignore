@@ -30,12 +30,22 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# === Secrets & env — NE JAMAIS committer ===
+.env
+.env.*
+.env.backup
+!.env.example
+
+# === Logs & fichiers runtime ===
+*.log
+dev.log
+dev.out.log
+server.log
+logs/
+.zscripts/dev.pid
 
 # vercel
 .vercel
-
 
 # typescript
 *.tsbuildinfo
@@ -43,12 +53,57 @@ next-env.d.ts
 local-*
 .claude
 .z-ai-config
-*.log
-dev.log
-dev.out.log
-test
-prompt
 
-server.log
-# Skills directory
+# === Base de données locale (la prod utilise sa propre URL) ===
+db/*.db
+db/*.db-journal
+db/*.db-wal
+db/*.db-shm
+
+# === Screenshots & artefacts visuels ===
+screenshot-*.png
+/tool-results/
+/upload/
+
+# === Documentation interne / audits / suivi (non public) ===
+/AUDIT.md
+/SUIVI.md
+/worklog.md
+/worklog-*.md
+
+# === Skills directory ===
 /skills/
+
+# === Tooling / configs agent locales ===
+.gemini/
+.gemini-cache/
+.z-ai-config/
+.claude/
+
+# === Lockfiles alternatifs (on garde package-lock.json) ===
+bun.lock
+bun.lockb
+yarn.lock
+pnpm-lock.yaml
+
+# === Configs éditeurs / OS ===
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+Thumbs.db
+
+# === Caddy / reverse-proxy local ===
+Caddyfile.local
+Caddyfile.*.local
+
+# === Données / uploads locaux ===
+/download/
+/db/*.db
+/db/*.db-journal
+/db/*.db-wal
+/db/*.db-shm
+
+# === Build artefacts TypeScript ===
+*.tsbuildinfo

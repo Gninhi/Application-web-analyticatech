@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { APP_VERSION } from "@/lib/utils/version";
 
 /** Headers de sécurité pour le health check. */
 const HEALTH_HEADERS: Record<string, string> = {
@@ -10,7 +11,8 @@ const HEALTH_HEADERS: Record<string, string> = {
 /**
  * GET /api/health
  * Probe de santé pour monitoring Docker / Kubernetes.
- * Retourne un statut simple + timestamp.
+ * `version` provient de `src/lib/version.ts` (injectée via NEXT_PUBLIC_APP_VERSION
+ * au build, fallback sur constante locale si absente).
  */
 export async function GET() {
   return NextResponse.json(
@@ -18,7 +20,7 @@ export async function GET() {
       status: "UP",
       timestamp: Date.now(),
       service: "analyticatech-web",
-      version: "2.4.1",
+      version: APP_VERSION,
     },
     { status: 200, headers: HEALTH_HEADERS }
   );

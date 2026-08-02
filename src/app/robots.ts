@@ -56,7 +56,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/"],
       },
     ],
-    sitemap: "https://analyticatech.com/sitemap.xml",
-    host: "https://analyticatech.com",
+    sitemap: "https://analyticatech.fr/sitemap.xml",
+    host: "https://analyticatech.fr",
   };
 }

@@ -3,10 +3,11 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { ArrowRight, Compass, Zap, ShieldCheck } from "lucide-react";
-import { type ViewKey } from "@/lib/data";
-import { useI18n, useLocalizedData } from "@/lib/i18n";
-import { PixelRevealTitle } from "@/components/PixelRevealTitle";
-import { SnakeButton } from "@/components/SnakeButton";
+import { type ViewKey } from "@/lib/i18n/data-fr";
+import { useI18n } from "@/lib/i18n/provider";
+import { useAppContent } from "@/components/providers/ContentProvider";
+import { PixelRevealTitle } from "@/components/interactive/PixelRevealTitle";
+import { MovingButton } from "@/components/interactive/MovingButton";
 
 interface SolutionsViewProps {
   onNavigate: (view: ViewKey) => void;
@@ -29,7 +30,7 @@ interface SolutionsViewProps {
  */
 export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewProps) {
   const { t } = useI18n();
-  const { SOLUTIONS } = useLocalizedData();
+  const { solutions: SOLUTIONS } = useAppContent();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -188,7 +189,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
                     ))}
                   </div>
 
-                  <SnakeButton
+                  <MovingButton
                     onClick={() => onNavigateDetail("solution-detail", sol.id)}
                     variant="outline"
                     size="sm"
@@ -196,7 +197,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
                   >
                     {t("solutions.card.cta")}
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden />
-                  </SnakeButton>
+                  </MovingButton>
                 </div>
               </article>
             ))}
@@ -210,7 +211,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
               <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-sm">
                 {t("solutions.final.desc")}
               </p>
-              <SnakeButton
+              <MovingButton
                 onClick={() => onNavigate("contact")}
                 variant="primary"
                 size="lg"
@@ -218,7 +219,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
               >
                 {t("solutions.final.cta")}
                 <ArrowRight className="h-4 w-4" aria-hidden />
-              </SnakeButton>
+              </MovingButton>
             </article>
           </motion.div>
         </div>

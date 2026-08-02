@@ -1,25 +1,35 @@
-import { NextResponse } from "next/server";
-import { contactSchema, type ContactApiResponse } from "@/lib/validation";
-import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
-import { sanitizeObject } from "@/lib/sanitize";
-import { audit, hashIp } from "@/lib/auditLog";
-import { getRequestFingerprint, isSuspiciousUserAgent } from "@/lib/security";
+import { NextResponse, type NextRequest } from "next/server";
+import { contactSchema, type ContactApiResponse } from "@/lib/validation/schemas";
+import { checkRateLimit, getClientIp } from "@/lib/security/rate-limit";
+import { sanitizeObject } from "@/lib/security/sanitize";
+import { audit, hashIp } from "@/lib/observability/audit";
+import { getRequestFingerprint } from "@/lib/security/fingerprint";
+import { isSuspiciousUserAgent } from "@/lib/security/user-agent";
+import { validateCsrfToken } from "@/lib/security/csrf";
+import { isOriginAllowed } from "@/lib/security/origin";
+import { db } from "@/lib/db/client";
+import { sendContactNotification } from "@/lib/email/mailer";
 
 /**
- * POST /api/v1/contact — endpoint sécurisé niveau bancaire.
+ * POST /api/v1/contact — endpoint sécurisé en défense en profondeur.
  *
- * Couches de sécurité (défense en profondeur) :
- *  1. CSRF validation (déjà faite par middleware, double-check ici)
- *  2. Bot detection (UA suspect → 403)
- *  3. Rate limiting par fingerprint (IP + UA hashé) — 5 req/h
- *  4. Multi-honeypot (companyUrl + website + fax — tous doivent être vides)
- *  5. Validation Zod stricte (email pro, longueurs, format)
- *  6. Sanitization HTML XSS (récursif sur strings + arrays d'objets)
- *  7. Délai anti-timing (500ms) — prévient les attaques par timing
- *  8. Audit logging persisté (RGPD : IP hashée, rotation auto)
- *  9. Réponses normalisées sans fuite d'information interne
- * 10. Headers de sécurité stricts (CSP, HSTS, X-Frame-Options DENY...)
+ * Couches réellement appliquées :
+ *  1. CSRF double-submit (vérifié à nouveau ici, pas seulement dans le middleware)
+ *  2. Vérification d'origine (allowlist via ALLOWED_ORIGINS)
+ *  3. Bot detection (UA suspect → 403)
+ *  4. Rate limiting par fingerprint (IP + UA + lang hashé) — 5 req/h
+ *  5. Multi-honeypot (companyUrl + website + fax — tous doivent être vides)
+ *  6. Validation Zod stricte (email pro, longueurs, format)
+ *  7. Sanitization XSS (récursif sur strings + arrays d'objets)
+ *  8. Délai anti-timing (500ms) — prévient les attaques par timing
+ *  9. Persistance en base (ContactRequest) avec IP/fingerprint hashés (RGPD)
+ * 10. Notification email (transport réel si RESEND_API_KEY, sinon stub logué)
+ * 11. Audit logging persisté (sans PII)
+ * 12. Réponses normalisées sans fuite d'info interne + headers stricts
  */
+
+const CSRF_COOKIE = "at-csrf";
+const CSRF_HEADER = "x-csrf-token";
 
 const SECURITY_HEADERS: Record<string, string> = {
   "X-Content-Type-Options": "nosniff",
@@ -39,34 +49,62 @@ function json(body: ContactApiResponse, status: number, extra?: Record<string, s
   });
 }
 
-// Champs honeypot — tous doivent être vides pour un utilisateur légitime
 const HONEYPOT_FIELDS = ["companyUrl", "website", "fax", "phone2"] as const;
 
-export async function POST(req: Request) {
+/** Build l'allowlist d'origines depuis l'env. Same-origin implicite en l'absence de config. */
+function getAllowedOrigins(): string[] {
+  const raw = process.env.ALLOWED_ORIGINS ?? process.env.NEXT_PUBLIC_SITE_URL ?? "";
+  if (!raw) return [];
+  return raw
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
   const ipHash = hashIp(ip);
   const fingerprint = getRequestFingerprint(req);
   const ua = req.headers.get("user-agent");
 
-  // 1. Bot detection (défense en profondeur avec le middleware)
-  if (isSuspiciousUserAgent(ua)) {
+  // 1. CSRF réellement re-validé ici (double-submit pattern, defense in depth).
+  const cookieToken = req.cookies.get(CSRF_COOKIE)?.value ?? null;
+  const headerToken = req.headers.get(CSRF_HEADER);
+  if (!validateCsrfToken(cookieToken, headerToken)) {
+    audit.warn("Contact: CSRF token mismatch", {
+      ipHash,
+      fingerprint,
+      hasCookie: Boolean(cookieToken),
+      hasHeader: Boolean(headerToken),
+    });
+    return json(
+      { success: false, message: "Token de sécurité invalide. Veuillez rafraîchir la page." },
+      403
+    );
+  }
+
+  // 2. Vérification d'origine (anti-CSRF layer supplémentaire).
+  const allowed = getAllowedOrigins();
+  if (allowed.length > 0 && !isOriginAllowed(req, allowed)) {
+    audit.warn("Contact: origin not allowed", { ipHash, fingerprint });
+    return json({ success: false, message: "Origine non autorisée." }, 403);
+  }
+
+  // 3. Bot detection.
+  if (await isSuspiciousUserAgent(ua)) {
     audit.alert("Contact: blocked suspicious UA", {
       ipHash,
       fingerprint,
       userAgent: ua?.slice(0, 80),
     });
-    return json(
-      { success: false, message: "Requête non autorisée." },
-      403
-    );
+    return json({ success: false, message: "Requête non autorisée." }, 403);
   }
 
-  // 2. Rate limiting par fingerprint (plus précis que IP seule)
+  // 4. Rate limiting.
   const rl = checkRateLimit(`contact:${fingerprint}`, {
     limit: 5,
     windowMs: 60 * 60 * 1000,
   });
-
   if (!rl.allowed) {
     const retryAfterSec = Math.ceil((rl.resetAt - Date.now()) / 1000);
     audit.warn("Contact: rate limit exceeded", {
@@ -85,26 +123,22 @@ export async function POST(req: Request) {
     );
   }
 
-  // 3. Parsing du corps
+  // 5. Parsing JSON.
   let raw: unknown;
   try {
     raw = await req.json();
   } catch {
     audit.warn("Contact: invalid JSON payload", { ipHash, fingerprint });
-    return json(
-      { success: false, message: "Payload JSON invalide." },
-      400
-    );
+    return json({ success: false, message: "Payload JSON invalide." }, 400);
   }
 
-  // 4. Multi-honeypot — si un seul champ est rempli => bot
+  // 6. Multi-honeypot — un seul champ rempli => bot.
   if (raw && typeof raw === "object") {
     const obj = raw as Record<string, unknown>;
     const triggeredHoneypot = HONEYPOT_FIELDS.find(
       (field) => typeof obj[field] === "string" && obj[field] !== ""
     );
     if (triggeredHoneypot) {
-      // Répond 200 faux succès pour ne pas alerter le bot
       await new Promise((r) => setTimeout(r, 500));
       audit.warn("Contact: honeypot triggered", {
         ipHash,
@@ -122,7 +156,7 @@ export async function POST(req: Request) {
     }
   }
 
-  // 5. Validation Zod stricte
+  // 7. Validation Zod.
   const parsed = contactSchema.safeParse(raw);
   if (!parsed.success) {
     const errors = parsed.error.issues.map((issue) => ({
@@ -145,7 +179,29 @@ export async function POST(req: Request) {
     );
   }
 
-  // 6. Sanitization XSS (récursif strings + arrays d'objets)
+  // 7b. Vérification dynamique du domaine email en base de données (BlockedEmailDomain)
+  const emailDomain = parsed.data.email.split("@")[1]?.toLowerCase();
+  if (emailDomain) {
+    try {
+      const isBlocked = await db.blockedEmailDomain.findUnique({
+        where: { domain: emailDomain },
+      });
+      if (isBlocked) {
+        return json(
+          {
+            success: false,
+            message: "Veuillez utiliser un email professionnel (entreprise).",
+            errors: [{ field: "email", message: "Domaine de messagerie non autorisé" }],
+          },
+          422
+        );
+      }
+    } catch {
+      // Poursuite si la vérification BDD échoue
+    }
+  }
+
+  // 8. Sanitization XSS.
   const sanitized = sanitizeObject({
     prenom: parsed.data.prenom,
     nom: parsed.data.nom,
@@ -155,25 +211,60 @@ export async function POST(req: Request) {
     message: parsed.data.message,
   });
 
-  // 7. Délai anti-timing (500ms) — prévient les attaques par timing
+  // 9. Délai anti-timing.
   await new Promise((r) => setTimeout(r, 500));
 
-  // 8. Génération d'une référence traçable
+  // 10. Référence traçable.
   const reference = `AT-${new Date().getFullYear()}-${Date.now()
     .toString(36)
     .toUpperCase()
     .slice(-6)}`;
 
-  // 9. Audit logging persisté (RGPD : IP hashée, pas de PII)
-  audit.info("Contact: nouvelle demande", {
-    ipHash,
-    fingerprint,
+  // 11. Persistance en base (IP/fingerprint hashés — RGPD).
+  try {
+    await db.contactRequest.create({
+      data: {
+        reference,
+        prenom: sanitized.prenom,
+        nom: sanitized.nom,
+        email: sanitized.email,
+        entreprise: sanitized.entreprise,
+        sujet: sanitized.sujet,
+        message: sanitized.message,
+        ipHash,
+        fingerprint,
+        status: "new",
+        consent: parsed.data.consent,
+      },
+    });
+  } catch (err) {
+    audit.warn("Contact: échec persistance DB", {
+      reference,
+      error: err instanceof Error ? err.message : String(err),
+    });
+    return json(
+      { success: false, message: "Erreur serveur. Réessayez ultérieurement." },
+      500
+    );
+  }
+
+  // 12. Notification email (non bloquant — fire-and-forget avec audit log).
+  void sendContactNotification({
+    reference,
+    prenom: sanitized.prenom,
+    nom: sanitized.nom,
+    email: sanitized.email,
+    entreprise: sanitized.entreprise,
+    sujet: sanitized.sujet,
+    message: sanitized.message,
+  });
+
+  audit.info("Contact: nouvelle demande persistée", {
     reference,
     entreprise: sanitized.entreprise,
     sujet_len: sanitized.sujet.length,
   });
 
-  // 10. Réponse normalisée (sans fuite d'info interne)
   return json(
     {
       success: true,

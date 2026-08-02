@@ -2,57 +2,35 @@
 
 import { motion } from "framer-motion";
 import { ArrowLeft, Target, Eye, Heart, Users } from "lucide-react";
-import type { ViewKey } from "@/lib/data";
-import { useI18n } from "@/lib/i18n";
-import { SnakeButton } from "@/components/SnakeButton";
-import { Logo } from "@/components/Logo";
+import type { ViewKey } from "@/lib/i18n/data-fr";
+import { useI18n } from "@/lib/i18n/provider";
+import { useAppContent } from "@/components/providers/ContentProvider";
+import { MovingButton } from "@/components/interactive/MovingButton";
+import { Logo } from "@/components/branding/Logo";
 
 interface AboutViewProps {
   onNavigate: (view: ViewKey) => void;
 }
 
-const VALUES = [
-  {
-    icon: Target,
-    title: "Précision",
-    description: "Chaque décision est fondée sur des données. Nous mesurons, validons et itérons — jamais d'à-peu-près.",
-  },
-  {
-    icon: Eye,
-    title: "Transparence",
-    description: "Code auditable, logs intelligibles, métriques partagées. Vous savez toujours ce qui se passe dans vos systèmes.",
-  },
-  {
-    icon: Heart,
-    title: "Engagement",
-    description: "Une équipe dédiée, sans rotation. Nous portons vos objectifs comme les nôtres, du cadrage au run.",
-  },
-  {
-    icon: Users,
-    title: "Souveraineté",
-    description: "Vos données restent les vôtres. Hébergement SecNumCloud, code ouvert, aucune dépendance fournisseur.",
-  },
-] as const;
+const VALUE_ICONS: Record<string, any> = { Target, Eye, Heart, Users };
 
-const STATS = [
-  { v: "127+", l: "Missions livrées" },
-  { v: "38%", l: "Coûts réduits" },
-  { v: "24h", l: "Temps de réponse" },
-  { v: "4.9/5", l: "Satisfaction" },
-];
-
-/**
- * AboutView — page "À propos" d'Analyticatech.
- * Mission, vision, valeurs et statistiques clés.
- */
 export function AboutView({ onNavigate }: AboutViewProps) {
   const { t } = useI18n();
+  const { companyValues: DB_VALUES, metrics: DB_METRICS } = useAppContent();
+
+  const VALUES = DB_VALUES.map((v) => ({
+    icon: VALUE_ICONS[v.iconKey] || Target,
+    title: v.title,
+    description: v.description,
+  }));
+
+  const STATS = DB_METRICS.slice(0, 4).map((m) => ({ v: m.value, l: m.label }));
 
   return (
     <div className="pt-28 md:pt-36 pb-20">
       <div className="mx-auto max-w-5xl px-4 md:px-6">
         {/* Retour */}
-        <SnakeButton
+        <MovingButton
           variant="ghost"
           size="sm"
           onClick={() => onNavigate("home")}
@@ -60,7 +38,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
         >
           <ArrowLeft className="h-4 w-4" aria-hidden />
           {t("legal.back")}
-        </SnakeButton>
+        </MovingButton>
 
         {/* Hero */}
         <motion.div
@@ -184,14 +162,14 @@ export function AboutView({ onNavigate }: AboutViewProps) {
           transition={{ duration: 0.4 }}
           className="text-center"
         >
-          <SnakeButton
+          <MovingButton
             variant="primary"
             size="lg"
             onClick={() => onNavigate("contact")}
             className="neon-glow"
           >
             {t("about.cta")}
-          </SnakeButton>
+          </MovingButton>
         </motion.div>
       </div>
     </div>

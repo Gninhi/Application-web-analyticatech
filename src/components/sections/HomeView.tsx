@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -9,60 +8,41 @@ import {
   ChevronRight,
   Activity,
 } from "lucide-react";
-import { type ViewKey } from "@/lib/data";
-import { useI18n, useLocalizedData } from "@/lib/i18n";
-import { SpotlightCard } from "@/components/SpotlightCard";
-import { AnimatedCounter } from "@/components/AnimatedCounter";
-import { ScrambleText } from "@/components/ScrambleText";
-import { PixelRevealTitle } from "@/components/PixelRevealTitle";
-import { Marquee } from "@/components/Marquee";
-import { SnakeButton } from "@/components/SnakeButton";
-import { SERVICE_ICONS } from "@/lib/services";
+import { type ViewKey } from "@/lib/i18n/data-fr";
+import { useI18n } from "@/lib/i18n/provider";
+import { useAppContent } from "@/components/providers/ContentProvider";
+import { SpotlightCard } from "@/components/interactive/SpotlightCard";
+import { AnimatedCounter } from "@/components/interactive/AnimatedCounter";
+import { ScrambleText } from "@/components/interactive/ScrambleText";
+import { PixelRevealTitle } from "@/components/interactive/PixelRevealTitle";
+import { Marquee } from "@/components/interactive/Marquee";
+import { MovingButton } from "@/components/interactive/MovingButton";
+import { SERVICE_ICONS } from "@/lib/content/services";
 
 interface HomeViewProps {
   onNavigate: (view: ViewKey) => void;
 }
 
-// Types des données dynamiques
-interface DynamicMetric {
-  key: string;
-  label: string;
-  value: string;
-  suffix: string;
-}
-interface DynamicClient {
-  name: string;
-  sector: string;
-}
-
 export function HomeView({ onNavigate }: HomeViewProps) {
   const { t } = useI18n();
-  const { SERVICES, STREAM_METRICS, ACTIVITY_LOG, TESTIMONIALS, CAPABILITIES, MARQUEE_KEYWORDS, HERO_STATS } = useLocalizedData();
+  const {
+    services: SERVICES,
+    metrics: DB_METRICS,
+    clientLogos: DB_CLIENTS,
+    capabilities: CAPABILITIES,
+    testimonials: TESTIMONIALS,
+    marqueeKeywords: MARQUEE_KEYWORDS,
+    activityLogs: ACTIVITY_LOG,
+  } = useAppContent();
 
-  // État pour les données dynamiques (métriques + clients)
-  const [dynamicMetrics, setDynamicMetrics] = useState<DynamicMetric[]>([]);
-  const [dynamicClients, setDynamicClients] = useState<DynamicClient[]>([]);
+  // Metric stats affichées dans la hero section
+  const displayStats = DB_METRICS.slice(0, 4).map((m) => ({ v: m.value, l: m.label }));
 
-  useEffect(() => {
-    // Fetch parallèle des métriques et clients
-    Promise.all([
-      fetch("/api/metrics").then((r) => r.json()).catch(() => ({ success: false, metrics: [] })),
-      fetch("/api/clients").then((r) => r.json()).catch(() => ({ success: false, clients: [] })),
-    ]).then(([metricsRes, clientsRes]) => {
-      if (metricsRes.success) setDynamicMetrics(metricsRes.metrics);
-      if (clientsRes.success) setDynamicClients(clientsRes.clients);
-    });
-  }, []);
+  // Clients affichés dans la section signal de confiance
+  const displayClients = DB_CLIENTS.length > 0 ? DB_CLIENTS : [];
 
-  // Stats affichées : dynamiques si dispo, sinon fallback statique (HERO_STATS)
-  const displayStats = dynamicMetrics.length >= 4
-    ? dynamicMetrics.slice(0, 4).map((m) => ({ v: m.value, l: m.label }))
-    : HERO_STATS;
-
-  // Clients affichés : dynamiques si dispo, sinon fallback statique
-  const displayClients = dynamicClients.length > 0
-    ? dynamicClients
-    : ["NOVA BANK", "AXIOM CORP", "HELIOS GROUP", "MERIDIAN", "QUANTUM LABS", "ORBITAL SYS"].map((name) => ({ name, sector: "" }));
+  // Stream metrics pour le dashboard interactif
+  const streamMetrics = DB_METRICS.filter((m) => m.source === "stream" || m.sparkline !== null);
   return (
     <div className="space-y-24 md:space-y-32">
       {/* ============ HERO ============ */}
@@ -110,7 +90,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
             transition={{ duration: 0.6, delay: 0.25 }}
             className="mt-9 flex flex-col sm:flex-row items-start sm:items-center gap-3"
           >
-            <SnakeButton
+            <MovingButton
               onClick={() => onNavigate("services")}
               variant="primary"
               size="lg"
@@ -118,14 +98,14 @@ export function HomeView({ onNavigate }: HomeViewProps) {
             >
               {t("home.hero.cta1")}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
-            </SnakeButton>
-            <SnakeButton
+            </MovingButton>
+            <MovingButton
               onClick={() => onNavigate("contact")}
               variant="ghost"
               size="lg"
             >
               {t("home.hero.cta2")}
-            </SnakeButton>
+            </MovingButton>
           </motion.div>
 
           <motion.div
@@ -157,7 +137,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
 
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {SERVICES.map((service, i) => {
-              const Icon = SERVICE_ICONS[service.icon] ?? SERVICE_ICONS.BrainCircuit;
+              const Icon = SERVICE_ICONS[service.iconKey] ?? SERVICE_ICONS.BrainCircuit;
               return (
                 <motion.div
                   key={service.index}
@@ -251,9 +231,9 @@ export function HomeView({ onNavigate }: HomeViewProps) {
 
           <div className="mt-12 grid gap-5 lg:grid-cols-3">
             <div className="lg:col-span-2 grid grid-cols-2 gap-5">
-              {STREAM_METRICS.map((metric, i) => (
+              {streamMetrics.map((metric, i) => (
                 <motion.div
-                  key={metric.label}
+                  key={metric.key}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -266,17 +246,17 @@ export function HomeView({ onNavigate }: HomeViewProps) {
                     </p>
                     <span className="inline-flex items-center gap-1 font-mono text-[10px] text-[#4CAF50]">
                       <TrendingUp className="h-3 w-3" aria-hidden />
-                      +{metric.trend}%
+                      +{metric.trend ?? 0}%
                     </span>
                   </div>
                   <p className="font-display text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-50">
                     <AnimatedCounter
-                      value={metric.value}
-                      suffix={metric.suffix}
+                      value={(metric.numericValue ?? parseFloat(metric.value)) || 0}
+                      suffix={metric.suffix || ""}
                       decimals={metric.suffix === "%" ? 2 : 0}
                     />
                   </p>
-                  <Sparkline data={metric.sparkline} className="mt-4 h-10 w-full" />
+                  <Sparkline data={metric.sparkline || []} className="mt-4 h-10 w-full" />
                 </motion.div>
               ))}
             </div>
@@ -472,7 +452,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
             <p className="relative max-w-xl mx-auto text-slate-400 dark:text-slate-300 mb-8">
               {t("home.section.cta.desc")}
             </p>
-            <SnakeButton
+            <MovingButton
               onClick={() => onNavigate("contact")}
               variant="primary"
               size="lg"
@@ -480,7 +460,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
             >
               {t("home.section.cta.button")}
               <ArrowRight className="h-4 w-4" aria-hidden />
-            </SnakeButton>
+            </MovingButton>
           </div>
         </div>
       </section>

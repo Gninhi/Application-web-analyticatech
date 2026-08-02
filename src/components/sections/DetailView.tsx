@@ -2,10 +2,11 @@
 
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
-import type { ViewKey } from "@/lib/data";
-import { useI18n, useLocalizedData } from "@/lib/i18n";
-import { SnakeButton } from "@/components/SnakeButton";
-import { SERVICE_ICONS, getServiceBgImage, getServiceMeshOverlay } from "@/lib/services";
+import type { ViewKey } from "@/lib/i18n/data-fr";
+import { useI18n } from "@/lib/i18n/provider";
+import { useAppContent } from "@/components/providers/ContentProvider";
+import { MovingButton } from "@/components/interactive/MovingButton";
+import { SERVICE_ICONS, getServiceBgImage, getServiceMeshOverlay } from "@/lib/content/services";
 
 interface ServiceDetailViewProps {
   serviceIndex: string;
@@ -17,18 +18,18 @@ interface ServiceDetailViewProps {
  * Accessible via ViewKey "service-detail" + serviceIndex.
  */
 export function ServiceDetailView({ serviceIndex, onNavigate }: ServiceDetailViewProps) {
-  const { t, locale } = useI18n();
-  const { SERVICES } = useLocalizedData();
-  const service = SERVICES.find((s) => s.index === serviceIndex) ?? SERVICES[0];
-  const IconComponent = SERVICE_ICONS[service.icon] ?? SERVICE_ICONS.BrainCircuit;
-  const bgImage = getServiceBgImage(service.index);
-  const meshOverlay = getServiceMeshOverlay(service.index);
+  const { t } = useI18n();
+  const { services } = useAppContent();
+  const service = services.find((s) => s.index === serviceIndex) ?? services[0];
+  const IconComponent = SERVICE_ICONS[service.iconKey] ?? SERVICE_ICONS.BrainCircuit;
+  const bgImage = service.bgImagePath ?? getServiceBgImage(service.index);
+  const meshOverlay = service.meshOverlay ?? getServiceMeshOverlay(service.index);
 
   return (
     <div className="pt-28 md:pt-36 pb-20">
       <div className="mx-auto max-w-5xl px-4 md:px-6">
         {/* Retour */}
-        <SnakeButton
+        <MovingButton
           variant="ghost"
           size="sm"
           onClick={() => onNavigate("services")}
@@ -36,7 +37,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate }: ServiceDetailVie
         >
           <ArrowLeft className="h-4 w-4" aria-hidden />
           {`${t("common.back")} ${t("nav.services")}`}
-        </SnakeButton>
+        </MovingButton>
 
         {/* Hero du service */}
         <motion.div
@@ -116,10 +117,10 @@ export function ServiceDetailView({ serviceIndex, onNavigate }: ServiceDetailVie
           <p className="text-slate-600 dark:text-slate-300 mb-4">
             Prêt à démarrer ce service pour votre organisation ?
           </p>
-          <SnakeButton variant="primary" size="lg" onClick={() => onNavigate("contact")} className="neon-glow">
+          <MovingButton variant="primary" size="lg" onClick={() => onNavigate("contact")} className="neon-glow">
             {t("nav.cta")}
             <ArrowUpRight className="h-4 w-4" aria-hidden />
-          </SnakeButton>
+          </MovingButton>
         </motion.div>
       </div>
     </div>
@@ -135,17 +136,17 @@ interface SolutionDetailViewProps {
 }
 
 export function SolutionDetailView({ solutionId, onNavigate }: SolutionDetailViewProps) {
-  const { t, locale } = useI18n();
-  const { SOLUTIONS } = useLocalizedData();
-  const solution = SOLUTIONS.find((s) => s.id === solutionId) ?? SOLUTIONS[0];
+  const { t } = useI18n();
+  const { solutions } = useAppContent();
+  const solution = solutions.find((s) => s.id === solutionId) ?? solutions[0];
 
   return (
     <div className="pt-28 md:pt-36 pb-20">
       <div className="mx-auto max-w-4xl px-4 md:px-6">
-        <SnakeButton variant="ghost" size="sm" onClick={() => onNavigate("solutions")} className="mb-8">
+        <MovingButton variant="ghost" size="sm" onClick={() => onNavigate("solutions")} className="mb-8">
           <ArrowLeft className="h-4 w-4" aria-hidden />
           {`${t("common.back")} ${t("nav.solutions")}`}
-        </SnakeButton>
+        </MovingButton>
 
         <motion.div
           initial={{ opacity: 0, y: 18 }}
@@ -188,10 +189,10 @@ export function SolutionDetailView({ solutionId, onNavigate }: SolutionDetailVie
           <p className="text-slate-600 dark:text-slate-300 mb-4">
             Cette solution correspond à votre besoin ?
           </p>
-          <SnakeButton variant="primary" size="lg" onClick={() => onNavigate("contact")} className="neon-glow">
+          <MovingButton variant="primary" size="lg" onClick={() => onNavigate("contact")} className="neon-glow">
             {t("common.contact")}
             <ArrowUpRight className="h-4 w-4" aria-hidden />
-          </SnakeButton>
+          </MovingButton>
         </motion.div>
       </div>
     </div>
@@ -208,8 +209,8 @@ interface BlogDetailViewProps {
 
 export function BlogDetailView({ postId, onNavigate }: BlogDetailViewProps) {
   const { t, locale } = useI18n();
-  const { BLOG_POSTS } = useLocalizedData();
-  const post = BLOG_POSTS.find((p) => p.id === postId) ?? BLOG_POSTS[0];
+  const { blogPosts } = useAppContent();
+  const post = blogPosts.find((p) => p.id === postId) ?? blogPosts[0];
 
   const formatDate = (iso: string) =>
     new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
@@ -217,10 +218,10 @@ export function BlogDetailView({ postId, onNavigate }: BlogDetailViewProps) {
   return (
     <div className="pt-28 md:pt-36 pb-20">
       <div className="mx-auto max-w-3xl px-4 md:px-6">
-        <SnakeButton variant="ghost" size="sm" onClick={() => onNavigate("blog")} className="mb-8">
+        <MovingButton variant="ghost" size="sm" onClick={() => onNavigate("blog")} className="mb-8">
           <ArrowLeft className="h-4 w-4" aria-hidden />
           {`${t("common.back")} ${t("nav.blog")}`}
-        </SnakeButton>
+        </MovingButton>
 
         <motion.article
           initial={{ opacity: 0, y: 18 }}
@@ -231,7 +232,7 @@ export function BlogDetailView({ postId, onNavigate }: BlogDetailViewProps) {
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-4">
               <span className="rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-[#F26D3D]">
-                {post.category}
+                {post.categoryLabel}
               </span>
               <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
                 {formatDate(post.date)} · {post.readingTime}
@@ -285,10 +286,10 @@ export function BlogDetailView({ postId, onNavigate }: BlogDetailViewProps) {
             <p className="text-slate-600 dark:text-slate-300 mb-4">
               Cet article vous a intéressé ? Échangeons sur votre projet.
             </p>
-            <SnakeButton variant="primary" size="lg" onClick={() => onNavigate("contact")} className="neon-glow">
+            <MovingButton variant="primary" size="lg" onClick={() => onNavigate("contact")} className="neon-glow">
               {t("common.contact")}
               <ArrowUpRight className="h-4 w-4" aria-hidden />
-            </SnakeButton>
+            </MovingButton>
           </div>
         </motion.article>
       </div>

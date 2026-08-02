@@ -3,17 +3,17 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, Clock, User, Hash, Newspaper } from "lucide-react";
-import {
-  type ViewKey,
-} from "@/lib/data";
-import { useI18n, useLocalizedData } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
-import { PixelRevealTitle } from "@/components/PixelRevealTitle";
-import { FilterPill } from "@/components/FilterPill";
+import { type ViewKey } from "@/lib/i18n/data-fr";
+import { useI18n } from "@/lib/i18n/provider";
+import { useAppContent } from "@/components/providers/ContentProvider";
+import type { BlogPostDTO } from "@/types/content";
+import { cn } from "@/lib/utils/cn";
+import { PixelRevealTitle } from "@/components/interactive/PixelRevealTitle";
+import { FilterPill } from "@/components/interactive/FilterPill";
 
 type Filter = string;
 
-// Couleurs par catégorie — couvre les libellés FR (IA, Automatisation) et EN (AI, Automation)
+// Couleurs par catégorie
 const CATEGORY_COLORS: Record<string, string> = {
   IA: "text-[#F26D3D] border-[#F26D3D]/40 bg-[#F26D3D]/10",
   AI: "text-[#F26D3D] border-[#F26D3D]/40 bg-[#F26D3D]/10",
@@ -21,18 +21,6 @@ const CATEGORY_COLORS: Record<string, string> = {
   Automation: "text-[#4CAF50] border-[#4CAF50]/40 bg-[#4CAF50]/10",
   BI: "text-sky-300 border-sky-300/40 bg-sky-300/10",
   Architecture: "text-violet-300 border-violet-300/40 bg-violet-300/10",
-};
-
-// Type structurel commun aux posts FR et EN (les littéraux category diffèrent).
-type AnyBlogPost = {
-  id: string;
-  title: string;
-  excerpt: string;
-  category: string;
-  date: string;
-  readingTime: string;
-  author: string;
-  tags: string[];
 };
 
 function formatDate(iso: string): string {
@@ -49,13 +37,17 @@ interface BlogViewProps {
 
 export function BlogView({ onNavigateDetail }: BlogViewProps) {
   const { t } = useI18n();
-  const { BLOG_POSTS, BLOG_CATEGORIES } = useLocalizedData();
-  const allValue = BLOG_CATEGORIES[0] as string;
+  const { blogPosts: BLOG_POSTS, blogCategories: DB_CATEGORIES } = useAppContent();
   const [filter, setFilter] = useState<Filter>("all");
 
-  const filtered = useMemo<AnyBlogPost[]>(() => {
-    if (filter === "all") return BLOG_POSTS as AnyBlogPost[];
-    return (BLOG_POSTS as AnyBlogPost[]).filter((p) => p.category === filter);
+  const categories = useMemo(() => [
+    { key: "all", label: t("blog.all") || "Tous" },
+    ...DB_CATEGORIES.map((c) => ({ key: c.key, label: c.label })),
+  ], [DB_CATEGORIES, t]);
+
+  const filtered = useMemo(() => {
+    if (filter === "all") return BLOG_POSTS;
+    return BLOG_POSTS.filter((p) => p.categoryKey === filter || p.categoryLabel === filter);
   }, [filter, BLOG_POSTS]);
 
   return (
@@ -101,19 +93,15 @@ export function BlogView({ onNavigateDetail }: BlogViewProps) {
             role="tablist"
             aria-label="Filtrer par catégorie"
           >
-            {BLOG_CATEGORIES.map((cat) => {
-              const isAll = cat === allValue;
-              const value: Filter = isAll ? "all" : cat;
-              return (
-                <FilterPill
-                  key={cat}
-                  active={filter === value}
-                  onClick={() => setFilter(value)}
-                >
-                  {isAll ? t("blog.filter.all") : cat}
-                </FilterPill>
-              );
-            })}
+            {categories.map((cat) => (
+              <FilterPill
+                key={cat.key}
+                active={filter === cat.key}
+                onClick={() => setFilter(cat.key)}
+              >
+                {cat.label}
+              </FilterPill>
+            ))}
             <span className="ml-auto font-mono text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
               {filtered.length} entrée{filtered.length > 1 ? "s" : ""}
             </span>
@@ -160,7 +148,7 @@ export function BlogView({ onNavigateDetail }: BlogViewProps) {
                     <div className="absolute inset-0 p-4 flex flex-col justify-between font-mono text-[10px] text-slate-400 dark:text-slate-300">
                       <div className="flex items-center justify-between">
                         <span className="rounded-full border border-black/15 dark:border-white/15 bg-black/40 px-2 py-0.5 uppercase tracking-widest text-[#F26D3D]">
-                          {post.category}
+                          {post.categoryLabel}
                         </span>
                         <span className="text-slate-500 dark:text-slate-400">REPORT_{post.id.slice(0, 6).toUpperCase()}</span>
                       </div>
@@ -202,10 +190,10 @@ export function BlogView({ onNavigateDetail }: BlogViewProps) {
                       <span
                         className={cn(
                           "rounded-full border px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-widest",
-                          CATEGORY_COLORS[post.category]
+                          CATEGORY_COLORS[post.categoryKey] || CATEGORY_COLORS[post.categoryLabel]
                         )}
                       >
-                        {post.category}
+                        {post.categoryLabel}
                       </span>
                       <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-300 group-hover:text-[#F26D3D] transition-colors">
                         Lire
@@ -239,7 +227,7 @@ function FeaturedNews({
   posts,
   onNavigateDetail,
 }: {
-  posts: AnyBlogPost[];
+  posts: BlogPostDTO[];
   onNavigateDetail: (view: ViewKey, id: string) => void;
 }) {
   if (posts.length === 0) return null;
@@ -273,10 +261,10 @@ function FeaturedNews({
               <span
                 className={cn(
                   "inline-block rounded-full border px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-widest mb-2",
-                  CATEGORY_COLORS[post.category]
+                  CATEGORY_COLORS[post.categoryKey] || CATEGORY_COLORS[post.categoryLabel]
                 )}
               >
-                {post.category}
+                {post.categoryLabel}
               </span>
               <h3 className="font-display text-xl md:text-3xl font-bold text-slate-900 dark:text-slate-50 tracking-tight group-hover:text-[#F26D3D] transition-colors">
                 {post.title}

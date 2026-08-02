@@ -329,52 +329,6 @@
   animation-play-state: paused !important;
 }
 
-/* === SnakeBorder : bordure serpent animée continue ===
-   Le gradient conique tourne autour du bouton en continu.
-   Au repos : rotation lente (6s) pour ne pas distraire.
-   Au survol : accélération (2s) + intensité renforcée. */
-@keyframes snake-rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-.snake-border {
-  position: relative;
-  isolation: isolate;
-}
-.snake-border::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  padding: 1px;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    transparent 240deg,
-    var(--accent) 290deg,
-    #ffae6b 330deg,
-    transparent 360deg
-  );
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  animation: snake-rotate 6s linear infinite;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.7;
-  transition: opacity 0.3s ease;
-}
-.snake-border:hover::before {
-  animation-duration: 2s;
-  opacity: 1;
-}
-.snake-border:focus-visible::before {
-  opacity: 1;
-  animation-duration: 1.5s;
-}
-
 /* Réduction des animations pour l'accessibilité */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

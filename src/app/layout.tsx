@@ -3,10 +3,9 @@ import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
-import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
-import { PageLoader } from "@/components/PageLoader";
-import { JsonLd } from "@/components/JsonLd";
-import { I18nProvider } from "@/lib/i18n";
+import { GlobalErrorBoundary } from "@/components/system/GlobalErrorBoundary";
+import { PageLoader } from "@/components/layout/PageLoader";
+import { I18nProvider } from "@/lib/i18n/provider";
 
 /* === Typographie du Design System "Corporate Cyberpunk" ===
  * Optimisé Lighthouse : preload + display swap + adjustFontFallback
@@ -17,7 +16,7 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["500", "600", "700"],
   display: "swap",
   preload: true,
-  adjustFontFallback: "0.95",
+  adjustFontFallback: true,
 });
 
 const inter = Inter({
@@ -26,7 +25,7 @@ const inter = Inter({
   weight: ["400", "500", "600"],
   display: "swap",
   preload: true,
-  adjustFontFallback: "1.05",
+  adjustFontFallback: true,
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -38,7 +37,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://analyticatech.com"),
+  metadataBase: new URL("https://analyticatech.fr"),
   title: {
     default: "Analyticatech — Cabinet de conseil en IA, Agents & Automatisation",
     template: "%s | Analyticatech",
@@ -74,7 +73,7 @@ export const metadata: Metadata = {
     "data engineering IA",
     "MLOps production",
   ],
-  authors: [{ name: "Analyticatech", url: "https://analyticatech.com" }],
+  authors: [{ name: "Analyticatech", url: "https://analyticatech.fr" }],
   creator: "Analyticatech",
   publisher: "Analyticatech",
   icons: { icon: "/logo.svg" },
@@ -96,7 +95,7 @@ export const metadata: Metadata = {
     siteName: "Analyticatech",
     type: "website",
     locale: "fr_FR",
-    url: "https://analyticatech.com",
+    url: "https://analyticatech.fr",
     images: [
       {
         url: "/og-image.png",
@@ -114,11 +113,11 @@ export const metadata: Metadata = {
     images: ["/og-image.png"],
   },
   alternates: {
-    canonical: "https://analyticatech.com",
+    canonical: "https://analyticatech.fr",
     languages: {
-      "fr-FR": "https://analyticatech.com",
-      "en-US": "https://analyticatech.com/en",
-      "x-default": "https://analyticatech.com",
+      "fr-FR": "https://analyticatech.fr",
+      "en-US": "https://analyticatech.fr/en",
+      "x-default": "https://analyticatech.fr",
     },
   },
   category: "technology",
@@ -142,10 +141,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <head>
-        {/* Structured data JSON-LD pour SEO + GEO (LLMs) */}
-        <JsonLd />
-      </head>
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
