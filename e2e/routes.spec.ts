@@ -31,13 +31,14 @@ for (const route of STATIC_ROUTES) {
   test.describe(`route ${route.path}`, () => {
     test("répond 200 avec un h1 unique et un titre", async ({ page }) => {
       const errors = collectErrors(page);
-      const response = await page.goto(route.path, { waitUntil: "networkidle" });
+      const response = await page.goto(route.path, { waitUntil: "domcontentloaded" });
       expect(response?.status()).toBe(200);
 
       await expect(page.locator("h1")).toHaveCount(1);
       const title = await page.title();
       expect(title).toContain(route.titleContains);
       expect(title.length).toBeGreaterThan(10);
+      await page.waitForTimeout(400);
       expect(errors).toEqual([]);
     });
   });
@@ -45,7 +46,7 @@ for (const route of STATIC_ROUTES) {
 
 test.describe("métadonnées & canonical", () => {
   test("canonical (URL de prod) + description sur /services", async ({ page }) => {
-    await page.goto("/services", { waitUntil: "networkidle" });
+    await page.goto("/services", { waitUntil: "domcontentloaded" });
     const canonical = await page.locator("link[rel='canonical']").getAttribute("href");
     expect(canonical).toBe("https://analyticatech.fr/services");
     const description = await page
@@ -55,9 +56,10 @@ test.describe("métadonnées & canonical", () => {
   });
 
   test("open graph présent sur une page de détail", async ({ page }) => {
-    await page.goto("/solutions", { waitUntil: "networkidle" });
+    await page.goto("/solutions", { waitUntil: "domcontentloaded" });
     const firstCard = page.locator("article").first();
     await expect(firstCard).toBeVisible();
+    await page.waitForTimeout(500);
     await firstCard.click();
     await page.waitForURL(/\/solutions\/[a-z0-9-]+$/, { timeout: 15_000 });
 

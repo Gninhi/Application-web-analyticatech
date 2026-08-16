@@ -16,7 +16,7 @@ function collectErrors(page: Page) {
 
 test.describe("navigation desktop", () => {
   test("les liens du menu sont de vraies balises <a>", async ({ page }) => {
-    await page.goto("/", { waitUntil: "networkidle" });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
     const hrefs = await page.locator("nav a").evaluateAll((els) => els.map((e) => e.getAttribute("href")));
     const clean = hrefs.filter((h): h is string => Boolean(h));
     expect(clean.length).toBeGreaterThanOrEqual(4);
@@ -27,12 +27,12 @@ test.describe("navigation desktop", () => {
 
   test("navigation client-side vers /solutions + aria-current + focus main", async ({ page }) => {
     const errors = collectErrors(page);
-    await page.goto("/", { waitUntil: "networkidle" });
-    await page.waitForTimeout(400);
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.waitForTimeout(500);
 
     await page.locator("nav a", { hasText: "Solutions" }).first().click();
     await page.waitForURL("**/solutions", { timeout: 15_000 });
-    await page.waitForTimeout(600);
+    await page.waitForFunction(() => document.activeElement?.id === "main-content", undefined, { timeout: 10_000 });
 
     const activeCount = await page.locator("nav a[aria-current='page']").count();
     expect(activeCount).toBeGreaterThanOrEqual(1);
@@ -43,7 +43,7 @@ test.describe("navigation desktop", () => {
   });
 
   test("le logo ramène à l'accueil", async ({ page }) => {
-    await page.goto("/solutions", { waitUntil: "networkidle" });
+    await page.goto("/solutions", { waitUntil: "domcontentloaded" });
     const logo = page.locator("header a[href='/']").first();
     await expect(logo).toBeVisible();
     await logo.click();
@@ -57,8 +57,8 @@ test.describe("panel mobile", () => {
 
   test("ouvre, navigue et referme le menu", async ({ page }) => {
     const errors = collectErrors(page);
-    await page.goto("/", { waitUntil: "networkidle" });
-    await page.waitForTimeout(400);
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.waitForTimeout(500);
 
     await page.locator("button[aria-label*='Ouvrir']").click();
     await expect(page.locator("#mobile-menu")).toBeVisible();
@@ -72,8 +72,8 @@ test.describe("panel mobile", () => {
   });
 
   test("Escape ferme le panel et rend le focus à l'ouvreur", async ({ page }) => {
-    await page.goto("/", { waitUntil: "networkidle" });
-    await page.waitForTimeout(400);
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.waitForTimeout(500);
 
     await page.locator("button[aria-label*='Ouvrir']").click();
     await expect(page.locator("#mobile-menu")).toBeVisible();
@@ -92,7 +92,7 @@ test.describe("panel mobile", () => {
 
 test.describe("accessibilité", () => {
   test("skip-link amène le focus sur le contenu", async ({ page }) => {
-    await page.goto("/", { waitUntil: "networkidle" });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
     await page.keyboard.press("Tab");
     const skip = await page.evaluate(() => {
       const el = document.activeElement;
@@ -101,14 +101,14 @@ test.describe("accessibilité", () => {
     expect(skip).not.toBeNull();
 
     await page.keyboard.press("Enter");
-    await page.waitForTimeout(300);
+    await page.waitForFunction(() => document.activeElement?.id === "main-content", undefined, { timeout: 10_000 });
     const focused = await page.evaluate(() => document.activeElement?.id);
     expect(focused).toBe("main-content");
   });
 
   test("au moins un h1 sur chaque page secondaire", async ({ page }) => {
     for (const path of ["/services", "/solutions", "/insights", "/contact"]) {
-      await page.goto(path, { waitUntil: "networkidle" });
+      await page.goto(path, { waitUntil: "domcontentloaded" });
       await expect(page.locator("h1")).toHaveCount(1);
     }
   });
@@ -118,17 +118,17 @@ test.describe("erreurs & sécurité", () => {
   test("404 sur une solution inconnue", async ({ page }) => {
     // Le navigateur log un erreur réseau « 404 » sur la ressource — comportement
     // attendu d'une page 404 ; on ne teste donc ici que le statut + rendu propre.
-    const response = await page.goto("/solutions/slug-inexistant", { waitUntil: "networkidle" });
+    const response = await page.goto("/solutions/slug-inexistant", { waitUntil: "domcontentloaded" });
     expect(response?.status()).toBe(404);
   });
 
   test("404 sur un article inconnu", async ({ page }) => {
-    const response = await page.goto("/insights/inexistant", { waitUntil: "networkidle" });
+    const response = await page.goto("/insights/inexistant", { waitUntil: "domcontentloaded" });
     expect(response?.status()).toBe(404);
   });
 
   test("CSP : script-src nonce-based sur /services", async ({ page }) => {
-    const response = await page.goto("/services", { waitUntil: "networkidle" });
+    const response = await page.goto("/services", { waitUntil: "domcontentloaded" });
     const header = response?.headers()["content-security-policy"] ?? "";
     expect(header).toContain("nonce-");
 
@@ -158,7 +158,7 @@ test.describe("erreurs & sécurité", () => {
   });
 
   test("clic sur une carte solution → URL de détail, retour navigateur OK", async ({ page }) => {
-    await page.goto("/solutions", { waitUntil: "networkidle" });
+    await page.goto("/solutions", { waitUntil: "domcontentloaded" });
     const firstCard = page.locator("article").first();
     await expect(firstCard).toBeVisible();
     await firstCard.click();
