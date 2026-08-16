@@ -292,7 +292,7 @@ function SolutionCard({ solution, index, total, onNavigateDetail }: SolutionCard
 
   return (
     <BorderRotate
-      onClick={() => onNavigateDetail("solution-detail", sol.id)}
+      onClick={() => onNavigateDetail("solution-detail", sol.slug)}
       className="group shrink-0 w-[82vw] sm:w-[68vw] md:w-[54vw] lg:w-[42vw] h-[78vh] cursor-pointer"
       animationSpeed={9}
       borderRadius={30}
@@ -464,7 +464,7 @@ function SolutionCard({ solution, index, total, onNavigateDetail }: SolutionCard
             <MovingButton
               onClick={(e) => {
                 e.stopPropagation();
-                onNavigateDetail("solution-detail", sol.id);
+                onNavigateDetail("solution-detail", sol.slug);
               }}
               variant="outline"
               size="md"

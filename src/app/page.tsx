@@ -1,9 +1,8 @@
 import { cookies } from "next/headers";
 import type { Metadata } from "next";
-import { getAppContent } from "@/lib/services/content.service";
 import { getSeoMetadata } from "@/lib/services/seo.service";
 import { safe, FALLBACK_SEO_METADATA } from "@/lib/services/safe";
-import { AppClientShell } from "@/components/layout/AppClientShell";
+import { HomeRoute } from "@/components/routes/HomeRoute";
 import type { Locale } from "@/types/content";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -38,14 +37,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * Server Component principal d'Analyticatech.
- * Récupère l'ensemble des données dynamiques depuis Supabase avec le cache React
- * et transmet le payload typé à la coquille client.
+ * Page d'accueil (route "/").
+ * Le contenu est fourni par le layout racine (SiteShell) : la vue accueil
+ * consomme le contexte ContentProvider, sans refetch par page.
  */
 export default async function HomePage() {
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("NEXT_LOCALE")?.value as Locale) || "fr";
-  const content = await getAppContent(locale);
-
-  return <AppClientShell content={content} />;
+  return <HomeRoute />;
 }

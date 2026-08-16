@@ -148,16 +148,17 @@ export function ServiceDetailView({ serviceIndex, onNavigate }: ServiceDetailVie
 
 /**
  * SolutionDetailView — page de détail d'une solution.
+ * Résolue par slug (URL partageable), plus stable que l'UUID.
  */
 interface SolutionDetailViewProps {
-  solutionId: string;
+  solutionSlug: string;
   onNavigate: (view: ViewKey) => void;
 }
 
-export function SolutionDetailView({ solutionId, onNavigate }: SolutionDetailViewProps) {
+export function SolutionDetailView({ solutionSlug, onNavigate }: SolutionDetailViewProps) {
   const { t } = useI18n();
   const { solutions } = useAppContent();
-  const solution = solutions.find((s) => s.id === solutionId);
+  const solution = solutions.find((s) => s.slug === solutionSlug);
 
   if (!solution) {
     return (
@@ -224,16 +225,17 @@ export function SolutionDetailView({ solutionId, onNavigate }: SolutionDetailVie
 
 /**
  * BlogDetailView — page de détail d'un article.
+ * Résolue par slug (URL partageable), plus stable que l'UUID.
  */
 interface BlogDetailViewProps {
-  postId: string;
+  postSlug: string;
   onNavigate: (view: ViewKey) => void;
 }
 
-export function BlogDetailView({ postId, onNavigate }: BlogDetailViewProps) {
+export function BlogDetailView({ postSlug, onNavigate }: BlogDetailViewProps) {
   const { t, locale } = useI18n();
   const { blogPosts } = useAppContent();
-  const post = blogPosts.find((p) => p.id === postId);
+  const post = blogPosts.find((p) => p.slug === postSlug);
 
   if (!post) {
     return (

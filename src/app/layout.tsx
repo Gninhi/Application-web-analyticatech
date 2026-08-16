@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
+import { headers, cookies } from "next/headers";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/branding/ThemeProvider";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { GlobalErrorBoundary } from "@/components/system/GlobalErrorBoundary";
+import { SiteShell } from "@/components/layout/SiteShell";
+import { getAppContent } from "@/lib/services/content.service";
+import type { Locale } from "@/types/content";
 
 /* === Typographie du Design System "Corporate Cyberpunk" ===
  * Optimisé Lighthouse : preload + display swap + adjustFontFallback
@@ -148,6 +151,12 @@ export default async function RootLayout({
   // aussi à notre script d'init du thème.
   const nonce = (await headers()).get("x-nonce") ?? "";
 
+  // Locale issue du cookie (même logique que le toggle i18n) puis contenu
+  // complet du site. `getAppContent` est `cache()` : les pages et les
+  // generateMetadata réutilisent ce résultat (un seul fetch DB par requête).
+  const locale = (((await cookies()).get("NEXT_LOCALE")?.value) as Locale) || "fr";
+  const content = await getAppContent(locale);
+
   return (
     <html lang="fr" suppressHydrationWarning>
       <body
@@ -178,7 +187,9 @@ export default async function RootLayout({
             crossOrigin="anonymous"
             href="/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
           />
-          <GlobalErrorBoundary>{children}</GlobalErrorBoundary>
+          <GlobalErrorBoundary>
+            <SiteShell content={content}>{children}</SiteShell>
+          </GlobalErrorBoundary>
           <Toaster />
         </ThemeProvider>
       </body>

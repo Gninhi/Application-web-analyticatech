@@ -162,6 +162,10 @@ function generateToken(): string {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|services|logo.svg|robots.txt).*)",
+    // `services` était exclu pour les images statiques /services/*.webp — mais
+    // la conversion en routes réelles (/services, /services/[index]) impose
+    // que ces pages passent par le proxy (CSP nonce + en-têtes de sécurité).
+    // Les réponses d'images restent inoffensives sous CSP (headers seuls).
+    "/((?!_next/static|_next/image|favicon.ico|logo.svg|robots.txt).*)",
   ],
 };

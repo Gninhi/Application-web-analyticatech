@@ -1,9 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { type ViewKey } from "@/types/content";
+import { viewToPath, pathToView } from "@/lib/navigation/routes";
 import { ScrambleText } from "@/components/interactive/ScrambleText";
 import { MovingButton } from "@/components/interactive/MovingButton";
 import { NavLink } from "@/components/interactive/NavLink";
@@ -15,18 +18,21 @@ import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
 import { cn } from "@/lib/utils/cn";
 
-interface NavbarProps {
-  activeView: ViewKey;
-  onNavigate: (view: ViewKey) => void;
-}
-
 /**
  * Sélecteur d'éléments focusables dans un conteneur (pour le focus trap).
  */
 const FOCUSABLE_SELECTOR =
   'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
-export function Navbar({ activeView, onNavigate }: NavbarProps) {
+/**
+ * Navbar — navigation réelle App Router : chaque entrée est un <Link> pointant
+ * vers sa route (/services, /solutions, /insights, …). L'état actif est dérivé
+ * du pathname courant (`usePathname` → pathToView), sans state partagé.
+ */
+export function Navbar() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const activeView = pathToView(pathname);
   const { scrolled, hidden } = useScrollState();
   const { t } = useI18n();
   const { navItems } = useAppContent();
@@ -89,13 +95,12 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
     };
   }, [mobileOpen]);
 
-  const handleNav = useCallback(
-    (view: ViewKey) => {
-      onNavigate(view);
-      setMobileOpen(false);
-    },
-    [onNavigate]
-  );
+  const closeMobile = useCallback(() => setMobileOpen(false), []);
+
+  const handleCta = useCallback(() => {
+    router.push(viewToPath("contact"));
+    setMobileOpen(false);
+  }, [router]);
 
   return (
     <>
@@ -127,24 +132,26 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
               aria-hidden
             />
             {/* Logo */}
-            <button
-              onClick={() => handleNav("home")}
+            <Link
+              href="/"
               className="group flex items-center gap-2.5 focus-visible:outline-2 focus-visible:outline-offset-4 rounded-md"
               aria-label={`${t("nav.home")} — AnalyticaTech`}
+              onClick={closeMobile}
             >
               <Logo size={32} delay={0.2} />
               <span className="font-display text-base font-bold tracking-tight text-slate-800 dark:text-slate-100">
                 Analytica<span className="text-[#F26D3D]">tech</span>
               </span>
-            </button>
+            </Link>
 
             {/* Liens desktop — design premium avec pill hover */}
             <div className="hidden md:flex items-center gap-0.5">
               {NAV_ITEMS.map((item) => (
                 <NavLink
                   key={item.key}
+                  href={viewToPath(item.key)}
                   active={activeView === item.key}
-                  onClick={() => handleNav(item.key)}
+                  onNavigate={closeMobile}
                 >
                   <ScrambleText text={item.label} />
                 </NavLink>
@@ -160,7 +167,7 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
               <ThemeToggle />
 
               <MovingButton
-                onClick={() => handleNav("contact")}
+                onClick={handleCta}
                 variant="primary"
                 size="sm"
                 className="hidden md:inline-flex neon-glow"
@@ -182,7 +189,7 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
                 aria-controls="mobile-menu"
               >
                 <Menu className="h-5 w-5" aria-hidden />
-          </MovingButton>
+              </MovingButton>
             </div>
           </nav>
         </div>
@@ -220,38 +227,42 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
                 aria-label={t("nav.menu.close")}
               >
                 <X className="h-5 w-5" aria-hidden />
-         </MovingButton>
+              </MovingButton>
             </div>
 
             {/* Liens surdimensionnés */}
             <nav className="flex-1 flex flex-col justify-center px-6 gap-2" aria-label="Menu mobile">
               {NAV_ITEMS.map((item, i) => (
-                <motion.button
+                <motion.div
                   key={item.key}
                   initial={{ opacity: 0, x: -30 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.05 * i + 0.05, duration: 0.3 }}
-                  onClick={() => handleNav(item.key)}
-                  className={cn(
-                    "group flex items-baseline justify-between border-b border-black/10 dark:border-white/10 py-4 text-left transition-colors",
-                    activeView === item.key ? "text-[#F26D3D]" : "text-slate-800 dark:text-slate-100"
-                  )}
-                  aria-current={activeView === item.key ? "page" : undefined}
                 >
-                  <span className="font-display text-3xl font-bold tracking-tight">
-                    {item.label}
-                  </span>
-                  <span className="font-mono text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400 group-hover:text-[#F26D3D] transition-colors">
-                    {item.hint}
-                  </span>
-                </motion.button>
+                  <Link
+                    href={viewToPath(item.key)}
+                    onClick={closeMobile}
+                    className={cn(
+                      "group flex items-baseline justify-between border-b border-black/10 dark:border-white/10 py-4 text-left transition-colors",
+                      activeView === item.key ? "text-[#F26D3D]" : "text-slate-800 dark:text-slate-100"
+                    )}
+                    aria-current={activeView === item.key ? "page" : undefined}
+                  >
+                    <span className="font-display text-3xl font-bold tracking-tight">
+                      {item.label}
+                    </span>
+                    <span className="font-mono text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400 group-hover:text-[#F26D3D] transition-colors">
+                      {item.hint}
+                    </span>
+                  </Link>
+                </motion.div>
               ))}
             </nav>
 
             {/* CTA bas de panel */}
             <div className="px-6 py-6 border-t border-black/10 dark:border-white/10">
               <MovingButton
-                onClick={() => handleNav("contact")}
+                onClick={handleCta}
                 variant="primary"
                 size="lg"
                 className="w-full neon-glow"

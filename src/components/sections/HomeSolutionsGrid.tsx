@@ -93,7 +93,7 @@ export function HomeSolutionsGrid({ onNavigate, onNavigateDetail }: HomeSolution
       const h = haystack(sol);
       return terms.some((term) => h.includes(term));
     });
-    return found?.id ?? null;
+    return found?.slug ?? null;
   };
 
   return (
@@ -109,10 +109,10 @@ export function HomeSolutionsGrid({ onNavigate, onNavigateDetail }: HomeSolution
           {SOLUTION_CARDS.map((sol, i) => {
             const Icon = sol.icon;
             const Visual = sol.VisualComponent;
-            const detailId = resolveSolutionDetail(sol.keywords, sol.matchOn);
+            const detailSlug = resolveSolutionDetail(sol.keywords, sol.matchOn);
             const goToDetail = () =>
-              detailId
-                ? onNavigateDetail("solution-detail", detailId)
+              detailSlug
+                ? onNavigateDetail("solution-detail", detailSlug)
                 : onNavigate("solutions");
             return (
               <motion.article

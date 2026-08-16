@@ -324,7 +324,7 @@ function HeroCard({
     >
       <button
         type="button"
-        onClick={() => onNavigateDetail("blog-detail", post.id)}
+        onClick={() => onNavigateDetail("blog-detail", post.slug)}
         aria-label={`${t("common.read")} : ${post.title}`}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
@@ -478,7 +478,7 @@ function ReportCard({
     >
       <button
         type="button"
-        onClick={() => onNavigateDetail("blog-detail", post.id)}
+        onClick={() => onNavigateDetail("blog-detail", post.slug)}
         aria-label={`${t("common.read")} : ${post.title}`}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}

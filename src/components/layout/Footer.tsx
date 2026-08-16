@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Send, ShieldCheck, Github, Linkedin, Twitter } from "lucide-react";
 import { type ViewKey } from "@/types/content";
+import { viewToPath } from "@/lib/navigation/routes";
 import { NavLink } from "@/components/interactive/NavLink";
 import { Logo } from "@/components/branding/Logo";
 import { MovingButton } from "@/components/interactive/MovingButton";
@@ -11,10 +13,6 @@ import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
 
 const SOCIAL_ICONS = { Linkedin, Twitter, Github };
-
-interface FooterProps {
-  onNavigate: (view: ViewKey) => void;
-}
 
 /** Horloge temps réel au format UTC HH:MM:SS.
  *  Mise à jour limitée (~1 tick/5s) et démarrée après le chargement/idle :
@@ -47,7 +45,7 @@ function useUtcClock() {
   return time;
 }
 
-export function Footer({ onNavigate }: FooterProps) {
+export function Footer() {
   const utc = useUtcClock();
   const { t } = useI18n();
   const { navItems, services, siteConfig } = useAppContent();
@@ -106,10 +104,7 @@ export function Footer({ onNavigate }: FooterProps) {
             <ul className="space-y-2.5">
               {NAV_ITEMS.map((item) => (
                 <li key={item.key}>
-                  <NavLink
-                    variant="footer"
-                    onClick={() => onNavigate(item.key)}
-                  >
+                  <NavLink variant="footer" href={viewToPath(item.key)}>
                     {item.label}
                   </NavLink>
                 </li>
@@ -124,7 +119,14 @@ export function Footer({ onNavigate }: FooterProps) {
             </h3>
             <ul className="space-y-2.5 text-sm text-slate-500 dark:text-slate-400">
               {services.slice(0, 5).map((s) => (
-                <li key={s.id}>{s.title}</li>
+                <li key={s.id}>
+                  <Link
+                    href={viewToPath("service-detail", s.index)}
+                    className="hover:text-[#F26D3D] transition-colors"
+                  >
+                    {s.title}
+                  </Link>
+                </li>
               ))}
             </ul>
           </div>
@@ -196,33 +198,24 @@ export function Footer({ onNavigate }: FooterProps) {
             <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
               © {new Date().getFullYear()} Analyticatech — {t("footer.copyright")}
           </p>
-            <MovingButton
-              variant="ghost"
-              onClick={() => onNavigate("rgpd")}
-              borderRadius="0.375rem"
-              duration={4000}
+            <Link
+              href="/confidentialite"
               className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] px-2 py-1"
             >
               {t("footer.confidentiality")}
-         </MovingButton>
-            <MovingButton
-              variant="ghost"
-              onClick={() => onNavigate("legal")}
-              borderRadius="0.375rem"
-              duration={4000}
+            </Link>
+            <Link
+              href="/mentions-legales"
               className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] px-2 py-1"
             >
               {t("footer.legal")}
-         </MovingButton>
-            <MovingButton
-              variant="ghost"
-              onClick={() => onNavigate("about")}
-              borderRadius="0.375rem"
-              duration={4000}
+            </Link>
+            <Link
+              href="/a-propos"
               className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] px-2 py-1"
             >
               {t("footer.about")}
-         </MovingButton>
+            </Link>
        </div>
           <div className="flex items-center gap-4">
             <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
