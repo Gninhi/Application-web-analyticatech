@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider } from "@/components/branding/ThemeProvider";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { GlobalErrorBoundary } from "@/components/system/GlobalErrorBoundary";
@@ -96,7 +97,7 @@ export const metadata: Metadata = {
     url: "https://analyticatech.fr",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Analyticatech — Cabinet de conseil en IA",
@@ -108,7 +109,7 @@ export const metadata: Metadata = {
     title: "Analyticatech — Cabinet conseil IA & Automatisation",
     description:
       "Agents LLM, RAG, automatisation, transformation digitale. 127+ missions livrées.",
-    images: ["/og-image.png"],
+    images: ["/og-image.jpg"],
   },
   alternates: {
     canonical: "https://analyticatech.fr",
@@ -132,22 +133,31 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+// Script d'init du thème (noncé) : pose la classe sur <html> avant le premier
+// paint pour éviter le FOUC. Compatible CSP nonce (script-src sans
+// 'unsafe-inline'). Doit rester synchrone avec ThemeProvider.
+const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem("theme");var dark=t?t==="dark":true;var c=document.documentElement.classList;c.remove("light","dark");c.add(dark?"dark":"light")}catch(e){}})();`;
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Nonce CSP injecté par le proxy de sécurité (header x-nonce). Next.js
+  // l'applique automatiquement à ses propres scripts inline ; on l'applique
+  // aussi à notre script d'init du thème.
+  const nonce = (await headers()).get("x-nonce") ?? "";
+
   return (
     <html lang="fr" suppressHydrationWarning>
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
+        <script
+          nonce={nonce}
+          dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
+        />
+        <ThemeProvider>
           {/* Preload manuel des fichiers de police principaux (Inter latin +
               Space Grotesk latin). Turbopack n'émet pas les <link rel=preload>
               de next/font : sans ce preload, les polices ne sont découvertes

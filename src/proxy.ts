@@ -10,11 +10,16 @@ import { NextResponse, type NextRequest } from "next/server";
  *  2. Bot detection — bloque les User-Agents suspects (scanners, outils d'attaque)
  *  3. Request size validation — bloque les payloads surdimensionnés (> 16 KB)
  *  4. Security headers additionnels (complément à next.config.ts)
+ *  5. CSP nonce-based : génère un nonce par requête, le pose en header
+ *     `x-nonce` (lu par Next pour ses scripts inline) et émet la
+ *     Content-Security-Policy avec `'nonce-…'` à la place de `'unsafe-inline'`
+ *     côté scripts. Le script d'init du thème (RootLayout) utilise ce nonce.
  */
 
 const CSRF_COOKIE = "at-csrf";
 const CSRF_HEADER = "x-csrf-token";
 const MAX_BODY_SIZE = 16384; // 16 KB max pour les requêtes mutatives
+const isDev = process.env.NODE_ENV !== "production";
 
 // User-Agents suspects (scanners, outils d'attaque, bots malveillants)
 const SUSPICIOUS_UA_PATTERNS = [
@@ -86,7 +91,14 @@ export function proxy(req: NextRequest) {
   // 4. Prépare la réponse
   const res = NextResponse.next();
 
-  // 5. Pose le cookie CSRF si absent (double-submit pattern)
+  // 5. CSP nonce-based — un nonce par requête, appliqué aux scripts inline
+  //    de Next et à notre script d'init du thème (header x-nonce lu dans
+  //    RootLayout). Remplace 'unsafe-inline' côté script-src.
+  const nonce = generateToken();
+  res.headers.set("x-nonce", nonce);
+  res.headers.set("Content-Security-Policy", buildCsp(nonce));
+
+  // 6. Pose le cookie CSRF si absent (double-submit pattern)
   if (!req.cookies.has(CSRF_COOKIE)) {
     const token = generateToken();
     res.cookies.set(CSRF_COOKIE, token, {
@@ -98,12 +110,43 @@ export function proxy(req: NextRequest) {
     });
   }
 
-  // 6. Security headers additionnels
+  // 7. Security headers additionnels
   res.headers.set("X-Content-Type-Options", "nosniff");
   res.headers.set("X-Frame-Options", "DENY");
   res.headers.set("Referrer-Policy", "no-referrer");
 
   return res;
+}
+
+/**
+ * Construit la Content-Security-Policy avec le nonce dans script-src.
+ * style-src conserve 'unsafe-inline' (styles générés par next/font) —
+ * l'injection de style est sans conséquence en comparaison du script.
+ */
+function buildCsp(nonce: string): string {
+  const scriptSrc = [`'self'`, `'nonce-${nonce}'`];
+  if (isDev) scriptSrc.push("'unsafe-eval'");
+
+  const connectSrc = isDev
+    ? "'self' ws://localhost:* http://localhost:* ws://127.0.0.1:* http://127.0.0.1:*"
+    : "'self'";
+
+  const frameSrc = isDev
+    ? "'self' http://localhost:* http://127.0.0.1:*"
+    : "'none'";
+
+  return [
+    "default-src 'self'",
+    `script-src ${scriptSrc.join(" ")}`,
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src 'self' https://fonts.gstatic.com data:",
+    "img-src 'self' data: blob: https:",
+    `connect-src ${connectSrc}`,
+    `frame-src ${frameSrc}`,
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+  ].join("; ");
 }
 
 /**
