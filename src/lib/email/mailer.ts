@@ -2,23 +2,20 @@
  * Mailer — transport des notifications email.
  *
  * ARCHITECTURE EXTENSIBLE :
- *  - Si `RESEND_API_KEY` est défini ET `resend` installé → envoi réel via Resend.
+ *  - Si `RESEND_API_KEY` est défini → envoi réel via Resend.
  *  - Sinon → mode "stub" : log structuré (utile en dev / preview serverless).
  *
  * POUR ACTIVER L'ENVOI RÉEL :
- *   1. `npm install resend` (devient une dep réelle)
- *   2. Définir RESEND_API_KEY, MAIL_FROM, MAIL_TO dans .env
+ *   1. Définir RESEND_API_KEY, MAIL_FROM, MAIL_TO dans .env / Vercel
+ *   2. Vérifier le domaine d'envoi chez Resend (records DNS SPF + DKIM)
  *   3. Le code ci-dessous bascule automatiquement sur le transport réel.
  *
- * NB : on charge `resend` via `createRequire` à l'exécution afin que la dep
- * reste optionnelle côté bundler (aucun echec build si absente). Vérifié :
- * Turbopack affiche un warning mais n'échoue pas.
+ * `resend` est une dépendance réelle (package.json) : import statique, bundle
+ * sûr sous Turbopack et dans les fonctions serveurless Vercel.
  */
 
-import { createRequire } from "module";
+import { Resend } from "resend";
 import { audit } from "@/lib/observability/audit";
-
-const dynamicRequire = createRequire(import.meta.url);
 
 export interface ContactMailPayload {
   reference: string;
@@ -30,22 +27,9 @@ export interface ContactMailPayload {
   message: string;
 }
 
-/** Charge `resend` à runtime ; retourne null si module absent (typé permissif). */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function loadResend(): { Resend: new (apiKey: string) => any } | null {
-  try {
-     
-    const mod = dynamicRequire("resend");
-    if (mod && typeof mod.Resend === "function") return mod;
-    return null;
-  } catch {
-    return null;
-  }
-}
-
 export async function sendContactNotification(payload: ContactMailPayload): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.MAIL_FROM ?? "contact@analyticatech.fr";
+  const from = process.env.MAIL_FROM ?? "Analyticatech <contact@analyticatech.fr>";
   const to = process.env.MAIL_TO ?? "leads@analyticatech.fr";
 
   if (!apiKey) {
@@ -58,16 +42,8 @@ export async function sendContactNotification(payload: ContactMailPayload): Prom
     return;
   }
 
-  const mod = loadResend();
-  if (!mod) {
-    audit.warn("Contact: RESEND_API_KEY configuré mais module `resend` non installé", {
-      reference: payload.reference,
-    });
-    return;
-  }
-
   try {
-    const resend = new mod.Resend(apiKey);
+    const resend = new Resend(apiKey);
     const subject = `[${payload.reference}] Nouvelle demande — ${payload.entreprise}`;
     const textBody = renderContactText(payload);
 
