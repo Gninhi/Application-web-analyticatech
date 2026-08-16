@@ -6,7 +6,7 @@ export const getSeoMetadata = cache(async (locale: Locale = "fr"): Promise<SeoMe
   const meta = await db.seoMetadata.findUnique({
     where: { id: "singleton" },
     include: {
-      translations: { where: { locale: locale as any } },
+      translations: { where: { locale: locale } },
     },
   });
 
@@ -32,6 +32,6 @@ export const getSeoSchemas = cache(async (): Promise<SeoSchemaDTO[]> => {
   return schemas.map((s) => ({
     id: s.id,
     type: s.type,
-    payload: s.payload as Record<string, any>,
+    payload: s.payload as Record<string, unknown>,
   }));
 });

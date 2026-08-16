@@ -46,6 +46,9 @@ const csp = [
 const nextConfig: NextConfig = {
   output: "standalone",
   reactStrictMode: true,
+  turbopack: {
+    root: __dirname,
+  },
   // Security headers globaux — appliqués sur TOUTES les routes
   async headers() {
     return [

@@ -7,7 +7,7 @@ export const getSolutions = cache(async (locale: Locale = "fr"): Promise<Solutio
     where: { active: true },
     orderBy: { order: "asc" },
     include: {
-      translations: { where: { locale: locale as any } },
+      translations: { where: { locale: locale } },
       tags: true,
     },
   });

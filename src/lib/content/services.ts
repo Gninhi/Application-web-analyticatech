@@ -1,24 +1,9 @@
-import {
-  BrainCircuit,
-  Network,
-  Workflow,
-  Bot,
-  BarChart3,
-  type LucideIcon,
-} from "lucide-react";
+import { BrainCircuit, Network, Workflow, Bot, BarChart3 } from "lucide-react";
 
 /**
  * Registre centralisé des icônes / images de fond / overlays mesh
  * associés aux services. Évite la duplication entre HomeView et ServicesView.
  */
-
-const ICONS: Record<string, LucideIcon> = {
-  BrainCircuit,
-  Network,
-  Workflow,
-  Bot,
-  BarChart3,
-};
 
 /** Map statique des icônes Lucide par nom de service. */
 export const SERVICE_ICONS = {
@@ -29,13 +14,9 @@ export const SERVICE_ICONS = {
   BarChart3,
 } as const;
 
-/** Retourne l'icône Lucide associée à un nom de service. */
-export function getServiceIcon(name: string): LucideIcon {
-  return ICONS[name] ?? BrainCircuit;
-}
-
-/** Images de fond générées par IA, associées à chaque service.
- *  Format WebP pour optimiser Lighthouse (30% plus léger que PNG). */
+/** Images de fond « version marque » : fonds procéduraux générés dans
+ *  l'identité du site (base navy + mesh aux couleurs d'accent de chaque
+ *  service + trame technique). Format WebP pour optimiser Lighthouse. */
 const BG_IMAGES: Record<string, string> = {
   "01": "/services/bg-01-ia.webp",
   "02": "/services/bg-02-transfo.webp",
@@ -61,4 +42,20 @@ const MESH_OVERLAY: Record<string, string> = {
 /** Retourne le dégradé mesh overlay pour un index de service. */
 export function getServiceMeshOverlay(index: string): string {
   return MESH_OVERLAY[index] ?? MESH_OVERLAY["01"];
+}
+
+/** Couleur d'accent par service — déclinée sur la carte (liseré supérieur,
+ *  chip icône, grand chiffre, valeurs metrics). Teintes alignées sur les
+ *  mesh overlays pour une identité cohérente, lisibles sur les 2 thèmes. */
+const SERVICE_ACCENT: Record<string, string> = {
+  "01": "#F26D3D",
+  "02": "#43A047",
+  "03": "#F26D3D",
+  "04": "#38BDF8",
+  "05": "#A855F7",
+};
+
+/** Retourne la couleur d'accent d'un service. */
+export function getServiceAccent(index: string): string {
+  return SERVICE_ACCENT[index] ?? SERVICE_ACCENT["01"];
 }

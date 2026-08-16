@@ -1,18 +1,20 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowLeft, Target, Eye, Heart, Users } from "lucide-react";
-import type { ViewKey } from "@/lib/i18n/data-fr";
+import { ArrowLeft, Target, Eye, Heart, Users, type LucideIcon } from "lucide-react";
+import type { ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
 import { MovingButton } from "@/components/interactive/MovingButton";
 import { Logo } from "@/components/branding/Logo";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { SectionContainer } from "@/components/ui/SectionContainer";
 
 interface AboutViewProps {
   onNavigate: (view: ViewKey) => void;
 }
 
-const VALUE_ICONS: Record<string, any> = { Target, Eye, Heart, Users };
+const VALUE_ICONS: Record<string, LucideIcon> = { Target, Eye, Heart, Users };
 
 export function AboutView({ onNavigate }: AboutViewProps) {
   const { t } = useI18n();
@@ -28,7 +30,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
 
   return (
     <div className="pt-28 md:pt-36 pb-20">
-      <div className="mx-auto max-w-5xl px-4 md:px-6">
+      <SectionContainer maxWidth="5xl">
         {/* Retour */}
         <MovingButton
           variant="ghost"
@@ -41,22 +43,18 @@ export function AboutView({ onNavigate }: AboutViewProps) {
         </MovingButton>
 
         {/* Hero */}
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16">
           <div className="flex justify-center mb-6">
             <Logo size={64} delay={0.2} />
           </div>
-          <h1 className="font-display text-4xl md:text-6xl font-bold text-[#F26D3D] tracking-tight mb-4">
-            {t("about.title")}
-          </h1>
-          <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto">
-            {t("about.desc")}
-          </p>
-        </motion.div>
+          <PageHeader
+            align="center"
+            title={t("about.title")}
+            gradient
+            description={t("about.desc")}
+            className="max-w-2xl mx-auto"
+          />
+        </div>
 
         {/* Mission & Vision */}
         <div className="grid md:grid-cols-2 gap-6 mb-16">
@@ -71,10 +69,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
               {t("about.mission.title")}
             </h2>
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-              Rendre l'intelligence artificielle opérationnelle et souveraine pour les
-              organisations européennes. Du POC à la production, nous transformons
-              l'IA en avantage concurrentiel durable — avec précision, sécurité et
-              impact mesurable.
+              {t("about.mission.body")}
             </p>
           </motion.div>
 
@@ -89,10 +84,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
               {t("about.vision.title")}
             </h2>
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-              Un futur où chaque organisation maîtrise ses systèmes agentiques,
-              où la donnée est un levier et non une contrainte, et où l'IA
-              sert l'humain — pas l'inverse. Nous bâtissons cette souveraineté
-              technologique, une mission à la fois.
+              {t("about.vision.body")}
             </p>
           </motion.div>
         </div>
@@ -171,7 +163,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
             {t("about.cta")}
           </MovingButton>
         </motion.div>
-      </div>
+      </SectionContainer>
     </div>
   );
 }

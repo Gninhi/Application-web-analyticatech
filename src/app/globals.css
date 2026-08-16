@@ -3,6 +3,23 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Bordure dégradée animée — l'angle du conic-gradient est animé via une
+   propriété CSS enregistrée (@property) pour une interpolation fluide. */
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes gradient-rotate {
+  from {
+    --gradient-angle: 0deg;
+  }
+  to {
+    --gradient-angle: 360deg;
+  }
+}
+
 /*
  * ============================================================
  * ANALYTICATECH — DESIGN SYSTEM PREMIUM
@@ -11,11 +28,14 @@
  *   #03318C  — Bleu principal (lien, texte clair)
  *   #022873  — Bleu profond (surface, gradient)
  *   #022859  — Bleu nuit (surface glass sombre)
- *   #021C40  — Fond sombre
+ *   #06070B  — Noir obsidienne (fond sombre)
  *   #F26D3D  — Accent orange (CTA, titres)
  *
- * Thème sombre : fond #021C40, textes blancs, glass bleu nuit
- * Thème clair  : fond blanc cassé, textes bleu #03318C, titres orange #F26D3D
+ * Thème sombre : fond noir obsidienne #06070B, textes blancs,
+ *                cartes "liquid glass" (translucide + liseré lumineux
+ *                + reflet au survol).
+ * Thème clair  : fond blanc cassé, textes bleu #03318C, titres orange #F26D3D,
+ *                cartes en verre blanc translucide avec ombre bleutée.
  * ============================================================
  */
 
@@ -49,7 +69,7 @@
   --color-brand-blue: #03318C;
   --color-brand-deep: #022873;
   --color-brand-night: #022859;
-  --color-brand-bg: #021C40;
+  --color-brand-bg: #06070B;
   --color-brand-accent: #F26D3D;
 
   --radius-sm: 6px;
@@ -59,36 +79,53 @@
 }
 
 /* === THÈME SOMBRE (par défaut) ===
-   Fond #021C40, textes blancs/slate, glass bleu nuit #022859 */
+   Fond noir obsidienne #06070B, textes blancs/slate, cartes liquid glass */
 :root {
-  --bg: #021C40;
+  --bg: #06070B;
   --fg: oklch(0.95 0.02 250);          /* blanc cassé */
-  --fg-muted: oklch(0.78 0.03 250);    /* slate-300 */
+  --fg-muted: oklch(0.76 0.02 250);    /* slate-300 */
   --fg-link: #F26D3D;                   /* orange pour liens en sombre */
-  --surface: rgba(2, 40, 89, 0.55);    /* #022859 translucide */
-  --surface-2: rgba(2, 28, 64, 0.7);
+  --surface: rgba(96, 116, 168, 0.12); /* reflet bleuté subtil (halo haut) */
+  --surface-2: rgba(255, 255, 255, 0.05);
   --accent: #F26D3D;
   --border: rgba(255, 255, 255, 0.12);
-  --glass-card-bg: rgba(2, 40, 89, 0.88);
-  --glass-card-border: rgba(255, 255, 255, 0.14);
-  --glass-bg: rgba(2, 40, 89, 0.65);
+  --glass-bg: linear-gradient(160deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.03) 100%);
   --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-strong-bg: rgba(2, 40, 89, 0.85);
-  --glass-strong-border: rgba(255, 255, 255, 0.15);
-  --fade-from: #021C40;
-  --grid-color: rgba(255, 255, 255, 0.04);
-  --overlay-bg: rgba(2, 28, 64, 0.5);
-  --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+  --glass-strong-bg: linear-gradient(160deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.05) 100%);
+  --glass-strong-border: rgba(255, 255, 255, 0.16);
+  --glass-card-bg: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.11) 0%,
+    rgba(255, 255, 255, 0.045) 45%,
+    rgba(255, 255, 255, 0.025) 100%
+  );
+  --glass-card-border: rgba(255, 255, 255, 0.14);
+  --glass-card-border-strong: rgba(255, 255, 255, 0.30);
+  --glass-rim: rgba(255, 255, 255, 0.24);       /* liseré supérieur lumineux */
+  --glass-rim-soft: rgba(255, 255, 255, 0.08);
+  --glass-sheen: rgba(255, 255, 255, 0.07);     /* reflet "liquide" mobile */
+  --glass-card-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  --glass-card-shadow-hover: 0 24px 64px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(242, 109, 61, 0.16),
+    0 0 48px rgba(242, 109, 61, 0.08);
+  --fade-from: #06070B;
+  --overlay-bg: rgba(6, 7, 11, 0.55);
+  --halo-blue: rgba(60, 96, 180, 0.10); /* halo bleu du fond interactif */
 
-  /* Particules : bleu #03318C + accent orange #F26D3D en sombre */
-  --particle-r: 0.01;  /* ~3/255 */
-  --particle-g: 0.19;  /* ~49/255 */
-  --particle-b: 0.55;  /* ~140/255 */
-  --particle-accent-r: 0.95;  /* ~242/255 */
-  --particle-accent-g: 0.43;  /* ~109/255 */
-  --particle-accent-b: 0.24;  /* ~61/255 */
+  /* Voile de la pile services — auto-adaptatif : défini UNE fois avec
+     var(--bg), il se résout en voile sombre (thème sombre) ou clair
+     (thème clair) sans aucune duplication. */
+  --deck-veil: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--bg) 55%, transparent) 0%,
+    color-mix(in srgb, var(--bg) 28%, transparent) 50%,
+    color-mix(in srgb, var(--bg) 62%, transparent) 100%
+  );
 
-  --radius: 0.875rem;
+  /* Écart entre les cartes empilées : chaque carte se colle un peu plus bas
+     que la précédente → le bord de la carte précédente reste visible en
+     liseré au-dessus, donnant l'illusion d'un jeu de cartes physique. */
+  --deck-gap: clamp(16px, 4vh, 56px);
 }
 
 /* === THÈME CLAIR ===
@@ -99,28 +136,32 @@
   --fg: #03318C;                        /* bleu principal — tous les textes */
   --fg-muted: #022873;                  /* bleu profond — texte secondaire */
   --fg-link: #03318C;                   /* bleu pour liens */
-  --surface: rgba(255, 255, 255, 0.75);
+  --surface: rgba(255, 255, 255, 0.85);
   --surface-2: rgba(224, 232, 240, 0.8);
   --accent: #F26D3D;                    /* orange — titres, CTA */
   --border: rgba(3, 49, 140, 0.12);    /* bleu léger */
-  --glass-card-bg: rgba(255, 255, 255, 0.92);
-  --glass-card-border: rgba(3, 49, 140, 0.10);
-  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-bg: linear-gradient(160deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.68) 100%);
   --glass-border: rgba(3, 49, 140, 0.10);
-  --glass-strong-bg: rgba(255, 255, 255, 0.96);
+  --glass-strong-bg: linear-gradient(160deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.88) 100%);
   --glass-strong-border: rgba(3, 49, 140, 0.14);
+  --glass-card-bg: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(255, 255, 255, 0.86) 45%,
+    rgba(255, 255, 255, 0.76) 100%
+  );
+  --glass-card-border: rgba(3, 49, 140, 0.12);
+  --glass-card-border-strong: rgba(3, 49, 140, 0.24);
+  --glass-rim: rgba(255, 255, 255, 1);  /* liseré supérieur franc */
+  --glass-rim-soft: rgba(255, 255, 255, 0.7);
+  --glass-sheen: rgba(3, 49, 140, 0.05);
+  --glass-card-shadow: 0 8px 28px rgba(3, 49, 140, 0.10);
+  --glass-card-shadow-hover: 0 24px 60px rgba(3, 49, 140, 0.16),
+    0 0 0 1px rgba(242, 109, 61, 0.18),
+    0 0 40px rgba(242, 109, 61, 0.10);
   --fade-from: #F0F4F8;
-  --grid-color: rgba(3, 49, 140, 0.05);
-  --overlay-bg: rgba(240, 244, 248, 0.5);
-  --card-shadow: 0 4px 24px rgba(3, 49, 140, 0.08);
-
-  /* Particules : bleu #03318C + accent orange #F26D3D en clair */
-  --particle-r: 0.01;
-  --particle-g: 0.19;
-  --particle-b: 0.55;
-  --particle-accent-r: 0.95;
-  --particle-accent-g: 0.43;
-  --particle-accent-b: 0.24;
+  --overlay-bg: rgba(240, 244, 248, 0.55);
+  --halo-blue: rgba(3, 49, 140, 0.12); /* halo bleu du fond interactif */
 }
 
 @layer base {
@@ -181,25 +222,85 @@
 }
 
 @layer utilities {
-  /* === GLASS CARDS — adaptées aux 2 thèmes === */
+  /* === BORDURE DÉGRADÉE ANIMÉE (animated-gradient-border) ===
+     Le composant <BorderRotate> pose --gradient-angle ; ces classes pilotent
+     la rotation : auto (continu), hover (au survol), stop-hover (pause au survol). */
+  .gradient-border-auto {
+    animation: gradient-rotate var(--animation-duration, 5s) linear infinite;
+  }
+  .gradient-border-hover {
+    animation: gradient-rotate var(--animation-duration, 5s) linear infinite;
+    animation-play-state: paused;
+  }
+  .gradient-border-hover:hover {
+    animation-play-state: running;
+  }
+  .gradient-border-stop-hover {
+    animation: gradient-rotate var(--animation-duration, 5s) linear infinite;
+  }
+  .gradient-border-stop-hover:hover {
+    animation-play-state: paused;
+  }
+
+  /* === GLASS CARDS — "liquid glass", adaptées aux 2 thèmes ===
+     Translucide + blur saturé + liseré supérieur lumineux (rim light).
+     .glass-card : reflet "liquide" mobile + élévation + halo orange au survol. */
   .glass {
     background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
     border: 1px solid var(--glass-border);
+    box-shadow: inset 0 1px 0 var(--glass-rim-soft);
   }
   .glass-strong {
     background: var(--glass-strong-bg);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(18px) saturate(150%);
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
     border: 1px solid var(--glass-strong-border);
+    box-shadow: inset 0 1px 0 var(--glass-rim);
   }
   .glass-card {
-    background: var(--glass-card-bg);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background-image:
+      linear-gradient(115deg, transparent 30%, var(--glass-sheen) 50%, transparent 70%),
+      var(--glass-card-bg);
+    background-size: 250% 100%, 100% 100%;
+    background-position: 120% 0, 0 0;
+    background-repeat: no-repeat;
+    backdrop-filter: blur(18px) saturate(150%);
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
     border: 1px solid var(--glass-card-border);
-    box-shadow: var(--card-shadow);
+    translate: 0 0;
+    box-shadow:
+      inset 0 1px 0 var(--glass-rim),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.04),
+      var(--glass-card-shadow);
+    transition:
+      translate 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.35s ease,
+      box-shadow 0.35s ease,
+      background-position 0.9s ease;
+  }
+  .glass-card:hover {
+    background-position: -20% 0, 0 0;
+    border-color: var(--glass-card-border-strong);
+    translate: 0 -4px;
+    box-shadow:
+      inset 0 1px 0 var(--glass-rim),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.04),
+      var(--glass-card-shadow-hover);
+  }
+
+  /* Carte de la pile services — panneau adaptatif aux 2 thèmes.
+     Fond = var(--bg) translucide (noir voilé en sombre, blanc laiteux en
+     clair) + blur saturé + liseré rim lumineux + ombre profonde. */
+  .deck-card {
+    background: color-mix(in srgb, var(--bg) 52%, transparent);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    backdrop-filter: blur(14px) saturate(150%);
+    border: 1px solid var(--glass-card-border);
+    box-shadow:
+      inset 0 1px 0 var(--glass-rim),
+      0 24px 80px -24px rgba(0, 0, 0, 0.5);
   }
 
   /* Grille de fond militaire (menu mobile) */
@@ -214,17 +315,80 @@
   .neon-glow {
     box-shadow: 0 0 24px rgba(242, 109, 61, 0.35), 0 0 4px rgba(242, 109, 61, 0.6);
   }
-  .text-neon {
-    text-shadow: 0 0 18px rgba(242, 109, 61, 0.45);
-  }
 
-  /* Dégradé texte accent */
-  .text-gradient-accent {
-    background: linear-gradient(120deg, var(--fg) 0%, var(--accent) 55%, #ffae6b 100%);
+  /* Titre hero : dégradé de marque animé (shimmer) — un balayage
+     bleu → orange → ambre qui ondule sur le texte. Adaptatif aux 2 thèmes
+     via var(--fg)/var(--accent). Animé en background-position (léger). */
+  .text-shimmer {
+    background: linear-gradient(
+      110deg,
+      var(--fg) 0%,
+      var(--accent) 30%,
+      #ffb26a 50%,
+      var(--accent) 70%,
+      var(--fg) 100%
+    );
+    background-size: 220% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
+    /* L'animation de background-position sur background-clip:text force des
+       repaints continus sur le thread principal (coûteux en TBT/LCP simulé).
+       Le dégradé reste appliqué ; seul le défilement est désactivé. */
+    animation: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .text-shimmer {
+      animation: none;
+      background-position: 50% center;
+    }
+  }
+
+  /* === Animations d'entrée du hero (CSS, compositor-only) ===
+   * Remplacent les animations framer-motion du bloc au-dessus de la ligne de
+   * flottaison : transform uniquement (pas d'opacity) pour que le texte reste
+   * visible dès le SSR (aucun impact LCP) et que l'animation tourne sur le
+   * compositeur sans bloquer le thread principal (réduit TBT et Speed Index). */
+  @keyframes rise-up {
+    from {
+      transform: translateY(20px);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  @keyframes scale-in {
+    from {
+      transform: scale(0.96);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+  .animate-rise-up-sm {
+    animation: rise-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .animate-rise-up {
+    animation: rise-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .animate-scale-in {
+    animation: scale-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .anim-delay-150 {
+    animation-delay: 150ms;
+  }
+  .anim-delay-300 {
+    animation-delay: 300ms;
+  }
+  .anim-delay-450 {
+    animation-delay: 450ms;
+  }
+  .anim-delay-500 {
+    animation-delay: 500ms;
+  }
+  .anim-delay-700 {
+    animation-delay: 700ms;
   }
 
   /* === Grain cinématographique === */
@@ -236,29 +400,6 @@
     opacity: 0.05;
     mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-
-  /* === Texte étiré signature === */
-  .stretch-text {
-    font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
-    text-transform: uppercase;
-    letter-spacing: 0.5em;
-    font-weight: 400;
-    display: inline-block;
-  }
-  .stretch-text-sm {
-    font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
-    text-transform: uppercase;
-    letter-spacing: 0.32em;
-    font-weight: 400;
-  }
-
-  /* === Grille de fond technique === */
-  .grid-tech {
-    background-image:
-      linear-gradient(var(--grid-color) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-    background-size: 64px 64px;
   }
 
   /* === Lignes de balayage === */
@@ -307,11 +448,6 @@
 @keyframes blink {
   0%, 49% { opacity: 1; }
   50%, 100% { opacity: 0; }
-}
-
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.8); }
 }
 
 /* Marquee horizontal infini */

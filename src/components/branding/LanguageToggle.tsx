@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n/provider";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/moving-border";
+import { MovingButton } from "@/components/interactive/MovingButton";
 
 /**
  * LanguageToggle — bouton de bascule de langue (FR / EN).
@@ -23,19 +23,25 @@ export function LanguageToggle() {
 
   // Valeurs neutres avant montage pour éviter le mismatch d'hydration
   const displayLocale = mounted ? locale : "fr";
-  const ariaLabel = mounted
+  const actionLabel = mounted
     ? displayLocale === "fr"
       ? "Switch to English"
       : "Passer en français"
     : "Change language";
+  // Le nom accessible inclut le texte visible (FR / EN) pour satisfaire
+  // label-content-name-mismatch du Lighthouse.
+  const ariaLabel = mounted
+    ? `${displayLocale.toUpperCase()} · ${actionLabel}`
+    : actionLabel;
 
   return (
-    <Button
+    <MovingButton
       onClick={toggleLocale}
       aria-label={ariaLabel}
+      iconOnly
       borderRadius="0.625rem"
       duration={4000}
-      className="h-10 w-10 flex items-center justify-center bg-white/10 dark:bg-white/5 backdrop-blur-md text-slate-800 dark:text-slate-100 hover:text-[#F26D3D] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
+      className="h-10 w-10 bg-white/10 dark:bg-white/5 backdrop-blur-md text-slate-800 dark:text-slate-100 hover:text-[#F26D3D]"
     >
       {mounted && (
         <AnimatePresence mode="wait" initial={false}>
@@ -51,6 +57,6 @@ export function LanguageToggle() {
         </motion.span>
       </AnimatePresence>
       )}
-  </Button>
+  </MovingButton>
   );
 }

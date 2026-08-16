@@ -1,16 +1,29 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
-import type { ViewKey } from "@/lib/i18n/data-fr";
+import { ArrowLeft, Check } from "lucide-react";
+import type { ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
 import { MovingButton } from "@/components/interactive/MovingButton";
 import { SERVICE_ICONS, getServiceBgImage, getServiceMeshOverlay } from "@/lib/content/services";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { ContactCta } from "@/components/ui/ContactCta";
 
 interface ServiceDetailViewProps {
   serviceIndex: string;
   onNavigate: (view: ViewKey) => void;
+}
+
+/** Encart "introuvable" réutilisé par les trois vues de détail. */
+function DetailNotFound({ label, title, message }: { label: string; title: string; message: string }) {
+  return (
+    <div className="glass-card rounded-3xl p-8 md:p-12 text-center">
+      <p className="font-mono text-[11px] uppercase tracking-widest text-[#F26D3D] mb-3">{label}</p>
+      <h1 className="font-display text-2xl font-bold text-slate-900 dark:text-slate-50 mb-3">{title}</h1>
+      <p className="text-slate-500 dark:text-slate-400">{message}</p>
+    </div>
+  );
 }
 
 /**
@@ -20,7 +33,26 @@ interface ServiceDetailViewProps {
 export function ServiceDetailView({ serviceIndex, onNavigate }: ServiceDetailViewProps) {
   const { t } = useI18n();
   const { services } = useAppContent();
-  const service = services.find((s) => s.index === serviceIndex) ?? services[0];
+  const service = services.find((s) => s.index === serviceIndex);
+
+  if (!service) {
+    return (
+      <div className="pt-28 md:pt-36 pb-20">
+        <div className="mx-auto max-w-4xl px-4 md:px-6">
+          <MovingButton variant="ghost" size="sm" onClick={() => onNavigate("services")} className="mb-8">
+            <ArrowLeft className="h-4 w-4" aria-hidden />
+            {`${t("common.back")} ${t("nav.services")}`}
+          </MovingButton>
+          <DetailNotFound
+            label={t("detail.noData")}
+            title={t("detail.unavailable.title")}
+            message={t("detail.service.unavailable")}
+          />
+        </div>
+      </div>
+    );
+  }
+
   const IconComponent = SERVICE_ICONS[service.iconKey] ?? SERVICE_ICONS.BrainCircuit;
   const bgImage = service.bgImagePath ?? getServiceBgImage(service.index);
   const meshOverlay = service.meshOverlay ?? getServiceMeshOverlay(service.index);
@@ -57,7 +89,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate }: ServiceDetailVie
               </span>
               <div>
                 <p className="font-mono text-[11px] uppercase tracking-widest text-[#F26D3D]">
-                  Service {service.index} — {service.tagline}
+                  {t("detail.service.label")} {service.index} — {service.tagline}
                 </p>
                 <h1 className="font-display text-3xl md:text-5xl font-bold text-white tracking-tight">
                   {service.title}
@@ -108,20 +140,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate }: ServiceDetailVie
         </motion.div>
 
         {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-          className="glass-card rounded-2xl p-6 md:p-8 text-center"
-        >
-          <p className="text-slate-600 dark:text-slate-300 mb-4">
-            Prêt à démarrer ce service pour votre organisation ?
-          </p>
-          <MovingButton variant="primary" size="lg" onClick={() => onNavigate("contact")} className="neon-glow">
-            {t("nav.cta")}
-            <ArrowUpRight className="h-4 w-4" aria-hidden />
-          </MovingButton>
-        </motion.div>
+        <ContactCta question={t("detail.service.cta")} cta={t("nav.cta")} onNavigate={onNavigate} />
       </div>
     </div>
   );
@@ -138,7 +157,25 @@ interface SolutionDetailViewProps {
 export function SolutionDetailView({ solutionId, onNavigate }: SolutionDetailViewProps) {
   const { t } = useI18n();
   const { solutions } = useAppContent();
-  const solution = solutions.find((s) => s.id === solutionId) ?? solutions[0];
+  const solution = solutions.find((s) => s.id === solutionId);
+
+  if (!solution) {
+    return (
+      <div className="pt-28 md:pt-36 pb-20">
+        <div className="mx-auto max-w-4xl px-4 md:px-6">
+          <MovingButton variant="ghost" size="sm" onClick={() => onNavigate("solutions")} className="mb-8">
+            <ArrowLeft className="h-4 w-4" aria-hidden />
+            {`${t("common.back")} ${t("nav.solutions")}`}
+          </MovingButton>
+          <DetailNotFound
+            label={t("detail.noData")}
+            title={t("detail.unavailable.title")}
+            message={t("detail.solution.unavailable")}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="pt-28 md:pt-36 pb-20">
@@ -154,15 +191,14 @@ export function SolutionDetailView({ solutionId, onNavigate }: SolutionDetailVie
           transition={{ duration: 0.5 }}
           className="glass-card rounded-3xl p-8 md:p-12 mb-8"
         >
-          <p className="font-mono text-[11px] uppercase tracking-widest text-[#F26D3D] mb-3">
-            {solution.sector}
-          </p>
-          <h1 className="font-display text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 tracking-tight mb-4">
-            {solution.title}
-          </h1>
-          <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-base md:text-lg mb-6">
-            {solution.summary}
-          </p>
+          <PageHeader
+            kicker={solution.sector}
+            title={solution.title}
+            gradient
+            description={solution.summary}
+            size="md"
+            className="mb-6"
+          />
 
           <div className="rounded-xl border border-[#F26D3D]/25 bg-[#F26D3D]/5 p-4 mb-6">
             <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
@@ -180,20 +216,7 @@ export function SolutionDetailView({ solutionId, onNavigate }: SolutionDetailVie
           </div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-          className="glass-card rounded-2xl p-6 md:p-8 text-center"
-        >
-          <p className="text-slate-600 dark:text-slate-300 mb-4">
-            Cette solution correspond à votre besoin ?
-          </p>
-          <MovingButton variant="primary" size="lg" onClick={() => onNavigate("contact")} className="neon-glow">
-            {t("common.contact")}
-            <ArrowUpRight className="h-4 w-4" aria-hidden />
-          </MovingButton>
-        </motion.div>
+        <ContactCta question={t("detail.solution.cta")} cta={t("common.contact")} onNavigate={onNavigate} />
       </div>
     </div>
   );
@@ -210,10 +233,28 @@ interface BlogDetailViewProps {
 export function BlogDetailView({ postId, onNavigate }: BlogDetailViewProps) {
   const { t, locale } = useI18n();
   const { blogPosts } = useAppContent();
-  const post = blogPosts.find((p) => p.id === postId) ?? blogPosts[0];
+  const post = blogPosts.find((p) => p.id === postId);
+
+  if (!post) {
+    return (
+      <div className="pt-28 md:pt-36 pb-20">
+        <div className="mx-auto max-w-3xl px-4 md:px-6">
+          <MovingButton variant="ghost" size="sm" onClick={() => onNavigate("blog")} className="mb-8">
+            <ArrowLeft className="h-4 w-4" aria-hidden />
+            {`${t("common.back")} ${t("nav.blog")}`}
+          </MovingButton>
+          <DetailNotFound
+            label={t("detail.noData")}
+            title={t("detail.unavailable.title")}
+            message={t("detail.article.unavailable")}
+          />
+        </div>
+      </div>
+    );
+  }
 
   const formatDate = (iso: string) =>
-    new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+    new Date(iso).toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric" });
 
   return (
     <div className="pt-28 md:pt-36 pb-20">
@@ -255,9 +296,7 @@ export function BlogDetailView({ postId, onNavigate }: BlogDetailViewProps) {
               {t("common.context")}
             </h2>
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
-              {post.excerpt} Dans cet article, nous explorons en détail les enjeux techniques,
-              les choix d'architecture et les leçons apprises sur le terrain. Notre objectif :
-              fournir un cadre actionnable pour vos propres projets.
+              {post.excerpt} {t("detail.article.body")}
             </p>
 
             <h2 className="font-display text-xl font-bold text-slate-900 dark:text-slate-50 mb-4">
@@ -282,15 +321,7 @@ export function BlogDetailView({ postId, onNavigate }: BlogDetailViewProps) {
           </div>
 
           {/* CTA */}
-          <div className="glass-card rounded-2xl p-6 md:p-8 text-center">
-            <p className="text-slate-600 dark:text-slate-300 mb-4">
-              Cet article vous a intéressé ? Échangeons sur votre projet.
-            </p>
-            <MovingButton variant="primary" size="lg" onClick={() => onNavigate("contact")} className="neon-glow">
-              {t("common.contact")}
-              <ArrowUpRight className="h-4 w-4" aria-hidden />
-            </MovingButton>
-          </div>
+          <ContactCta question={t("detail.article.cta")} cta={t("common.contact")} onNavigate={onNavigate} />
         </motion.article>
       </div>
     </div>

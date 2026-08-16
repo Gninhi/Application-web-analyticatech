@@ -1,17 +1,46 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
-import { ArrowRight, Compass, Zap, ShieldCheck } from "lucide-react";
-import { type ViewKey } from "@/lib/i18n/data-fr";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { ArrowRight, Compass, TrendingUp, Zap, ShieldCheck, Sparkles } from "lucide-react";
+import { type ViewKey } from "@/types/content";
+import { type SolutionDTO } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
-import { PixelRevealTitle } from "@/components/interactive/PixelRevealTitle";
 import { MovingButton } from "@/components/interactive/MovingButton";
+import { BorderRotate } from "@/components/ui/animated-gradient-border";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { SectionContainer } from "@/components/ui/SectionContainer";
 
 interface SolutionsViewProps {
   onNavigate: (view: ViewKey) => void;
   onNavigateDetail: (view: ViewKey, id: string) => void;
+}
+
+/** Couleur d'accent par solution (ordre 1..6) — teintes de secteur distinctes,
+ *  lisibles sur les 2 thèmes. Déclinées sur la carte (liseré supérieur, chip
+ *  secteur, watermark, impact, bordures animées) comme les accents des services. */
+const SOLUTION_ACCENT: Record<string, string> = {
+  "1": "#38BDF8",
+  "2": "#4CAF50",
+  "3": "#F26D3D",
+  "4": "#A855F7",
+  "5": "#F59E0B",
+  "6": "#22D3EE",
+};
+
+function getSolutionAccent(order: number): string {
+  return SOLUTION_ACCENT[String(order)] ?? SOLUTION_ACCENT["1"];
+}
+
+/** Éclaircit une couleur hexadécimale — déclinaisons du BorderRotate
+ *  (primary = accent, secondary/accent = teintes plus claires). */
+function tint(hex: string, amount: number): string {
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.min(255, ((n >> 16) & 0xff) + amount);
+  const g = Math.min(255, ((n >> 8) & 0xff) + amount);
+  const b = Math.min(255, (n & 0xff) + amount);
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
 }
 
 /**
@@ -25,22 +54,51 @@ interface SolutionsViewProps {
  *  3. RELEASE (85% → 100%): la piste est immobile sur la dernière
  *     carte, puis la section libère le scroll vertical.
  *
- * La hauteur totale = (nb cartes + 1) * 100vh donne assez d'amplitude
- * pour ces 3 phases sans précipitation.
+ * Depuis la refonte : la translation est mesurée en pixels (ResizeObserver)
+ * pour rester parfaitement calibrée quel que soit le breakpoint, et les
+ * cartes sont thématisées à la manière des fiches services — accent propre
+ * à chaque secteur (liseré supérieur, watermark, spot curseur, bordure
+ * animée, impact, chips glass), dégradé d'en-tête sectoriel, et l'ensemble
+ * des libellés d'interface via i18n (aucun texte codé en dur).
  */
 export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewProps) {
   const { t } = useI18n();
   const { solutions: SOLUTIONS } = useAppContent();
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  // Décalage horizontal total (px) pour amener la dernière carte au bord droit.
+  // `startPx` stagings la 1ère carte (léger décalage de mise en place à 5vw).
+  const [drift, setDrift] = useState(0);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const measure = () => {
+      const vw = window.innerWidth;
+      const trackWidth = track.scrollWidth;
+      const startPx = vw * 0.05;
+      // drift laisse une marge droite de 4vw → dernière carte visible + breathing room
+      setDrift(Math.max(0, trackWidth - vw + vw * 0.04 + startPx));
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    const ro = new ResizeObserver(measure);
+    ro.observe(track);
+    return () => {
+      window.removeEventListener("resize", measure);
+      ro.disconnect();
+    };
+  }, [SOLUTIONS.length]);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
 
   // x mappé sur la portion centrale [0.15, 0.85] → lead-in & lead-out
-  // La piste part légèrement à droite pour "center" la 1ère carte au démarrage.
-  const x = useTransform(scrollYProgress, [0.15, 0.85], ["8%", "-78%"]);
+  const x = useTransform(scrollYProgress, [0.15, 0.85], [0, -drift]);
   // Indicateur de progression (même plage que x)
   const progressWidth = useTransform(scrollYProgress, [0.15, 0.85], ["0%", "100%"]);
   // Opacité de la barre de progression (s'allume pendant le drift)
@@ -57,34 +115,14 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
     <div ref={containerRef} className="relative">
       {/* === En-tête === */}
       <section className="pt-32 md:pt-40 pb-10">
-        <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+        <SectionContainer>
+          <PageHeader
+            kicker={t("solutions.kicker")}
+            title={t("solutions.title1")}
+            accent={t("solutions.title2")}
+            description={t("solutions.desc")}
             className="max-w-3xl"
-          >
-            <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
-              {"// Solutions — Dérive Latérale"}
-            </p>
-            <h1 className="font-display text-4xl md:text-6xl font-bold text-[#F26D3D] tracking-tight mb-4">
-              <PixelRevealTitle
-                text={t("solutions.title1")}
-                as="span"
-                className="block"
-                delay={0.1}
-              />
-              <PixelRevealTitle
-                text={t("solutions.title2")}
-                as="span"
-                className="block text-neon"
-                delay={0.45}
-              />
-            </h1>
-            <p className="text-slate-400 dark:text-slate-300 leading-relaxed text-lg">
-              {t("solutions.desc")}
-            </p>
-          </motion.div>
+          />
 
           {/* Barre de progression horizontale (style cula) */}
           <motion.div
@@ -92,17 +130,17 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
             className="mt-10 flex items-center gap-3"
           >
             <Compass className="h-4 w-4 text-[#F26D3D]" aria-hidden />
-            <div className="relative h-px flex-1 bg-white/10 overflow-hidden">
+            <div className="relative h-px flex-1 bg-black/10 dark:bg-white/10 overflow-hidden">
               <motion.div
                 style={{ width: progressWidth }}
                 className="absolute inset-y-0 left-0 bg-[#F26D3D]"
               />
             </div>
             <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
-              Séquence de Dérive
+              {t("solutions.drift.label")}
             </span>
           </motion.div>
-        </div>
+        </SectionContainer>
       </section>
 
       {/* === Piste horizontale pin === */}
@@ -112,110 +150,44 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
           <PhaseIndicator progress={scrollYProgress} />
 
           <motion.div
+            ref={trackRef}
             style={{ x }}
-            className="flex gap-6 md:gap-10 pl-[8vw] md:pl-[12vw] pr-10"
+            className="flex gap-5 md:gap-8 pl-[6vw] md:pl-[8vw] pr-[6vw]"
           >
             {SOLUTIONS.map((sol, i) => (
-              <article
+              <SolutionCard
                 key={sol.id}
-                className="relative shrink-0 w-[78vw] sm:w-[64vw] md:w-[52vw] lg:w-[40vw] h-[68vh] glass-card rounded-3xl overflow-hidden flex flex-col"
-                style={{ border: "1px solid rgba(255,255,255,0.18)" }}
-              >
-                {/* Visuel de fond avec dégradé sectoriel */}
-                <div
-                  className="relative h-40 md:h-48 overflow-hidden"
-                  style={{
-                    background:
-                      i % 3 === 0
-                        ? "linear-gradient(135deg, #022859 0%, #F26D3D33 100%)"
-                        : i % 3 === 1
-                        ? "linear-gradient(135deg, #011C40 0%, #4CAF5033 100%)"
-                        : "linear-gradient(135deg, #022859 0%, #ffffff11 100%)",
-                  }}
-                >
-                  <div
-                    className="absolute inset-0 opacity-30"
-                    style={{
-                      backgroundImage:
-                        "linear-gradient(rgba(242,109,61,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(242,109,61,0.2) 1px, transparent 1px)",
-                      backgroundSize: "28px 28px",
-                    }}
-                    aria-hidden
-                  />
-                  <div className="absolute top-5 left-5 right-5 flex items-start justify-between">
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-[#F26D3D] bg-black/30 backdrop-blur-sm rounded-full px-3 py-1">
-                      {sol.sector}
-                    </span>
-                    <span className="font-mono text-5xl font-bold text-white/10">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                  </div>
-                  <div className="absolute bottom-4 left-5">
-                    <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-[#4CAF50]">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#4CAF50] animate-pulse" />
-                      {t("common.deployed")}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Contenu */}
-                <div className="flex-1 p-6 md:p-8 flex flex-col">
-                  <h3 className="font-display text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-50 mb-3 tracking-tight">
-                    {sol.title}
-                  </h3>
-                  <p className="text-sm text-slate-400 dark:text-slate-300 leading-relaxed mb-5 flex-1">
-                    {sol.summary}
-                  </p>
-
-                  {/* Impact */}
-                  <div className="rounded-xl border border-[#F26D3D]/25 bg-[#F26D3D]/5 p-3 mb-5">
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
-                      {t("common.impact")}
-                    </p>
-                    <p className="font-display text-lg font-bold text-[#F26D3D]">
-                      {sol.impact}
-                    </p>
-                  </div>
-
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-1.5 mb-5">
-                    {sol.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-md border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/20 px-2 py-1 font-mono text-[10px] text-slate-400 dark:text-slate-300"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  <MovingButton
-                    onClick={() => onNavigateDetail("solution-detail", sol.id)}
-                    variant="outline"
-                    size="sm"
-                    className="group self-start"
-                  >
-                    {t("solutions.card.cta")}
-                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden />
-                  </MovingButton>
-                </div>
-              </article>
+                solution={sol}
+                index={i}
+                total={SOLUTIONS.length}
+                onNavigateDetail={onNavigateDetail}
+              />
             ))}
 
             {/* Carte finale CTA */}
-            <article className="shrink-0 w-[78vw] sm:w-[64vw] md:w-[52vw] lg:w-[40vw] h-[68vh] rounded-3xl border border-dashed border-[#F26D3D]/40 flex flex-col items-center justify-center text-center p-8">
-              <Zap className="h-10 w-10 text-[#F26D3D] mb-4" aria-hidden />
-              <h3 className="font-display text-3xl font-bold text-slate-900 dark:text-slate-50 mb-3">
+            <article className="relative shrink-0 w-[82vw] sm:w-[68vw] md:w-[54vw] lg:w-[42vw] h-[78vh] rounded-[28px] border-2 border-dashed border-[#F26D3D]/50 bg-[#F26D3D]/5 backdrop-blur-sm flex flex-col items-center justify-center text-center p-8 md:p-12 overflow-hidden">
+              <div
+                className="absolute inset-0 opacity-30 pointer-events-none"
+                style={{
+                  background:
+                    "radial-gradient(circle at 50% 0%, rgba(242,109,61,0.25), transparent 60%)",
+                }}
+                aria-hidden
+              />
+              <span className="relative h-16 w-16 rounded-2xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 flex items-center justify-center mb-5">
+                <Sparkles className="h-8 w-8 text-[#F26D3D]" aria-hidden />
+              </span>
+              <h3 className="relative font-display text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-50 mb-3">
                 {t("solutions.final.title")}
               </h3>
-              <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-sm">
+              <p className="relative text-slate-500 dark:text-slate-400 mb-8 max-w-md text-base leading-relaxed">
                 {t("solutions.final.desc")}
               </p>
               <MovingButton
                 onClick={() => onNavigate("contact")}
                 variant="primary"
                 size="lg"
-                className="neon-glow"
+                className="relative neon-glow"
               >
                 {t("solutions.final.cta")}
                 <ArrowRight className="h-4 w-4" aria-hidden />
@@ -240,13 +212,22 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4 }}
-                className="glass-card rounded-2xl p-6"
+                className="glass-card relative overflow-hidden rounded-2xl p-6 transition-colors duration-300 hover:border-accent/40"
               >
+                {/* Liseré supérieur d'accent — définit la tuile */}
+                <div
+                  className="pointer-events-none absolute inset-x-3 top-0 h-px"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, transparent, rgba(242,109,61,0.8), transparent)",
+                  }}
+                  aria-hidden
+                />
                 <f.icon className="h-7 w-7 text-[#F26D3D] mb-3" aria-hidden />
                 <h4 className="font-display text-lg font-bold text-slate-900 dark:text-slate-50 mb-1.5">
                   {f.t}
                 </h4>
-                <p className="text-sm text-slate-400 dark:text-slate-300 leading-relaxed">{f.d}</p>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{f.d}</p>
               </motion.div>
             ))}
           </div>
@@ -256,10 +237,252 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
   );
 }
 
-/* === Indicateur de phase (lead-in / drift / lead-out) ===
- * Trois segments qui s'illuminent selon la position du scroll.
- */
+/* === Carte solution — grand format === */
+interface SolutionCardProps {
+  solution: SolutionDTO;
+  index: number;
+  total: number;
+  onNavigateDetail: (view: ViewKey, id: string) => void;
+}
+
+function SolutionCard({ solution, index, total, onNavigateDetail }: SolutionCardProps) {
+  const { t } = useI18n();
+  const sol = solution;
+  const num = String(index + 1).padStart(2, "0");
+  const accent = getSolutionAccent(sol.order);
+  const reduceMotion = useReducedMotion();
+
+  // En-tête image — esthétique premium minimaliste : fond navy profond,
+  // grille technique estompée sur les bords, halo accent doux.
+  const headerGradient = `linear-gradient(135deg, #050a18 0%, #0a1328 55%, color-mix(in srgb, ${accent} 22%, #050a18) 130%)`;
+  const headerGrid = `linear-gradient(color-mix(in srgb, ${accent} 22%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, ${accent} 22%, transparent) 1px, transparent 1px)`;
+  const headerGridMask = "radial-gradient(ellipse 85% 100% at 30% 0%, black 30%, transparent 92%)";
+  const headerGlow = `radial-gradient(300px circle at 84% 12%, color-mix(in srgb, ${accent} 26%, transparent), transparent 70%)`;
+
+  // Bordure animée déclinée sur l'accent du secteur.
+  const borderColors = {
+    primary: accent,
+    secondary: tint(accent, 46),
+    accent: tint(accent, 96),
+  };
+
+  // Style accent des chips (secteur, impact, icônes).
+  const chipStyle: CSSProperties = {
+    borderColor: `color-mix(in srgb, ${accent} 30%, transparent)`,
+    background: `color-mix(in srgb, ${accent} 12%, transparent)`,
+  };
+  const impactStyle: CSSProperties = {
+    borderColor: `color-mix(in srgb, ${accent} 18%, transparent)`,
+    background: `linear-gradient(90deg, color-mix(in srgb, ${accent} 8%, transparent), transparent)`,
+  };
+
+  // Spot lumineux suivant le curseur (pattern 21st.dev) : 2 variables CSS
+  // posées au survol, aucun transform pendant le scroll.
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    const el = e.currentTarget;
+    const rect = el.getBoundingClientRect();
+    el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+    el.style.setProperty("--my", `${e.clientY - rect.top}px`);
+  };
+  const handleMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
+    const el = e.currentTarget;
+    el.style.setProperty("--mx", "-200px");
+    el.style.setProperty("--my", "-200px");
+  };
+
+  return (
+    <BorderRotate
+      onClick={() => onNavigateDetail("solution-detail", sol.id)}
+      className="group shrink-0 w-[82vw] sm:w-[68vw] md:w-[54vw] lg:w-[42vw] h-[78vh] cursor-pointer"
+      animationSpeed={9}
+      borderRadius={30}
+      borderWidth={2}
+      gradientColors={borderColors}
+      backgroundColor="var(--glass-card-bg)"
+    >
+      <article
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className="relative h-full w-full glass-card grain rounded-[28px] overflow-hidden flex flex-col"
+        style={{ "--sa": accent, "--mx": "-200px", "--my": "-200px" } as CSSProperties}
+      >
+        {/* Liseré supérieur — teinte du secteur */}
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 z-20 h-px"
+          style={{ background: `linear-gradient(90deg, transparent, ${accent}b3, transparent)` }}
+          aria-hidden
+        />
+
+        {/* Watermark géant — numéro de solution en bas, teinté de l'accent */}
+        <span
+          className="pointer-events-none absolute -bottom-6 -right-4 z-0 select-none font-display text-[7rem] font-bold leading-none md:text-[9rem]"
+          style={{ color: `color-mix(in srgb, ${accent} 9%, transparent)` }}
+          aria-hidden
+        >
+          {num}
+        </span>
+
+        {/* Spot lumineux suivant le curseur — couleur du secteur */}
+        <div
+          className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          style={{
+            background:
+              "radial-gradient(480px circle at var(--mx) var(--my), color-mix(in srgb, var(--sa) 18%, transparent), transparent 70%)",
+          }}
+          aria-hidden
+        />
+
+        {/* Visuel de fond — en-tête image premium minimaliste */}
+        <div className="relative h-36 md:h-44 shrink-0 overflow-hidden" style={{ background: headerGradient }}>
+          {/* Grille technique — estompée sur les bords */}
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: headerGrid,
+              backgroundSize: "24px 24px",
+              maskImage: headerGridMask,
+              WebkitMaskImage: headerGridMask,
+              opacity: 0.5,
+            }}
+            aria-hidden
+          />
+          {/* Halo accent doux */}
+          <div className="absolute inset-0" style={{ background: headerGlow }} aria-hidden />
+
+          {/* Balayage lumineux — fine barre d'accent qui dérive lentement */}
+          {!reduceMotion && (
+            <motion.div
+              initial={{ x: "-140%" }}
+              animate={{ x: "140%" }}
+              transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
+              className="pointer-events-none absolute inset-y-0 w-[45%]"
+              style={{
+                background: `linear-gradient(100deg, transparent, color-mix(in srgb, ${accent} 30%, transparent) 45%, transparent)`,
+              }}
+              aria-hidden
+            />
+          )}
+
+          {/* Top row : pastille secteur + numéro fantôme */}
+          <div className="absolute top-4 left-5 right-5 z-20 flex items-start justify-between">
+            <span
+              className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] backdrop-blur-md"
+              style={chipStyle}
+            >
+              <span className="h-1 w-1 rotate-45" style={{ background: accent }} aria-hidden />
+              <span style={{ color: accent }}>{sol.sector}</span>
+            </span>
+            <div className="flex items-baseline gap-1.5">
+              <span
+                className="font-display text-4xl font-bold leading-none md:text-5xl"
+                style={{ color: `color-mix(in srgb, ${accent} 35%, transparent)` }}
+              >
+                /{num}
+              </span>
+              <span
+                className="font-mono text-[10px]"
+                style={{ color: `color-mix(in srgb, ${accent} 65%, transparent)` }}
+              >
+                / {String(total).padStart(2, "0")}
+              </span>
+            </div>
+          </div>
+
+          {/* Bottom row : statut déployé + hover hint */}
+          <div className="absolute bottom-4 left-5 right-5 z-20 flex items-center justify-between">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#4CAF50]/30 bg-[#4CAF50]/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-[#4CAF50] backdrop-blur-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#4CAF50] animate-pulse" />
+              {t("common.deployed")}
+            </span>
+            <span
+              className="font-mono text-[10px] uppercase tracking-widest opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              style={{ color: accent }}
+            >
+              {t("solutions.card.viewDetail")} ↗
+            </span>
+          </div>
+
+          {/* Liseré de séparation en-tête / contenu */}
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px"
+            style={{
+              background: `linear-gradient(90deg, transparent, color-mix(in srgb, ${accent} 28%, transparent), transparent)`,
+            }}
+            aria-hidden
+          />
+        </div>
+
+        {/* Contenu — conteneur contraint : si l'espace manque (petits
+            écrans), le contenu défile à l'intérieur de la carte au lieu de
+            déborder (jamais tronqué). Scrollbar fine aux couleurs du thème. */}
+        <div
+          className="relative z-20 flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain p-5 md:p-7 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[var(--glass-card-border)] [&::-webkit-scrollbar-track]:bg-transparent"
+          style={{ scrollbarWidth: "thin", scrollbarColor: "var(--glass-card-border) transparent" }}
+        >
+          <h3 className="font-display text-2xl md:text-3xl font-bold tracking-tight mb-3 text-foreground transition-colors duration-300 group-hover:text-[var(--sa)]">
+            {sol.title}
+          </h3>
+          {/* Règle d'accent sous le titre — dégradé */}
+          <div
+            className="mb-4 h-px w-14"
+            style={{ background: `linear-gradient(90deg, ${accent}, transparent)` }}
+            aria-hidden
+          />
+          <p className="text-sm md:text-base text-muted-foreground leading-relaxed mb-4 flex-1">
+            {sol.summary}
+          </p>
+
+          {/* Impact — métrique sectorielle, barre d'accent à gauche */}
+          <div className="relative rounded-xl p-3.5 md:p-4 mb-4 flex items-center gap-3.5 overflow-hidden" style={impactStyle}>
+            <span className="absolute inset-y-2 left-0 w-0.5 rounded-full" style={{ background: accent }} aria-hidden />
+            <span className="h-10 w-10 shrink-0 rounded-lg border flex items-center justify-center" style={chipStyle}>
+              <TrendingUp className="h-5 w-5" style={{ color: accent }} aria-hidden />
+            </span>
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground mb-0.5">
+                {t("common.impact")}
+              </p>
+              <p className="font-display text-lg md:text-xl font-bold leading-snug" style={{ color: accent }}>
+                {sol.impact}
+              </p>
+            </div>
+          </div>
+
+          {/* Tags — puces glass */}
+          <div className="flex flex-wrap gap-1.5 mb-4">
+            {sol.tags.map((tag: string) => (
+              <span
+                key={tag}
+                className="glass rounded-md px-2 py-1 font-mono text-[10px] text-muted-foreground transition-colors duration-300 hover:border-accent/30"
+              >
+                #{tag}
+              </span>
+            ))}
+          </div>
+
+          <div className="border-t border-border pt-4">
+            <MovingButton
+              onClick={(e) => {
+                e.stopPropagation();
+                onNavigateDetail("solution-detail", sol.id);
+              }}
+              variant="outline"
+              size="md"
+              className="group/btn w-full"
+            >
+              {t("solutions.card.cta")}
+              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" aria-hidden />
+            </MovingButton>
+          </div>
+        </div>
+      </article>
+    </BorderRotate>
+  );
+}
+
+/* === Indicateur de phase (lead-in / drift / lead-out) === */
 function PhaseIndicator({ progress }: { progress: MotionValue<number> }) {
+  const { t } = useI18n();
   const leadIn = useTransform(progress, [0, 0.15], [1, 0.3]);
   const drift = useTransform(progress, [0.15, 0.16, 0.84, 0.85], [0.3, 1, 1, 0.3]);
   const leadOut = useTransform(progress, [0.85, 1], [0.3, 1]);
@@ -270,21 +493,21 @@ function PhaseIndicator({ progress }: { progress: MotionValue<number> }) {
         style={{ opacity: leadIn }}
         className="font-mono text-[9px] uppercase tracking-widest text-slate-500 dark:text-slate-400"
       >
-        Préparation
+        {t("solutions.phase.lead")}
       </motion.span>
-      <span className="h-px w-4 bg-white/20" aria-hidden />
+      <span className="h-px w-4 bg-black/15 dark:bg-white/20" aria-hidden />
       <motion.span
         style={{ opacity: drift }}
         className="font-mono text-[9px] uppercase tracking-widest text-[#F26D3D]"
       >
-        Dérive
+        {t("solutions.phase.drift")}
       </motion.span>
-      <span className="h-px w-4 bg-white/20" aria-hidden />
+      <span className="h-px w-4 bg-black/15 dark:bg-white/20" aria-hidden />
       <motion.span
         style={{ opacity: leadOut }}
         className="font-mono text-[9px] uppercase tracking-widest text-slate-500 dark:text-slate-400"
       >
-        Libération
+        {t("solutions.phase.release")}
       </motion.span>
     </div>
   );

@@ -4,8 +4,6 @@ import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { GlobalErrorBoundary } from "@/components/system/GlobalErrorBoundary";
-import { PageLoader } from "@/components/layout/PageLoader";
-import { I18nProvider } from "@/lib/i18n/provider";
 
 /* === Typographie du Design System "Corporate Cyberpunk" ===
  * Optimisé Lighthouse : preload + display swap + adjustFontFallback
@@ -123,7 +121,7 @@ export const metadata: Metadata = {
   category: "technology",
   other: {
     "application-name": "Analyticatech",
-    "theme-color": "#011C40",
+    "theme-color": "#06070B",
     // SEO pour LLMs / GEO — signale le contenu au crawling IA
     "ai-content-optimized": "true",
     "llm-friendly": "true",
@@ -150,11 +148,28 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <I18nProvider>
-            <PageLoader />
-            <GlobalErrorBoundary>{children}</GlobalErrorBoundary>
-            <Toaster />
-          </I18nProvider>
+          {/* Preload manuel des fichiers de police principaux (Inter latin +
+              Space Grotesk latin). Turbopack n'émet pas les <link rel=preload>
+              de next/font : sans ce preload, les polices ne sont découvertes
+              qu'après parsing des CSS render-blocking, ce qui retarde le swap
+              des polices et donc le LCP. Les noms de fichiers sont stables
+              (dérivés du contenu des polices). */}
+          <link
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+            href="/_next/static/media/0c89a48fa5027cee-s.p.2cyn07wtgehh0.woff2"
+          />
+          <link
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+            href="/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
+          />
+          <GlobalErrorBoundary>{children}</GlobalErrorBoundary>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

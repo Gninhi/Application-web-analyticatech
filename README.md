@@ -121,7 +121,7 @@ Copier `.env.example` en `.env` et renseigner :
 │   │   ├── branding/        # Logo, ThemeToggle, LanguageToggle, CookieConsent
 │   │   ├── effects/         # ImmersiveBackground, ParticleField
 │   │   ├── interactive/     # AnimatedCounter, Marquee, ScrambleText, SpotlightCard...
-│   │   ├── layout/          # Navbar, Footer, BackToTop, PageLoader, AppClientShell
+│   │   ├── layout/          # Navbar, Footer, BackToTop, AppClientShell
 │   │   ├── providers/       # ContentProvider
 │   │   ├── sections/        # Vues : Home, About, Services, Solutions, Blog, Contact, Legal
 │   │   ├── seo/             # JsonLd (données structurées)

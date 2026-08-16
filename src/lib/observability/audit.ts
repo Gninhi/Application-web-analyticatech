@@ -89,6 +89,8 @@ export function auditLog(entry: Omit<AuditEntry, "ts">): void {
     } else if (level === "WARN") {
       console.warn("[AUDIT]", line.trim());
     } else {
+      // INFO : fallback légitime hors environnement fichier (serverless/Vercel)
+      // eslint-disable-next-line no-console
       console.info("[AUDIT]", line.trim());
     }
   }

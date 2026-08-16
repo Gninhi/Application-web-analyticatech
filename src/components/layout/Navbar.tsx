@@ -3,14 +3,13 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowRight } from "lucide-react";
-import { type ViewKey } from "@/lib/i18n/data-fr";
+import { type ViewKey } from "@/types/content";
 import { ScrambleText } from "@/components/interactive/ScrambleText";
 import { MovingButton } from "@/components/interactive/MovingButton";
 import { NavLink } from "@/components/interactive/NavLink";
 import { Logo } from "@/components/branding/Logo";
 import { ThemeToggle } from "@/components/branding/ThemeToggle";
 import { LanguageToggle } from "@/components/branding/LanguageToggle";
-import { Button } from "@/components/ui/moving-border";
 import { useScrollState } from "@/hooks/useScrollState";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
@@ -31,7 +30,20 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
   const { scrolled, hidden } = useScrollState();
   const { t } = useI18n();
   const { navItems } = useAppContent();
-  const NAV_ITEMS = navItems.map((n) => ({ key: n.viewKey as ViewKey, label: n.label, hint: n.hint }));
+
+  // Repli statique (mode offline : DB injoignable → navItems vide).
+  // Associe chaque vue à sa clé i18n pour rester bilingue.
+  const STATIC_NAV: { key: ViewKey; label: string; hint: string }[] = [
+    { key: "home", label: t("nav.home"), hint: "00" },
+    { key: "services", label: t("nav.services"), hint: "01" },
+    { key: "solutions", label: t("nav.solutions"), hint: "02" },
+    { key: "blog", label: t("nav.blog"), hint: "03" },
+    { key: "contact", label: t("nav.contact"), hint: "04" },
+  ];
+  const NAV_ITEMS =
+    navItems.length > 0
+      ? navItems.map((n) => ({ key: n.viewKey as ViewKey, label: n.label, hint: n.hint }))
+      : STATIC_NAV;
   const [mobileOpen, setMobileOpen] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const openerRef = useRef<HTMLButtonElement>(null);
@@ -39,6 +51,7 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
   // Bloque le scroll body + focus trap + Escape quand le dialog mobile est ouvert
   useEffect(() => {
     if (!mobileOpen) return;
+    const opener = openerRef.current;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
@@ -72,7 +85,7 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
       document.body.style.overflow = prevOverflow;
       document.removeEventListener("keydown", handleTab);
       document.removeEventListener("keydown", handleEscape);
-      openerRef.current?.focus();
+      opener?.focus();
     };
   }, [mobileOpen]);
 
@@ -96,18 +109,28 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <nav
             className={cn(
-              "flex items-center justify-between rounded-2xl px-4 md:px-6 transition-all duration-300",
+              "relative flex items-center justify-between overflow-hidden rounded-2xl border px-4 md:px-6 backdrop-blur-xl saturate-150 transition-all duration-300",
               scrolled
-                ? "glass-strong h-14 shadow-lg shadow-black/30"
-                : "h-16 bg-transparent"
+                ? "h-14 border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/[0.06] shadow-lg shadow-black/10 dark:shadow-black/40"
+                : "h-16 border-black/5 dark:border-white/[0.08] bg-white/55 dark:bg-white/[0.04] shadow-sm shadow-black/5 dark:shadow-black/20"
             )}
             aria-label="Navigation principale"
           >
+            {/* Rim light liquid glass : liseré lumineux supérieur */}
+            <span
+              className="pointer-events-none absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent dark:via-white/25"
+              aria-hidden
+            />
+            {/* Halo interne doux (cœur du verre liquide) */}
+            <span
+              className="pointer-events-none absolute -top-10 left-1/2 h-24 w-2/3 -translate-x-1/2 rounded-full bg-white/40 dark:bg-white/[0.05] blur-2xl"
+              aria-hidden
+            />
             {/* Logo */}
             <button
               onClick={() => handleNav("home")}
               className="group flex items-center gap-2.5 focus-visible:outline-2 focus-visible:outline-offset-4 rounded-md"
-              aria-label={t("nav.home")}
+              aria-label={`${t("nav.home")} — AnalyticaTech`}
             >
               <Logo size={32} delay={0.2} />
               <span className="font-display text-base font-bold tracking-tight text-slate-800 dark:text-slate-100">
@@ -147,18 +170,19 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
               </MovingButton>
 
               {/* Bouton hamburger mobile */}
-              <Button
+              <MovingButton
                 ref={openerRef}
                 onClick={() => setMobileOpen(true)}
+                iconOnly
                 borderRadius="0.625rem"
                 duration={4000}
-                className="md:hidden h-10 w-10 flex items-center justify-center bg-white/10 dark:bg-white/5 backdrop-blur-md text-slate-800 dark:text-slate-100"
+                className="md:hidden h-10 w-10 bg-white/10 dark:bg-white/5 backdrop-blur-md text-slate-800 dark:text-slate-100"
                 aria-label={t("nav.menu.open")}
                 aria-expanded={mobileOpen}
                 aria-controls="mobile-menu"
               >
                 <Menu className="h-5 w-5" aria-hidden />
-          </Button>
+          </MovingButton>
             </div>
           </nav>
         </div>
@@ -187,15 +211,16 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
                   {t("nav.menu.status")}
                 </span>
               </div>
-              <Button
+              <MovingButton
                 onClick={() => setMobileOpen(false)}
+                iconOnly
                 borderRadius="0.625rem"
                 duration={4000}
-                className="h-10 w-10 flex items-center justify-center bg-white/10 dark:bg-white/5 backdrop-blur-md text-slate-800 dark:text-slate-100"
+                className="h-10 w-10 bg-white/10 dark:bg-white/5 backdrop-blur-md text-slate-800 dark:text-slate-100"
                 aria-label={t("nav.menu.close")}
               >
                 <X className="h-5 w-5" aria-hidden />
-         </Button>
+         </MovingButton>
             </div>
 
             {/* Liens surdimensionnés */}

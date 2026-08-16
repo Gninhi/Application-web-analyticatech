@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import { useScrollVisibility } from "@/hooks/useScrollState";
-import { Button } from "@/components/ui/moving-border";
+import { MovingButton } from "@/components/interactive/MovingButton";
 
 /**
  * BackToTop — bouton flottant "retour vers le haut".
@@ -36,15 +36,16 @@ export function BackToTop() {
           transition={{ duration: 0.2, ease: "easeOut" }}
           className="fixed bottom-6 right-6 z-40"
         >
-          <Button
+          <MovingButton
             onClick={scrollToTop}
             aria-label="Retour en haut de page"
+            iconOnly
             borderRadius="9999px"
             duration={2500}
-            className="h-12 w-12 flex items-center justify-center bg-[#F26D3D] text-white shadow-lg shadow-black/40 transition hover:bg-[#ff7a4a] neon-glow focus-visible:outline-2 focus-visible:outline-offset-2"
+            className="h-12 w-12 bg-[#C9470F] text-white shadow-lg shadow-black/40 hover:bg-[#B63C0C] neon-glow focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             <ArrowUp className="h-5 w-5" aria-hidden />
-      </Button>
+      </MovingButton>
        </motion.div>
       )}
   </AnimatePresence>

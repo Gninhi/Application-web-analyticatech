@@ -7,7 +7,7 @@ export const getBlogCategories = cache(async (locale: Locale = "fr"): Promise<Bl
     where: { active: true },
     orderBy: { order: "asc" },
     include: {
-      translations: { where: { locale: locale as any } },
+      translations: { where: { locale: locale } },
     },
   });
 
@@ -27,10 +27,10 @@ export const getBlogPosts = cache(async (locale: Locale = "fr"): Promise<BlogPos
     include: {
       category: {
         include: {
-          translations: { where: { locale: locale as any } },
+          translations: { where: { locale: locale } },
         },
       },
-      translations: { where: { locale: locale as any } },
+      translations: { where: { locale: locale } },
       tags: true,
     },
   });

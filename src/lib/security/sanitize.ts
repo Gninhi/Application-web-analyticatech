@@ -40,7 +40,7 @@ function escapeHtml(s: string): string {
  * - échappe ensuite les caractères HTML
  * - normalise les espaces (trim)
  */
-export function sanitizeText(input: string): string {
+function sanitizeText(input: string): string {
   if (typeof input !== "string") return "";
 
   const cleaned = input

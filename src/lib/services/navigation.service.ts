@@ -7,7 +7,7 @@ export const getNavItems = cache(async (locale: Locale = "fr"): Promise<NavItemD
     where: { visible: true },
     orderBy: { order: "asc" },
     include: {
-      translations: { where: { locale: locale as any } },
+      translations: { where: { locale: locale } },
     },
   });
 

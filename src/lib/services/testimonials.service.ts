@@ -7,7 +7,7 @@ export const getTestimonials = cache(async (locale: Locale = "fr"): Promise<Test
     where: { active: true },
     orderBy: { order: "asc" },
     include: {
-      translations: { where: { locale: locale as any } },
+      translations: { where: { locale: locale } },
     },
   });
 

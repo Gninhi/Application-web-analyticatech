@@ -7,7 +7,7 @@ export const getServices = cache(async (locale: Locale = "fr"): Promise<ServiceD
     where: { active: true },
     orderBy: { order: "asc" },
     include: {
-      translations: { where: { locale: locale as any } },
+      translations: { where: { locale: locale } },
       metrics: { orderBy: { order: "asc" } },
       technologies: { orderBy: { order: "asc" } },
     },

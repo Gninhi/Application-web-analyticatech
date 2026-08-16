@@ -1,5 +1,18 @@
 export type Locale = "fr" | "en";
 
+export type ViewKey =
+  | "home"
+  | "services"
+  | "solutions"
+  | "blog"
+  | "contact"
+  | "rgpd"
+  | "legal"
+  | "about"
+  | "service-detail"
+  | "solution-detail"
+  | "blog-detail";
+
 export interface MetricDTO {
   id: string;
   key: string;
@@ -158,7 +171,7 @@ export interface SeoMetadataDTO {
 export interface SeoSchemaDTO {
   id: string;
   type: string;
-  payload: Record<string, any>;
+  payload: Record<string, unknown>;
 }
 
 export interface AppContentDTO {

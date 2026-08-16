@@ -1,78 +1,96 @@
 "use client";
 
-import { useRef, useState } from "react";
-
-/**
- * ScrambleText — effet de "déchiffrement" cyberpunk au survol.
- * Les caractères passent par des symboles aléatoires avant de se stabiliser.
- */
-const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*<>/\\";
+import { useEffect, useRef, useState } from "react";
+import { useInView } from "framer-motion";
+import { cn } from "@/lib/utils/cn";
 
 interface ScrambleTextProps {
   text: string;
   className?: string;
-  as?: "span" | "button" | "a";
-  onClick?: () => void;
-  ariaLabel?: string;
+  /** Jeu de caractères de brouillage. */
+  scrambleChars?: string;
+  /** Délai avant démarrage (s). */
+  delay?: number;
+  /** Durée totale du brouillage (s). */
+  duration?: number;
 }
 
+const DEFAULT_CHARS = "!<>-_/[]{}—=+*^?#0123456789";
+
+/**
+ * ScrambleText — effet "Text Scramble" (marketplace Framer).
+ * Les caractères se mélangent avant de se fixer sur le texte final.
+ * Reste lisible (le texte final est rendu en sr-only pour les lecteurs
+ * d'écran) et se désactive via prefers-reduced-motion.
+ */
 export function ScrambleText({
   text,
   className,
-  as = "span",
-  onClick,
-  ariaLabel,
+  scrambleChars = DEFAULT_CHARS,
+  delay = 0.4,
+  duration = 1.1,
 }: ScrambleTextProps) {
-  // `scrambled` vaut null au repos => on rend `text` directement (toujours synchronisé).
-  // Pendant l'animation, il contient la chaîne en cours de déchiffrement.
-  const [scrambled, setScrambled] = useState<string | null>(null);
-  const rafRef = useRef<number | null>(null);
-  const frameRef = useRef(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const [display, setDisplay] = useState(text);
 
-  const scramble = () => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    frameRef.current = 0;
-    const target = text;
+  useEffect(() => {
+    if (!inView) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const tick = () => {
-      const progress = frameRef.current / (target.length * 1.6);
-      const revealed = Math.floor(progress * target.length);
+    const pool = scrambleChars.split("");
+    let frame = 0;
+    let start: number | null = null;
+    let lastUpdate = 0;
 
-      const next = target
-        .split("")
-        .map((char, i) => {
-          if (char === " ") return " ";
-          if (i < revealed) return char;
-          return CHARS[Math.floor(Math.random() * CHARS.length)];
-        })
-        .join("");
-
-      setScrambled(next);
-      frameRef.current += 1;
-
-      if (revealed < target.length) {
-        rafRef.current = requestAnimationFrame(tick);
-      } else {
-        // Fin de l'animation : retour à l'état repos (rend `text`)
-        setScrambled(null);
+    const tick = (ts: number) => {
+      if (start === null) start = ts;
+      const elapsed = (ts - start) / 1000 - delay;
+      if (elapsed < 0) {
+        frame = requestAnimationFrame(tick);
+        return;
       }
+      const progress = Math.min(elapsed / duration, 1);
+      const done = progress >= 1;
+      // Mise à jour visuelle limitée (~15 fps) : l'effet de brouillage est
+      // visuellement identique, mais on évite ~100 re-renders React (le
+      // main-thread reste libre → TBT réduit).
+      // IMPORTANT : sur la dernière frame (done), on affiche TOUJOURS le texte
+      // final même si <66 ms se sont écoulées, sinon le texte se fige tronqué.
+      if (done || ts - lastUpdate >= 66) {
+        lastUpdate = ts;
+        const output = done
+          ? text
+          : text
+              .split("")
+              .map((char, i) => {
+                if (char === " ") return " ";
+                if (i < Math.floor(progress * text.length)) return char;
+                return pool[Math.floor(Math.random() * pool.length)];
+              })
+              .join("");
+        setDisplay(output);
+      }
+      if (!done) frame = requestAnimationFrame(tick);
     };
 
-    rafRef.current = requestAnimationFrame(tick);
-  };
-
-  // Tag polymorphe — typage explicite pour permettre les props className/onClick/...
-  const Tag = as as unknown as React.ComponentType<React.HTMLAttributes<HTMLElement>>;
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [inView, text, delay, duration, scrambleChars]);
 
   return (
-    <Tag
-      className={className}
-      onMouseEnter={scramble}
-      onClick={onClick}
-      aria-label={ariaLabel ?? text}
-      data-text={text}
-    >
-      {scrambled ?? text}
-    </Tag>
+    <span ref={ref} className={cn("relative inline-block whitespace-nowrap", className)}>
+      {/* Spacer invisible : verrouille la largeur sur le texte final pour
+          éviter tout reflow (CLS) quand les caractères brouillés changent
+          de largeur. */}
+      <span aria-hidden="true" className="invisible">
+        {text}
+      </span>
+      {/* Texte brouillé superposé au spacer : n'impacte plus le layout. */}
+      <span aria-hidden="true" className="absolute inset-y-0 left-0 flex items-center">
+        {display}
+      </span>
+      <span className="sr-only">{text}</span>
+    </span>
   );
 }

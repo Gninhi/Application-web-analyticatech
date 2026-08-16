@@ -4,9 +4,10 @@ import { checkRateLimit, getClientIp } from "@/lib/security/rate-limit";
 import { sanitizeObject } from "@/lib/security/sanitize";
 import { audit, hashIp } from "@/lib/observability/audit";
 import { getRequestFingerprint } from "@/lib/security/fingerprint";
-import { isSuspiciousUserAgent } from "@/lib/security/user-agent";
+import { isSuspiciousUserAgent, isRequestSizeValid } from "@/lib/security/user-agent";
 import { validateCsrfToken } from "@/lib/security/csrf";
 import { isOriginAllowed } from "@/lib/security/origin";
+import { MAX_BODY_SIZE } from "@/lib/content/site";
 import { db } from "@/lib/db/client";
 import { sendContactNotification } from "@/lib/email/mailer";
 
@@ -18,14 +19,15 @@ import { sendContactNotification } from "@/lib/email/mailer";
  *  2. Vérification d'origine (allowlist via ALLOWED_ORIGINS)
  *  3. Bot detection (UA suspect → 403)
  *  4. Rate limiting par fingerprint (IP + UA + lang hashé) — 5 req/h
- *  5. Multi-honeypot (companyUrl + website + fax — tous doivent être vides)
- *  6. Validation Zod stricte (email pro, longueurs, format)
- *  7. Sanitization XSS (récursif sur strings + arrays d'objets)
- *  8. Délai anti-timing (500ms) — prévient les attaques par timing
- *  9. Persistance en base (ContactRequest) avec IP/fingerprint hashés (RGPD)
- * 10. Notification email (transport réel si RESEND_API_KEY, sinon stub logué)
- * 11. Audit logging persisté (sans PII)
- * 12. Réponses normalisées sans fuite d'info interne + headers stricts
+ *  5. Anti-DoS : taille max du payload (content-length > 16 KB → 413)
+ *  6. Multi-honeypot (companyUrl + website + fax — tous doivent être vides)
+ *  7. Validation Zod stricte (email pro, longueurs, format)
+ *  8. Sanitization XSS (récursif sur strings + arrays d'objets)
+ *  9. Délai anti-timing (500ms) — prévient les attaques par timing
+ * 10. Persistance en base (ContactRequest) avec IP/fingerprint hashés (RGPD)
+ * 11. Notification email (transport réel si RESEND_API_KEY, sinon stub logué)
+ * 12. Audit logging persisté (sans PII)
+ * 13. Réponses normalisées sans fuite d'info interne + headers stricts
  */
 
 const CSRF_COOKIE = "at-csrf";
@@ -51,10 +53,9 @@ function json(body: ContactApiResponse, status: number, extra?: Record<string, s
 
 const HONEYPOT_FIELDS = ["companyUrl", "website", "fax", "phone2"] as const;
 
-/** Build l'allowlist d'origines depuis l'env. Same-origin implicite en l'absence de config. */
+/** Build l'allowlist d'origines depuis l'env. Fallback fail-closed sur NEXT_PUBLIC_SITE_URL. */
 function getAllowedOrigins(): string[] {
   const raw = process.env.ALLOWED_ORIGINS ?? process.env.NEXT_PUBLIC_SITE_URL ?? "";
-  if (!raw) return [];
   return raw
     .split(",")
     .map((s) => s.trim())
@@ -84,8 +85,13 @@ export async function POST(req: NextRequest) {
   }
 
   // 2. Vérification d'origine (anti-CSRF layer supplémentaire).
+  //    Fail-closed : si aucune origine n'est configurée, la requête est rejetée.
   const allowed = getAllowedOrigins();
-  if (allowed.length > 0 && !isOriginAllowed(req, allowed)) {
+  if (allowed.length === 0) {
+    audit.warn("Contact: no allowed origins configured, rejecting", { ipHash, fingerprint });
+    return json({ success: false, message: "Origine non autorisée." }, 403);
+  }
+  if (!isOriginAllowed(req, allowed)) {
     audit.warn("Contact: origin not allowed", { ipHash, fingerprint });
     return json({ success: false, message: "Origine non autorisée." }, 403);
   }
@@ -123,7 +129,11 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // 5. Parsing JSON.
+  // 5. Anti-DoS (taille du payload) + Parsing JSON.
+  if (!isRequestSizeValid(req, MAX_BODY_SIZE)) {
+    audit.warn("Contact: payload too large", { ipHash, fingerprint });
+    return json({ success: false, message: "Payload trop volumineux." }, 413);
+  }
   let raw: unknown;
   try {
     raw = await req.json();

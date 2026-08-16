@@ -1,24 +1,31 @@
 "use client";
 
-import { Button } from "@/components/ui/moving-border";
+import { forwardRef } from "react";
+import { AnimatedButtonBorder } from "@/components/ui/button-border";
 import { cn } from "@/lib/utils/cn";
 
 interface MovingButtonProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "ref"> {
   /** Variante visuelle. Défaut : "primary". */
   variant?: "primary" | "outline" | "ghost" | "subtle";
-  /** Taille. Défaut : "md". */
+  /** Taille. Défaut : "md". Ignorée quand `iconOnly` est vrai. */
   size?: "sm" | "md" | "lg";
+  /**
+   * Mode icône seule : supprime le padding horizontal/vertical.
+   * Le bouton prend alors exactement les dimensions fournies via
+   * `className` (ex. `h-10 w-10`), centrées par `inline-flex`.
+   */
+  iconOnly?: boolean;
   /** Rayon de bordure. Défaut : "0.75rem" (équivalent de rounded-lg). */
   borderRadius?: string;
-  /** Durée d'un tour de la bordure lumineuse en ms. Défaut : 3000. */
+  /** Durée d'un tour du faisceau en ms. Défaut : 3000. */
   duration?: number;
   children: React.ReactNode;
 }
 
 const VARIANTS = {
   primary:
-    "bg-[#F26D3D] text-white hover:bg-[#ff7a4a] border-transparent",
+    "bg-[#C9470F] text-white hover:bg-[#B63C0C] border-transparent",
   outline:
     "bg-[#F26D3D]/10 text-[#F26D3D] hover:bg-[#F26D3D] hover:text-white border-transparent",
   ghost:
@@ -33,47 +40,67 @@ const SIZES = {
   lg: "px-6 py-3 text-sm",
 } as const;
 
+/** Convertit un rayon CSS ("0.75rem", "16px") en pixels pour le offset-path. */
+function radiusToPx(radius: string): number {
+  const n = parseFloat(radius);
+  if (Number.isNaN(n)) return 12;
+  return radius.endsWith("rem") ? Math.round(n * 16) : Math.round(n);
+}
+
 /**
- * MovingButton — bouton premium centralisé avec bordure lumineuse animée.
+ * MovingButton — bouton premium centralisé à bordure animée.
  *
- * Remplace l'ancien SnakeButton : la bordure suit un point lumineux qui
- * parcourt le contour du bouton (orange → bleu, palette signature).
- *
- * Le span interne est `inline-flex items-center gap-2` pour garantir
- * que les icônes restent alignées horizontalement avec le texte,
- * peu importe le contenu passé en `children`.
+ * Composant unique pour tous les boutons du site (CTA, formulaire, icônes,
+ * basculeurs…). Le faisceau dégradé (AnimatedButtonBorder) parcourt le
+ * contour via offset-path. Les couleurs de fond/texte restent celles des
+ * variantes (primary, outline, ghost, subtle) : seuls l'anneau et son
+ * faisceau bougent.
  *
  * Utilisation :
  *   <MovingButton variant="primary" size="lg" onClick={...}>
  *     Explorer nos services <ArrowRight className="h-4 w-4" />
- *  </MovingButton>
+ *   </MovingButton>
+ *
+ *   <MovingButton iconOnly className="h-10 w-10" onClick={...}>
+ *     <Menu className="h-5 w-5" />
+ *   </MovingButton>
  */
-export function MovingButton({
-  variant = "primary",
-  size = "md",
-  borderRadius = "0.75rem",
-  duration = 3000,
-  className,
-  children,
-  ...props
-}: MovingButtonProps) {
-  return (
-    <Button
-      borderRadius={borderRadius}
-      duration={duration}
-      className={cn(
-        "font-mono font-semibold uppercase tracking-wider transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed border border-transparent",
-        VARIANTS[variant],
-        SIZES[size],
-        className
-      )}
-      {...props}
-    >
-      <span className="relative z-10 inline-flex items-center gap-2">
-        {children}
-     </span>
-   </Button>
-  );
-}
+export const MovingButton = forwardRef<HTMLButtonElement, MovingButtonProps>(
+  function MovingButton(
+    {
+      variant = "primary",
+      size = "md",
+      iconOnly = false,
+      borderRadius = "0.75rem",
+      duration = 3000,
+      className,
+      children,
+      ...props
+    },
+    ref
+  ) {
+    return (
+      <button
+        ref={ref}
+        className={cn(
+          "relative inline-flex items-center justify-center font-mono font-semibold uppercase tracking-wider transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed border border-transparent",
+          !iconOnly && SIZES[size],
+          VARIANTS[variant],
+          className
+        )}
+        style={{ borderRadius }}
+        {...props}
+      >
+        <AnimatedButtonBorder
+          borderRadius={radiusToPx(borderRadius)}
+          duration={duration / 1000}
+        />
+        <span className="relative z-10 inline-flex items-center gap-2">
+          {children}
+        </span>
+      </button>
+    );
+  }
+);
 
 export default MovingButton;

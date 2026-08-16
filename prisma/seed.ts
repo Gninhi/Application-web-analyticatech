@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { db } from "@/lib/db/client";
 
 async function seed() {
@@ -547,7 +548,8 @@ async function seed() {
   ];
 
   for (const p of postsData) {
-    const categoryId = catMap.get(p.categoryKey)!;
+    const categoryId = catMap.get(p.categoryKey);
+    if (!categoryId) throw new Error(`Catégorie manquante pour le post "${p.slug}"`);
     const post = await db.blogPost.upsert({
       where: { slug: p.slug },
       update: {

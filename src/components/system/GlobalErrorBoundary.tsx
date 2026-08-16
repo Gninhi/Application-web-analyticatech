@@ -2,7 +2,7 @@
 
 import React from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/moving-border";
+import { MovingButton } from "@/components/interactive/MovingButton";
 
 interface Props {
   children: React.ReactNode;
@@ -62,15 +62,15 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
                 {this.state.error.message}
             </pre>
             )}
-            <Button
+            <MovingButton
               onClick={this.handleReload}
               borderRadius="0.5rem"
               duration={3000}
-              className="mt-6 inline-flex items-center gap-2 bg-[#F26D3D] px-5 py-2.5 font-mono text-sm font-semibold text-white transition hover:bg-[#ff7a4a] focus-visible:outline-2 focus-visible:outline-offset-2"
+              className="mt-6 bg-[#C9470F] px-5 py-2.5 text-sm text-white hover:bg-[#B63C0C]"
             >
               <RefreshCw className="h-4 w-4" aria-hidden />
               RÉINITIALISER LE SYSTÈME
-        </Button>
+        </MovingButton>
       </div>
     </div>
       );

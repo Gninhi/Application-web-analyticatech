@@ -6,7 +6,7 @@ export const getCapabilities = cache(async (locale: Locale = "fr"): Promise<Capa
   const raw = await db.capability.findMany({
     orderBy: { order: "asc" },
     include: {
-      translations: { where: { locale: locale as any } },
+      translations: { where: { locale: locale } },
       features: { orderBy: { order: "asc" } },
     },
   });

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Cookie, Check, X } from "lucide-react";
-import { Button } from "@/components/ui/moving-border";
+import { MovingButton } from "@/components/interactive/MovingButton";
 
 const CONSENT_KEY = "at-cookie-consent";
 const CONSENT_VERSION = "1.0"; // bump si la politique change → re-demande le consentement
@@ -80,7 +80,7 @@ export function CookieConsent() {
           aria-label="Consentement aux cookies"
           aria-live="polite"
         >
-          <div className="glass-card rounded-2xl border border-black/15 dark:border-white/15 shadow-2xl shadow-black/50 p-5 md:p-6">
+          <div className="glass-card rounded-2xl border border-black/15 dark:border-white/15 p-5 md:p-6">
             <div className="flex items-start gap-3 mb-3">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#F26D3D]/40 bg-[#F26D3D]/10">
                 <Cookie className="h-5 w-5 text-[#F26D3D]" aria-hidden />
@@ -96,36 +96,41 @@ export function CookieConsent() {
                   pouvez refuser sans impact sur la navigation.
                 </p>
               </div>
-              <Button
+              <MovingButton
                 onClick={() => saveChoice("refused")}
                 aria-label="Fermer le bandeau (refuser)"
+                iconOnly
                 borderRadius="0.5rem"
                 duration={4000}
-                className="shrink-0 h-8 w-8 flex items-center justify-center bg-white/10 dark:bg-white/5 backdrop-blur-md text-slate-500 hover:text-slate-400 dark:hover:text-slate-400 dark:text-slate-300 transition-colors"
+                className="shrink-0 h-8 w-8 bg-white/10 dark:bg-white/5 backdrop-blur-md text-slate-500 hover:text-slate-400 dark:hover:text-slate-400 dark:text-slate-300"
               >
                 <X className="h-4 w-4" aria-hidden />
-             </Button>
+             </MovingButton>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-2 mt-4">
-              <Button
+              <MovingButton
                 onClick={() => saveChoice("accepted")}
+                variant="primary"
+                size="sm"
                 borderRadius="0.5rem"
                 duration={2500}
-                className="flex-1 inline-flex items-center justify-center gap-2 bg-[#F26D3D] px-4 py-2.5 font-mono text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-[#ff7a4a] neon-glow"
+                className="flex-1 neon-glow"
               >
                 <Check className="h-4 w-4" aria-hidden />
                 Tout accepter
-            </Button>
-              <Button
+            </MovingButton>
+              <MovingButton
                 onClick={() => saveChoice("refused")}
+                variant="ghost"
+                size="sm"
                 borderRadius="0.5rem"
                 duration={3000}
-                className="flex-1 inline-flex items-center justify-center gap-2 bg-[#03318C]/8 dark:bg-white/5 px-4 py-2.5 font-mono text-xs font-semibold uppercase tracking-wider text-[#03318C] dark:text-slate-300 transition hover:bg-[#03318C]/15 dark:hover:bg-white/15"
+                className="flex-1"
               >
                 <X className="h-4 w-4" aria-hidden />
                 Tout refuser
-            </Button>
+            </MovingButton>
           </div>
 
             <p className="mt-3 text-[10px] text-slate-500 font-mono">

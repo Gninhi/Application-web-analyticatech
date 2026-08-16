@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Send, ShieldCheck, Github, Linkedin, Twitter } from "lucide-react";
-import { type ViewKey } from "@/lib/i18n/data-fr";
+import { type ViewKey } from "@/types/content";
 import { NavLink } from "@/components/interactive/NavLink";
 import { Logo } from "@/components/branding/Logo";
-import { Button } from "@/components/ui/moving-border";
+import { MovingButton } from "@/components/interactive/MovingButton";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
 
@@ -16,7 +16,10 @@ interface FooterProps {
   onNavigate: (view: ViewKey) => void;
 }
 
-/** Horloge temps réel au format UTC HH:MM:SS. */
+/** Horloge temps réel au format UTC HH:MM:SS.
+ *  Mise à jour limitée (~1 tick/5s) et démarrée après le chargement/idle :
+ *  un tick toutes les secondes pendant la fenêtre de chargement crée des
+ *  tâches main-thread inutiles (pénalise TBT et LCP simulé). */
 function useUtcClock() {
   const [time, setTime] = useState<string>("");
   useEffect(() => {
@@ -28,8 +31,18 @@ function useUtcClock() {
       setTime(`${hh}:${mm}:${ss}`);
     };
     update();
-    const id = setInterval(update, 1000);
-    return () => clearInterval(id);
+    let id: number | null = null;
+    const startTicking = () => {
+      id = window.setInterval(update, 5000);
+    };
+    if (typeof requestIdleCallback === "function") {
+      id = requestIdleCallback(startTicking);
+    } else {
+      id = window.setTimeout(startTicking, 5000);
+    }
+    return () => {
+      if (id) clearInterval(id);
+    };
   }, []);
   return time;
 }
@@ -78,7 +91,7 @@ export function Footer({ onNavigate }: FooterProps) {
               <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-300">
                 System Online
               </span>
-              <span className="mx-1 h-3 w-px bg-white/15" aria-hidden />
+              <span className="mx-1 h-3 w-px bg-black/15 dark:bg-white/15" aria-hidden />
               <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
                 UTC {utc}
               </span>
@@ -133,17 +146,18 @@ export function Footer({ onNavigate }: FooterProps) {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={t("footer.newsletter.placeholder")}
                   aria-label="Adresse email pour la newsletter"
-                  className="terminal-input flex-1 min-w-0 rounded-lg bg-black/30 border border-black/10 dark:border-white/10 px-3 py-2 font-mono text-xs text-slate-800 dark:text-slate-100 placeholder:text-slate-500 outline-none transition"
+                  className="terminal-input flex-1 min-w-0 min-h-9 rounded-lg bg-black/30 border border-black/10 dark:border-white/10 px-3 py-2 font-mono text-xs text-slate-800 dark:text-slate-100 placeholder:text-slate-500 outline-none transition"
                 />
-                <Button
+                <MovingButton
                   type="submit"
                   aria-label="S'abonner à la newsletter"
+                  iconOnly
                   borderRadius="0.5rem"
                   duration={3500}
-                  className="h-9 w-9 shrink-0 flex items-center justify-center bg-[#F26D3D] text-white transition hover:bg-[#ff7a4a]"
+                  className="h-9 w-9 shrink-0 bg-[#C9470F] text-white hover:bg-[#B63C0C]"
                 >
                   <Send className="h-4 w-4" aria-hidden />
-            </Button>
+            </MovingButton>
               </div>
               {subscribed && (
                 <p className="font-mono text-[10px] text-[#4CAF50] uppercase tracking-wider">
@@ -162,7 +176,7 @@ export function Footer({ onNavigate }: FooterProps) {
                 return (
                   <a
                     key={social.label}
-                    href={social.url!}
+                    href={social.url ?? "#"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex h-9 w-9 items-center justify-center rounded-lg glass text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] transition-colors"
@@ -182,30 +196,33 @@ export function Footer({ onNavigate }: FooterProps) {
             <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
               © {new Date().getFullYear()} Analyticatech — {t("footer.copyright")}
           </p>
-            <Button
+            <MovingButton
+              variant="ghost"
               onClick={() => onNavigate("rgpd")}
               borderRadius="0.375rem"
               duration={4000}
-              className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] transition-colors px-2 py-1"
+              className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] px-2 py-1"
             >
               {t("footer.confidentiality")}
-         </Button>
-            <Button
+         </MovingButton>
+            <MovingButton
+              variant="ghost"
               onClick={() => onNavigate("legal")}
               borderRadius="0.375rem"
               duration={4000}
-              className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] transition-colors px-2 py-1"
+              className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] px-2 py-1"
             >
               {t("footer.legal")}
-         </Button>
-            <Button
+         </MovingButton>
+            <MovingButton
+              variant="ghost"
               onClick={() => onNavigate("about")}
               borderRadius="0.375rem"
               duration={4000}
-              className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] transition-colors px-2 py-1"
+              className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] px-2 py-1"
             >
               {t("footer.about")}
-         </Button>
+         </MovingButton>
        </div>
           <div className="flex items-center gap-4">
             <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">

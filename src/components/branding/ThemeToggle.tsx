@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/moving-border";
+import { MovingButton } from "@/components/interactive/MovingButton";
 
 /**
  * ThemeToggle — bouton de bascule entre thème clair et sombre.
@@ -41,12 +41,13 @@ export function ThemeToggle() {
     : "Changer de thème";
 
   return (
-    <Button
+    <MovingButton
       onClick={toggle}
       aria-label={ariaLabel}
+      iconOnly
       borderRadius="0.625rem"
       duration={4000}
-      className="h-10 w-10 flex items-center justify-center bg-white/10 dark:bg-white/5 backdrop-blur-md text-slate-800 dark:text-slate-100 hover:text-[#F26D3D] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
+      className="h-10 w-10 bg-white/10 dark:bg-white/5 backdrop-blur-md text-slate-800 dark:text-slate-100 hover:text-[#F26D3D]"
     >
       {mounted && (
         <AnimatePresence mode="wait" initial={false}>
@@ -71,8 +72,8 @@ export function ThemeToggle() {
               <Moon className="h-5 w-5 text-slate-700" aria-hidden />
            </motion.span>
           )}
-       </AnimatePresence>
+        </AnimatePresence>
       )}
-   </Button>
+   </MovingButton>
   );
 }

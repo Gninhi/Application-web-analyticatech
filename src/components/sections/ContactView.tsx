@@ -19,8 +19,9 @@ import { safeFetch, FetchError } from "@/lib/http/safe-fetch";
 import { cn } from "@/lib/utils/cn";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
-import { PixelRevealTitle } from "@/components/interactive/PixelRevealTitle";
 import { MovingButton } from "@/components/interactive/MovingButton";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { SectionContainer } from "@/components/ui/SectionContainer";
 
 interface FormState {
   prenom: string;
@@ -78,7 +79,7 @@ export function ContactView() {
       }
       setErrors(fieldErrors);
       setStatus("error");
-      setServerMsg("Validation échouée — corrigez les champs signalés.");
+      setServerMsg(t("contact.err.validation"));
       return;
     }
 
@@ -122,9 +123,9 @@ export function ContactView() {
     } catch (err) {
       setStatus("error");
       if (err instanceof FetchError && err.status === 429) {
-        setServerMsg("Trop de tentatives. Réessayez dans une heure.");
+        setServerMsg(t("contact.err.ratelimit"));
       } else {
-        setServerMsg("Erreur réseau. Vérifiez votre connexion et réessayez.");
+        setServerMsg(t("contact.err.network"));
       }
     }
   };
@@ -133,35 +134,15 @@ export function ContactView() {
     <div className="relative">
       {/* En-tête */}
       <section className="pt-32 md:pt-40 pb-10">
-        <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+        <SectionContainer>
+          <PageHeader
+            kicker={t("contact.kicker")}
+            title={t("contact.title1")}
+            accent={t("contact.title2")}
+            description={t("contact.desc")}
             className="max-w-3xl"
-          >
-            <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
-              {"// Canal Sécurisé — Chiffré"}
-            </p>
-            <h1 className="font-display text-4xl md:text-6xl font-bold text-[#F26D3D] tracking-tight mb-4">
-              <PixelRevealTitle
-                text={t("contact.title1")}
-                as="span"
-                className="block"
-                delay={0.1}
-              />
-              <PixelRevealTitle
-                text={t("contact.title2")}
-                as="span"
-                className="block text-neon"
-                delay={0.45}
-              />
-            </h1>
-            <p className="text-slate-400 dark:text-slate-300 leading-relaxed text-lg">
-              {t("contact.desc")}
-            </p>
-          </motion.div>
-        </div>
+          />
+        </SectionContainer>
       </section>
 
       <section className="pb-24">
@@ -170,15 +151,15 @@ export function ContactView() {
           <div className="lg:col-span-3">
             <div
               ref={terminalRef}
-              className="glass-card rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 shadow-2xl shadow-black/40"
+              className="glass-card rounded-2xl overflow-hidden border border-black/10 dark:border-white/10"
             >
               {/* Barre de titre terminal */}
-              <div className="flex items-center gap-2 px-4 py-3 border-b border-black/10 dark:border-white/10 bg-black/30">
+              <div className="flex items-center gap-2 px-4 py-3 border-b border-black/10 dark:border-white/10 bg-slate-900/70">
                 <span className="h-3 w-3 rounded-full bg-[#F26D3D]/80" aria-hidden />
                 <span className="h-3 w-3 rounded-full bg-[#4CAF50]/70" aria-hidden />
                 <span className="h-3 w-3 rounded-full bg-slate-500/60" aria-hidden />
-                <span className="ml-3 font-mono text-[11px] uppercase tracking-widest text-slate-400 dark:text-slate-300">
-                  analyticatech@sécurisé ~ % contact --nouveau
+                <span className="ml-3 font-mono text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-300">
+                  {t("contact.terminal.title")}
                 </span>
                 <Terminal className="ml-auto h-4 w-4 text-slate-500 dark:text-slate-400" aria-hidden />
               </div>
@@ -190,7 +171,7 @@ export function ContactView() {
                   <span className="text-slate-500">:</span>
                   <span className="text-sky-400">~/contact</span>
                   <span className="text-slate-500">$</span>{" "}
-                  <span className="text-slate-400 dark:text-slate-300">initier_session --chiffré</span>
+                  <span className="text-slate-500 dark:text-slate-300">{t("contact.terminal.cmd")}</span>
                   <span className="blink-cursor" />
                 </p>
 
@@ -251,7 +232,7 @@ export function ContactView() {
                 <div>
                   <label
                     htmlFor="message"
-                    className="block font-mono text-[10px] uppercase tracking-[0.25em] text-slate-400 dark:text-slate-300 mb-2"
+                    className="block font-mono text-[10px] uppercase tracking-[0.25em] text-slate-500 dark:text-slate-300 mb-2"
                   >
                     {t("contact.fields.message")} <span className="text-[#F26D3D]">*</span>
                   </label>
@@ -260,7 +241,7 @@ export function ContactView() {
                     rows={5}
                     value={form.message}
                     onChange={(e) => update("message", e.target.value)}
-                    placeholder="$ echo 'Décrivez votre contexte, vos contraintes et objectifs…'"
+                    placeholder={t("contact.msg.placeholder")}
                     aria-invalid={!!errors.message}
                     aria-describedby={errors.message ? "message-err" : undefined}
                     className={cn(
@@ -287,7 +268,7 @@ export function ContactView() {
                     className="mt-0.5 h-4 w-4 shrink-0 accent-[#F26D3D]"
                     aria-invalid={!!errors.consent}
                   />
-                  <span className="text-xs text-slate-400 dark:text-slate-300 leading-relaxed">
+                  <span className="text-xs text-slate-500 dark:text-slate-300 leading-relaxed">
                     {t("contact.consent")}
                   </span>
                 </label>
@@ -367,8 +348,8 @@ export function ContactView() {
                         {status === "success" && serverMsg ? serverMsg : t("contact.success")}
                       </p>
                       {reference && (
-                        <p className="mt-1.5 font-mono text-[11px] text-slate-400 dark:text-slate-300">
-                          Référence ticket :{" "}
+                        <p className="mt-1.5 font-mono text-[11px] text-slate-500 dark:text-slate-300">
+                          {t("contact.reference")}{" "}
                           <span className="text-[#F26D3D]">{reference}</span>
                         </p>
                       )}
@@ -394,14 +375,14 @@ export function ContactView() {
             {/* Badges sécurité */}
             <div className="mt-4 flex flex-wrap items-center gap-2">
               {[
-                { icon: Lock, t: "TLS 1.3" },
-                { icon: ShieldCheck, t: "Conforme RGPD" },
-                { icon: Lock, t: "Chiffré bout-en-bout" },
-                { icon: ShieldCheck, t: "Pot-de-miel anti-spam" },
+                { icon: Lock, t: t("contact.badge.tls") },
+                { icon: ShieldCheck, t: t("contact.badge.rgpd") },
+                { icon: Lock, t: t("contact.badge.encrypted") },
+                { icon: ShieldCheck, t: t("contact.badge.honeypot") },
               ].map((b) => (
                 <span
                   key={b.t}
-                  className="inline-flex items-center gap-1.5 rounded-full glass px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-300"
+                  className="inline-flex items-center gap-1.5 rounded-full glass px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-300"
                 >
                   <b.icon className="h-3 w-3 text-[#4CAF50]" aria-hidden />
                   {b.t}
@@ -423,7 +404,7 @@ export function ContactView() {
                   </span>
                   <div>
                     <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
-                      Email
+                      {t("contact.channel.email")}
                     </p>
                     <a href={`mailto:${siteConfig.email}`} className="text-sm text-slate-700 dark:text-slate-200 hover:text-[#F26D3D] transition-colors">
                       {siteConfig.email}
@@ -436,7 +417,7 @@ export function ContactView() {
                   </span>
                   <div>
                     <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
-                      Téléphone
+                      {t("contact.channel.phone")}
                     </p>
                     <p className="text-sm text-slate-700 dark:text-slate-200">{siteConfig.phone}</p>
                   </div>
@@ -447,7 +428,7 @@ export function ContactView() {
                   </span>
                   <div>
                     <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
-                      Siège
+                      {t("contact.channel.hq")}
                     </p>
                     <p className="text-sm text-slate-700 dark:text-slate-200">
                       {siteConfig.streetAddress}, {siteConfig.postalCode} {siteConfig.city}
@@ -472,7 +453,7 @@ export function ContactView() {
                     key={s.l}
                     className="flex items-center justify-between py-2 border-b border-black/10 dark:border-white/10 last:border-0"
                   >
-                    <span className="text-sm text-slate-400 dark:text-slate-300">{s.l}</span>
+                    <span className="text-sm text-slate-500 dark:text-slate-300">{s.l}</span>
                     <span className="font-mono text-xs text-[#4CAF50] uppercase tracking-wider">
                       {s.v}
                     </span>
@@ -488,7 +469,7 @@ export function ContactView() {
                   {t("contact.confidentiality.title")}
                 </h3>
               </div>
-              <p className="text-xs text-slate-400 dark:text-slate-300 leading-relaxed">
+              <p className="text-xs text-slate-500 dark:text-slate-300 leading-relaxed">
                 {t("contact.confidentiality.desc")}
               </p>
             </div>
@@ -525,7 +506,7 @@ function TerminalField({
     <div>
       <label
         htmlFor={name}
-        className="block font-mono text-[10px] uppercase tracking-[0.25em] text-slate-400 dark:text-slate-300 mb-2"
+        className="block font-mono text-[10px] uppercase tracking-[0.25em] text-slate-500 dark:text-slate-300 mb-2"
       >
         {label} {required && <span className="text-[#F26D3D]">*</span>}
       </label>

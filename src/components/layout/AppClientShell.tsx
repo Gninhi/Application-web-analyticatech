@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { ImmersiveBackground } from "@/components/effects/ImmersiveBackground";
 import { Navbar } from "@/components/layout/Navbar";
@@ -8,18 +9,57 @@ import { Footer } from "@/components/layout/Footer";
 import { BackToTop } from "@/components/layout/BackToTop";
 import { CookieConsent } from "@/components/branding/CookieConsent";
 import { HomeView } from "@/components/sections/HomeView";
-import { ServicesView } from "@/components/sections/ServicesView";
-import { SolutionsView } from "@/components/sections/SolutionsView";
-import { BlogView } from "@/components/sections/BlogView";
-import { ContactView } from "@/components/sections/ContactView";
-import { LegalView } from "@/components/sections/LegalView";
-import { AboutView } from "@/components/sections/AboutView";
-import { ServiceDetailView, SolutionDetailView, BlogDetailView } from "@/components/sections/DetailView";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ContentProvider } from "@/components/providers/ContentProvider";
 import { I18nProvider } from "@/lib/i18n/provider";
-import type { ViewKey } from "@/lib/i18n/data-fr";
+import type { ViewKey } from "@/types/content";
 import type { AppContentDTO } from "@/types/content";
+
+/* === Code splitting des vues ===
+ * Les vues non-accueil sont chargées à la demande (next/dynamic) : leur JS
+ * n'est ni parsé ni hydraté au chargement initial, ce qui réduit fortement
+ * le Total Blocking Time. La vue accueil (initiale) reste statique. */
+const ServicesView = dynamic(
+  () => import("@/components/sections/ServicesView").then((m) => m.ServicesView),
+  { loading: () => <ViewLoading /> }
+);
+const SolutionsView = dynamic(
+  () => import("@/components/sections/SolutionsView").then((m) => m.SolutionsView),
+  { loading: () => <ViewLoading /> }
+);
+const BlogView = dynamic(
+  () => import("@/components/sections/BlogView").then((m) => m.BlogView),
+  { loading: () => <ViewLoading /> }
+);
+const ContactView = dynamic(
+  () => import("@/components/sections/ContactView").then((m) => m.ContactView),
+  { loading: () => <ViewLoading /> }
+);
+const LegalView = dynamic(
+  () => import("@/components/sections/LegalView").then((m) => m.LegalView),
+  { loading: () => <ViewLoading /> }
+);
+const AboutView = dynamic(
+  () => import("@/components/sections/AboutView").then((m) => m.AboutView),
+  { loading: () => <ViewLoading /> }
+);
+const ServiceDetailView = dynamic(
+  () => import("@/components/sections/DetailView").then((m) => m.ServiceDetailView),
+  { loading: () => <ViewLoading /> }
+);
+const SolutionDetailView = dynamic(
+  () => import("@/components/sections/DetailView").then((m) => m.SolutionDetailView),
+  { loading: () => <ViewLoading /> }
+);
+const BlogDetailView = dynamic(
+  () => import("@/components/sections/DetailView").then((m) => m.BlogDetailView),
+  { loading: () => <ViewLoading /> }
+);
+
+/** Fallback léger pendant le chargement d'une vue à la demande. */
+function ViewLoading() {
+  return <div className="min-h-[60vh]" aria-hidden />;
+}
 
 interface AppClientShellProps {
   content: AppContentDTO;
@@ -28,7 +68,10 @@ interface AppClientShellProps {
 export function AppClientShell({ content }: AppClientShellProps) {
   const [view, setView] = useState<ViewKey>("home");
   const [detailId, setDetailId] = useState<string>("");
-  const [ready, setReady] = useState(false);
+  // `mounted` permet de rendre le premier montage immédiatement visible
+  // (pas d'entrée animée qui retarde le premier paint utile) tout en
+  // conservant les transitions animées entre vues.
+  const [mounted, setMounted] = useState(false);
 
   /** Navigation vers une vue simple (sans détail). */
   const handleNavigate = useCallback((next: ViewKey) => {
@@ -44,10 +87,12 @@ export function AppClientShell({ content }: AppClientShellProps) {
     window.scrollTo(0, 0);
   }, []);
 
-  // Marqueur de montée pour l'animation d'entrée
+  // Marqueur de premier montage pour l'animation d'entrée des vues
   useEffect(() => {
-    const t = setTimeout(() => setReady(true), 50);
-    return () => clearTimeout(t);
+    // Initialisé côté client uniquement (évite un premier rendu animé qui
+    // retarde le premier paint) — pattern standard SSR/hydration.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
   }, []);
 
   // Focus management + annonce SR au changement de vue
@@ -60,13 +105,13 @@ export function AppClientShell({ content }: AppClientShellProps) {
       <ContentProvider content={content}>
         <JsonLd />
         <div className="relative min-h-screen flex flex-col">
-          {/* Fond immersif Three.js (fixed, -z-10) */}
+          {/* Fond dégradé fixe (le canevas de particules « Studio Géométrique 3D » a été retiré) */}
           <ImmersiveBackground />
 
           {/* Skip-link accessibilité */}
           <a
             href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:rounded-lg focus:bg-[#F26D3D] focus:px-4 focus:py-2 focus:font-mono focus:text-sm focus:text-white"
+            className="sr-only leading-7 text-slate-900 dark:text-slate-100 focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:rounded-lg focus:bg-[#C9470F] focus:px-4 focus:py-2 focus:font-mono focus:text-sm focus:text-white"
           >
             Aller au contenu principal
           </a>
@@ -94,12 +139,12 @@ export function AppClientShell({ content }: AppClientShellProps) {
             <AnimatePresence mode="wait">
               <motion.div
                 key={view + detailId}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: ready ? 1 : 0, y: 0 }}
+                initial={mounted ? { opacity: 0, y: 12 } : false}
+                animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.35, ease: "easeOut" }}
               >
-                {view === "home" && <HomeView onNavigate={handleNavigate} />}
+                {view === "home" && <HomeView onNavigate={handleNavigate} onNavigateDetail={handleNavigateDetail} />}
                 {view === "services" && <ServicesView onNavigate={handleNavigate} onNavigateDetail={handleNavigateDetail} />}
                 {view === "solutions" && <SolutionsView onNavigate={handleNavigate} onNavigateDetail={handleNavigateDetail} />}
                 {view === "blog" && <BlogView onNavigateDetail={handleNavigateDetail} />}
