@@ -139,6 +139,10 @@ export const metadata: Metadata = {
 // Script d'init du thème (noncé) : pose la classe sur <html> avant le premier
 // paint pour éviter le FOUC. Compatible CSP nonce (script-src sans
 // 'unsafe-inline'). Doit rester synchrone avec ThemeProvider.
+// `suppressHydrationWarning` : le nonce est régénéré par le proxy à chaque
+// requête → la passe SSR et l'hydratation peuvent voir des valeurs différentes.
+// Le contenu du script est identique des deux côtés ; seul l'attribut nonce
+// varie, c'est ce que React doit ignorer lors de l'hydratation.
 const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem("theme");var dark=t?t==="dark":true;var c=document.documentElement.classList;c.remove("light","dark");c.add(dark?"dark":"light")}catch(e){}})();`;
 
 export default async function RootLayout({
@@ -164,6 +168,7 @@ export default async function RootLayout({
       >
         <script
           nonce={nonce}
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
         />
         <ThemeProvider>
