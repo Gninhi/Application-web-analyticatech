@@ -9,6 +9,9 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
@@ -26,6 +29,7 @@
     "next": "^16.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "resend": "^4.8.0",
     "tailwind-merge": "^3.3.1",
     "zod": "^4.0.2"
   },
@@ -42,15 +46,8 @@
     "tailwindcss-animate": "^1.0.7",
     "tsx": "^4.19.2",
     "tw-animate-css": "^1.3.5",
-    "typescript": "^5"
-  },
-  "peerDependencies": {
-    "resend": "^4.8.0"
-  },
-  "peerDependenciesMeta": {
-    "resend": {
-      "optional": true
-    }
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   },
   "engines": {
     "node": ">=20.0.0"

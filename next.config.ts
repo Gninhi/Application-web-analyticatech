@@ -11,6 +11,8 @@ import type { NextConfig } from "next";
  */
 const nextConfig: NextConfig = {
   output: "standalone",
+  // Dossier de build isolé pour les tests e2e (ne touche pas au build prod).
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   reactStrictMode: true,
   turbopack: {
     root: __dirname,
