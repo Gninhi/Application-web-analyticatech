@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { ImmersiveBackground } from "@/components/effects/ImmersiveBackground";
@@ -95,8 +95,15 @@ export function AppClientShell({ content }: AppClientShellProps) {
     setMounted(true);
   }, []);
 
-  // Focus management + annonce SR au changement de vue
+  // Focus management + annonce SR au changement de vue.
+  // Le premier rendu est exclu : focuser main dès le chargement neutraliserait
+  // le skip-link (premier Tab = CTA du hero au lieu d'« Aller au contenu »).
+  const isFirstRender = useRef(true);
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     document.getElementById("main-content")?.focus();
   }, [view, detailId]);
 

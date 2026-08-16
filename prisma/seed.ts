@@ -836,6 +836,7 @@ async function seed() {
     },
   ];
 
+  await db.activityLogEntry.deleteMany({});
   for (const a of activityLogs) {
     const entry = await db.activityLogEntry.create({
       data: { time: a.time, level: a.level, order: a.order },
@@ -876,6 +877,7 @@ async function seed() {
     },
   ];
 
+  await db.companyValue.deleteMany({});
   for (const v of companyValues) {
     const val = await db.companyValue.create({
       data: { iconKey: v.iconKey, order: v.order },
@@ -916,6 +918,7 @@ async function seed() {
     },
   ];
 
+  await db.deliveryStep.deleteMany({});
   for (const ds of deliverySteps) {
     const step = await db.deliveryStep.create({
       data: { iconKey: ds.iconKey, order: ds.order },
@@ -960,6 +963,8 @@ async function seed() {
       en: { heading: "5. Retention Period", body: "Data is stored for 90 days following your last interaction, then permanently deleted." },
     },
   ];
+
+  await db.legalSection.deleteMany({});
 
   for (const s of rgpdSections) {
     const sec = await db.legalSection.create({

@@ -196,7 +196,7 @@ export function Navbar({ activeView, onNavigate }: NavbarProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-[60] md:hidden bg-background/95 backdrop-blur-xl grid-military flex flex-col"
+            className="fixed inset-0 z-[90] md:hidden bg-background/95 backdrop-blur-xl grid-military flex flex-col"
             ref={dialogRef}
             id="mobile-menu"
             role="dialog"
