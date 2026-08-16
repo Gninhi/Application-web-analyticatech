@@ -52,7 +52,7 @@ function LiveClock({ locale }: { locale: string }) {
 }
 
 function TrendIcon({ value, invert }: { value: number | null | undefined; invert: boolean }) {
-  if (value == null || value === 0) return <Minus className="h-3 w-3 text-slate-500" />;
+  if (value == null || value === 0) return <Minus className="h-3 w-3 text-slate-600 dark:text-slate-400" />;
   const positive = invert ? value < 0 : value > 0;
   return positive ? (
     <TrendingUp className="h-3 w-3 text-emerald-400" />
@@ -151,7 +151,7 @@ function CompactMetricCard({ metric, locale }: { metric: MetricDTO; locale: stri
   return (
     <div className="glass group relative flex flex-col justify-between overflow-hidden rounded-xl border-black/10 dark:border-white/10 p-4 transition-all duration-300 hover:border-[#F26D3D]/30 hover:bg-white/10 dark:hover:bg-white/10">
       <div className="flex items-center justify-between gap-2 mb-3">
-        <span className="font-mono text-[9px] uppercase tracking-widest text-slate-500 truncate max-w-[100px]">{metric.label}</span>
+        <span className="font-mono text-[9px] uppercase tracking-widest text-slate-600 dark:text-slate-400 truncate max-w-[100px]">{metric.label}</span>
         <TrendIcon value={metric.trend} invert={invert} />
       </div>
       <div className="flex items-end justify-between gap-2">
@@ -395,7 +395,7 @@ export function DataConsoleBento() {
                   </span>
                 ))}
               </div>
-              <span className="font-mono text-[9px] uppercase tracking-widest text-slate-500 dark:text-slate-500 hidden md:block">
+              <span className="font-mono text-[9px] uppercase tracking-widest text-slate-600 dark:text-slate-400 hidden md:block">
                 {t("dataconsole.tag")} · v2.4.1
               </span>
             </div>

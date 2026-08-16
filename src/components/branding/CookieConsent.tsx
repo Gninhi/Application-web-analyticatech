@@ -133,7 +133,7 @@ export function CookieConsent() {
             </MovingButton>
           </div>
 
-            <p className="mt-3 text-[10px] text-slate-500 font-mono">
+            <p className="mt-3 text-[10px] text-slate-600 dark:text-slate-400 font-mono">
               Conforme RGPD · Données stockées localement · Aucune revente
             </p>
           </div>

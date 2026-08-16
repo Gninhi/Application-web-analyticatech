@@ -51,6 +51,23 @@ const EMPTY: FormState = {
 
 type Status = "idle" | "submitting" | "success" | "error";
 
+/** Ordre naturel des champs dans le formulaire — pour le focus du 1er champ invalide. */
+const FIELD_ORDER: (keyof FormState)[] = [
+  "prenom",
+  "nom",
+  "email",
+  "entreprise",
+  "sujet",
+  "message",
+  "consent",
+];
+
+/** A11y : après une validation échouée, déplace le focus vers le 1er champ invalide. */
+function focusFirstInvalid(errors: Partial<Record<keyof FormState, string>>) {
+  const first = FIELD_ORDER.find((f) => errors[f]);
+  if (first) document.getElementById(first)?.focus();
+}
+
 export function ContactView() {
   const { t } = useI18n();
   const { siteConfig } = useAppContent();
@@ -80,6 +97,7 @@ export function ContactView() {
       setErrors(fieldErrors);
       setStatus("error");
       setServerMsg(t("contact.err.validation"));
+      focusFirstInvalid(fieldErrors);
       return;
     }
 
@@ -118,6 +136,7 @@ export function ContactView() {
             fe[err.field as keyof FormState] = err.message;
           }
           setErrors(fe);
+          focusFirstInvalid(fe);
         }
       }
     } catch (err) {
@@ -168,9 +187,9 @@ export function ContactView() {
                 {/* Ligne de commande simulée */}
                 <p className="font-mono text-xs text-slate-500 dark:text-slate-400">
                   <span className="text-[#4CAF50]">root@analyticatech</span>
-                  <span className="text-slate-500">:</span>
+                  <span className="text-slate-600 dark:text-slate-400">:</span>
                   <span className="text-sky-400">~/contact</span>
-                  <span className="text-slate-500">$</span>{" "}
+                  <span className="text-slate-600 dark:text-slate-400">$</span>{" "}
                   <span className="text-slate-500 dark:text-slate-300">{t("contact.terminal.cmd")}</span>
                   <span className="blink-cursor" />
                 </p>
@@ -254,7 +273,7 @@ export function ContactView() {
                       <AlertTriangle className="h-3 w-3" aria-hidden /> {errors.message}
                     </p>
                   )}
-                  <p className="mt-1.5 font-mono text-[10px] text-slate-500 text-right">
+                  <p className="mt-1.5 font-mono text-[10px] text-slate-600 dark:text-slate-400 text-right">
                     {form.message.length}/2000
                   </p>
                 </div>
@@ -262,18 +281,20 @@ export function ContactView() {
                 {/* Consentement RGPD */}
                 <label className="flex items-start gap-3 cursor-pointer group">
                   <input
+                    id="consent"
                     type="checkbox"
                     checked={form.consent}
                     onChange={(e) => update("consent", e.target.checked)}
                     className="mt-0.5 h-4 w-4 shrink-0 accent-[#F26D3D]"
                     aria-invalid={!!errors.consent}
+                    aria-describedby={errors.consent ? "consent-err" : undefined}
                   />
                   <span className="text-xs text-slate-500 dark:text-slate-300 leading-relaxed">
                     {t("contact.consent")}
                   </span>
                 </label>
                 {errors.consent && (
-                  <p className="font-mono text-[11px] text-[#F26D3D] flex items-center gap-1.5">
+                  <p id="consent-err" className="font-mono text-[11px] text-[#F26D3D] flex items-center gap-1.5">
                     <AlertTriangle className="h-3 w-3" aria-hidden /> {errors.consent}
                   </p>
                 )}
@@ -341,6 +362,7 @@ export function ContactView() {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0 }}
+                      role="status"
                       className="rounded-lg border border-[#4CAF50]/40 bg-[#4CAF50]/10 p-4"
                     >
                       <p className="flex items-center gap-2 font-mono text-sm text-[#4CAF50]">
@@ -360,6 +382,7 @@ export function ContactView() {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0 }}
+                      role="alert"
                       className="rounded-lg border border-[#F26D3D]/40 bg-[#F26D3D]/10 p-4"
                     >
                       <p className="flex items-center gap-2 font-mono text-sm text-[#F26D3D]">

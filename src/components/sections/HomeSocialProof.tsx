@@ -113,7 +113,7 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-xs font-mono text-slate-500">
+                <div className="pt-4 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-xs font-mono text-slate-600 dark:text-slate-400">
                   <span>{t("home.insights.reading")} {post.readingTime}</span>
                   <span className="text-[#F26D3D] group-hover:translate-x-1 transition-transform inline-flex items-center gap-1 font-bold">
                     {t("home.insights.read")} <ArrowRight className="h-3 w-3" />

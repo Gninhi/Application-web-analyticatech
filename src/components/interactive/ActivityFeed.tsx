@@ -74,14 +74,14 @@ export function ActivityFeed({ logs, limit = 6, className }: ActivityFeedProps) 
             transition={{ duration: 0.35, delay: i * 0.08 }}
             className="flex items-baseline gap-2"
           >
-            <span className="shrink-0 text-slate-500 dark:text-slate-500 tabular-nums">
+            <span className="shrink-0 text-slate-600 dark:text-slate-400 tabular-nums">
               {entry.time}
             </span>
             <span
               className={cn("h-1.5 w-1.5 shrink-0 translate-y-[-1px] rounded-full", LEVEL_DOT[entry.level])}
               aria-hidden
             />
-            <span className="shrink-0 font-bold text-[9px] tracking-widest text-slate-400 dark:text-slate-500">
+            <span className="shrink-0 font-bold text-[9px] tracking-widest text-slate-600 dark:text-slate-400">
               [{LEVEL_LABEL[entry.level]}]
             </span>
             <span className={cn("break-words", LEVEL_TEXT[entry.level])}>{entry.event}</span>

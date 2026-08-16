@@ -89,7 +89,7 @@ export function SpotlightCard({
             {pattern === "dots" ? (
               <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
                 <pattern id="spotlight-dots" width="20" height="20" patternUnits="userSpaceOnUse">
-                  <circle cx="2" cy="2" r="1.2" fill="currentColor" className="text-slate-400 dark:text-slate-500" />
+                  <circle cx="2" cy="2" r="1.2" fill="currentColor" className="text-slate-400 dark:text-slate-400" />
                 </pattern>
                 <rect width="100%" height="100%" fill="url(#spotlight-dots)" />
               </svg>

@@ -65,7 +65,7 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
               >
                 <div
                   className={`p-2 rounded-xl shrink-0 mt-0.5 ${
-                    isSelected ? "bg-[#C9470F] text-white" : "bg-slate-200 dark:bg-white/10 text-slate-500"
+                    isSelected ? "bg-[#C9470F] text-white" : "bg-slate-200 dark:bg-white/10 text-slate-600 dark:text-slate-400"
                   }`}
                 >
                   <AlertCircle className="h-4 w-4" aria-hidden />

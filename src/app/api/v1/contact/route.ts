@@ -56,10 +56,23 @@ const HONEYPOT_FIELDS = ["companyUrl", "website", "fax", "phone2"] as const;
 /** Build l'allowlist d'origines depuis l'env. Fallback fail-closed sur NEXT_PUBLIC_SITE_URL. */
 function getAllowedOrigins(): string[] {
   const raw = process.env.ALLOWED_ORIGINS ?? process.env.NEXT_PUBLIC_SITE_URL ?? "";
-  return raw
+  const configured = raw
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
+  // Hors production : autorise explicitement localhost pour les tests locaux
+  // (dev, Playwright, tests manuels). En production, seule l'env fait foi
+  // (fail-closed). La protection reste assurée par le CSRF double-submit.
+  if (process.env.NODE_ENV !== "production") {
+    return [
+      ...configured,
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://127.0.0.1:3000",
+      "http://127.0.0.1:3001",
+    ];
+  }
+  return configured;
 }
 
 export async function POST(req: NextRequest) {
