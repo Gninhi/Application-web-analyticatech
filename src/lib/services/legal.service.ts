@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { db } from "@/lib/db/client";
-import type { Prisma } from "@prisma/client";
+import type { Prisma } from "@/generated/prisma/client";
 import type { LegalSectionDTO, Locale } from "@/types/content";
 
 export const getLegalSections = cache(async (locale: Locale = "fr", type?: "rgpd" | "legal"): Promise<LegalSectionDTO[]> => {
