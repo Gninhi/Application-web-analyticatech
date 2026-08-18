@@ -292,11 +292,13 @@
 
   /* Carte de la pile services — panneau adaptatif aux 2 thèmes.
      Fond = var(--bg) translucide (noir voilé en sombre, blanc laiteux en
-     clair) + blur saturé + liseré rim lumineux + ombre profonde. */
+     clair) + liseré rim lumineux + ombre profonde. PAS de backdrop-filter :
+     le décor défile derrière le panneau pendant l'empilement — un blur
+     rétroéclairé obligerait le navigateur à re-rasteriser chaque frame
+     (flou + à-coups). La translucidité (60%) + le voile (--deck-veil)
+     suffisent à la lisibilité du texte. */
   .deck-card {
-    background: color-mix(in srgb, var(--bg) 52%, transparent);
-    -webkit-backdrop-filter: blur(14px) saturate(150%);
-    backdrop-filter: blur(14px) saturate(150%);
+    background: color-mix(in srgb, var(--bg) 60%, transparent);
     border: 1px solid var(--glass-card-border);
     box-shadow:
       inset 0 1px 0 var(--glass-rim),
@@ -472,5 +474,13 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  /* Parallaxe du décor des cartes services : on gèle le transform (le
+     translateY animé par framer-motion est neutralisé par l'important).
+     Le range useTransform reste déterministe côté JS pour garantir
+     l'hydratation serveur/client. */
+  .service-card-bg {
+    transform: none !important;
   }
 }

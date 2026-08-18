@@ -67,6 +67,7 @@ db/*.db-shm
 screenshot-*.png
 /tool-results/
 /upload/
+/e2e/screenshots/
 
 # === Documentation interne / audits / suivi (non public) ===
 /AUDIT.md

@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, type CSSProperties } from "react";
-import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import {
   ArrowUpRight,
   ChevronDown,
@@ -44,9 +44,9 @@ const STEP_ICONS: Record<string, LucideIcon> = {
  *   1. En-tête (PageHeader) présentant les 5 couches d'expertise.
  *   2. Pile de cartes sticky : chaque service occupe un viewport de scroll,
  *      se colle en haut un cran plus bas que la précédente (var(--deck-gap)),
- *      et se fait recouvrir par la suivante. Le scroll est lissé par un
- *      spring (aucun à-coup) et seul le décor est transformé (parallaxe
- *      composité) → empilement 60fps.
+ *      et se fait recouvrir par la suivante. Chaque carte pilote son décor
+ *      (parallaxe subtile + assombrissement) sur sa propre fenêtre de scroll,
+ *      sans spring → empilement stable, déterministe et composité 60fps.
  *   3. Méthode de livraison : les 4 phases (DeliveryStepDTO) en pipeline.
  *
  * Le contenu des cartes est entièrement piloté par les données (ServiceDTO)
@@ -58,8 +58,35 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
   const { services, deliverySteps } = useAppContent();
   const reduceMotion = useReducedMotion();
 
-  // Progression de scroll globale, consommée par chaque carte sticky.
-  const { scrollYProgress } = useScroll();
+  // Offset de scroll brut (rAF-throttlé par framer-motion) + géométrie du
+  // deck mesurée à l'écran : on en déduit la fenêtre de scroll réelle de
+  // chaque carte (une hauteur de viewport exactement), ce qui cale le
+  // parallaxe et l'assombrissement sur le cycle de vie réel de la carte —
+  // plus de dérive entre décor et cadre, et plus de spring (aucun lag).
+  const { scrollY } = useScroll();
+  const deckRef = useRef<HTMLElement>(null);
+  const [geometry, setGeometry] = useState({ deckTop: 0, vh: 1000 });
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const el = deckRef.current;
+      if (!el) return;
+      setGeometry({
+        deckTop: el.getBoundingClientRect().top + window.scrollY,
+        vh: window.innerHeight,
+      });
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (deckRef.current) ro.observe(deckRef.current);
+    window.addEventListener("resize", measure);
+    window.addEventListener("orientationchange", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("orientationchange", measure);
+    };
+  }, []);
 
   return (
     <div>
@@ -97,14 +124,16 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
       </section>
 
       {/* === Pile de cartes sticky === */}
-      <section className="relative">
+      <section ref={deckRef} className="relative" data-testid="services-deck">
         {services.map((service, i) => (
           <ServiceDeckCard
             key={service.index}
             service={service}
             index={i}
             total={services.length}
-            scrollProgress={scrollYProgress}
+            scrollY={scrollY}
+            arrive={geometry.deckTop + i * geometry.vh}
+            end={geometry.deckTop + (i + 1) * geometry.vh}
             onNavigateDetail={onNavigateDetail}
           />
         ))}
@@ -194,7 +223,9 @@ interface ServiceDeckCardProps {
   service: ServiceDTO;
   index: number;
   total: number;
-  scrollProgress: ReturnType<typeof useScroll>["scrollYProgress"];
+  scrollY: ReturnType<typeof useScroll>["scrollY"];
+  arrive: number;
+  end: number;
   onNavigateDetail: (view: ViewKey, id: string) => void;
 }
 
@@ -206,10 +237,14 @@ interface ServiceDeckCardProps {
  *    au-dessus de la suivante (effet jeu de cartes).
  *  - height: 100vh ; fond opaque (var(--bg) + voile + image + mesh) →
  *    recouvre la précédente ; z-index croissant.
- *  - Le scroll est lissé par un spring : l'assombrissement (overlay de
- *    profondeur) et le parallaxe du décor glissent sans à-coup.
- *  - Parallaxe : seule l'image de fond est transformée (composited) — aucun
- *    transform sur la carte ou le panneau → empilement 60fps.
+ *  - Le progress de chaque carte est dérivé directement du scroll brut sur
+ *    SA fenêtre réelle (arrive → end, une hauteur de viewport exactement),
+ *    sans spring : l'assombrissement (overlay de profondeur) et le parallaxe
+ *    suivent le cycle de vie exact de la carte — plus de dérive ni de lag.
+ *  - Parallaxe : seule l'image de fond est transformée (composited), très
+ *    subtile (±1.5%), désactivée sous prefers-reduced-motion — aucun
+ *    transform sur la carte ou le panneau → empilement 60fps et carte active
+ *    parfaitement stable.
  *
  * Contenu : fiche technique premium — identifiant + tagline, titre avec
  * règle d'accent, description, stack technologique, métriques chiffrées et
@@ -219,7 +254,9 @@ function ServiceDeckCard({
   service,
   index,
   total,
-  scrollProgress,
+  scrollY,
+  arrive,
+  end,
   onNavigateDetail,
 }: ServiceDeckCardProps) {
   const { t } = useI18n();
@@ -229,24 +266,25 @@ function ServiceDeckCard({
   const accent = getServiceAccent(service.index);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // Progression lissée : le scroll passe par un spring (léger, sans
-  // dépassement) → aucun à-coup sur l'empilement, l'assombrissement, la
-  // parallaxe.
-  const smooth = useSpring(scrollProgress, { stiffness: 120, damping: 30, mass: 0.6 });
-
-  // Plage de scroll dédiée à cette carte : [index/total, (index+1)/total]
-  const start = index / total;
-  const end = (index + 1) / total;
   const isLast = index === total - 1;
-  const progress = useTransform(smooth, [start, end], [0, 1]);
 
-  // Overlay de profondeur : assombrit les cartes précédentes (0 → 0.5) quand
-  // la carte suivante arrive, avec une atténuation douce (spring en amont).
-  const overlayOpacity = useTransform(progress, [0, 1], [0, isLast ? 0 : 0.5]);
+  // Progression directe sur la fenêtre de scroll réelle de la carte : 0 à
+  // l'arrivée en haut du viewport, 1 quand la suivante la recouvre. Aucun
+  // spring → déterministe et synchronisé au pixel près avec le cadre sticky.
+  const progress = useTransform(scrollY, [arrive, end], [0, 1], { clamp: true });
 
-  // Parallaxe du décor : l'image de fond dérive à l'opposé du scroll pendant
-  // que la carte monte → la carte « flue » avec son arrière-plan.
-  const bgY = useTransform(progress, [0, 1], ["3%", "-3%"]);
+  // Overlay de profondeur : assombrit les cartes précédentes (0 → 0.45) quand
+  // la carte suivante arrive, piloté directement par le scroll.
+  const overlayOpacity = useTransform(progress, [0, 1], [0, isLast ? 0 : 0.45]);
+
+  // Parallaxe du décor : l'image de fond dérive très légèrement (±1.5%) à
+  // l'opposé du scroll pendant que la carte monte.
+  //
+  // NOTE hydratation : le range est volontairement déterministe (jamais
+  // branché sur useReducedMotion, qui vaut null en SSR → mismatch serveur/
+  // client). La désactivation sous prefers-reduced-motion se fait en CSS
+  // (`.service-card-bg` + @media) pour rester identique entre les deux.
+  const bgY = useTransform(progress, [0, 1], ["1.5%", "-1.5%"]);
 
   // Spot lumineux suivant le curseur (pattern 21st.dev) : 2 variables CSS
   // posées au survol, aucun transform pendant le scroll.
@@ -273,6 +311,7 @@ function ServiceDeckCard({
   return (
     <article
       className="sticky flex h-screen w-full items-center justify-center overflow-hidden px-3 md:px-6"
+      data-testid="service-card"
       style={{
         zIndex: index + 1,
         backgroundColor: "var(--bg)",
@@ -286,7 +325,8 @@ function ServiceDeckCard({
     >
       {/* Décor : image en parallaxe + mesh + voile adaptatif */}
       <motion.div
-        className="absolute inset-0 bg-cover bg-center"
+        className="service-card-bg absolute inset-0 bg-cover bg-center"
+        data-testid="service-card-bg"
         style={{ backgroundImage: `url(${bgImage})`, y: bgY, scale: 1.1 }}
         aria-hidden
       />
@@ -301,6 +341,7 @@ function ServiceDeckCard({
       {!isLast && (
         <motion.div
           className="pointer-events-none absolute inset-0 z-30 bg-black"
+          data-testid="service-card-depth"
           style={{ opacity: overlayOpacity }}
           aria-hidden
         />
@@ -312,7 +353,8 @@ function ServiceDeckCard({
           ref={panelRef}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className="group relative overflow-hidden rounded-[28px] deck-card grain"
+          data-testid="service-card-panel"
+          className="group relative overflow-hidden rounded-[28px] deck-card"
           style={{ "--sa": accent, "--mx": "-200px", "--my": "-200px" } as CSSProperties}
         >
           {/* Liseré supérieur — teinte du service */}
