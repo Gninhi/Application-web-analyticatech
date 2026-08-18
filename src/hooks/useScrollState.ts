@@ -27,6 +27,7 @@ export function useScrollState(): ScrollState {
     atTop: true,
   });
   const lastScrollY = useRef(0);
+  const hiddenRef = useRef(false);
 
   useEffect(() => {
     let ticking = false;
@@ -42,13 +43,14 @@ export function useScrollState(): ScrollState {
         const atTop = currentY < SCROLL_THRESHOLDS.autoHide;
 
         // Auto-hide : masque si on scroll vers le bas (après autoHide)
-        let hidden = state.hidden;
+        let hidden = hiddenRef.current;
         if (currentY > SCROLL_THRESHOLDS.autoHide && delta > SCROLL_THRESHOLDS.scrollDelta) {
           hidden = true;
         } else if (delta < -SCROLL_THRESHOLDS.scrollDelta || atTop) {
           hidden = false;
         }
 
+        hiddenRef.current = hidden;
         setState({ scrollY: currentY, scrolled, hidden, atTop });
         lastScrollY.current = currentY;
         ticking = false;
@@ -58,7 +60,7 @@ export function useScrollState(): ScrollState {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [state.hidden]);
+  }, []);
 
   return state;
 }

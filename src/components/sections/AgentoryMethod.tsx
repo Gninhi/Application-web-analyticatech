@@ -114,6 +114,17 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
 
       {/* Detail Card Principale Style Agentory */}
       <div className="relative overflow-hidden glass-card rounded-3xl p-6 md:p-10">
+        {/* Halos ambiants assortis */}
+        <div
+          className="pointer-events-none absolute -top-28 -right-20 h-72 w-72 rounded-full opacity-20 blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(242,109,61,0.45) 0%, transparent 70%)" }}
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute -bottom-24 -left-16 h-64 w-64 rounded-full opacity-15 blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(43,109,224,0.45) 0%, transparent 70%)" }}
+          aria-hidden
+        />
         <AnimatePresence mode="wait">
           <motion.div
             key={activeStep.number}
