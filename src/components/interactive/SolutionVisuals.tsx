@@ -138,44 +138,6 @@ export function SolutionVisualAutomation() {
   );
 }
 
-export function SolutionVisualAgentic() {
-  return (
-    <VisualFrame label="Multi-agents & Autonomie" title="Orchestration d'agents cognitifs autonomes">
-      <svg viewBox="0 0 320 160" className="h-full w-full p-4" aria-hidden>
-        <defs>
-          <linearGradient id="agentViz" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#F26D3D" stopOpacity="0.9" />
-            <stop offset="50%" stopColor="#022873" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#4CAF50" stopOpacity="0.9" />
-          </linearGradient>
-        </defs>
-        <g className="font-mono">
-          {/* Orchestrateur central */}
-          <rect x="122" y="22" width="76" height="56" rx="10" fill="#F26D3D22" stroke="#F26D3D" strokeWidth="1.5" />
-          <text x="160" y="48" textAnchor="middle" fill="#F26D3D" fontSize="9" fontWeight="700">ORCHESTRE</text>
-          <text x="160" y="62" textAnchor="middle" fill="#ffffff99" fontSize="8">Plan · Mémoire</text>
-          {/* Agents périphériques */}
-          <rect x="12" y="66" width="58" height="40" rx="8" fill="#02287333" stroke="#022873" />
-          <text x="41" y="91" textAnchor="middle" fill="#9db8ff" fontSize="8" fontWeight="700">AGENT R</text>
-          <rect x="250" y="66" width="58" height="40" rx="8" fill="#02287333" stroke="#022873" />
-          <text x="279" y="91" textAnchor="middle" fill="#9db8ff" fontSize="8" fontWeight="700">AGENT S</text>
-          <rect x="64" y="120" width="58" height="32" rx="8" fill="#4CAF5022" stroke="#4CAF50" />
-          <text x="93" y="141" textAnchor="middle" fill="#4CAF50" fontSize="8" fontWeight="700">AGENT T</text>
-          <rect x="198" y="120" width="58" height="32" rx="8" fill="#4CAF5022" stroke="#4CAF50" />
-          <text x="227" y="141" textAnchor="middle" fill="#4CAF50" fontSize="8" fontWeight="700">AGENT U</text>
-        </g>
-        <g stroke="url(#agentViz)" strokeWidth="1.5" strokeDasharray="3 5" className="animate-pulse">
-          <line x1="70" y1="86" x2="122" y2="66" />
-          <line x1="198" y1="66" x2="250" y2="86" />
-          <line x1="122" y1="78" x2="93" y2="120" />
-          <line x1="198" y1="78" x2="227" y2="120" />
-        </g>
-      </svg>
-      <FlowDot />
-    </VisualFrame>
-  );
-}
-
 export function SolutionVisualBI() {
   return (
     <VisualFrame label="Observabilité & Pilotage" title="Tableau de bord de pilotage de la performance">

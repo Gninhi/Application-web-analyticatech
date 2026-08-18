@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ChevronRight, BrainCircuit, Network, Workflow, Bot, BarChart3 } from "lucide-react";
+import { ChevronRight, BrainCircuit, Network, Workflow, BarChart3 } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
@@ -14,7 +14,6 @@ import {
   SolutionVisualAI,
   SolutionVisualTransformation,
   SolutionVisualAutomation,
-  SolutionVisualAgentic,
   SolutionVisualBI,
 } from "@/components/interactive/SolutionVisuals";
 
@@ -23,37 +22,17 @@ interface HomeSolutionsGridProps {
   onNavigateDetail: (view: ViewKey, id: string) => void;
 }
 
-/** Accent chromatique par domaine — cohérent avec le bento de la DataConsole. */
-type SolutionCard = {
-  id: string;
-  keywords: string[];
-  matchOn: string[];
-  title: string;
-  promise: string;
-  tagline: string;
-  VisualComponent: React.ComponentType;
-  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
-  technologies: string[];
-  metrics: { label: string; value: string };
-  accent: string;
-  hero?: boolean;
-};
-
 /**
  * HomeSolutionsGrid — section "04 — LES SOLUTIONS" de l'accueil.
- * Bento grid asymétrique (grille 12 colonnes, lignes auto =) : la carte IA
- * occupe 7 colonnes × 2 rangées, Transformation & Systèmes Agentiques
- * s'empilent à droite, Automatisation & BI ferment le bandeau bas (6 + 6).
- * Extraite dans un chunk séparé (chargée à la demande) : les SolutionVisual
- * sont des SVG animés coûteux, inutiles au premier paint.
+ * Extraite dans un chunk séparé (chargée à la demande) : les quatre
+ * SolutionVisual sont des SVG animés coûteux, inutiles au premier paint.
  */
 export function HomeSolutionsGrid({ onNavigate, onNavigateDetail }: HomeSolutionsGridProps) {
   const { t } = useI18n();
   const { solutions: DB_SOLUTIONS } = useAppContent();
 
-  // 5 Solutions Métier (Blueprint 04) — contenu crédible et produisible
-  // (stacks open-source, résultats mesurables, conformes aux personae).
-  const SOLUTION_CARDS: SolutionCard[] = [
+  // 4 Solutions Métier (Blueprint 04)
+  const SOLUTION_CARDS = [
     {
       id: "ai",
       keywords: ["RAG", "Soulevé"],
@@ -65,8 +44,6 @@ export function HomeSolutionsGrid({ onNavigate, onNavigateDetail }: HomeSolution
       icon: BrainCircuit,
       technologies: ["LangChain", "LangGraph", "OpenAI", "Pinecone", "vLLM"],
       metrics: { label: t("home.solution.ai.metric"), value: "320 ms" },
-      accent: "#F26D3D",
-      hero: true,
     },
     {
       id: "transformation",
@@ -79,20 +56,6 @@ export function HomeSolutionsGrid({ onNavigate, onNavigateDetail }: HomeSolution
       icon: Network,
       technologies: ["Kubernetes", "Terraform", "AWS", "Azure", "GitOps"],
       metrics: { label: t("home.solution.transformation.metric"), value: "99.98 %" },
-      accent: "#2B6DE0",
-    },
-    {
-      id: "agentic",
-      keywords: ["Systèmes Agentiques"],
-      matchOn: ["Agent", "conformité", "autonome"],
-      title: t("home.solution.agentic.title"),
-      promise: t("home.solution.agentic.promise"),
-      tagline: t("home.solution.agentic.tagline"),
-      VisualComponent: SolutionVisualAgentic,
-      icon: Bot,
-      technologies: ["LangGraph", "CrewAI", "MemGPT", "Pinecone", "Temporal"],
-      metrics: { label: t("home.solution.agentic.metric"), value: "24/7" },
-      accent: "#8b5cf6",
     },
     {
       id: "automation",
@@ -105,7 +68,6 @@ export function HomeSolutionsGrid({ onNavigate, onNavigateDetail }: HomeSolution
       icon: Workflow,
       technologies: ["n8n", "Zapier", "Temporal", "Airflow", "Python"],
       metrics: { label: t("home.solution.automation.metric"), value: "-75 %" },
-      accent: "#10b981",
     },
     {
       id: "bi",
@@ -118,7 +80,6 @@ export function HomeSolutionsGrid({ onNavigate, onNavigateDetail }: HomeSolution
       icon: BarChart3,
       technologies: ["Power BI", "dbt", "Snowflake", "BigQuery", "Looker"],
       metrics: { label: t("home.solution.bi.metric"), value: "640+" },
-      accent: "#f59e0b",
     },
   ];
 
@@ -144,9 +105,7 @@ export function HomeSolutionsGrid({ onNavigate, onNavigateDetail }: HomeSolution
           description={t("home.section.solutions.desc")}
         />
 
-        {/* Bento grid : 12 colonnes, lignes auto égales → les cartes s'emboîtent
-            parfaitement (IA hero span 7×2, 2 cartes droites, bandeau bas 6+6). */}
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:auto-rows-fr lg:grid-cols-12 gap-6">
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
           {SOLUTION_CARDS.map((sol, i) => {
             const Icon = sol.icon;
             const Visual = sol.VisualComponent;
@@ -155,13 +114,6 @@ export function HomeSolutionsGrid({ onNavigate, onNavigateDetail }: HomeSolution
               detailSlug
                 ? onNavigateDetail("solution-detail", detailSlug)
                 : onNavigate("solutions");
-
-            const span = sol.hero
-              ? "sm:col-span-2 lg:col-span-7 lg:row-span-2"
-              : sol.id === "transformation" || sol.id === "agentic"
-                ? "lg:col-span-5"
-                : "lg:col-span-6";
-
             return (
               <motion.article
                 key={sol.id}
@@ -170,20 +122,16 @@ export function HomeSolutionsGrid({ onNavigate, onNavigateDetail }: HomeSolution
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
                 onClick={goToDetail}
-                className={`group relative cursor-pointer ${span}`}
+                className="group relative cursor-pointer"
               >
-                {/* Index mono style "works" */}
+                {/* Index mono style "works" omnira */}
                 <span className="absolute -top-3 left-5 z-10 rounded-lg bg-background px-2 py-0.5 font-mono text-[10px] italic tracking-widest text-[#F26D3D] border border-black/10 dark:border-white/10">
                   /{String(i + 1).padStart(2, "0")}
                 </span>
 
                 <SpotlightCard className="h-full overflow-hidden p-0 flex flex-col">
                   {/* Bandeau visuel cinématique avec zoom au survol */}
-                  <div
-                    className={`relative w-full overflow-hidden rounded-t-3xl border-b border-black/10 dark:border-white/10 [&>div]:transition-transform [&>div]:duration-500 [&>div]:group-hover:scale-105 ${
-                      sol.hero ? "h-52 sm:h-60" : "h-36 sm:h-40"
-                    }`}
-                  >
+                  <div className="relative h-52 w-full overflow-hidden rounded-t-3xl border-b border-black/10 dark:border-white/10 [&>div]:transition-transform [&>div]:duration-500 [&>div]:group-hover:scale-105">
                     <Visual />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/25 to-transparent pointer-events-none" aria-hidden />
                     {/* Icône premium */}
@@ -202,11 +150,7 @@ export function HomeSolutionsGrid({ onNavigate, onNavigateDetail }: HomeSolution
                       </span>
                     </div>
 
-                    <h3
-                      className={`font-display font-bold text-slate-900 dark:text-slate-50 mb-2 transition-colors group-hover:text-[#F26D3D] ${
-                        sol.hero ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"
-                      }`}
-                    >
+                    <h3 className="font-display text-2xl font-bold text-slate-900 dark:text-slate-50 mb-2 transition-colors group-hover:text-[#F26D3D]">
                       {sol.title}
                     </h3>
 

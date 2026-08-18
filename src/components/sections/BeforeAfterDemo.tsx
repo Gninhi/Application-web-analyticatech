@@ -55,17 +55,6 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
 
       {/* Vue Comparative */}
       <div className="relative overflow-hidden glass-card rounded-3xl p-6 md:p-10">
-        {/* Halos ambiants (rouge/green selon la vue, bleu neutre) */}
-        <div
-          className="pointer-events-none absolute -top-28 -right-20 h-72 w-72 rounded-full opacity-20 blur-3xl"
-          style={{
-            background:
-              viewMode === "before"
-                ? "radial-gradient(circle, rgba(239,68,68,0.4) 0%, transparent 70%)"
-                : "radial-gradient(circle, rgba(76,175,80,0.35) 0%, transparent 70%)",
-          }}
-          aria-hidden
-        />
         <AnimatePresence mode="wait">
           {viewMode === "before" ? (
             <motion.div
