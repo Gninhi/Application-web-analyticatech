@@ -445,6 +445,18 @@
   .theme-overlay {
     background: var(--overlay-bg);
   }
+
+  /* === SQUELETTES DE SECTION (LazySection) ===
+     Réserve la place (desktop + mobile via variables CSS inline) pour éviter
+     tout CLS au remplacement par le contenu réel. */
+  .lazy-section-skeleton {
+    min-height: var(--sk-min, 640px);
+  }
+  @media (max-width: 639px) {
+    .lazy-section-skeleton {
+      min-height: var(--sk-mobile, var(--sk-min, 640px));
+    }
+  }
 }
 
 @keyframes blink {

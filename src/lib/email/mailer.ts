@@ -14,8 +14,11 @@
  * sûr sous Turbopack et dans les fonctions serveurless Vercel.
  */
 
+import "server-only";
+
 import { Resend } from "resend";
 import { audit } from "@/lib/observability/audit";
+import { getServerEnv } from "@/lib/env";
 
 export interface ContactMailPayload {
   reference: string;
@@ -28,9 +31,9 @@ export interface ContactMailPayload {
 }
 
 export async function sendContactNotification(payload: ContactMailPayload): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.MAIL_FROM ?? "Analyticatech <contact@analyticatech.fr>";
-  const to = process.env.MAIL_TO ?? "leads@analyticatech.fr";
+  const apiKey = getServerEnv().RESEND_API_KEY;
+  const from = getServerEnv().MAIL_FROM ?? "Analyticatech <contact@analyticatech.fr>";
+  const to = getServerEnv().MAIL_TO ?? "leads@analyticatech.fr";
 
   if (!apiKey) {
     // Mode stub : log structuré pour monitoring / récupération par un cron.

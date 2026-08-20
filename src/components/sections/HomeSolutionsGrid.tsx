@@ -118,8 +118,7 @@ export function HomeSolutionsGrid({ onNavigate, onNavigateDetail }: HomeSolution
               <motion.article
                 key={sol.id}
                 initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
                 onClick={goToDetail}
                 className="group relative cursor-pointer"

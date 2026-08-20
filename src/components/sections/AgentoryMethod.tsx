@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Search, Map, Cpu, Rocket, BarChart3, Check, ArrowRight, ShieldCheck } from "lucide-react";
 import { MovingButton } from "@/components/interactive/MovingButton";
 import { useI18n } from "@/lib/i18n/provider";
+import { cn } from "@/lib/utils/cn";
 
 export interface MethodStep {
   number: string;
@@ -45,7 +46,6 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
       duration: t(`method.step${n}.duration`),
     };
   });
-  const activeStep = METHOD_STEPS[activeStepIndex];
 
   return (
     <section className="relative py-12">
@@ -112,80 +112,89 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
         })}
       </div>
 
-      {/* Detail Card Principale Style Agentory */}
-      <div className="relative overflow-hidden glass-card rounded-3xl p-6 md:p-10">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeStep.number}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
-            className="grid lg:grid-cols-12 gap-8 items-center"
-          >
-            {/* Colonne gauche : Description & Phase */}
-            <div className="lg:col-span-7">
-              <span className="font-mono text-[10px] uppercase tracking-widest text-[#F26D3D] px-3 py-1 rounded-full bg-[#F26D3D]/10 inline-block mb-4 border border-[#F26D3D]/20">
-                {activeStep.phase}
-              </span>
+      {/* Detail Card Principale Style Agentory.
+        Crossfade "grid-stack" : les 5 panneaux sont empilés dans la même
+        cellule (hauteur = max des panneaux → zéro saut de mise en page). */}
+      <div className="relative overflow-hidden glass-card rounded-3xl p-6 md:p-10 grid">
+        {METHOD_STEPS.map((step, idx) => {
+          const isActive = idx === activeStepIndex;
+          return (
+            <motion.div
+              key={step.number}
+              initial={false}
+              animate={{ opacity: isActive ? 1 : 0 }}
+              transition={{ duration: 0.3 }}
+              inert={!isActive}
+              className={cn(
+                "col-start-1 row-start-1 grid lg:grid-cols-12 gap-8 items-center",
+                !isActive && "pointer-events-none"
+              )}
+              aria-hidden={!isActive}
+            >
+              {/* Colonne gauche : Description & Phase */}
+              <div className="lg:col-span-7">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-[#F26D3D] px-3 py-1 rounded-full bg-[#F26D3D]/10 inline-block mb-4 border border-[#F26D3D]/20">
+                  {step.phase}
+                </span>
 
-              <h3 className="font-display text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-50 mb-2">
-                0{activeStepIndex + 1}. {activeStep.title} — {activeStep.subtitle}
-              </h3>
+                <h3 className="font-display text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-50 mb-2">
+                  0{idx + 1}. {step.title} — {step.subtitle}
+                </h3>
 
-              <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
-                {activeStep.description}
-              </p>
+                <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
+                  {step.description}
+                </p>
 
-              {/* Pill de résultat explicite (Exigence Blueprint) */}
-              <div className="p-4 rounded-2xl border border-[#4CAF50]/30 bg-[#4CAF50]/10 flex items-start gap-3 mb-6">
-                <ShieldCheck className="h-5 w-5 text-[#4CAF50] shrink-0 mt-0.5" aria-hidden />
-                <div>
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-[#4CAF50] font-bold block">
-                    {t("method.result")}
-                  </span>
-                  <span className="font-display font-semibold text-slate-900 dark:text-slate-100 text-sm md:text-base">
-                    {activeStep.result}
-                  </span>
+                {/* Pill de résultat explicite (Exigence Blueprint) */}
+                <div className="p-4 rounded-2xl border border-[#4CAF50]/30 bg-[#4CAF50]/10 flex items-start gap-3 mb-6">
+                  <ShieldCheck className="h-5 w-5 text-[#4CAF50] shrink-0 mt-0.5" aria-hidden />
+                  <div>
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-[#4CAF50] font-bold block">
+                      {t("method.result")}
+                    </span>
+                    <span className="font-display font-semibold text-slate-900 dark:text-slate-100 text-sm md:text-base">
+                      {step.result}
+                    </span>
+                  </div>
+                </div>
+
+                {onNavigateContact && (
+                  <MovingButton
+                    onClick={onNavigateContact}
+                    variant="primary"
+                    size="md"
+                    className="neon-glow"
+                  >
+                    {t("method.cta")}
+                    <ArrowRight className="h-4 w-4" aria-hidden />
+                  </MovingButton>
+                )}
+              </div>
+
+              {/* Colonne droite : Liste des Livrables Clés */}
+              <div className="lg:col-span-5 rounded-2xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 backdrop-blur-md">
+                <span className="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-300 block mb-4 border-b border-black/10 dark:border-white/10 pb-2">
+                  {t("method.deliverables")}
+                </span>
+                <ul className="space-y-3">
+                  {step.deliverables.map((deliv, i) => (
+                    <li key={i} className="flex items-center gap-3 text-sm text-slate-800 dark:text-slate-200 font-medium">
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#F26D3D]/20 text-[#F26D3D] shrink-0">
+                        <Check className="h-3 w-3" aria-hidden />
+                      </span>
+                      <span>{deliv}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-6 pt-4 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400">
+                  <span>{t("method.duration")}</span>
+                  <span className="text-[#F26D3D] font-bold">{step.duration}</span>
                 </div>
               </div>
-
-              {onNavigateContact && (
-                <MovingButton
-                  onClick={onNavigateContact}
-                  variant="primary"
-                  size="md"
-                  className="neon-glow"
-                >
-                  {t("method.cta")}
-                  <ArrowRight className="h-4 w-4" aria-hidden />
-                </MovingButton>
-              )}
-            </div>
-
-            {/* Colonne droite : Liste des Livrables Clés */}
-            <div className="lg:col-span-5 rounded-2xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 backdrop-blur-md">
-              <span className="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-300 block mb-4 border-b border-black/10 dark:border-white/10 pb-2">
-                {t("method.deliverables")}
-              </span>
-              <ul className="space-y-3">
-                {activeStep.deliverables.map((deliv, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm text-slate-800 dark:text-slate-200 font-medium">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#F26D3D]/20 text-[#F26D3D] shrink-0">
-                      <Check className="h-3 w-3" aria-hidden />
-                    </span>
-                    <span>{deliv}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-6 pt-4 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400">
-                <span>{t("method.duration")}</span>
-                <span className="text-[#F26D3D] font-bold">{activeStep.duration}</span>
-              </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+            </motion.div>
+          );
+        })}
       </div>
     </section>
   );

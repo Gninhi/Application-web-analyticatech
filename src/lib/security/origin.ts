@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Vérification d'origine (anti-CSRF origin check layer supplémentaire).
  * Accepte soit l'en-tête `Origin`, soit le `Referer` comme fallback.

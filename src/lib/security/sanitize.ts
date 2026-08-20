@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Sanitization HTML stricte — prévention XSS.
  * Supprime balises, entités HTML dangereuses et caractères de contrôle.

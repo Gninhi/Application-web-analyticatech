@@ -25,6 +25,11 @@ const nextConfig: NextConfig = {
   // garantir que le client + moteur (binaryTargets rhel-openssl-3.0.x) sont
   // chargés nativement par Node et tracés dans le bundle serveur Vercel.
   serverExternalPackages: ["@prisma/client", "prisma"],
+  // Fichiers non-importés par le code à inclure dans le traçage standalone
+  // (Docker / auto-hébergement) : la CA racine Supabase lue par db/client.ts.
+  outputFileTracingIncludes: {
+    "/**": ["src/lib/db/supabase-ca-2021.crt"],
+  },
   // Security headers globaux — appliqués sur TOUTES les routes
   async headers() {
     return [

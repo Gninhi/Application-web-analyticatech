@@ -7,7 +7,7 @@ import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
 import { MovingButton } from "@/components/interactive/MovingButton";
 import { HeroSection } from "@/components/sections/HeroSection";
-import { LazySection } from "@/components/ui/LazySection";
+import { LazySection, SectionSkeleton } from "@/components/ui/LazySection";
 
 /* === Chargement à la demande des sections sous la ligne de flottaison ===
  * Chaque section lourde (SVG animés, boucles rAF, marquees, bordures
@@ -15,49 +15,53 @@ import { LazySection } from "@/components/ui/LazySection";
  * approche du viewport (LazySection). Résultat : le JS initial est beaucoup
  * plus petit, moins de parsing/hydration → Total Blocking Time réduit. */
 
+/* Hauteurs réservées par section pendant le chargement (squelette) :
+ * desktop (minHeight) et mobile ≤ 639px (mobileMinHeight). Un même squelette
+ * sert à la fois au placeholder de LazySection et au fallback `loading` des
+ * chunks dynamiques → aucune variation de hauteur entre les deux phases. */
+const SECTION_SKELETONS = {
+  graph: { minHeight: 520, mobileMinHeight: 800 },
+  bento: { minHeight: 640, mobileMinHeight: 1300 },
+  solutions: { minHeight: 760, mobileMinHeight: 2100 },
+  pains: { minHeight: 640, mobileMinHeight: 850 },
+  method: { minHeight: 640, mobileMinHeight: 1050 },
+  demo: { minHeight: 640, mobileMinHeight: 850 },
+  proof: { minHeight: 720, mobileMinHeight: 1800 },
+  faq: { minHeight: 640, mobileMinHeight: 850 },
+} as const;
+
 const LivingSystemGraph = dynamic(
   () => import("@/components/interactive/LivingSystemGraph").then((m) => m.LivingSystemGraph),
-  { loading: () => <SectionSkeleton minHeight={520} /> }
+  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.graph} /> }
 );
 const DataConsoleBento = dynamic(
   () => import("@/components/sections/DataConsoleBento").then((m) => m.DataConsoleBento),
-  { loading: () => <SectionSkeleton minHeight={640} /> }
+  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.bento} /> }
 );
 const HomeSolutionsGrid = dynamic(
   () => import("@/components/sections/HomeSolutionsGrid").then((m) => m.HomeSolutionsGrid),
-  { loading: () => <SectionSkeleton minHeight={760} /> }
+  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.solutions} /> }
 );
 const BusinessPainPointsSection = dynamic(
   () => import("@/components/sections/BusinessPainPointsSection").then((m) => m.BusinessPainPointsSection),
-  { loading: () => <SectionSkeleton minHeight={640} /> }
+  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.pains} /> }
 );
 const AgentoryMethod = dynamic(
   () => import("@/components/sections/AgentoryMethod").then((m) => m.AgentoryMethod),
-  { loading: () => <SectionSkeleton minHeight={640} /> }
+  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.method} /> }
 );
 const BeforeAfterDemo = dynamic(
   () => import("@/components/sections/BeforeAfterDemo").then((m) => m.BeforeAfterDemo),
-  { loading: () => <SectionSkeleton minHeight={640} /> }
+  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.demo} /> }
 );
 const HomeSocialProof = dynamic(
   () => import("@/components/sections/HomeSocialProof").then((m) => m.HomeSocialProof),
-  { loading: () => <SectionSkeleton minHeight={720} /> }
+  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.proof} /> }
 );
 const FaqSection = dynamic(
   () => import("@/components/sections/FaqSection").then((m) => m.FaqSection),
-  { loading: () => <SectionSkeleton minHeight={640} /> }
+  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.faq} /> }
 );
-
-/** Squelette léger affiché pendant le chargement d'une section à la demande. */
-function SectionSkeleton({ minHeight = 420 }: { minHeight?: number }) {
-  return (
-    <div
-      className="w-full animate-pulse rounded-3xl border border-black/5 dark:border-white/5 bg-black/5 dark:bg-white/5"
-      style={{ minHeight }}
-      aria-hidden
-    />
-  );
-}
 
 interface HomeViewProps {
   onNavigate: (view: ViewKey) => void;
@@ -79,7 +83,7 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
       {/* ============ 02 — SYSTÈME VIVANT ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <LazySection minHeight={520}>
+          <LazySection {...SECTION_SKELETONS.graph}>
             <LivingSystemGraph />
           </LazySection>
         </div>
@@ -118,19 +122,19 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
       </section>
 
       {/* ============ 03b — DATA CONSOLE BENTO ============ */}
-      <LazySection minHeight={640}>
+      <LazySection {...SECTION_SKELETONS.bento}>
         <DataConsoleBento />
       </LazySection>
 
       {/* ============ 04 — LES SOLUTIONS ============ */}
-      <LazySection minHeight={760}>
+      <LazySection {...SECTION_SKELETONS.solutions}>
         <HomeSolutionsGrid onNavigate={onNavigate} onNavigateDetail={onNavigateDetail} />
       </LazySection>
 
       {/* ============ 05 — PROBLÈMES MÉTIERS ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <LazySection minHeight={640}>
+          <LazySection {...SECTION_SKELETONS.pains}>
             <BusinessPainPointsSection onNavigateContact={() => onNavigate("contact")} />
           </LazySection>
         </div>
@@ -139,7 +143,7 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
       {/* ============ 06 — MÉTHODE (STYLE FRAMER AGENTORY) ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <LazySection minHeight={640}>
+          <LazySection {...SECTION_SKELETONS.method}>
             <AgentoryMethod onNavigateContact={() => onNavigate("contact")} />
           </LazySection>
         </div>
@@ -148,21 +152,21 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
       {/* ============ 07 — CAS / DÉMONSTRATION ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <LazySection minHeight={640}>
+          <LazySection {...SECTION_SKELETONS.demo}>
             <BeforeAfterDemo onNavigateContact={() => onNavigate("contact")} />
           </LazySection>
         </div>
       </section>
 
       {/* ============ 08 — INSIGHTS + TÉMOIGNAGES (MARQUEES INCLUS) ============ */}
-      <LazySection minHeight={720}>
+      <LazySection {...SECTION_SKELETONS.proof}>
         <HomeSocialProof onNavigate={onNavigate} />
       </LazySection>
 
       {/* ============ 09 — FAQ (ACCORDÉON SERVICE) ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <LazySection minHeight={640}>
+          <LazySection {...SECTION_SKELETONS.faq}>
             <FaqSection />
           </LazySection>
         </div>

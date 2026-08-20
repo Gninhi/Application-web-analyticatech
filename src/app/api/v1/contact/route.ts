@@ -1,10 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { contactSchema, type ContactApiResponse } from "@/lib/validation/schemas";
+import { getServerEnv } from "@/lib/env";
 import { checkRateLimit, getClientIp } from "@/lib/security/rate-limit";
 import { sanitizeObject } from "@/lib/security/sanitize";
 import { audit, hashIp } from "@/lib/observability/audit";
 import { getRequestFingerprint } from "@/lib/security/fingerprint";
-import { isSuspiciousUserAgent, isRequestSizeValid } from "@/lib/security/user-agent";
+import { isSuspiciousUserAgent, readBodyWithLimit } from "@/lib/security/user-agent";
 import { validateCsrfToken } from "@/lib/security/csrf";
 import { isOriginAllowed } from "@/lib/security/origin";
 import { MAX_BODY_SIZE } from "@/lib/content/site";
@@ -55,7 +56,8 @@ const HONEYPOT_FIELDS = ["companyUrl", "website", "fax", "phone2"] as const;
 
 /** Build l'allowlist d'origines depuis l'env. Fallback fail-closed sur NEXT_PUBLIC_SITE_URL. */
 function getAllowedOrigins(): string[] {
-  const raw = process.env.ALLOWED_ORIGINS ?? process.env.NEXT_PUBLIC_SITE_URL ?? "";
+  const env = getServerEnv();
+  const raw = env.ALLOWED_ORIGINS ?? env.NEXT_PUBLIC_SITE_URL ?? "";
   const configured = raw
     .split(",")
     .map((s) => s.trim())
@@ -143,13 +145,16 @@ export async function POST(req: NextRequest) {
   }
 
   // 5. Anti-DoS (taille du payload) + Parsing JSON.
-  if (!isRequestSizeValid(req, MAX_BODY_SIZE)) {
+  //    Lecture en stream avec plafond : bloque aussi les corps chunked
+  //    sans content-length qui contournaient le check statique.
+  const rawText = await readBodyWithLimit(req, MAX_BODY_SIZE);
+  if (rawText === null) {
     audit.warn("Contact: payload too large", { ipHash, fingerprint });
     return json({ success: false, message: "Payload trop volumineux." }, 413);
   }
   let raw: unknown;
   try {
-    raw = await req.json();
+    raw = JSON.parse(rawText);
   } catch {
     audit.warn("Contact: invalid JSON payload", { ipHash, fingerprint });
     return json({ success: false, message: "Payload JSON invalide." }, 400);

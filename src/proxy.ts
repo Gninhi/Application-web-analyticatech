@@ -21,7 +21,10 @@ const CSRF_HEADER = "x-csrf-token";
 const MAX_BODY_SIZE = 16384; // 16 KB max pour les requêtes mutatives
 const isDev = process.env.NODE_ENV !== "production";
 
-// User-Agents suspects (scanners, outils d'attaque, bots malveillants)
+// User-Agents suspects (scanners, outils d'attaque, bots malveillants).
+// NB : AhrefsBot / SemrushBot sont VOLONTAIREMENT absents — robots.ts les
+// autorise (indexation SEO) ; les bloquer en HTTP créerait une incohérence
+// (autorisé par robots.txt mais 403 à la requête).
 const SUSPICIOUS_UA_PATTERNS = [
   "sqlmap",
   "nikto",
@@ -37,8 +40,6 @@ const SUSPICIOUS_UA_PATTERNS = [
   "acunetix",
   "nessus",
   "zgrab",
-  "semrushbot",
-  "ahrefsbot",
 ];
 
 export function proxy(req: NextRequest) {
@@ -65,7 +66,7 @@ export function proxy(req: NextRequest) {
       const cookieToken = req.cookies.get(CSRF_COOKIE)?.value;
       const headerToken = req.headers.get(CSRF_HEADER);
 
-      if (!cookieToken || !headerToken || cookieToken !== headerToken) {
+      if (!cookieToken || !headerToken || !timingSafeEqualStr(cookieToken, headerToken)) {
         console.warn(`[SECURITY] CSRF token mismatch on ${method} ${pathname}`);
         return NextResponse.json(
           {
@@ -114,8 +115,27 @@ export function proxy(req: NextRequest) {
   res.headers.set("X-Content-Type-Options", "nosniff");
   res.headers.set("X-Frame-Options", "DENY");
   res.headers.set("Referrer-Policy", "no-referrer");
+  // Isolation cross-origin (COOP/CORP) — défense contre les attaques
+  // cross-origin (Spectre, navigation, embedding non autorisé).
+  res.headers.set("Cross-Origin-Opener-Policy", "same-origin");
+  res.headers.set("Cross-Origin-Resource-Policy", "same-site");
 
   return res;
+}
+
+/**
+ * Comparaison temps-constant pour strings (Web Crypto, Edge Runtime).
+ * Évite les attaques par timing sur la validation CSRF dans le middleware.
+ */
+function timingSafeEqualStr(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  const aBytes = new TextEncoder().encode(a);
+  const bBytes = new TextEncoder().encode(b);
+  let diff = 0;
+  for (let i = 0; i < aBytes.length; i++) {
+    diff |= aBytes[i] ^ bBytes[i];
+  }
+  return diff === 0;
 }
 
 /**

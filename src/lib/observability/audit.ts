@@ -1,6 +1,9 @@
+import "server-only";
+
 import { createHash } from "crypto";
 import { mkdirSync, appendFileSync, existsSync, statSync, renameSync, unlinkSync } from "fs";
 import { join } from "path";
+import { getServerEnv } from "@/lib/env";
 
 /**
  * Audit logging niveau bancaire — logs persistés avec rotation.
@@ -46,7 +49,7 @@ export interface AuditEntry {
  */
 export function hashIp(ip: string): string {
   try {
-    const salt = process.env.IP_SALT;
+    const salt = getServerEnv().IP_SALT;
     if (!salt || salt.length < 16) {
       if (process.env.NODE_ENV === "production") {
         throw new Error("IP_SALT manquant ou trop court en production.");

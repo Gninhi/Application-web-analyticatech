@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { SiteConfigDTO, SeoMetadataDTO } from "@/types/content";
 import { audit } from "@/lib/observability/audit";
 import { DEFAULT_SITE_CONFIG } from "@/lib/content/site";

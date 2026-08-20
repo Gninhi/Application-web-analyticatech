@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, MotionConfig } from "framer-motion";
 import { ImmersiveBackground } from "@/components/effects/ImmersiveBackground";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -50,8 +50,11 @@ export function SiteShell({ content, children }: SiteShellProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
+    // setState synchrone interdit dans un effet (react-hooks/set-state-in-effect) :
+    // on reporte le flag "mounted" à la frame suivante pour autoriser les
+    // transitions animées entre routes sans retarder le premier paint utile.
+    const raf = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   // Focus management : au changement de route, le focus est porté sur le
@@ -68,10 +71,11 @@ export function SiteShell({ content, children }: SiteShellProps) {
   }, [pathname]);
 
   return (
-    <I18nProvider initialLocale={content.locale}>
-      <ContentProvider content={content}>
-        <JsonLd />
-        <div className="relative min-h-screen flex flex-col">
+    <MotionConfig reducedMotion="user">
+      <I18nProvider initialLocale={content.locale}>
+        <ContentProvider content={content}>
+          <JsonLd />
+          <div className="relative min-h-screen flex flex-col">
           {/* Fond dégradé fixe */}
           <ImmersiveBackground />
 
@@ -114,5 +118,6 @@ export function SiteShell({ content, children }: SiteShellProps) {
         </div>
       </ContentProvider>
     </I18nProvider>
+    </MotionConfig>
   );
 }

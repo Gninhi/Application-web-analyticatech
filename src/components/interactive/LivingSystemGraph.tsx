@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Database, BrainCircuit, Workflow, BarChart3, ArrowRight, Activity, CheckCircle2 } from "lucide-react";
+import { cn } from "@/lib/utils/cn";
 
 export interface NodeItem {
   id: string;
@@ -60,8 +61,6 @@ const NODES: NodeItem[] = [
 
 export function LivingSystemGraph() {
   const [activeNodeId, setActiveNodeId] = useState<string>("intelligence");
-
-  const activeNode = NODES.find((n) => n.id === activeNodeId) || NODES[1];
 
   return (
     <div className="relative overflow-hidden glass-card rounded-3xl p-6 md:p-10 transition-all">
@@ -189,39 +188,51 @@ export function LivingSystemGraph() {
         </div>
       </div>
 
-      {/* Fiche de détail du nœud sélectionné */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeNode.id}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.25 }}
-          className="mt-6 rounded-2xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 p-5 md:p-6 backdrop-blur-md flex flex-col md:flex-row md:items-center justify-between gap-6"
-        >
-          <div className="max-w-xl">
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="font-mono text-xs text-[#F26D3D] font-bold">Nœud {activeNode.step}</span>
-              <span className="text-slate-300 dark:text-slate-300">•</span>
-              <span className="font-display font-semibold text-slate-800 dark:text-slate-100 text-sm">
-                {activeNode.title} : {activeNode.subtitle}
-              </span>
-            </div>
-            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-              {activeNode.description}
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-2 shrink-0 border-t md:border-t-0 md:border-l border-black/10 dark:border-white/10 pt-4 md:pt-0 md:pl-6">
-            {activeNode.details.map((detail, idx) => (
-              <div key={idx} className="flex items-center gap-2 text-xs font-mono text-slate-700 dark:text-slate-300">
-                <CheckCircle2 className="h-3.5 w-3.5 text-[#F26D3D] shrink-0" aria-hidden />
-                <span>{detail}</span>
+      {/* Fiche de détail du nœud sélectionné.
+          Crossfade "grid-stack" : tous les panneaux sont empilés dans la même
+          cellule (hauteur = max des panneaux → zéro saut de mise en page) et
+          seul celui actif est visible/interactif. */}
+      <div className="mt-6 grid">
+        {NODES.map((node) => {
+          const isActive = node.id === activeNodeId;
+          return (
+            <motion.div
+              key={node.id}
+              initial={false}
+              animate={{ opacity: isActive ? 1 : 0 }}
+              transition={{ duration: 0.25 }}
+              inert={!isActive}
+              className={cn(
+                "col-start-1 row-start-1 rounded-2xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 p-5 md:p-6 backdrop-blur-md flex flex-col md:flex-row md:items-center justify-between gap-6",
+                !isActive && "pointer-events-none"
+              )}
+              aria-hidden={!isActive}
+            >
+              <div className="max-w-xl">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="font-mono text-xs text-[#F26D3D] font-bold">Nœud {node.step}</span>
+                  <span className="text-slate-300 dark:text-slate-300">•</span>
+                  <span className="font-display font-semibold text-slate-800 dark:text-slate-100 text-sm">
+                    {node.title} : {node.subtitle}
+                  </span>
+                </div>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {node.description}
+                </p>
               </div>
-            ))}
-          </div>
-        </motion.div>
-      </AnimatePresence>
+
+              <div className="flex flex-col gap-2 shrink-0 border-t md:border-t-0 md:border-l border-black/10 dark:border-white/10 pt-4 md:pt-0 md:pl-6">
+                {node.details.map((detail, idx) => (
+                  <div key={idx} className="flex items-center gap-2 text-xs font-mono text-slate-700 dark:text-slate-300">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-[#F26D3D] shrink-0" aria-hidden />
+                    <span>{detail}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
     </div>
   );
 }

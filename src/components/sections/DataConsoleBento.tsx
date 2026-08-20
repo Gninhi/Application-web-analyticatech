@@ -17,6 +17,7 @@ import { useAppContent } from "@/components/providers/ContentProvider";
 import { AnimatedCounter } from "@/components/interactive/AnimatedCounter";
 import { Sparkline } from "@/components/interactive/Sparkline";
 import { ActivityFeed } from "@/components/interactive/ActivityFeed";
+import { SectionSkeleton } from "@/components/ui/LazySection";
 import type { MetricDTO } from "@/types/content";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -39,14 +40,20 @@ function decimalsFor(n: number | null): number {
 }
 
 function LiveClock({ locale }: { locale: string }) {
-  const [now, setNow] = useState(() => new Date());
+  const [now, setNow] = useState<Date | null>(null);
   useEffect(() => {
+    // Premier tick dès la frame suivante (pas de setState synchrone dans
+    // l'effet), puis mise à jour chaque seconde. SSR = placeholder "--:--:--".
+    const first = window.setTimeout(() => setNow(new Date()), 0);
     const id = window.setInterval(() => setNow(new Date()), 1000);
-    return () => window.clearInterval(id);
+    return () => {
+      window.clearTimeout(first);
+      window.clearInterval(id);
+    };
   }, []);
   return (
-    <span suppressHydrationWarning className="tabular-nums">
-      {now.toLocaleTimeString(locale, { timeZone: "UTC", hour12: false })}
+    <span className="tabular-nums">
+      {now != null ? now.toLocaleTimeString(locale, { timeZone: "UTC", hour12: false }) : "--:--:--"}
     </span>
   );
 }
@@ -65,9 +72,8 @@ function MiniProgressBar({ pct, color = "#F26D3D" }: { pct: number; color?: stri
   return (
     <div className="mt-3 h-[2px] w-full rounded-full bg-black/10 dark:bg-white/10 overflow-hidden">
       <motion.div
-        initial={{ width: 0 }}
-        whileInView={{ width: `${Math.min(100, Math.abs(pct))}%` }}
-        viewport={{ once: true }}
+        initial={false}
+        animate={{ width: `${Math.min(100, Math.abs(pct))}%` }}
         transition={{ duration: 1.2, ease: "easeOut" }}
         className="h-full rounded-full"
         style={{ backgroundColor: color }}
@@ -234,7 +240,9 @@ export function DataConsoleBento() {
     [allMetrics]
   );
 
-  if (metrics.length === 0) return null;
+  if (metrics.length === 0) {
+    return <SectionSkeleton minHeight={640} mobileMinHeight={1300} />;
+  }
 
   const SIGNAL_CARDS = [
     { icon: Zap, label: "Disponibilité système", value: "99.98 %", accent: "#F26D3D" },
@@ -248,8 +256,7 @@ export function DataConsoleBento() {
       <div className="mx-auto max-w-7xl px-4 md:px-6">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="glass-card relative overflow-hidden rounded-3xl border-black/10 dark:border-white/10"
         >
@@ -316,8 +323,7 @@ export function DataConsoleBento() {
                   <motion.div
                     key={m.id}
                     initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: i * 0.1 }}
                   >
                     <HeroMetricCard metric={m} locale={intlLocale} index={i} />
@@ -329,8 +335,7 @@ export function DataConsoleBento() {
               <motion.div
                 className="lg:col-span-4 overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 glass-strong"
                 initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.15 }}
               >
                 <div className="flex items-center justify-between gap-2 border-b border-black/10 dark:border-white/10 px-4 py-3">
@@ -355,8 +360,7 @@ export function DataConsoleBento() {
                     <motion.div
                       key={s.label}
                       initial={{ opacity: 0, scale: 0.95 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
+                      animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.4, delay: i * 0.07 }}
                     >
                       <SignalCard icon={s.icon} label={s.label} value={s.value} accent={s.accent} />
@@ -371,8 +375,7 @@ export function DataConsoleBento() {
                       <motion.div
                         key={m.id}
                         initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.4, delay: 0.2 + i * 0.06 }}
                       >
                         <CompactMetricCard metric={m} locale={intlLocale} />

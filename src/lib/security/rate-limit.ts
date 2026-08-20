@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Rate limiting en mémoire (par IP + endpoint).
  * Adapté à un déploiement mono-instance.

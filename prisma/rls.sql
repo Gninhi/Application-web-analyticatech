@@ -70,6 +70,29 @@ CREATE POLICY "No Public Select BlockedEmailDomain" ON "BlockedEmailDomain" FOR 
 DROP POLICY IF EXISTS "No Public Select SuspiciousUAPattern" ON "SuspiciousUAPattern";
 CREATE POLICY "No Public Select SuspiciousUAPattern" ON "SuspiciousUAPattern" FOR SELECT USING (false);
 
--- Autoriser uniquement l'insertion de demande de contact via API serveur (role postgres/service_role)
+-- Insertion de demandes de contact réservée à l'API serveur (Prisma).
+-- Prisma se connecte avec le rôle propriétaire (postgres) qui bypass RLS
+-- nativement → les inserts serveur continuent de fonctionner.
+-- `WITH CHECK (false)` = verrou absolu côté PostgREST : la clé anon (publique)
+-- ne peut JAMAIS insérer, contournant ainsi CSRF / rate-limit / validation Zod.
 DROP POLICY IF EXISTS "Allow Service Insert ContactRequest" ON "ContactRequest";
-CREATE POLICY "Allow Service Insert ContactRequest" ON "ContactRequest" FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow Service Insert ContactRequest" ON "ContactRequest"
+  FOR INSERT WITH CHECK (false);
+
+-- Verrouillage des privilèges au niveau table (PostgREST / clés anon & authenticated)
+REVOKE INSERT, UPDATE, DELETE ON "ContactRequest" FROM anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE ON "BlockedEmailDomain" FROM anon, authenticated;
+REVOKE INSERT, UPDATE, DELETE ON "SuspiciousUAPattern" FROM anon, authenticated;
+
+-- Garde-fou complémentaire : révoquer TOUTE écriture aux rôles publics sur toutes
+-- les tables. Seules les lectures marketing restent ouvertes (politiques section 2).
+DO $$
+DECLARE
+  t text;
+BEGIN
+  FOR t IN SELECT table_name FROM information_schema.tables
+           WHERE table_schema = 'public'
+  LOOP
+    EXECUTE format('REVOKE INSERT, UPDATE, DELETE ON %I FROM anon, authenticated;', t);
+  END LOOP;
+END $$;

@@ -87,8 +87,7 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
               >
                 <motion.article
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: idx * 0.08 }}
                   onClick={() => onNavigate("blog")}
                   className="glass-card rounded-3xl p-6 h-full flex flex-col justify-between"
@@ -167,8 +166,7 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
               >
                 <motion.figure
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: i * 0.08 }}
                   className="glass-card rounded-2xl p-6 h-full flex flex-col justify-between"
                 >

@@ -82,7 +82,7 @@ export function JsonLd() {
         "@type": "SearchAction",
         target: {
           "@type": "EntryPoint",
-          urlTemplate: `${siteConfig.url}/blog?q={search_term_string}`,
+          urlTemplate: `${siteConfig.url}/insights?q={search_term_string}`,
         },
         "query-input": "required name=search_term_string",
       },
@@ -160,16 +160,16 @@ export function JsonLd() {
         },
       ],
     },
-    // BreadcrumbList
+    // BreadcrumbList — URLs réelles des routes App Router
     {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "Accueil", item: siteConfig.url },
-        { "@type": "ListItem", position: 2, name: "Services", item: `${siteConfig.url}/#services` },
-        { "@type": "ListItem", position: 3, name: "Solutions", item: `${siteConfig.url}/#solutions` },
-        { "@type": "ListItem", position: 4, name: "Insights", item: `${siteConfig.url}/#blog` },
-        { "@type": "ListItem", position: 5, name: "Contact", item: `${siteConfig.url}/#contact` },
+        { "@type": "ListItem", position: 2, name: "Services", item: `${siteConfig.url}/services` },
+        { "@type": "ListItem", position: 3, name: "Solutions", item: `${siteConfig.url}/solutions` },
+        { "@type": "ListItem", position: 4, name: "Insights", item: `${siteConfig.url}/insights` },
+        { "@type": "ListItem", position: 5, name: "Contact", item: `${siteConfig.url}/contact` },
       ],
     },
     // Schémas dynamiques Supabase

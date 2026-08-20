@@ -69,8 +69,7 @@ export function ActivityFeed({ logs, limit = 6, className }: ActivityFeedProps) 
           <motion.div
             key={entry.id || `${entry.time}-${i}`}
             initial={{ opacity: 0, x: -8 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.35, delay: i * 0.08 }}
             className="flex items-baseline gap-2"
           >
@@ -90,8 +89,7 @@ export function ActivityFeed({ logs, limit = 6, className }: ActivityFeedProps) 
 
         <motion.div
           initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-40px" }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: items.length * 0.08 }}
           className="mt-1 text-slate-500 dark:text-slate-400 tabular-nums"
           aria-hidden

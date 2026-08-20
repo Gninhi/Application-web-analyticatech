@@ -117,8 +117,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://analyticatech.fr",
     languages: {
+      // Version anglaise non publiée (pas de route /en) : ne PAS annoncer de
+      // hreflang vers une URL inexistante (signal SEO négatif).
       "fr-FR": "https://analyticatech.fr",
-      "en-US": "https://analyticatech.fr/en",
       "x-default": "https://analyticatech.fr",
     },
   },
