@@ -1,4 +1,5 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
+import { collectErrors } from "./helpers";
 
 /**
  * Couverture des routes App Router : statut HTTP, h1 unique, titre,
@@ -10,6 +11,7 @@ import { test, expect, type Page } from "@playwright/test";
 const STATIC_ROUTES = [
   { path: "/", titleContains: "Analyticatech" },
   { path: "/services", titleContains: "Services" },
+  { path: "/services/01", titleContains: "Raisonnement & RAG" },
   { path: "/solutions", titleContains: "Solutions" },
   { path: "/insights", titleContains: "Insights" },
   { path: "/contact", titleContains: "Contact" },
@@ -17,15 +19,6 @@ const STATIC_ROUTES = [
   { path: "/mentions-legales", titleContains: "Mentions" },
   { path: "/a-propos", titleContains: "propos" },
 ];
-
-function collectErrors(page: Page) {
-  const errors: string[] = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
-  });
-  page.on("pageerror", (err) => errors.push(err.message));
-  return errors;
-}
 
 for (const route of STATIC_ROUTES) {
   test.describe(`route ${route.path}`, () => {

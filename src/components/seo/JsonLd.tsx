@@ -52,7 +52,6 @@ export function JsonLd() {
         "Large Language Models",
         "Retrieval Augmented Generation",
         "Agents IA",
-        "Transformation Digitale",
         "Automatisation",
         "Business Intelligence",
         "LangChain",

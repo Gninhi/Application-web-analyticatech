@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, XCircle, CheckCircle2 } from "lucide-react";
+import { ArrowRight, XCircle, CheckCircle2, AlertOctagon, Sparkles, TrendingUp } from "lucide-react";
 import { MovingButton } from "@/components/interactive/MovingButton";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils/cn";
@@ -30,34 +30,38 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
         </p>
       </div>
 
-      {/* Switcher Avant / Après */}
-      <div className="flex items-center justify-between mb-8 p-2 rounded-full border border-black/10 dark:border-white/10 bg-white/40 dark:bg-white/5 max-w-md mx-auto">
+      {/* Switcher Interactif Avant / Après — Style 21st.dev */}
+      <div className="flex items-center justify-between mb-8 p-1.5 rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 max-w-md mx-auto backdrop-blur-md shadow-lg shadow-black/5">
         <button
+          type="button"
           onClick={() => setViewMode("before")}
-          className={`flex-1 py-2.5 px-4 rounded-full font-mono text-xs font-bold transition-all ${
+          className={`flex-1 py-2.5 px-4 rounded-full font-mono text-xs font-bold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer ${
             viewMode === "before"
-              ? "bg-red-50 text-red-700 border border-red-300 shadow-sm dark:bg-red-500/25 dark:text-red-300 dark:border-red-400/40"
-              : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+              ? "bg-red-500/15 text-red-600 dark:text-red-400 border border-red-500/30 shadow-md shadow-red-500/10"
+              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
           }`}
         >
-          {t("demo.before.switch")}
+          <AlertOctagon className="h-3.5 w-3.5" aria-hidden />
+          <span>{t("demo.before.switch")}</span>
         </button>
         <button
+          type="button"
           onClick={() => setViewMode("after")}
-          className={`flex-1 py-2.5 px-4 rounded-full font-mono text-xs font-bold transition-all ${
+          className={`flex-1 py-2.5 px-4 rounded-full font-mono text-xs font-bold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer ${
             viewMode === "after"
-              ? "bg-green-50 text-green-800 border border-green-300 shadow-sm dark:bg-[#4CAF50]/25 dark:text-green-300 dark:border-[#4CAF50]/40"
-              : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+              ? "bg-[#4CAF50]/15 text-[#4CAF50] border border-[#4CAF50]/30 shadow-md shadow-[#4CAF50]/10"
+              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
           }`}
         >
-          {t("demo.after.switch")}
+          <Sparkles className="h-3.5 w-3.5" aria-hidden />
+          <span>{t("demo.after.switch")}</span>
         </button>
       </div>
 
       {/* Vue Comparative.
         Crossfade "grid-stack" : les vues Avant/Après sont empilées dans la
         même cellule (hauteur = max des vues → zéro saut de mise en page). */}
-      <div className="relative overflow-hidden glass-card rounded-3xl p-6 md:p-10 grid">
+      <div className="relative overflow-hidden glass-card rounded-3xl p-6 md:p-10 grid border border-black/10 dark:border-white/10 shadow-2xl">
         {(["before", "after"] as const).map((mode) => {
           const isActive = viewMode === mode;
           return (
@@ -76,9 +80,10 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
               {mode === "before" ? (
                 <>
                   <div className="lg:col-span-7">
-                    <span className="font-mono text-xs uppercase tracking-widest text-red-500 bg-red-500/10 px-3 py-1 rounded-full border border-red-500/20 inline-block mb-4">
-                      {t("demo.before.label")}
-                    </span>
+                    <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-red-500 bg-red-500/10 px-3 py-1 rounded-full border border-red-500/20 mb-4">
+                      <AlertOctagon className="h-3.5 w-3.5" aria-hidden />
+                      <span>{t("demo.before.label")}</span>
+                    </div>
                     <h3 className="font-display text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-50 mb-3">
                       {t("demo.before.title")}
                     </h3>
@@ -94,7 +99,9 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
                         t("demo.before.point4"),
                       ].map((point, idx) => (
                         <div key={idx} className="flex items-center gap-3 text-sm text-red-600 dark:text-red-400 font-medium">
-                          <XCircle className="h-4 w-4 shrink-0" aria-hidden />
+                          <div className="p-1 rounded-full bg-red-500/10 shrink-0">
+                            <XCircle className="h-4 w-4 text-red-500" aria-hidden />
+                          </div>
                           <span>{point}</span>
                         </div>
                       ))}
@@ -112,9 +119,10 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
               ) : (
                 <>
                   <div className="lg:col-span-7">
-                    <span className="font-mono text-xs uppercase tracking-widest text-[#4CAF50] bg-[#4CAF50]/10 px-3 py-1 rounded-full border border-[#4CAF50]/20 inline-block mb-4">
-                      {t("demo.after.label")}
-                    </span>
+                    <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-[#4CAF50] bg-[#4CAF50]/10 px-3 py-1 rounded-full border border-[#4CAF50]/20 mb-4">
+                      <Sparkles className="h-3.5 w-3.5" aria-hidden />
+                      <span>{t("demo.after.label")}</span>
+                    </div>
                     <h3 className="font-display text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-50 mb-3">
                       {t("demo.after.title")}
                     </h3>
@@ -130,7 +138,9 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
                         t("demo.after.point4"),
                       ].map((point, idx) => (
                         <div key={idx} className="flex items-center gap-3 text-sm text-[#4CAF50] font-medium">
-                          <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden />
+                          <div className="p-1 rounded-full bg-[#4CAF50]/10 shrink-0">
+                            <CheckCircle2 className="h-4 w-4 text-[#4CAF50]" aria-hidden />
+                          </div>
                           <span>{point}</span>
                         </div>
                       ))}
@@ -153,17 +163,20 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
 
                   {/* Metrics d'impact */}
                   <div className="lg:col-span-5 grid grid-cols-2 gap-3">
-                    <div className="rounded-2xl border border-[#4CAF50]/30 bg-[#4CAF50]/10 p-5 text-center">
+                    <div className="rounded-2xl border border-[#4CAF50]/30 bg-[#4CAF50]/10 p-5 text-center transition-transform duration-300 hover:scale-[1.02]">
                       <span className="font-mono text-[10px] uppercase text-[#4CAF50] font-bold block">{t("demo.after.m1.label")}</span>
                       <span className="font-display text-3xl font-bold text-slate-900 dark:text-slate-50 mt-1 block">{t("demo.after.m1.value")}</span>
                     </div>
-                    <div className="rounded-2xl border border-[#F26D3D]/30 bg-[#F26D3D]/10 p-5 text-center">
+                    <div className="rounded-2xl border border-[#F26D3D]/30 bg-[#F26D3D]/10 p-5 text-center transition-transform duration-300 hover:scale-[1.02]">
                       <span className="font-mono text-[10px] uppercase text-[#F26D3D] font-bold block">{t("demo.after.m2.label")}</span>
                       <span className="font-display text-3xl font-bold text-slate-900 dark:text-slate-50 mt-1 block">{t("demo.after.m2.value")}</span>
                     </div>
-                    <div className="col-span-2 rounded-2xl border border-black/10 dark:border-white/20 bg-black/5 dark:bg-white/5 p-5 text-center">
-                      <span className="font-mono text-[10px] uppercase text-slate-500 dark:text-slate-400 block">{t("demo.after.m3.label")}</span>
-                      <span className="font-display text-4xl font-bold text-[#F26D3D] mt-1 block">{t("demo.after.m3.value")}</span>
+                    <div className="col-span-2 rounded-2xl border border-black/10 dark:border-white/20 bg-black/5 dark:bg-white/5 p-5 text-center transition-transform duration-300 hover:scale-[1.01]">
+                      <div className="inline-flex items-center gap-1.5 mb-1">
+                        <TrendingUp className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden />
+                        <span className="font-mono text-[10px] uppercase text-slate-500 dark:text-slate-400">{t("demo.after.m3.label")}</span>
+                      </div>
+                      <span className="font-display text-4xl font-bold text-[#F26D3D] block">{t("demo.after.m3.value")}</span>
                       <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400 mt-1 block">{t("demo.after.m3.sub")}</span>
                     </div>
                   </div>

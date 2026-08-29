@@ -47,6 +47,11 @@ export interface ServiceDTO {
   meshOverlay: string | null;
   metrics: { label: string; value: string }[];
   order: number;
+  persona: {
+    ceo: string;
+    architect: string;
+    operational: string;
+  };
 }
 
 export interface SolutionDTO {

@@ -74,7 +74,7 @@ export function Footer() {
               </span>
             </div>
             <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xs mb-5">
-              Cabinet de conseil en IA, Transformation Digitale et Automatisation.
+              Cabinet de conseil en IA, Automatisation & Workflows et Décision Augmentée.
               Architecture de systèmes intelligents à l&apos;échelle.
             </p>
 

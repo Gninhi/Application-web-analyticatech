@@ -12,12 +12,12 @@ const PAGE_COPY: Record<Locale, Record<string, { title: string; description: str
     services: {
       title: "Services — Conseil en IA, Agents & Automatisation",
       description:
-        "Cinq couches d'expertise empilées : IA & LLM, Transformation Digitale, Automatisation, Business Intelligence et Agents. Chaque service livré avec méthode, sécurité et ROI mesuré.",
+        "Quatre couches d'expertise empilées : Raisonnement & RAG, Automatisation & Workflows, Orchestration Multi-Agents, Data & Décision Augmentée. Chaque service livré avec méthode, sécurité et ROI mesuré.",
     },
     solutions: {
       title: "Solutions sectorielles — IA & Automatisation par métier",
       description:
-        "Des solutions prêtes à adapter pour la banque, l'industrie, le retail, le secteur public et plus : agents IA, automatisation de workflows, BI et transformation digitale.",
+        "Des solutions prêtes à adapter pour la banque, l'industrie, le retail, le secteur public et plus : agents IA, automatisation de workflows, BI et pilotage décisionnel.",
     },
     insights: {
       title: "Insights — Rapports techniques & retours de terrain",
@@ -39,22 +39,22 @@ const PAGE_COPY: Record<Locale, Record<string, { title: string; description: str
       description:
         "Mentions légales d'Analyticatech : éditeur du site, hébergement, propriété intellectuelle et coordonnées.",
     },
-    "a-propos": {
+"a-propos": {
       title: "À propos d'Analyticatech",
       description:
-        "Cabinet de conseil en IA, Transformation Digitale et Automatisation : mission, vision et valeurs. Du POC à la production, avec précision, sécurité et impact mesurable.",
+        "Cabinet de conseil en IA, Agents & Automatisation : mission, vision et valeurs. Du POC à la production, avec précision, sécurité et impact mesuré.",
     },
   },
   en: {
     services: {
       title: "Services — AI, Agents & Automation Consulting",
       description:
-        "Five stacked layers of expertise: AI & LLM, Digital Transformation, Automation, Business Intelligence and Agents. Every service delivered with method, security and measurable ROI.",
+        "Four stacked layers of expertise: Reasoning & RAG, Automation & Workflows, Multi-Agent Orchestration, Data & Augmented Decision. Every service delivered with method, security and measurable ROI.",
     },
     solutions: {
       title: "Industry Solutions — AI & Automation by sector",
       description:
-        "Ready-to-adapt solutions for banking, industry, retail, public sector and more: AI agents, workflow automation, BI and digital transformation.",
+        "Ready-to-adapt solutions for banking, industry, retail, public sector and more: AI agents, workflow automation, BI and augmented decision.",
     },
     insights: {
       title: "Insights — Technical reports & field feedback",
@@ -79,7 +79,7 @@ const PAGE_COPY: Record<Locale, Record<string, { title: string; description: str
     "a-propos": {
       title: "About Analyticatech",
       description:
-        "Consulting firm in AI, Digital Transformation and Automation: mission, vision and values. From POC to production, with precision, security and measurable impact.",
+        "Consulting firm in AI, Agents & Automation: mission, vision and values. From POC to production, with precision, security and measurable impact.",
     },
   },
 };

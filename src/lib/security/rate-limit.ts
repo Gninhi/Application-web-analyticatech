@@ -33,6 +33,12 @@ function cleanupIfNeeded() {
   }
 }
 
+/** Réinitialise les buckets en mémoire (usage réservé aux tests unitaires). */
+export function _resetRateLimitBucketsForTest(): void {
+  buckets.clear();
+  lastCleanup = Date.now();
+}
+
 export interface RateLimitResult {
   allowed: boolean;
   remaining: number;

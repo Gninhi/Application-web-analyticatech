@@ -20,16 +20,24 @@ import { LazySection, SectionSkeleton } from "@/components/ui/LazySection";
  * sert à la fois au placeholder de LazySection et au fallback `loading` des
  * chunks dynamiques → aucune variation de hauteur entre les deux phases. */
 const SECTION_SKELETONS = {
+  services: { minHeight: 960, mobileMinHeight: 2100 },
+  pains: { minHeight: 640, mobileMinHeight: 850 },
   graph: { minHeight: 520, mobileMinHeight: 800 },
   bento: { minHeight: 640, mobileMinHeight: 1300 },
-  solutions: { minHeight: 760, mobileMinHeight: 2100 },
-  pains: { minHeight: 640, mobileMinHeight: 850 },
-  method: { minHeight: 640, mobileMinHeight: 1050 },
+  method: { minHeight: 930, mobileMinHeight: 1520 },
   demo: { minHeight: 640, mobileMinHeight: 850 },
-  proof: { minHeight: 720, mobileMinHeight: 1800 },
+  proof: { minHeight: 1150, mobileMinHeight: 2200 },
   faq: { minHeight: 640, mobileMinHeight: 850 },
 } as const;
 
+const HomeServicesGrid = dynamic(
+  () => import("@/components/sections/HomeServicesGrid").then((m) => m.HomeServicesGrid),
+  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.services} /> }
+);
+const BusinessPainPointsSection = dynamic(
+  () => import("@/components/sections/BusinessPainPointsSection").then((m) => m.BusinessPainPointsSection),
+  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.pains} /> }
+);
 const LivingSystemGraph = dynamic(
   () => import("@/components/interactive/LivingSystemGraph").then((m) => m.LivingSystemGraph),
   { loading: () => <SectionSkeleton {...SECTION_SKELETONS.graph} /> }
@@ -37,14 +45,6 @@ const LivingSystemGraph = dynamic(
 const DataConsoleBento = dynamic(
   () => import("@/components/sections/DataConsoleBento").then((m) => m.DataConsoleBento),
   { loading: () => <SectionSkeleton {...SECTION_SKELETONS.bento} /> }
-);
-const HomeSolutionsGrid = dynamic(
-  () => import("@/components/sections/HomeSolutionsGrid").then((m) => m.HomeSolutionsGrid),
-  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.solutions} /> }
-);
-const BusinessPainPointsSection = dynamic(
-  () => import("@/components/sections/BusinessPainPointsSection").then((m) => m.BusinessPainPointsSection),
-  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.pains} /> }
 );
 const AgentoryMethod = dynamic(
   () => import("@/components/sections/AgentoryMethod").then((m) => m.AgentoryMethod),
@@ -72,7 +72,7 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
   const { t } = useI18n();
   const { metrics: DB_METRICS } = useAppContent();
 
-  // Metric stats affichées dans la section 03 Preuve rapide
+  // Metric stats affichées dans la section 02 Preuve rapide
   const displayStats = DB_METRICS.slice(0, 4).map((m) => ({ v: m.value, l: m.label }));
 
   return (
@@ -80,16 +80,7 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
       {/* ============ 01 — HERO (H1 blueprint + image ASCII pipeline) ============ */}
       <HeroSection onNavigate={onNavigate} />
 
-      {/* ============ 02 — SYSTÈME VIVANT ============ */}
-      <section className="relative">
-        <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <LazySection {...SECTION_SKELETONS.graph}>
-            <LivingSystemGraph />
-          </LazySection>
-        </div>
-      </section>
-
-      {/* ============ 03 — PREUVE RAPIDE ============ */}
+      {/* ============ 02 — PREUVE RAPIDE ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <div className="glass-card rounded-3xl p-8 md:p-10">
@@ -121,17 +112,12 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
         </div>
       </section>
 
-      {/* ============ 03b — DATA CONSOLE BENTO ============ */}
-      <LazySection {...SECTION_SKELETONS.bento}>
-        <DataConsoleBento />
+      {/* ============ 03 — LES SERVICES (BENTO COGNITIVE MATRIX) ============ */}
+      <LazySection {...SECTION_SKELETONS.services}>
+        <HomeServicesGrid onNavigate={onNavigate} onNavigateDetail={onNavigateDetail} />
       </LazySection>
 
-      {/* ============ 04 — LES SOLUTIONS ============ */}
-      <LazySection {...SECTION_SKELETONS.solutions}>
-        <HomeSolutionsGrid onNavigate={onNavigate} onNavigateDetail={onNavigateDetail} />
-      </LazySection>
-
-      {/* ============ 05 — PROBLÈMES MÉTIERS ============ */}
+      {/* ============ 04 — PROBLÈMES MÉTIERS ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <LazySection {...SECTION_SKELETONS.pains}>
@@ -140,7 +126,21 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
         </div>
       </section>
 
-      {/* ============ 06 — MÉTHODE (STYLE FRAMER AGENTORY) ============ */}
+      {/* ============ 05 — SYSTÈME VIVANT ============ */}
+      <section className="relative">
+        <div className="mx-auto max-w-7xl px-4 md:px-6">
+          <LazySection {...SECTION_SKELETONS.graph}>
+            <LivingSystemGraph />
+          </LazySection>
+        </div>
+      </section>
+
+      {/* ============ 06 — DATA CONSOLE & TÉLÉMÉTRIE ============ */}
+      <LazySection {...SECTION_SKELETONS.bento}>
+        <DataConsoleBento />
+      </LazySection>
+
+      {/* ============ 07 — MÉTHODE (STYLE FRAMER AGENTORY) ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <LazySection {...SECTION_SKELETONS.method}>
@@ -149,7 +149,7 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
         </div>
       </section>
 
-      {/* ============ 07 — CAS / DÉMONSTRATION ============ */}
+      {/* ============ 08 — CAS / DÉMONSTRATION AVANT-APRÈS ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <LazySection {...SECTION_SKELETONS.demo}>
@@ -158,12 +158,12 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
         </div>
       </section>
 
-      {/* ============ 08 — INSIGHTS + TÉMOIGNAGES (MARQUEES INCLUS) ============ */}
+      {/* ============ 09 — INSIGHTS + TÉMOIGNAGES (MARQUEES INCLUS) ============ */}
       <LazySection {...SECTION_SKELETONS.proof}>
         <HomeSocialProof onNavigate={onNavigate} />
       </LazySection>
 
-      {/* ============ 09 — FAQ (ACCORDÉON SERVICE) ============ */}
+      {/* ============ 10 — FAQ (ACCORDÉON SERVICE) ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <LazySection {...SECTION_SKELETONS.faq}>
@@ -172,7 +172,7 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
         </div>
       </section>
 
-      {/* ============ 10 — CTA FINAL (EXIGENCE BLUEPRINT) ============ */}
+      {/* ============ 11 — CTA FINAL (EXIGENCE BLUEPRINT) ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <div className="relative overflow-hidden rounded-3xl glass-card p-8 md:p-14 text-center">

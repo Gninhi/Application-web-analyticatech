@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Check } from "lucide-react";
 import type { ViewKey } from "@/types/content";
@@ -33,7 +34,23 @@ function DetailNotFound({ label, title, message }: { label: string; title: strin
 export function ServiceDetailView({ serviceIndex, onNavigate }: ServiceDetailViewProps) {
   const { t } = useI18n();
   const { services } = useAppContent();
-  const service = services.find((s) => s.index === serviceIndex);
+  const normalizedIndex = (serviceIndex ?? "").trim().padStart(2, "0");
+  const service = services.find((s) => s.index === serviceIndex || s.index === normalizedIndex);
+  const [persona, setPersona] = useState<"ceo" | "architect" | "operational" | null>(null);
+
+  useEffect(() => {
+    const handle = requestAnimationFrame(() => {
+      try {
+        const stored = localStorage.getItem("analyticatech-persona");
+        if (stored === "ceo" || stored === "architect" || stored === "operational") {
+          setPersona(stored);
+        }
+      } catch {
+        // Ignorer si indisponible
+      }
+    });
+    return () => cancelAnimationFrame(handle);
+  }, []);
 
   if (!service) {
     return (
@@ -112,6 +129,17 @@ export function ServiceDetailView({ serviceIndex, onNavigate }: ServiceDetailVie
           <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-base md:text-lg mb-6">
             {service.description}
           </p>
+
+          {persona && service.persona && service.persona[persona] && (
+            <div className="mt-6 glass-card rounded-2xl p-5 mb-6">
+              <h3 className="font-mono text-[11px] uppercase tracking-widest text-[#F26D3D] mb-3">
+                {t("detail.persona.title")} ({t(`services.persona.${persona}-label`)})
+              </h3>
+              <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
+                {service.persona[persona]}
+              </p>
+            </div>
+          )}
 
           <h3 className="font-mono text-[11px] uppercase tracking-widest text-[#F26D3D] mb-3">
             {t("common.techStack")}

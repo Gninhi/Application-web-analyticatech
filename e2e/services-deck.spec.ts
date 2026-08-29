@@ -52,7 +52,7 @@ function parseMatrix(transform: string): { tx: number; ty: number; scale: number
   if (!transform || transform === "none") return { tx: 0, ty: 0, scale: 1 };
   const m = transform.match(/matrix\(([^)]+)\)/);
   if (!m) return { tx: 0, ty: 0, scale: 1 };
-  const [a, b, c, d, e, f] = m[1].split(",").map((v) => parseFloat(v.trim()));
+  const [a, _b, _c, _d, e, f] = m[1].split(",").map((v) => parseFloat(v.trim()));
   return { tx: Number.isFinite(e) ? e : 0, ty: Number.isFinite(f) ? f : 0, scale: a || 1 };
 }
 
@@ -141,9 +141,9 @@ async function runDeckScrollSequence(page: Page, viewportH: number, screenshotDi
   await expect(deck).toBeVisible();
 
   const deckBox = await deck.boundingBox();
-  expect(deckBox).not.toBeNull();
-  const deckTop = deckBox!.y;
-  const deckHeight = deckBox!.height;
+  expect(deckBox).toBeTruthy();
+  const deckTop = deckBox?.y ?? 0;
+  const deckHeight = deckBox?.height ?? 0;
 
   const cardCount = await page.locator(CARD).count();
   const stepPx = STEP_PX;
@@ -151,8 +151,8 @@ async function runDeckScrollSequence(page: Page, viewportH: number, screenshotDi
 
   const log: string[] = [];
   let prevActive = -1;
-  let prevBgTy: Record<number, number> = {};
-  let prevRectTop: Record<number, number> = {};
+  const prevBgTy: Record<number, number> = {};
+  const prevRectTop: Record<number, number> = {};
 
   for (let s = 0; s <= steps; s++) {
     const y = deckTop + Math.min(s * stepPx, deckHeight + viewportH);
@@ -188,7 +188,7 @@ async function runDeckScrollSequence(page: Page, viewportH: number, screenshotDi
     }
 
     log.push(line.join(" "));
-    console.log(line.join(" "));
+    // (debug visible dans le rapport Playwright via les annotations de log)
 
     // Screenshot aux points de bascule entre cartes.
     if (active !== prevActive || s === 0 || s === steps) {
@@ -215,7 +215,7 @@ async function runDeckScrollSequence(page: Page, viewportH: number, screenshotDi
       `y=${Math.round(y)} c0.top=${Math.round(card0.rectTop)} c1.top=${Math.round(card1.rectTop)} c0.bgTy=${Math.round(bg0.ty)} c1.bgTy=${Math.round(bg1.ty)} c1.depth=${card1.depthOpacity?.toFixed(2)}`,
     );
   }
-  for (const l of fine) console.log("FINE " + l);
+  // Les mesures fines sont capturées dans le tableau `log` — pas de console.log en e2e
   log.push("FINE " + fine.join(" | "));
 
   return { log, cardCount };
@@ -243,13 +243,13 @@ for (const [label, viewport] of [
     test("empilement stable, net et déterministe au scroll", async ({ page }) => {
       const errors = collectErrors(page);
       await page.goto("/services", { waitUntil: "domcontentloaded" });
-      await page.evaluate(() => (document as any).fonts?.ready);
+      await page.evaluate(() => document.fonts.ready);
       await expect(page.locator(CARD).first()).toBeVisible();
-      await expect(page.locator(CARD)).toHaveCount(5);
+      await expect(page.locator(CARD)).toHaveCount(4);
 
       const dir = `e2e/screenshots/services-deck/${label}`;
       const { cardCount } = await runDeckScrollSequence(page, viewport.height, dir);
-      expect(cardCount).toBe(5);
+      expect(cardCount).toBe(4);
 
       // 1) Re-scroll lent complet pour les assertions finales.
       await scrollToAndSettle(page, 0);
@@ -257,11 +257,11 @@ for (const [label, viewport] of [
 
       const viewportH = viewport.height;
       const deckBox = await page.locator(DECK).boundingBox();
-      expect(deckBox).not.toBeNull();
+      expect(deckBox).toBeTruthy();
 
       // 2) Assertions sur chaque position de bascule (carte i active).
       for (let i = 0; i < cardCount; i++) {
-        const y = deckBox!.y + i * viewportH;
+        const y = (deckBox?.y ?? 0) + i * viewportH;
         await scrollToAndSettle(page, y);
         await settleAnimations(page);
         const metrics = await sampleCards(page);
@@ -289,21 +289,23 @@ for (const [label, viewport] of [
         // carte active (top = gap × i → sa carte dépasse naturellement du
         // bas du viewport, mais le panneau ne doit pas être rogné).
         const cardBox = await page.locator(CARD).nth(active).boundingBox();
-        expect(cardBox).not.toBeNull();
+        expect(cardBox).toBeTruthy();
         const panelBox = await page.locator(PANEL).nth(active).boundingBox();
-        expect(panelBox).not.toBeNull();
-        expect(panelBox!.y).toBeGreaterThanOrEqual(cardBox!.y - 1);
-        expect(panelBox!.y + panelBox!.height).toBeLessThanOrEqual(
-          cardBox!.y + cardBox!.height + 1,
-        );
+        expect(panelBox).toBeTruthy();
+        if (panelBox && cardBox) {
+          expect(panelBox.y).toBeGreaterThanOrEqual(cardBox.y - 1);
+          expect(panelBox.y + panelBox.height).toBeLessThanOrEqual(
+            cardBox.y + cardBox.height + 1,
+          );
+        }
       }
 
       // 3) Stabilité : parallaxe bornée (amplitude faible) sur le décor.
-      await scrollToAndSettle(page, deckBox!.y);
+      await scrollToAndSettle(page, deckBox?.y ?? 0);
       await settleAnimations(page);
       const m0 = await sampleCards(page);
       const first = parseMatrix(m0[0].bgTransform);
-      await scrollToAndSettle(page, deckBox!.y + viewportH);
+      await scrollToAndSettle(page, (deckBox?.y ?? 0) + viewportH);
       await settleAnimations(page);
       const m1 = await sampleCards(page);
       const second = parseMatrix(m1[0].bgTransform);
@@ -317,7 +319,7 @@ for (const [label, viewport] of [
       //    L'étape de transition (dernier incrément vers le pin) est exclue.
       const pinGap = Math.min(56, Math.max(16, viewportH * 0.04));
       const pinTop = pinGap * 1; // carte 1 : top = gap × 1
-      const startY = deckBox!.y + viewportH - 5 * STEP_PX;
+      const startY = (deckBox?.y ?? 0) + viewportH - 5 * STEP_PX;
       const pinnedRects: number[] = [];
       const slidingDeltas: number[] = [];
       const pinnedDeltas: number[] = [];
@@ -358,13 +360,13 @@ for (const [label, viewport] of [
       await page.emulateMedia({ reducedMotion: "reduce" });
       const errors = collectErrors(page);
       await page.goto("/services", { waitUntil: "domcontentloaded" });
-      await page.evaluate(() => (document as any).fonts?.ready);
-      await expect(page.locator(CARD)).toHaveCount(5);
+      await page.evaluate(() => document.fonts.ready);
+      await expect(page.locator(CARD)).toHaveCount(4);
 
       const deckBox = await page.locator(DECK).boundingBox();
-      expect(deckBox).not.toBeNull();
+      expect(deckBox).toBeTruthy();
 
-      await scrollToAndSettle(page, deckBox!.y + viewport.height);
+      await scrollToAndSettle(page, (deckBox?.y ?? 0) + viewport.height);
       await settleAnimations(page);
       const metrics = await sampleCards(page);
 

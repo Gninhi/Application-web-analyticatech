@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { useLayoutEffect, useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import {
   ArrowUpRight,
@@ -23,6 +23,7 @@ import {
 import { MovingButton } from "@/components/interactive/MovingButton";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SectionContainer } from "@/components/ui/SectionContainer";
+import { cn } from "@/lib/utils/cn";
 
 interface ServicesViewProps {
   onNavigate: (view: ViewKey) => void;
@@ -88,6 +89,36 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
     };
   }, []);
 
+  const [activePersona, setActivePersona] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handle = requestAnimationFrame(() => {
+      try {
+        const stored = localStorage.getItem("analyticatech-persona");
+        if (stored === "ceo" || stored === "architect" || stored === "operational") {
+          setActivePersona(stored);
+        }
+      } catch {
+        // Ignorer si indisponible
+      }
+    });
+    return () => cancelAnimationFrame(handle);
+  }, []);
+
+  const handleSelectPersona = (p: "ceo" | "architect" | "operational") => {
+    try {
+      if (activePersona === p) {
+        localStorage.removeItem("analyticatech-persona");
+        setActivePersona(null);
+      } else {
+        localStorage.setItem("analyticatech-persona", p);
+        setActivePersona(p);
+      }
+    } catch {
+      // Ignorer
+    }
+  };
+
   return (
     <div>
       {/* === En-tête de page === */}
@@ -100,6 +131,51 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
             description={t("services.desc")}
             className="max-w-3xl"
           />
+
+          {/* Sélecteur de persona */}
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+              {t("services.persona.filter") || "Vue ciblée :"}
+            </span>
+            <button
+              type="button"
+              className={cn(
+                "glass rounded-lg px-3.5 py-1.5 font-mono text-xs uppercase tracking-wider cursor-pointer transition-all duration-200 hover:bg-accent/15",
+                activePersona === "ceo" ? "ring-1 ring-[#F26D3D] bg-accent/20 text-[#F26D3D] font-bold" : "text-muted-foreground"
+              )}
+              onClick={() => handleSelectPersona("ceo")}
+              aria-label={t("services.persona.ceo")}
+            >
+              {t("services.persona.ceo-label")}
+            </button>
+            <button
+              type="button"
+              className={cn(
+                "glass rounded-lg px-3.5 py-1.5 font-mono text-xs uppercase tracking-wider cursor-pointer transition-all duration-200 hover:bg-[#43A047]/15",
+                activePersona === "architect" ? "ring-1 ring-[#43A047] bg-[#43A047]/20 text-[#43A047] font-bold" : "text-muted-foreground"
+              )}
+              onClick={() => handleSelectPersona("architect")}
+              aria-label={t("services.persona.architect-label")}
+            >
+              {t("services.persona.architect-label")}
+            </button>
+            <button
+              type="button"
+              className={cn(
+                "glass rounded-lg px-3.5 py-1.5 font-mono text-xs uppercase tracking-wider cursor-pointer transition-all duration-200 hover:bg-[#38BDF8]/15",
+                activePersona === "operational" ? "ring-1 ring-[#38BDF8] bg-[#38BDF8]/20 text-[#38BDF8] font-bold" : "text-muted-foreground"
+              )}
+              onClick={() => handleSelectPersona("operational")}
+              aria-label={t("services.persona.operational-label")}
+            >
+              {t("services.persona.operational-label")}
+            </button>
+            {activePersona && (
+              <span className="text-xs font-mono text-muted-foreground">
+                ({t("services.persona.selected")} {activePersona.toUpperCase()})
+              </span>
+            )}
+          </div>
 
           {/* Indice de défilement — guide vers la pile de cartes */}
           <motion.div

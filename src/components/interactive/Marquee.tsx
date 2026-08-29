@@ -34,8 +34,8 @@ export function Marquee({
 }: MarqueeProps) {
   if (!items.length) return null;
 
-  // Duplication pour la boucle continue (translateX -50%)
-  const doubled = [...items, ...items];
+  // Répétition 4x pour garantir un flux infini continu sur toutes largeurs d'écran
+  const repeated = [...items, ...items, ...items, ...items];
 
   // Animation inline pour contourner les problèmes de priorité CSS Tailwind v4
   const animationName = direction === "left" ? "marquee" : "marquee-reverse";
@@ -51,10 +51,10 @@ export function Marquee({
 
   return (
     <div
-      className={cn("marquee-container relative overflow-hidden group", className)}
+      className={cn("marquee-container relative overflow-hidden group select-none", className)}
     >
-      <div className="marquee-track" style={trackStyle}>
-        {doubled.map((item, i) => (
+      <div className="marquee-track flex items-center" style={trackStyle}>
+        {repeated.map((item, i) => (
           <div key={i} className="shrink-0">
             {renderItem(item, i)}
           </div>

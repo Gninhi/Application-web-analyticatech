@@ -1,18 +1,10 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
+import { collectErrors } from "./helpers";
 
 /**
  * Navigation réelle (App Router) : liens `<a>`, transitions client-side,
  * état actif du menu, panel mobile, skip-link, 404 et CSP nonce.
  */
-
-function collectErrors(page: Page) {
-  const errors: string[] = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
-  });
-  page.on("pageerror", (err) => errors.push(err.message));
-  return errors;
-}
 
 test.describe("navigation desktop", () => {
   test("les liens du menu sont de vraies balises <a>", async ({ page }) => {
@@ -32,13 +24,18 @@ test.describe("navigation desktop", () => {
 
     await page.locator("nav a", { hasText: "Solutions" }).first().click();
     await page.waitForURL("**/solutions", { timeout: 15_000 });
-    await page.waitForFunction(() => document.activeElement?.id === "main-content", undefined, { timeout: 10_000 });
+    await page.waitForLoadState("networkidle");
+    // Le focus peut mettre un instant à se stabiliser après la navigation client-side.
+    // On attends que l'élément main-content soit dans le DOM, puis on vérifie le focus.
+    await page.waitForSelector('[id="main-content"]', { state: "visible", timeout: 10_000 });
+    const focused = await page.evaluate(() => document.activeElement?.id);
+    expect(focused).toBe("main-content");
 
     const activeCount = await page.locator("nav a[aria-current='page']").count();
     expect(activeCount).toBeGreaterThanOrEqual(1);
 
-    const focused = await page.evaluate(() => document.activeElement?.id);
-    expect(focused).toBe("main-content");
+    const focused2 = await page.evaluate(() => document.activeElement?.id);
+    expect(focused2).toBe("main-content");
     expect(errors).toEqual([]);
   });
 
@@ -58,10 +55,12 @@ test.describe("panel mobile", () => {
   test("ouvre, navigue et referme le menu", async ({ page }) => {
     const errors = collectErrors(page);
     await page.goto("/", { waitUntil: "domcontentloaded" });
-    await page.waitForTimeout(500);
+    await page.waitForLoadState("networkidle");
 
-    await page.locator("button[aria-label*='Ouvrir']").click();
-    await expect(page.locator("#mobile-menu")).toBeVisible();
+    const menuBtn = page.locator("button[aria-label*='Ouvrir']").first();
+    await expect(menuBtn).toBeVisible();
+    await menuBtn.click();
+    await expect(page.locator("#mobile-menu")).toBeVisible({ timeout: 10_000 });
     const linkCount = await page.locator("#mobile-menu a").count();
     expect(linkCount).toBeGreaterThanOrEqual(4);
 
@@ -73,18 +72,23 @@ test.describe("panel mobile", () => {
 
   test("Escape ferme le panel et rend le focus à l'ouvreur", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
-    await page.waitForTimeout(500);
+    await page.waitForLoadState("networkidle");
 
-    await page.locator("button[aria-label*='Ouvrir']").click();
-    await expect(page.locator("#mobile-menu")).toBeVisible();
+    const menuBtn = page.locator("button[aria-label*='Ouvrir']").first();
+    await expect(menuBtn).toBeVisible();
+    await menuBtn.click();
+    await expect(page.locator("#mobile-menu")).toBeVisible({ timeout: 10_000 });
     const inPanel = await page.evaluate(() => document.activeElement?.closest("#mobile-menu") !== null);
     expect(inPanel).toBe(true);
 
     await page.keyboard.press("Escape");
     await expect(page.locator("#mobile-menu")).toHaveCount(0);
     const opener = await page.evaluate(() => {
-      const el = document.activeElement;
-      return el ? (el.getAttribute("aria-label") || "").includes("Ouvrir") : false;
+      const active = document.activeElement;
+      return (
+        active?.tagName.toLowerCase() === "button" &&
+        active.getAttribute("aria-label")?.includes("Ouvrir")
+      );
     });
     expect(opener).toBe(true);
   });
@@ -101,6 +105,7 @@ test.describe("accessibilité", () => {
     expect(skip).not.toBeNull();
 
     await page.keyboard.press("Enter");
+    // Après activation du skip-link, le focus doit aller sur main-content
     await page.waitForFunction(() => document.activeElement?.id === "main-content", undefined, { timeout: 10_000 });
     const focused = await page.evaluate(() => document.activeElement?.id);
     expect(focused).toBe("main-content");
@@ -115,9 +120,14 @@ test.describe("accessibilité", () => {
 });
 
 test.describe("erreurs & sécurité", () => {
+  test("404 sur un service inconnu", async ({ page }) => {
+    const response = await page.goto("/services/99-inexistant", { waitUntil: "domcontentloaded" });
+    expect(response?.status()).toBe(404);
+  });
+
   test("404 sur une solution inconnue", async ({ page }) => {
-    // Le navigateur log un erreur réseau « 404 » sur la ressource — comportement
-    // attendu d'une page 404 ; on ne teste donc ici que le statut + rendu propre.
+    // Le navigateur log une erreur réseau « 404 » sur la ressource — comportement
+    // attendu d'une page 404 ; on ne teste ici que le statut + rendu propre.
     const response = await page.goto("/solutions/slug-inexistant", { waitUntil: "domcontentloaded" });
     expect(response?.status()).toBe(404);
   });
@@ -157,11 +167,34 @@ test.describe("erreurs & sécurité", () => {
     expect(unscaped).toBe(0);
   });
 
+  test("clic sur une carte service accueil → /services/01, retour OK", async ({ page }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    // Instant scroll pour déclencher le lazy-loading de la section
+    await page.evaluate(() => {
+      document.documentElement.scrollTo({ top: 1200, behavior: "instant" });
+    });
+    await page.waitForTimeout(300);
+
+    const card = page.locator("article", { hasText: "Raisonnement & RAG" }).first();
+    await card.scrollIntoViewIfNeeded();
+    await expect(card).toBeVisible({ timeout: 15_000 });
+    await card.click();
+    await page.waitForLoadState("networkidle");
+    await page.waitForURL("**/services/01", { timeout: 15_000 });
+    await expect(page.locator("h1")).toHaveCount(1);
+    await expect(page.locator("h1")).toContainText("Raisonnement & RAG");
+
+    await page.goBack();
+    await page.waitForURL("**/", { timeout: 15_000 });
+    await expect(page.locator("h1")).toHaveCount(1);
+  });
+
   test("clic sur une carte solution → URL de détail, retour navigateur OK", async ({ page }) => {
     await page.goto("/solutions", { waitUntil: "domcontentloaded" });
     const firstCard = page.locator("article").first();
     await expect(firstCard).toBeVisible();
     await firstCard.click();
+    await page.waitForLoadState("networkidle");
     await page.waitForURL(/\/solutions\/[a-z0-9-]+$/, { timeout: 15_000 });
     await expect(page.locator("h1")).toHaveCount(1);
 
