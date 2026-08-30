@@ -57,10 +57,10 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
               Une erreur inattendue est survenue lors du rendu de l&apos;interface.
               L&apos;incident a été journalisé pour analyse.
          </p>
-            {this.state.error && (
+            {process.env.NODE_ENV !== "production" && this.state.error && (
               <pre className="font-mono text-[11px] text-[#F26D3D]/80 bg-black/30 border border-black/10 dark:border-white/10 rounded-lg p-3 mt-4 overflow-auto max-h-32 text-left">
                 {this.state.error.message}
-            </pre>
+              </pre>
             )}
             <MovingButton
               onClick={this.handleReload}

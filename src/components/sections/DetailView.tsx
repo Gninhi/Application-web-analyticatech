@@ -10,6 +10,7 @@ import { MovingButton } from "@/components/interactive/MovingButton";
 import { SERVICE_ICONS, getServiceBgImage, getServiceMeshOverlay } from "@/lib/content/services";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ContactCta } from "@/components/ui/ContactCta";
+import { formatPostDate } from "@/lib/utils/date";
 
 interface ServiceDetailViewProps {
   serviceIndex: string;
@@ -283,9 +284,6 @@ export function BlogDetailView({ postSlug, onNavigate }: BlogDetailViewProps) {
     );
   }
 
-  const formatDate = (iso: string) =>
-    new Date(iso).toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric" });
-
   return (
     <div className="pt-28 md:pt-36 pb-20">
       <div className="mx-auto max-w-3xl px-4 md:px-6">
@@ -306,7 +304,7 @@ export function BlogDetailView({ postSlug, onNavigate }: BlogDetailViewProps) {
                 {post.categoryLabel}
               </span>
               <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
-                {formatDate(post.date)} · {post.readingTime}
+                {formatPostDate(post.date, locale)} · {post.readingTime}
               </span>
             </div>
             <h1 className="font-display text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 tracking-tight mb-4">

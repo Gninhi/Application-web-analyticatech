@@ -656,24 +656,69 @@
   to { transform: rotate(360deg); }
 }
 
-/* Marquee horizontal infini */
+/* Marquee horizontal infini (optimisé GPU pour boucle continue sans saccade) */
 @keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
 @keyframes marquee-reverse {
-  from { transform: translateX(-50%); }
-  to { transform: translateX(0); }
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
 }
 
-/* Pause au survol pour les marquee */
-.marquee-container:hover .marquee-track {
+/* Animations dédiées Stock Ticker (Style Bourse / Bloomberg) */
+@keyframes ticker-scroll-left {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes ticker-scroll-right {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.stock-ticker-track-left {
+  display: flex !important;
+  width: max-content !important;
+  animation: ticker-scroll-left var(--ticker-duration, 35s) linear infinite !important;
+  will-change: transform;
+}
+
+.stock-ticker-track-right {
+  display: flex !important;
+  width: max-content !important;
+  animation: ticker-scroll-right var(--ticker-duration, 40s) linear infinite !important;
+  will-change: transform;
+}
+
+/* Pause au survol pour les bandeaux marquee et stock tickers */
+.marquee-container:hover .marquee-track,
+.stock-ticker-container:hover .stock-ticker-track-left,
+.stock-ticker-container:hover .stock-ticker-track-right {
   animation-play-state: paused !important;
 }
 
-/* Réduction des animations pour l'accessibilité */
+/* Réduction des animations pour l'accessibilité (hors bandeaux d'information continue ticker) */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *:not(.stock-ticker-track-left):not(.stock-ticker-track-right):not(.stock-ticker-track-left *):not(.stock-ticker-track-right *):not(.marquee-track):not(.marquee-track *),
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

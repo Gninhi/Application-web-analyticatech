@@ -5,37 +5,27 @@ import { ArrowRight, Calendar, Quote } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
-import { Marquee } from "@/components/interactive/Marquee";
+import { StockTicker } from "@/components/interactive/StockTicker";
 import { MovingButton } from "@/components/interactive/MovingButton";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { SectionContainer } from "@/components/ui/SectionContainer";
+import { formatPostDate } from "@/lib/utils/date";
 
 interface HomeSocialProofProps {
   onNavigate: (view: ViewKey) => void;
 }
 
-/** Formate une date ISO en chaîne lisible et localisée (ex: "12 août 2025") */
-function formatPostDate(isoString: string, locale: string) {
-  try {
-    const d = new Date(isoString);
-    if (isNaN(d.getTime())) return isoString;
-    return d.toLocaleDateString(locale === "en" ? "en-US" : "fr-FR", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-  } catch {
-    return isoString;
-  }
-}
-
 /**
- * HomeSocialProof — Section "08 — INSIGHTS" & Preuve Sociale / Témoignages
- * Structure claire et compartimentée :
+ * HomeSocialProof — Section "09 — INSIGHTS & TÉMOIGNAGES"
+ *
+ * Structure claire, compartimentée et hautement maintenable :
  *   1. Bloc Insights (1 article principal 7/12 + 2 articles secondaires 5/12)
- *   2. Bandeau défilant de mots-clés (séparateur technologique continu)
- *   3. Bloc Témoignages clients (grille 3 colonnes stable avec cartes isolées)
- *   4. Bandeau défilant des logos clients partenaires
+ *   2. Ticker Boursier 1 : Stack Technologique & Capacités IA (Défilement infini vers la gauche)
+ *   3. Bloc Témoignages Clients (grille 3 colonnes stable avec citations isolées)
+ *   4. Ticker Boursier 2 : Entreprises Partenaires & Déploiements (Défilement infini vers la droite)
+ *
+ * Les deux bandeaux utilisent le composant unifié `StockTicker` pour garantir une taille,
+ * une hauteur, une vitesse et une fluidité 100% identiques et centralisées.
  */
 export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
   const { t, locale } = useI18n();
@@ -54,8 +44,8 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
   const secondaryPosts = homeInsights.slice(1, 3);
 
   return (
-    <div className="space-y-20 md:space-y-28">
-      {/* ============ 08 — INSIGHTS : Featured + Secondary ============ */}
+    <div className="space-y-16 md:space-y-24">
+      {/* ============ 01 — INSIGHTS : Featured (7/12) + Secondary (5/12) ============ */}
       <section className="relative">
         <SectionContainer>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
@@ -75,7 +65,7 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
             </MovingButton>
           </div>
 
-          {/* Grille éditoriale : featured (7/12) + secondary (5/12) */}
+          {/* Grille éditoriale responsive */}
           <div className="grid gap-6 lg:grid-cols-12 items-stretch">
             {/* Featured Post — grande carte */}
             {featuredPost && (
@@ -119,7 +109,7 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
               </div>
             )}
 
-            {/* Secondary Posts — 2 cartes empilées parfaitement dimensionnées */}
+            {/* Secondary Posts — 2 cartes secondaires */}
             <div className="lg:col-span-5 flex flex-col gap-6 h-full">
               {secondaryPosts.map((post, idx) => (
                 <motion.article
@@ -165,27 +155,15 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
         </SectionContainer>
       </section>
 
-      {/* ============ SÉPARATEUR MOTS-CLÉS (MARQUEE 1) ============ */}
-      <div className="relative py-2">
-        <Marquee
-          items={MARQUEE_KEYWORDS}
-          direction="right"
-          speed={40}
-          className="border-y border-black/10 dark:border-white/10 py-3.5 bg-white/40 dark:bg-black/30 backdrop-blur-sm"
-          renderItem={(item) => (
-            <span className="flex items-center gap-4 px-5">
-              <span className="font-display text-base md:text-lg font-bold tracking-tight text-slate-800 dark:text-slate-100">
-                {item as string}
-              </span>
-              <span className="text-[#F26D3D] text-xs" aria-hidden>
-                ●
-              </span>
-            </span>
-          )}
-        />
-      </div>
+      {/* ============ 02 — BANDEAU TICKER 1 : TECH & CAPABILITIES (STYLE BOURSE) ============ */}
+      <StockTicker
+        type="tech"
+        keywords={MARQUEE_KEYWORDS}
+        direction="left"
+        speed={36}
+      />
 
-      {/* ============ TÉMOIGNAGES CLIENTS & AVIS — GRILLE STABLE ============ */}
+      {/* ============ 03 — TÉMOIGNAGES CLIENTS & AVIS ============ */}
       <section className="relative">
         <SectionContainer>
           <div className="mb-10 text-center max-w-2xl mx-auto">
@@ -200,7 +178,7 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
             </p>
           </div>
 
-          {/* Grille responsive de cartes de témoignages — robuste et sans chevauchement */}
+          {/* Grille responsive de cartes de témoignages */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {TESTIMONIALS.map((tItem, i) => (
               <motion.figure
@@ -227,38 +205,16 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
               </motion.figure>
             ))}
           </div>
-
-          {/* Logos clients en bas (Marquee 2 harmonisé) */}
-          {displayClients.length > 0 && (
-            <div className="mt-14 pt-8 border-t border-black/5 dark:border-white/10">
-              <Marquee
-                items={displayClients}
-                speed={30}
-                direction="left"
-                className="py-3.5 bg-white/20 dark:bg-black/20 rounded-2xl border border-black/5 dark:border-white/10"
-                renderItem={(item) => {
-                  const client = item as { name: string; sector: string };
-                  return (
-                    <span className="group/client flex items-center gap-3 px-6 select-none">
-                      <span className="font-display text-base md:text-lg font-bold tracking-tight text-slate-800 dark:text-slate-200 group-hover/client:text-[#F26D3D] transition-colors whitespace-nowrap">
-                        {client.name}
-                      </span>
-                      {client.sector && (
-                        <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 group-hover/client:text-[#F26D3D] transition-colors whitespace-nowrap px-2 py-0.5 rounded-full bg-white/40 dark:bg-white/5 border border-black/5 dark:border-white/10">
-                          {client.sector}
-                        </span>
-                      )}
-                      <span className="text-[#F26D3D]/50 text-xs ml-3" aria-hidden>
-                        ●
-                      </span>
-                    </span>
-                  );
-                }}
-              />
-            </div>
-          )}
         </SectionContainer>
       </section>
+
+      {/* ============ 04 — BANDEAU TICKER 2 : CLIENTS & PARTENAIRES (STYLE BOURSE) ============ */}
+      <StockTicker
+        type="clients"
+        clients={displayClients}
+        direction="right"
+        speed={40}
+      />
     </div>
   );
 }

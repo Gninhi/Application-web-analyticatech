@@ -11,6 +11,7 @@ import { FilterPill } from "@/components/interactive/FilterPill";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SectionContainer } from "@/components/ui/SectionContainer";
 import { BorderRotate } from "@/components/ui/animated-gradient-border";
+import { formatPostDate } from "@/lib/utils/date";
 
 type Filter = string;
 
@@ -37,14 +38,6 @@ function tint(hex: string, amount: number): string {
   const g = Math.min(255, ((n >> 8) & 0xff) + amount);
   const b = Math.min(255, (n & 0xff) + amount);
   return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
-}
-
-function formatDate(iso: string, locale: string = "fr-FR"): string {
-  return new Date(iso).toLocaleDateString(locale, {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
 }
 
 /* === Couverture "rapport technique" — fond navy profond, grille technique
@@ -358,7 +351,7 @@ function HeroCard({
           </div>
 
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            <span>{formatDate(post.date, locale)}</span>
+            <span>{formatPostDate(post.date, locale)}</span>
             <span className="h-px w-4 bg-border" aria-hidden />
             <span className="inline-flex items-center gap-1.5">
               <Clock className="h-3 w-3" style={{ color: accent }} aria-hidden />
@@ -545,7 +538,7 @@ function ReportCard({
         {/* Corps */}
         <div className="relative z-20 flex min-h-0 flex-1 flex-col p-5">
           <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            {formatDate(post.date, locale)}
+            {formatPostDate(post.date, locale)}
           </p>
           <h3 className="mb-2 font-display text-lg font-bold leading-snug text-foreground transition-colors duration-300 group-hover:text-[var(--ca)]">
             {post.title}
