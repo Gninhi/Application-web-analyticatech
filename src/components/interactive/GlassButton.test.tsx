@@ -63,6 +63,43 @@ describe("GlassButton component", () => {
     expect(html).toContain('aria-label="Action"');
   });
 
+  it("supporte le variant terminal pour le style cyber/console", () => {
+    const html = renderToStaticMarkup(
+      <Button variant="terminal" size="lg">
+        EXÉCUTER
+      </Button>
+    );
+    expect(html).toContain("glass-btn-terminal");
+    expect(html).toContain("EXÉCUTER");
+  });
+
+  it("gère l'état loading avec un spinner et aria-busy", () => {
+    const html = renderToStaticMarkup(
+      <Button variant="terminal" size="lg" loading>
+        Chiffrement...
+      </Button>
+    );
+    expect(html).toContain("animate-spin");
+    expect(html).toContain('aria-busy="true"');
+    expect(html).toContain("disabled");
+  });
+
+  it("positionne les icônes à gauche ou à droite", () => {
+    const leftHtml = renderToStaticMarkup(
+      <Button icon={<span className="icon-test-left">👈</span>} iconPosition="left">
+        Texte
+      </Button>
+    );
+    expect(leftHtml).toContain("icon-test-left");
+
+    const rightHtml = renderToStaticMarkup(
+      <Button icon={<span className="icon-test-right">👉</span>} iconPosition="right">
+        Texte
+      </Button>
+    );
+    expect(rightHtml).toContain("icon-test-right");
+  });
+
   it("MovingButton et Button sont compatibles et intègrent le système Liquid Glass", () => {
     const movingHtml = renderToStaticMarkup(
       <MovingButton variant="primary" size="md">

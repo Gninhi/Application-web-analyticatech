@@ -1,23 +1,23 @@
 # Analyticatech
 
-> Cabinet de conseil de haut niveau en IA, Transformation Digitale et Automatisation. Architecture d'agents LLM, RAG, automatisation workflows et industrialisation à l'échelle. 127+ missions livrées, 38% de coûts réduits.
+> Cabinet de conseil de haut niveau en IA, Transformation Digitale et Automatisation. Architecture d'agents LLM, RAG, automatisation workflows et industrialisation à l'échelle. 48+ missions livrées, 35% de coûts réduits.
 
 ## Services
 
-- **Intelligence Artificielle** : Architecture LLM, RAG, agents cognitifs en production. LangChain, LangGraph, vLLM. Latence RAG 320ms, précision 94.2%.
-- **Transformation Digitale** : Modernisation cloud-native, Kubernetes, Terraform, microservices. Uptime 99.98%, coûts cloud -38%.
-- **Automatisation** : Workflows n8n, Temporal, Airflow. 1 204 processus automatisés, 8 500h économisées/mois.
-- **Systèmes Agentiques** : Architectures multi-agents, mémoire long-terme, orchestration LangGraph. 312 agents déployés, 87% d'autonomie.
-- **Business Intelligence** : Plateformes data end-to-end, dbt, Snowflake, Power BI. 640 dashboards, 120+ sources data.
+- **Intelligence Artificielle** : Architecture LLM, RAG, agents cognitifs en production. LangChain, LangGraph, vLLM. Latence RAG 280ms, précision 94.2%.
+- **Transformation Digitale** : Modernisation cloud-native, Kubernetes, Terraform, microservices. Uptime 99.9%, coûts cloud -35%.
+- **Automatisation** : Workflows n8n, Temporal, Airflow. 48 processus automatisés, 420h économisées/mois.
+- **Systèmes Agentiques** : Architectures multi-agents, mémoire long-terme, orchestration LangGraph. 38 agents déployés, 72% d'autonomie.
+- **Business Intelligence** : Plateformes data end-to-end, dbt, Snowflake, Power BI. 42 dashboards, 28+ sources data.
 
 ## Solutions sectorielles
 
 - Optimisation logistique par l'IA (-22% coûts, -41% ruptures)
 - Agents de conformité réglementaire (100% coverage, 3s latency)
-- BI prédictive omnicanal (+14% marge, 640 dashboards)
+- BI prédictive omnicanal (+14% marge, 42 dashboards)
 - Assistant clinique RAG souverain (SecNumCloud, sources tracées)
-- Jumeau numérique & maintenance prédictive (-31% MTTR, +18% OEE)
-- Plateforme data souveraine secteur public (SecNumCloud, temps réel)
+- Jumeau numérique & maintenance prédictive (-34% arrêts imprévus, +18 mois durée de vie)
+- Optimisation de grille intelligente (850 k€/an économisés, 99.9% uptime)
 
 ## Expertises techniques
 

@@ -21,7 +21,7 @@ import {
   getServiceBgImage,
   getServiceMeshOverlay,
 } from "@/lib/content/services";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SectionContainer } from "@/components/ui/SectionContainer";
 import { cn } from "@/lib/utils/cn";
@@ -134,48 +134,41 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
           />
 
           {/* Sélecteur de persona */}
-          <div className="mt-8 flex flex-wrap items-center gap-3">
+          <div className="mt-8 flex flex-wrap items-center gap-3" role="tablist" aria-label={t("services.persona.filter") || "Vue ciblée"}>
             <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
               {t("services.persona.filter") || "Vue ciblée :"}
             </span>
-            <button
-              type="button"
-              className={cn(
-                "glass rounded-lg px-3.5 py-1.5 font-mono text-xs uppercase tracking-wider cursor-pointer transition-all duration-200 hover:bg-accent/15",
-                activePersona === "ceo" ? "ring-1 ring-[#F26D3D] bg-accent/20 text-[#F26D3D] font-bold" : "text-muted-foreground"
-              )}
-              onClick={() => handleSelectPersona("ceo")}
-              aria-label={t("services.persona.ceo")}
-            >
-              {t("services.persona.ceo-label")}
-            </button>
-            <button
-              type="button"
-              className={cn(
-                "glass rounded-lg px-3.5 py-1.5 font-mono text-xs uppercase tracking-wider cursor-pointer transition-all duration-200 hover:bg-[#43A047]/15",
-                activePersona === "architect" ? "ring-1 ring-[#43A047] bg-[#43A047]/20 text-[#43A047] font-bold" : "text-muted-foreground"
-              )}
-              onClick={() => handleSelectPersona("architect")}
-              aria-label={t("services.persona.architect-label")}
-            >
-              {t("services.persona.architect-label")}
-            </button>
-            <button
-              type="button"
-              className={cn(
-                "glass rounded-lg px-3.5 py-1.5 font-mono text-xs uppercase tracking-wider cursor-pointer transition-all duration-200 hover:bg-[#38BDF8]/15",
-                activePersona === "operational" ? "ring-1 ring-[#38BDF8] bg-[#38BDF8]/20 text-[#38BDF8] font-bold" : "text-muted-foreground"
-              )}
-              onClick={() => handleSelectPersona("operational")}
-              aria-label={t("services.persona.operational-label")}
-            >
-              {t("services.persona.operational-label")}
-            </button>
-            {activePersona && (
-              <span className="text-xs font-mono text-muted-foreground">
-                ({t("services.persona.selected")} {activePersona.toUpperCase()})
-              </span>
-            )}
+            {[
+              { id: "ceo" as const, label: t("services.persona.ceo-label"), ariaLabel: t("services.persona.ceo"), color: "#F26D3D" },
+              { id: "architect" as const, label: t("services.persona.architect-label"), ariaLabel: t("services.persona.architect-label"), color: "#43A047" },
+              { id: "operational" as const, label: t("services.persona.operational-label"), ariaLabel: t("services.persona.operational-label"), color: "#38BDF8" },
+            ].map((p) => {
+              const isSelected = activePersona === p.id;
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isSelected}
+                  aria-label={p.ariaLabel}
+                  onClick={() => handleSelectPersona(p.id)}
+                  className={cn(
+                    "glass rounded-lg px-3.5 py-1.5 font-mono text-xs uppercase tracking-wider cursor-pointer transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2",
+                    isSelected
+                      ? "font-bold shadow-xs"
+                      : "text-muted-foreground hover:bg-white/10"
+                  )}
+                  style={{
+                    borderColor: isSelected ? p.color : undefined,
+                    backgroundColor: isSelected ? `color-mix(in srgb, ${p.color} 18%, transparent)` : undefined,
+                    color: isSelected ? p.color : undefined,
+                    boxShadow: isSelected ? `0 0 12px color-mix(in srgb, ${p.color} 25%, transparent)` : undefined,
+                  }}
+                >
+                  {p.label}
+                </button>
+              );
+            })}
           </div>
 
           {/* Indice de défilement — guide vers la pile de cartes */}
@@ -211,6 +204,7 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
             scrollY={scrollY}
             arrive={geometry.deckTop + i * geometry.vh}
             end={geometry.deckTop + (i + 1) * geometry.vh}
+            activePersona={activePersona}
             onNavigateDetail={onNavigateDetail}
           />
         ))}
@@ -235,15 +229,16 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
               <p className="mb-6 leading-relaxed text-muted-foreground">
                 {t("services.method.desc")}
               </p>
-              <MovingButton
+              <Button
                 onClick={() => onNavigate("contact")}
                 variant="primary"
                 size="md"
+                icon={<ArrowUpRight className="h-4 w-4" aria-hidden />}
+                iconPosition="right"
                 className="neon-glow"
               >
                 {t("services.method.cta")}
-                <ArrowUpRight className="h-4 w-4" aria-hidden />
-              </MovingButton>
+              </Button>
             </motion.div>
 
             {/* Pipeline des 4 phases de livraison */}
@@ -303,6 +298,7 @@ interface ServiceDeckCardProps {
   scrollY: ReturnType<typeof useScroll>["scrollY"];
   arrive: number;
   end: number;
+  activePersona?: string | null;
   onNavigateDetail: (view: ViewKey, id: string) => void;
 }
 
@@ -334,6 +330,7 @@ function ServiceDeckCard({
   scrollY,
   arrive,
   end,
+  activePersona,
   onNavigateDetail,
 }: ServiceDeckCardProps) {
   const { t } = useI18n();
@@ -526,11 +523,29 @@ function ServiceDeckCard({
 
             {/* Détail expert du service */}
             <div className="flex flex-col p-8 md:col-span-3 md:border-l md:border-border md:p-12">
-              <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                {t("common.presentation")}
-              </p>
+              <div className="mb-2 flex items-center justify-between">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  {t("common.presentation")}
+                </p>
+                {activePersona && service.persona?.[activePersona as keyof typeof service.persona] && (
+                  <span
+                    className="rounded-md border px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest"
+                    style={{
+                      borderColor: `color-mix(in srgb, ${accent} 40%, transparent)`,
+                      color: accent,
+                      backgroundColor: `color-mix(in srgb, ${accent} 10%, transparent)`,
+                    }}
+                  >
+                    {activePersona === "ceo"
+                      ? t("services.persona.ceo")
+                      : activePersona === "architect"
+                      ? t("services.persona.architect")
+                      : t("services.persona.operational")}
+                  </span>
+                )}
+              </div>
               <p className="mb-6 text-base leading-relaxed text-muted-foreground md:text-lg">
-                {service.description}
+                {(activePersona && service.persona?.[activePersona as keyof typeof service.persona]) || service.description}
               </p>
 
               <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -571,18 +586,16 @@ function ServiceDeckCard({
                 ))}
               </div>
 
-              <MovingButton
+              <Button
                 onClick={() => onNavigateDetail("service-detail", service.index)}
                 variant="outline"
                 size="sm"
+                icon={<ArrowUpRight className="h-3.5 w-3.5" aria-hidden />}
+                iconPosition="right"
                 className="mt-auto self-start group"
               >
                 {t("services.card.cta")}
-                <ArrowUpRight
-                  className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                  aria-hidden
-                />
-              </MovingButton>
+              </Button>
             </div>
           </div>
         </div>

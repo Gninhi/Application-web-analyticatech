@@ -5,10 +5,17 @@ import { ArrowLeft, Target, Eye, Heart, Users, type LucideIcon } from "lucide-re
 import type { ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/branding/Logo";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SectionContainer } from "@/components/ui/SectionContainer";
+
+import {
+  FALLBACK_COMPANY_VALUES_FR,
+  FALLBACK_COMPANY_VALUES_EN,
+  FALLBACK_METRICS_FR,
+  FALLBACK_METRICS_EN,
+} from "@/lib/content/fallbacks";
 
 interface AboutViewProps {
   onNavigate: (view: ViewKey) => void;
@@ -17,30 +24,34 @@ interface AboutViewProps {
 const VALUE_ICONS: Record<string, LucideIcon> = { Target, Eye, Heart, Users };
 
 export function AboutView({ onNavigate }: AboutViewProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { companyValues: DB_VALUES, metrics: DB_METRICS } = useAppContent();
 
-  const VALUES = DB_VALUES.map((v) => ({
+  const valuesFallback = locale === "en" ? FALLBACK_COMPANY_VALUES_EN : FALLBACK_COMPANY_VALUES_FR;
+  const valuesSource = DB_VALUES.length > 0 ? DB_VALUES : valuesFallback;
+  const VALUES = valuesSource.map((v) => ({
     icon: VALUE_ICONS[v.iconKey] || Target,
     title: v.title,
     description: v.description,
   }));
 
-  const STATS = DB_METRICS.slice(0, 4).map((m) => ({ v: m.value, l: m.label }));
+  const statsFallback = locale === "en" ? FALLBACK_METRICS_EN : FALLBACK_METRICS_FR;
+  const statsSource = DB_METRICS.length > 0 ? DB_METRICS : statsFallback;
+  const STATS = statsSource.slice(0, 4).map((m) => ({ v: m.value, l: m.label }));
 
   return (
     <div className="pt-28 md:pt-36 pb-20">
       <SectionContainer maxWidth="5xl">
         {/* Retour */}
-        <MovingButton
+        <Button
           variant="ghost"
           size="sm"
           onClick={() => onNavigate("home")}
+          icon={<ArrowLeft className="h-4 w-4" aria-hidden />}
           className="mb-8"
         >
-          <ArrowLeft className="h-4 w-4" aria-hidden />
           {t("legal.back")}
-        </MovingButton>
+        </Button>
 
         {/* Hero */}
         <div className="text-center mb-16">
@@ -154,14 +165,14 @@ export function AboutView({ onNavigate }: AboutViewProps) {
           transition={{ duration: 0.4 }}
           className="text-center"
         >
-          <MovingButton
+          <Button
             variant="primary"
             size="lg"
             onClick={() => onNavigate("contact")}
             className="neon-glow"
           >
             {t("about.cta")}
-          </MovingButton>
+          </Button>
         </motion.div>
       </SectionContainer>
     </div>

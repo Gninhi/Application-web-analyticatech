@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, XCircle, CheckCircle2, AlertOctagon, Sparkles, TrendingUp } from "lucide-react";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils/cn";
 
@@ -31,11 +31,17 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
       </div>
 
       {/* Switcher Interactif Avant / Après — Style 21st.dev */}
-      <div className="flex items-center justify-between mb-8 p-1.5 rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 max-w-md mx-auto backdrop-blur-md shadow-lg shadow-black/5">
+      <div
+        className="flex items-center justify-between mb-8 p-1.5 rounded-full border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 max-w-md mx-auto backdrop-blur-md shadow-lg shadow-black/5"
+        role="tablist"
+        aria-label={t("home.section.demo.title")}
+      >
         <button
           type="button"
+          role="tab"
+          aria-selected={viewMode === "before"}
           onClick={() => setViewMode("before")}
-          className={`flex-1 py-2.5 px-4 rounded-full font-mono text-xs font-bold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer ${
+          className={`flex-1 py-2.5 px-4 rounded-full font-mono text-xs font-bold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 ${
             viewMode === "before"
               ? "bg-red-500/15 text-red-600 dark:text-red-400 border border-red-500/30 shadow-md shadow-red-500/10"
               : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
@@ -46,8 +52,10 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
         </button>
         <button
           type="button"
+          role="tab"
+          aria-selected={viewMode === "after"}
           onClick={() => setViewMode("after")}
-          className={`flex-1 py-2.5 px-4 rounded-full font-mono text-xs font-bold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer ${
+          className={`flex-1 py-2.5 px-4 rounded-full font-mono text-xs font-bold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 ${
             viewMode === "after"
               ? "bg-[#4CAF50]/15 text-[#4CAF50] border border-[#4CAF50]/30 shadow-md shadow-[#4CAF50]/10"
               : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
@@ -148,15 +156,16 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
 
                     {onNavigateContact && (
                       <div className="mt-8">
-                        <MovingButton
+                        <Button
                           onClick={onNavigateContact}
                           variant="primary"
                           size="md"
+                          icon={<ArrowRight className="h-4 w-4" aria-hidden />}
+                          iconPosition="right"
                           className="neon-glow"
                         >
                           {t("demo.after.cta")}
-                          <ArrowRight className="h-4 w-4" aria-hidden />
-                        </MovingButton>
+                        </Button>
                       </div>
                     )}
                   </div>

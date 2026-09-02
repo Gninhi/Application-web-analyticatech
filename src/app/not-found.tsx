@@ -11,7 +11,7 @@ import {
   Home,
 } from "lucide-react";
 import { SectionContainer } from "@/components/ui/SectionContainer";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
 
 export default function NotFoundPage() {
@@ -84,23 +84,25 @@ export default function NotFoundPage() {
 
           {/* Bouton retour accueil principal */}
           <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
-            <Link href={homeHref} className="inline-block">
-              <MovingButton
-                variant="primary"
-                size="lg"
-                className="neon-glow font-bold"
-              >
-                <Home className="h-4 w-4" aria-hidden />
-                {t("notFound.home")}
-                <ArrowRight className="h-4 w-4" aria-hidden />
-              </MovingButton>
-            </Link>
-            <Link href={contactHref} className="inline-block">
-              <MovingButton variant="ghost" size="lg">
-                <Mail className="h-4 w-4" aria-hidden />
-                {t("notFound.contact")}
-              </MovingButton>
-            </Link>
+            <Button
+              href={homeHref}
+              variant="primary"
+              size="lg"
+              icon={<Home className="h-4 w-4" aria-hidden />}
+              iconPosition="left"
+              className="neon-glow font-bold"
+            >
+              <span>{t("notFound.home")}</span>
+            </Button>
+            <Button
+              href={contactHref}
+              variant="ghost"
+              size="lg"
+              icon={<Mail className="h-4 w-4" aria-hidden />}
+              iconPosition="left"
+            >
+              <span>{t("notFound.contact")}</span>
+            </Button>
           </div>
 
           {/* Grille de liens de réorientation */}

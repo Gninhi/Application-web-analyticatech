@@ -16,7 +16,7 @@ import {
 import type { ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContentOptional } from "@/components/providers/ContentProvider";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { getServiceDetailData, SERVICES_DETAIL_REGISTRY } from "@/lib/content/services-detail-data";
 import { cn } from "@/lib/utils/cn";
 import { DetailNotFound } from "./DetailNotFound";
@@ -63,10 +63,15 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
     return (
       <div className="pt-28 md:pt-36 pb-20">
         <div className="mx-auto max-w-4xl px-4 md:px-6">
-          <MovingButton variant="ghost" size="sm" onClick={() => onNavigate("services")} className="mb-8">
-            <ArrowLeft className="h-4 w-4" aria-hidden />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onNavigate("services")}
+            icon={<ArrowLeft className="h-4 w-4" aria-hidden />}
+            className="mb-8"
+          >
             {`${t("common.back")} ${t("nav.services")}`}
-          </MovingButton>
+          </Button>
           <DetailNotFound
             label={t("detail.noData")}
             title={t("detail.unavailable.title")}
@@ -84,15 +89,15 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
       <div className="mx-auto max-w-5xl px-4 md:px-6 space-y-16">
         {/* ================= BREADCRUMB / RETOUR ================= */}
         <div className="flex items-center justify-between">
-          <MovingButton
+          <Button
             variant="ghost"
             size="sm"
             onClick={() => onNavigate("services")}
+            icon={<ArrowLeft className="h-4 w-4" aria-hidden />}
             className="group"
           >
-            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" aria-hidden />
-            <span>← {t("common.back")} {t("nav.services")}</span>
-          </MovingButton>
+            <span>{t("common.back")} {t("nav.services")}</span>
+          </Button>
 
           <span className="font-mono text-xs text-slate-400 dark:text-slate-500 uppercase tracking-widest hidden sm:inline-block">
             {detailData.eyebrow}
@@ -463,21 +468,23 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <MovingButton
+                <Button
                   variant="primary"
                   size="lg"
                   onClick={() => onNavigate("contact")}
+                  icon={<ArrowRight className="h-4 w-4" aria-hidden />}
+                  iconPosition="right"
                   className="neon-glow group w-full sm:w-auto"
                 >
                   <span>{t("detail.service.cta.button")}</span>
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
-                </MovingButton>
+                </Button>
               </div>
 
               {detailData.nextService && (
                 <div className="mt-8 pt-6 border-t border-black/5 dark:border-white/5 flex items-center justify-center">
-                  <button
-                    type="button"
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={() => {
                       if (onNavigateDetail) {
                         onNavigateDetail("service-detail", detailData.nextService.index);
@@ -485,11 +492,11 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
                         onNavigate("services");
                       }
                     }}
-                    className="font-mono text-xs text-slate-500 hover:text-[#F26D3D] transition-colors flex items-center gap-1.5 cursor-pointer"
+                    icon={<ArrowRight className="h-3.5 w-3.5" aria-hidden />}
+                    iconPosition="right"
                   >
                     <span>{t("detail.service.next")} {detailData.nextService.title}</span>
-                    <ArrowRight className="h-3.5 w-3.5" aria-hidden />
-                  </button>
+                  </Button>
                 </div>
               )}
             </div>

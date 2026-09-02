@@ -83,14 +83,14 @@ async function seed() {
   // 2. MÉTRIQUES ET LOGOS CLIENTS
   // ============================================================
   const metrics = [
-    { key: "missions_delivered", label: "Missions livrées", labelEn: "Missions Delivered", value: "127+", numericValue: 127, suffix: "+", trend: 15.2, sparkline: [90, 95, 102, 110, 115, 120, 127], source: "static" as const, order: 1 },
-    { key: "cost_reduction", label: "Coûts réduits", labelEn: "Costs Reduced", value: "38%", numericValue: 38, suffix: "%", trend: -5.4, sparkline: [15, 20, 28, 32, 35, 38], source: "static" as const, order: 2 },
-    { key: "uptime_platform", label: "Uptime plateforme", labelEn: "Platform Uptime", value: "99.98%", numericValue: 99.98, suffix: "%", trend: 0.2, sparkline: [99.5, 99.7, 99.8, 99.9, 99.98], source: "static" as const, order: 3 },
+    { key: "missions_delivered", label: "Missions livrées", labelEn: "Missions Delivered", value: "48+", numericValue: 48, suffix: "+", trend: 15.2, sparkline: [22, 28, 34, 38, 42, 45, 48], source: "static" as const, order: 1 },
+    { key: "cost_reduction", label: "Coûts réduits", labelEn: "Costs Reduced", value: "35%", numericValue: 35, suffix: "%", trend: -5.4, sparkline: [15, 20, 26, 29, 32, 35], source: "static" as const, order: 2 },
+    { key: "uptime_platform", label: "Uptime plateforme", labelEn: "Platform Uptime", value: "99.9%", numericValue: 99.9, suffix: "%", trend: 0.1, sparkline: [99.5, 99.7, 99.8, 99.85, 99.9], source: "static" as const, order: 3 },
     { key: "satisfaction_clevel", label: "Satisfaction C-Level", labelEn: "C-Level Satisfaction", value: "4.9/5", numericValue: 4.9, suffix: "/5", trend: 0.1, sparkline: [4.6, 4.7, 4.8, 4.9], source: "static" as const, order: 4 },
-    { key: "processes_automated", label: "Processus automatisés", labelEn: "Automated Processes", value: "1 204", numericValue: 1204, suffix: "", trend: 8.4, sparkline: [12, 18, 24, 36, 48, 60, 68], source: "stream" as const, order: 5 },
-    { key: "agents_production", label: "Agents IA en production", labelEn: "AI Agents in Production", value: "312", numericValue: 312, suffix: "", trend: 22.1, sparkline: [4, 10, 18, 28, 38, 50, 58], source: "stream" as const, order: 6 },
-    { key: "dashboards_decisional", label: "Dashboards décisionnels", labelEn: "Decision Dashboards", value: "640", numericValue: 640, suffix: "", trend: 5.7, sparkline: [22, 30, 38, 46, 54, 60, 64], source: "stream" as const, order: 7 },
-    { key: "hours_saved_monthly", label: "Heures économisées / mois", labelEn: "Hours Saved / Month", value: "8 500 h", numericValue: 8500, suffix: " h", trend: 12.0, sparkline: [1000, 3000, 5000, 7000, 8500], source: "static" as const, order: 8 },
+    { key: "processes_automated", label: "Processus automatisés", labelEn: "Automated Processes", value: "48", numericValue: 48, suffix: "", trend: 8.4, sparkline: [12, 18, 24, 32, 38, 44, 48], source: "stream" as const, order: 5 },
+    { key: "agents_production", label: "Agents IA en production", labelEn: "AI Agents in Production", value: "38", numericValue: 38, suffix: "", trend: 18.1, sparkline: [4, 10, 16, 22, 28, 34, 38], source: "stream" as const, order: 6 },
+    { key: "dashboards_decisional", label: "Dashboards décisionnels", labelEn: "Decision Dashboards", value: "42", numericValue: 42, suffix: "", trend: 5.7, sparkline: [14, 20, 26, 32, 36, 40, 42], source: "stream" as const, order: 7 },
+    { key: "hours_saved_monthly", label: "Heures économisées / mois", labelEn: "Hours Saved / Month", value: "420 h", numericValue: 420, suffix: " h", trend: 12.0, sparkline: [120, 200, 280, 350, 420], source: "static" as const, order: 8 },
   ];
 
   for (const m of metrics) {
@@ -127,7 +127,7 @@ async function seed() {
   console.log("✓ Logos clients insérés");
 
   // ============================================================
-  // 3. SERVICES (bilingues FR & EN) — 4 piliers (02 Transformation supprimé)
+  // 3. SERVICES (bilingues FR & EN) — 4 piliers
   // ============================================================
   const servicesData = [
     {
@@ -139,22 +139,22 @@ async function seed() {
       fr: {
         title: "Raisonnement & RAG",
         tagline: "Audit de l'existant & priorisation ROI",
-        description: "Audit de l'existant et priorisation des cas d'usage à plus fort ROI : nous identifions ensemble où l'IA crée le plus de valeur mesurable.",
-        personaCeo: "Sur 10 POC IA, seulement 2 réussissent à échelle. Notre approche industrielle avec 5 piliers garantit votre succès: architecture robuste, données qualité, modèles évalués, sécurité intégrée, ROI mesuré. Engagement: POC 6 semaines, livrable et roadmap 12 mois.",
-        personaArchitect: "Stack recommandée: LangGraph orchestration, Pinecone vector search, vLLM high-performance deployment. Patterns: RAG augmenté, agents avec mémoire à long terme, garde-fous de sécurité, évaluation continue toutes les 24h. Intégration: API REST + GraphQL, Docker/Kubernetes, monitoring Prometheus + Grafana.",
-        personaOperational: "Durée POC: 6 semaines. Équipe: 2 architectes + 1 data scientist + 1 DevOps. Outils: LangChain framework, OpenAI API, Pinecone vector database, GitHub Actions CI/CD. Méthodologie: sprints 2 semaines, démos production, observabilité complète dès le départ.",
+        description: "Nous concevons des architectures RAG avancées orchestrées sous LangGraph, associant recherche vectorielle hybride et réordonnancement sémantique. Chaque brique intègre des garde-fous anti-hallucination et une évaluation continue pour fiabiliser le raisonnement des modèles sur vos données d'entreprise.",
+        personaCeo: "Sur 10 POC IA, seulement 2 réussissent à l'échelle. Notre approche industrielle garantit votre succès : architecture robuste, données qualité, modèles évalués, sécurité intégrée et ROI mesuré. Engagement : POC 6 semaines, livrable opérationnel et feuille de route séquencée.",
+        personaArchitect: "Stack recommandée : LangGraph orchestration, Pinecone vector search, vLLM high-performance deployment. Patterns : RAG augmenté, agents avec mémoire à long terme, garde-fous de sécurité, évaluation continue. Intégration : API REST + GraphQL, Docker/Kubernetes, monitoring Prometheus + Grafana.",
+        personaOperational: "Durée POC : 6 semaines. Équipe : 2 architectes + 1 data scientist + 1 DevOps. Outils : LangChain framework, OpenAI API, Pinecone vector database, GitHub Actions CI/CD. Méthodologie : sprints 2 semaines, démos régulières, observabilité complète dès le départ.",
       },
       en: {
         title: "Reasoning & RAG",
         tagline: "Existing-state audit & ROI prioritization",
-        description: "We audit your existing landscape and prioritize the use cases with the highest measurable ROI.",
-        personaCeo: "Of 10 AI POCs, only 2 succeed at scale. Our industrial approach with 5 pillars guarantees your success: robust architecture, quality data, evaluated models, integrated security, measured ROI. Commitment: 6-week POC, deliverable and 12-month roadmap.",
-        personaArchitect: "Recommended stack: LangGraph orchestration, Pinecone vector search, vLLM high-performance deployment. Patterns: RAG augmented, agents with long-term memory, security guardrails, continuous evaluation every 24h. Integration: REST + GraphQL APIs, Docker/Kubernetes deployment, Prometheus + Grafana monitoring.",
-        personaOperational: "POC duration: 6 weeks. Team: 2 architects + 1 data scientist + 1 DevOps. Tools: LangChain framework, OpenAI API, Pinecone vector database, GitHub Actions CI/CD. Methodology: 2-week sprints, production demos, full observability from the start.",
+        description: "We architect advanced RAG pipelines orchestrated with LangGraph, combining hybrid vector search and semantic reranking. Each functional layer incorporates anti-hallucination guardrails and continuous evaluation to ensure deterministic reasoning over enterprise data.",
+        personaCeo: "Of 10 AI POCs, only 2 succeed at scale. Our industrial approach guarantees your success: robust architecture, quality data, evaluated models, integrated security, and measured ROI. Commitment: 6-week POC, operational deliverable, and sequenced roadmap.",
+        personaArchitect: "Recommended stack: LangGraph orchestration, Pinecone vector search, vLLM high-performance deployment. Patterns: RAG augmented, agents with long-term memory, security guardrails, continuous evaluation. Integration: REST + GraphQL APIs, Docker/Kubernetes deployment, Prometheus + Grafana monitoring.",
+        personaOperational: "POC duration: 6 weeks. Team: 2 architects + 1 data scientist + 1 DevOps. Tools: LangChain framework, OpenAI API, Pinecone vector database, GitHub Actions CI/CD. Methodology: 2-week sprints, regular demos, full observability from the start.",
       },
       technologies: ["LangChain", "LangGraph", "OpenAI", "Pinecone", "Hugging Face", "vLLM"],
       metrics: [
-        { label: "Latence RAG", value: "320 ms" },
+        { label: "Latence RAG", value: "280 ms" },
         { label: "Précision", value: "94.2 %" },
       ],
     },
@@ -167,23 +167,23 @@ async function seed() {
       fr: {
         title: "Automatisation & Workflows",
         tagline: "Workflows & orchestrations",
-        description: "Automatisation de bout en bout des processus métier : intégration applicative, orchestration de workflows, RPA intelligent et élimination des tâches répétitives à forte valeur.",
-        personaCeo: "Automatisation bout-en-bout = réduction de 40% des tâches répétitives + augmentation de 25% de la productivité équipe. Cas d'usage: RPA processus comptable, orchestration workflows marketing, élimination tasks manuelles à forte valeur. Engagement: POC 8 semaines, déploiement complet 3 mois.",
-        personaArchitect: "Stack recommandée: n8n workflow automation, Temporal orchestration, Apache Airflow batch processing, Make integration. Patterns: event-driven workflows, RPA intelligent, API-first approach. Intégration: connecteurs métier, webhooks, systèmes légacys.",
-        personaOperational: "Durée POC: 8 semaines. Équipe: 1 architecte + 1 data analyst + 1 développeur RPA. Outils: n8n, Zapier, Temporal, Python scripts. Méthodologie: cartographie processus, conception workflows, tests utilisateurs, déploiement progressif.",
+        description: "Nous déployons des couches fonctionnelles d'orchestration résilientes basées sur Temporal et n8n pour automatiser vos flux opérationnels critiques. L'architecture garantit l'idempotence native des transactions, une reprise automatique sur incident et une intégration standardisée via OpenAPI.",
+        personaCeo: "Automatisation bout-en-bout = 65% de tâches répétitives automatisées et 45% de gain de temps opérationnel. Cas d'usage : RPA processus comptable, orchestration marketing, élimination des erreurs manuelles de saisie. Engagement : POC 6 semaines, déploiement progressif.",
+        personaArchitect: "Stack recommandée : n8n workflow automation, Temporal orchestration, Apache Airflow batch processing, Make integration. Patterns : event-driven workflows, RPA intelligent, API-first approach. Intégration : connecteurs métier, webhooks, systèmes legacy.",
+        personaOperational: "Durée POC : 6 semaines. Équipe : 1 architecte + 1 data analyst + 1 développeur RPA. Outils : n8n, Zapier, Temporal, Python scripts. Méthodologie : cartographie processus, conception workflows, tests utilisateurs, déploiement progressif.",
       },
       en: {
         title: "Automation & Workflows",
         tagline: "Workflows & Orchestration",
-        description: "End-to-end automation of business processes: application integration, workflow orchestration, intelligent RPA and elimination of high-value repetitive tasks.",
-        personaCeo: "End-to-end automation = 40% reduction of repetitive tasks + 25% team productivity increase. Use cases: RPA accounting processes, marketing workflow orchestration, elimination of high-value manual tasks. Commitment: 8-week POC, full deployment 3 months.",
+        description: "We deploy resilient orchestration layers powered by Temporal and n8n to automate mission-critical operational flows. The architecture guarantees transaction idempotency, automated failure recovery, and standardized integration via OpenAPI.",
+        personaCeo: "End-to-end automation = 65% of repetitive tasks automated and 45% operational time saved. Use cases: RPA accounting processes, marketing orchestration, elimination of manual data re-entry. Commitment: 6-week POC, progressive rollout.",
         personaArchitect: "Recommended stack: n8n workflow automation, Temporal orchestration, Apache Airflow batch processing, Make integration. Patterns: event-driven workflows, intelligent RPA, API-first approach. Integration: business connectors, webhooks, legacy system integration.",
-        personaOperational: "POC duration: 8 weeks. Team: 1 architect + 1 data analyst + 1 RPA developer. Tools: n8n, Zapier, Temporal, Python scripts. Methodology: process mapping, workflow design, user testing, progressive deployment.",
+        personaOperational: "POC duration: 6 weeks. Team: 1 architect + 1 data analyst + 1 RPA developer. Tools: n8n, Zapier, Temporal, Python scripts. Methodology: process mapping, workflow design, user testing, progressive deployment.",
       },
       technologies: ["n8n", "Zapier", "Temporal", "Apache Airflow", "Make", "Python"],
       metrics: [
-        { label: "Processus auto", value: "1 204" },
-        { label: "Heures / mois", value: "8 500 h" },
+        { label: "Tâches auto.", value: "65 %" },
+        { label: "Gain temps", value: "45 %" },
       ],
     },
     {
@@ -195,23 +195,23 @@ async function seed() {
       fr: {
         title: "Orchestration Multi-Agents",
         tagline: "Multi-agents & autonomie",
-        description: "Architectures multi-agents capables de planifier, raisonner et agir : orchestration de rôles, mémoire long-terme, outillage dynamique et supervision humaine dans la boucle.",
-        personaCeo: "Architectures multi-agents = coordination de 312 agents en production + autonomie 87% + réduction time-to-market de 60%. Patterns: rôle orchestration, mémoire long-terme, outillage dynamique, supervision humaine-en-boucle. Engagement: POC 2 mois, système complet 4 mois.",
-        personaArchitect: "Stack recommandée: LangGraph orchestration, CrewAI multi-agent, AutoGen pattern, MCP protocol, Redis mémoire, Qdrant vector store. Patterns: rôle orchestration, mémoire à long-terme, outillage dynamique, supervision humaine-en-boucle. Intégration: API REST, événements Pub/Sub, stockage distribué.",
-        personaOperational: "Durée POC: 2 mois. Équipe: 2 architectes + 1 chercheur IA + 1 DevOps. Outils: LangGraph, CrewAI, AutoGen, Redis, Qdrant. Méthodologie: conception rôles, tests d'autonomie, benchmark performances, déploiement progressif.",
+        description: "Nous structurons des architectures multi-agents distribuées via le protocole MCP et LangGraph pour résoudre des processus complexes par décomposition dynamique de tâches. Chaque brique agentique collabore à travers une mémoire partagée sous Redis et un traçage exhaustif des exécutions sous Langfuse.",
+        personaCeo: "Architectures multi-agents = 38 agents spécialisés en production, 72% d'autonomie et réduction des délais de traitement de 50%. Patterns : rôle orchestration, mémoire long-terme, outillage dynamique, supervision humaine-en-boucle.",
+        personaArchitect: "Stack recommandée : LangGraph orchestration, CrewAI multi-agent, AutoGen pattern, MCP protocol, Redis mémoire, Qdrant vector store. Patterns : rôle orchestration, mémoire à long-terme, outillage dynamique, supervision humaine-en-boucle. Intégration : API REST, événements Pub/Sub, stockage distribué.",
+        personaOperational: "Durée POC : 6 semaines. Équipe : 2 architectes + 1 chercheur IA + 1 DevOps. Outils : LangGraph, CrewAI, AutoGen, Redis, Qdrant. Méthodologie : conception rôles, tests d'autonomie, benchmark performances, déploiement progressif.",
       },
       en: {
         title: "Multi-Agent Orchestration",
         tagline: "Multi-Agent & Autonomy",
-        description: "Multi-agent architectures capable of planning, reasoning and acting: role orchestration, long-term memory, dynamic tooling and human-in-the-loop oversight.",
-        personaCeo: "Multi-agent architectures = 312 agents in production + 87% autonomy + 60% time-to-market reduction. Patterns: role orchestration, long-term memory, dynamic tooling, human-in-the-loop oversight. Commitment: 2-week POC, full system 4 months.",
+        description: "We structure distributed multi-agent architectures using the MCP protocol and LangGraph to resolve complex processes through dynamic task decomposition. Each agentic building block collaborates via shared Redis memory with comprehensive execution tracing in Langfuse.",
+        personaCeo: "Multi-agent architectures = 38 specialized agents in production, 72% autonomy, and 50% turnaround time reduction. Patterns: role orchestration, long-term memory, dynamic tooling, human-in-the-loop oversight.",
         personaArchitect: "Recommended stack: LangGraph orchestration, CrewAI multi-agent, AutoGen pattern, MCP protocol, Redis memory, Qdrant vector store. Patterns: role orchestration, long-term memory, dynamic tooling, human-in-the-loop oversight. Integration: REST APIs, Pub/Sub events, distributed storage.",
-        personaOperational: "POC duration: 2 months. Team: 2 architects + 1 AI researcher + 1 DevOps. Tools: LangGraph, CrewAI, AutoGen, Redis, Qdrant. Methodology: role design, autonomy testing, performance benchmarking, progressive deployment.",
+        personaOperational: "POC duration: 6 weeks. Team: 2 architects + 1 AI researcher + 1 DevOps. Tools: LangGraph, CrewAI, AutoGen, Redis, Qdrant. Methodology: role design, autonomy testing, performance benchmarking, progressive deployment.",
       },
       technologies: ["LangGraph", "CrewAI", "AutoGen", "MCP", "Redis", "Qdrant"],
       metrics: [
-        { label: "Agents déployés", value: "312" },
-        { label: "Autonomie", value: "87 %" },
+        { label: "Agents déployés", value: "38" },
+        { label: "Autonomie", value: "72 %" },
       ],
     },
     {
@@ -224,23 +224,23 @@ async function seed() {
       fr: {
         title: "Data & Décision Augmentée",
         tagline: "Data & décision augmentée",
-        description: "Plateformes data end-to-end : ingestion, modélisation sémantique, dashboards exécutifs et alerting prédictif. La donnée devient un levier opérationnel quotidien.",
-        personaCeo: "BI décisionnelle = 640 dashboards executives + 120+ sources de données unifiées + marges +14% en moyenne. Pattern: ingestion ETL, modèle sémantique dbt, alerting prédictif, self-service business. Engagement: projet 3 mois, adoption équipe 2 mois.",
-        personaArchitect: "Stack recommandée: Power BI visualisation, dbt sémantique modélisation, Snowflake/cloud data warehouse, BigQuery, Looker exploration, Superset ad-hoc. Patterns: semantic layer, data modeling, dashboard governance, KPI tracking. Intégration: API REST, webhooks, data pipelines ETL.",
-        personaOperational: "Durée projet: 3 mois. Équipe: 1 architecte + 1 data engineer + 1 analyste BI. Outils: Power BI, dbt, Snowflake, Git. Méthodologie: discovery workshops, modèle sémantique, tests utilisateurs, formation équipe.",
+        description: "Nous unifions vos silos de données au sein d'une architecture Medallion sur Snowflake et BigQuery, modélisée et testée via dbt. Cette couche sémantique gouvernée alimente des tableaux de bord haute performance et des interfaces d'interrogation en langage naturel.",
+        personaCeo: "BI décisionnelle = 42 dashboards exécutifs gouvernés, 28+ sources de données unifiées et +24% de marge opérationnelle identifiée. Pattern : ingestion ETL, modèle sémantique dbt, alerting prédictif, self-service business.",
+        personaArchitect: "Stack recommandée : Power BI visualisation, dbt sémantique modélisation, Snowflake/cloud data warehouse, BigQuery, Looker exploration, Superset ad-hoc. Patterns : semantic layer, data modeling, dashboard governance, KPI tracking. Intégration : API REST, webhooks, data pipelines ETL.",
+        personaOperational: "Durée projet : 8 semaines. Équipe : 1 architecte + 1 data engineer + 1 analyste BI. Outils : Power BI, dbt, Snowflake, Git. Méthodologie : discovery workshops, modèle sémantique, tests utilisateurs, formation équipe.",
       },
       en: {
         title: "Data & Augmented Decision",
         tagline: "Data & Augmented Decision-Making",
         description: "End-to-end data platforms: ingestion, semantic modeling, executive dashboards and predictive alerting. Data becomes a daily operational lever.",
-        personaCeo: "Executive BI = 640 executive dashboards + 120+ unified data sources + average +14% margins. Pattern: ETL ingestion, semantic dbt model, predictive alerting, self-service business. Commitment: 3-month project, 2-month team adoption.",
+        personaCeo: "Executive BI = 42 governed dashboards, 28+ unified data sources, and +24% operational margin gains. Pattern: ETL ingestion, semantic dbt model, predictive alerting, self-service business.",
         personaArchitect: "Recommended stack: Power BI visualization, semantic dbt modeling, Snowflake/cloud data warehouse, BigQuery, Looker exploration, Superset ad-hoc. Patterns: semantic layer, data modeling, dashboard governance, KPI tracking. Integration: REST APIs, webhooks, ETL data pipelines.",
-        personaOperational: "Project duration: 3 months. Team: 1 architect + 1 data engineer + 1 BI analyst. Tools: Power BI, dbt, Snowflake, Git. Methodology: discovery workshops, semantic modeling, user testing, team training.",
+        personaOperational: "Project duration: 8 weeks. Team: 1 architect + 1 data engineer + 1 BI analyst. Tools: Power BI, dbt, Snowflake, Git. Methodology: discovery workshops, semantic modeling, user testing, team training.",
       },
       technologies: ["Power BI", "dbt", "Snowflake", "BigQuery", "Looker", "Superset"],
       metrics: [
-        { label: "Dashboards", value: "640" },
-        { label: "Sources data", value: "120+" },
+        { label: "Dashboards", value: "42" },
+        { label: "Sources data", value: "28+" },
       ],
     },
   ];
@@ -339,7 +339,7 @@ async function seed() {
       slug: "retail-bi",
       sectorFr: "Retail",
       sectorEn: "Retail",
-      impact: "+14% marge · 640 dashboards",
+      impact: "+14% marge · 42 dashboards",
       order: 3,
       tags: ["BI", "Pricing", "Omnicanal"],
       fr: {
@@ -825,8 +825,8 @@ async function seed() {
     },
     {
       time: "14:01:22", level: "ok", order: 3,
-      fr: "Pipeline[data-ingest] 1.2M lignes traitées",
-      en: "Pipeline[data-ingest] 1.2M rows processed",
+      fr: "Pipeline[data-ingest] 48k lignes traitées",
+      en: "Pipeline[data-ingest] 48k rows processed",
     },
     {
       time: "14:00:55", level: "warn", order: 4,
@@ -835,8 +835,8 @@ async function seed() {
     },
     {
       time: "14:00:12", level: "info", order: 5,
-      fr: "Dashboard[exec-cfo] rafraîchi · 640 KPIs",
-      en: "Dashboard[exec-cfo] refreshed · 640 KPIs",
+      fr: "Dashboard[exec-cfo] rafraîchi · 42 KPIs",
+      en: "Dashboard[exec-cfo] refreshed · 42 KPIs",
     },
     {
       time: "13:59:40", level: "ok", order: 6,

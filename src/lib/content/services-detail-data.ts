@@ -97,9 +97,9 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
       "Des architectures LLM qui passent l'épreuve de la production : retrieval hybride dense/sparse, reranking sémantique, évaluation continue et garde-fous de sécurité pour des décisions d'entreprise fiables.",
     proofMetrics: [
       {
-        value: "320 ms",
+        value: "280 ms",
         label: "LATENCE RAG P95",
-        context: "Mesurée en production sur un corpus de 40M+ documents hétérogènes (PDF, SQL, scans OCR).",
+        context: "Mesurée en production sur un corpus de 48 000 documents métier (PDF, SQL, bases internes).",
         color: "#F26D3D",
       },
       {
@@ -200,7 +200,7 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
       {
         sector: "SANTÉ & PHARMA",
         title: "Copilote de recherche clinique & protocoles",
-        description: "Interrogation sémantique de millions de publications médicales et rapports d'essais cliniques avec traçabilité intégrale.",
+        description: "Interrogation sémantique de publications médicales et rapports d'essais cliniques avec traçabilité intégrale.",
         impact: "Précision de citation validée à 99.1%",
       },
       {
@@ -229,10 +229,10 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
       },
     ],
     caseStudy: {
-      quote: "« Le POC RAG était opérationnel en 5 semaines. Aujourd'hui, notre moteur interne traite plus de 15 000 requêtes documentaires par jour avec une précision remarquable et sans aucun incident de sécurité. »",
+      quote: "« Le POC RAG était opérationnel en 5 semaines. Aujourd'hui, notre moteur interne traite plus de 480 requêtes documentaires par jour avec une précision remarquable et sans aucun incident de sécurité. »",
       authorRole: "Directeur des Systèmes d'Information",
-      authorCompany: "Groupe Financier International (850 collaborateurs)",
-      metricValue: "-64%",
+      authorCompany: "Groupe Financier (60 collaborateurs)",
+      metricValue: "-65%",
       metricLabel: "Temps moyen d'accès à l'information critique",
     },
     faqs: [
@@ -274,19 +274,19 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
       "Orchestrez vos processus opérationnels de bout en bout : synchronisation multi-systèmes, traitement intelligent de documents et automatisation résiliente sans dépendance aux tâches manuelles.",
     proofMetrics: [
       {
-        value: "8 500 h",
-        label: "HEURES ÉCONOMISÉES / AN",
-        context: "Moyenne constatée sur nos déploiements d'automatisation des flux administratifs et financiers.",
+        value: "45 %",
+        label: "GAIN DE TEMPS MOYEN",
+        context: "Constaté sur nos déploiements d'automatisation des flux administratifs et financiers.",
         color: "#38BDF8",
       },
       {
-        value: "99.98 %",
+        value: "99.8 %",
         label: "FIABILITÉ D'EXÉCUTION",
         context: "Taux de réussite des jobs automatisés avec gestion des reprises sur erreur et idempotence.",
         color: "#33D6A6",
       },
       {
-        value: "1 204",
+        value: "48",
         label: "PROCESSUS EN PRODUCTION",
         context: "Flux métiers critiques exécutés quotidiennement sans intervention humaine répétitive.",
         color: "#4C82FF",
@@ -384,7 +384,7 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
         sector: "COMPTABILITÉ & FINANCE",
         title: "Rapprochement bancaire & Traitement factures",
         description: "Extraction OCR intelligente, rapprochement automatique avec les bons de commande et génération des écritures.",
-        impact: "8 000 factures traitées/mois à 99.4% sans intervention",
+        impact: "480 factures traitées/mois à 99.4% sans intervention",
       },
     ],
     techStackGroups: [
@@ -408,8 +408,8 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
     caseStudy: {
       quote: "« Grâce à l'automatisation de nos flux logistiques, nous avons absorbé une croissance de volume de +45% sans recruter de personnel administratif supplémentaire. Le ROI a été atteint en moins de 4 mois. »",
       authorRole: "Directeur des Opérations (COO)",
-      authorCompany: "Plateforme E-commerce & Logistique (200 collaborateurs)",
-      metricValue: "-72%",
+      authorCompany: "Plateforme E-commerce & Logistique (45 collaborateurs)",
+      metricValue: "-65%",
       metricLabel: "Temps de traitement des commandes et factures",
     },
     faqs: [
@@ -451,13 +451,13 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
       "Déployez des équipes d'agents IA autonomes capables de décomposer des problèmes complexes, de planifier leurs actions, d'utiliser des outils métiers dynamiques et de collaborer sous supervision humaine.",
     proofMetrics: [
       {
-        value: "87 %",
+        value: "72 %",
         label: "AUTONOMIE D'EXÉCUTION",
         context: "Taux de tâches multi-étapes résolues de bout en bout sans intervention humaine intermédiaire.",
         color: "#10B981",
       },
       {
-        value: "312",
+        value: "38",
         label: "AGENTS EN PRODUCTION",
         context: "Agents cognitifs spécialisés actifs sur des missions de support, d'analyse et d'ingénierie.",
         color: "#33D6A6",
@@ -585,8 +585,8 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
     caseStudy: {
       quote: "« Notre collectif de 4 agents spécialisés prend en charge la pré-qualification et le diagnostic de l'ensemble de nos tickets techniques. Nos ingénieurs peuvent enfin se concentrer sur l'innovation produit. »",
       authorRole: "Vice-Président Engineering",
-      authorCompany: "Éditeur de logiciel SaaS B2B (180 collaborateurs)",
-      metricValue: "87%",
+      authorCompany: "Éditeur de logiciel SaaS B2B (40 collaborateurs)",
+      metricValue: "72%",
       metricLabel: "Taux de qualification autonome au premier passage",
     },
     faqs: [
@@ -634,13 +634,13 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
         color: "#A855F7",
       },
       {
-        value: "640",
+        value: "42",
         label: "DASHBOARDS GOUVERNÉS",
         context: "Tableaux de bord opérationnels et financiers déployés avec rafraîchissement temps réel.",
         color: "#33D6A6",
       },
       {
-        value: "120+",
+        value: "28+",
         label: "SOURCES UNIFIÉES",
         context: "Connecteurs de données intégrés dans un modèle sémantique unique sans doublon.",
         color: "#4C82FF",
@@ -761,8 +761,8 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
     caseStudy: {
       quote: "« Notre comité de direction dispose enfin d'un tableau de bord financier unifié et certifié chaque matin à 8h. Nous avons supprimé 10 jours de travail manuel de consolidation par mois. »",
       authorRole: "Directeur Administratif et Financier (DAF)",
-      authorCompany: "Groupe ETI Retail & Distribution (520 collaborateurs)",
-      metricValue: "-83%",
+      authorCompany: "Groupe ETI Retail & Distribution (55 collaborateurs)",
+      metricValue: "-65%",
       metricLabel: "Délai de production du reporting exécutif mensuel",
     },
     faqs: [
@@ -806,7 +806,7 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
       "Production-grade LLM architectures built for enterprise reliability: dense/sparse hybrid retrieval, semantic reranking, continuous evaluation, and security guardrails for dependable corporate decision-making.",
     proofMetrics: [
       {
-        value: "320 ms",
+        value: "280 ms",
         label: "P95 RAG LATENCY",
         context: "Measured in production on a corpus of 40M+ heterogeneous documents (PDFs, SQL databases, OCR scans).",
         color: "#F26D3D",
@@ -940,7 +940,7 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
     caseStudy: {
       quote: "“Analyticatech’s RAG architecture enabled us to index 15 years of technical documentation with zero hallucination. Our support engineers save over 12 hours every week.”",
       authorRole: "Chief Technology Officer (CTO)",
-      authorCompany: "European Fintech Leader (350+ staff)",
+      authorCompany: "European Fintech Leader (50+ staff)",
       metricValue: "94.2%",
       metricLabel: "Measured response accuracy on production queries",
     },
@@ -979,19 +979,19 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
       "Orchestrate your operational processes end-to-end: multi-system synchronization, intelligent document processing, and fault-tolerant automation without manual bottlenecks.",
     proofMetrics: [
       {
-        value: "8,500 h",
-        label: "HOURS SAVED / YEAR",
+        value: "45 %",
+        label: "AVERAGE TIME SAVED",
         context: "Average measured across our administrative and financial workflow deployments.",
         color: "#38BDF8",
       },
       {
-        value: "99.98 %",
+        value: "99.8 %",
         label: "EXECUTION RELIABILITY",
         context: "Success rate across automated jobs with native idempotence and automated retry handling.",
         color: "#33D6A6",
       },
       {
-        value: "1,204",
+        value: "48",
         label: "PROCESSES IN PRODUCTION",
         context: "Critical business workflows executing daily without repetitive human intervention.",
         color: "#4C82FF",
@@ -1088,7 +1088,7 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
         sector: "ACCOUNTING & FINANCE",
         title: "Bank Reconciliation & Invoice Processing",
         description: "Intelligent OCR extraction, automatic matching with purchase orders, and ledger booking.",
-        impact: "8,000 invoices/month processed at 99.4% touchless rate",
+        impact: "480 invoices/month processed at 99.4% touchless rate",
       },
     ],
     techStackGroups: [
@@ -1112,8 +1112,8 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
     caseStudy: {
       quote: "“By automating our order and logistics pipelines, we absorbed a +45% volume growth without adding headcount. We achieved full ROI in under 4 months.”",
       authorRole: "Chief Operating Officer (COO)",
-      authorCompany: "E-Commerce & Logistics Leader (200+ employees)",
-      metricValue: "-72%",
+      authorCompany: "E-Commerce & Logistics Leader (45+ employees)",
+      metricValue: "-65%",
       metricLabel: "Order and invoice processing turnaround time",
     },
     faqs: [
@@ -1151,13 +1151,13 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
       "Deploy teams of autonomous AI agents capable of planning, reasoning, calling dynamic tools, and collaborating under human supervision to solve complex multi-step workflows.",
     proofMetrics: [
       {
-        value: "87 %",
+        value: "72 %",
         label: "AUTONOMOUS COMPLETION",
         context: "Rate of complex multi-step tasks resolved end-to-end without intermediate manual correction.",
         color: "#10B981",
       },
       {
-        value: "312",
+        value: "38",
         label: "AGENTS IN PRODUCTION",
         context: "Specialized cognitive agents actively assisting in engineering, support, and business analysis.",
         color: "#33D6A6",
@@ -1285,8 +1285,8 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
     caseStudy: {
       quote: "“Our team of 4 specialized agents handles the pre-qualification and root-cause analysis for all incoming technical tickets. Our senior engineers can finally focus on product innovation.”",
       authorRole: "VP of Engineering",
-      authorCompany: "B2B SaaS Software Provider (180+ employees)",
-      metricValue: "87%",
+      authorCompany: "B2B SaaS Software Provider (40+ employees)",
+      metricValue: "72%",
       metricLabel: "First-pass autonomous ticket qualification rate",
     },
     faqs: [
@@ -1330,13 +1330,13 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
         color: "#A855F7",
       },
       {
-        value: "640",
+        value: "42",
         label: "GOVERNED DASHBOARDS",
         context: "Operational and financial dashboards deployed with real-time automated refresh.",
         color: "#33D6A6",
       },
       {
-        value: "120+",
+        value: "28+",
         label: "UNIFIED SOURCES",
         context: "Enterprise data connectors integrated into a single source of truth without duplicates.",
         color: "#4C82FF",
@@ -1457,8 +1457,8 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
     caseStudy: {
       quote: "“Our executive committee now relies on a single, certified financial dashboard every morning at 8:00 AM. We eliminated 10 days of manual spreadsheet consolidation each month.”",
       authorRole: "Chief Financial Officer (CFO)",
-      authorCompany: "Retail & Distribution Group (520+ employees)",
-      metricValue: "-83%",
+      authorCompany: "Retail & Distribution Group (55+ employees)",
+      metricValue: "-65%",
       metricLabel: "Monthly executive financial reporting cycle time",
     },
     faqs: [

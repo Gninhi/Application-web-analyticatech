@@ -57,37 +57,15 @@ export function LanguageToggle() {
       onClick={handleToggle}
       aria-label={ariaLabel}
       title={actionLabel}
-      className="group relative inline-flex h-9 items-center gap-1.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/[0.06] px-2.5 py-1 backdrop-blur-md transition-all duration-300 hover:border-[#F26D3D]/50 hover:bg-white/80 dark:hover:bg-white/[0.1] cursor-pointer shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2"
+      className="group relative inline-flex h-9 items-center gap-1.5 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-2.5 py-1 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-black/10 dark:hover:bg-white/10 hover:border-black/20 dark:hover:border-white/20 backdrop-blur-md transition-all duration-300 cursor-pointer shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2"
     >
-      <Globe className="h-3.5 w-3.5 text-slate-500 group-hover:text-[#F26D3D] transition-colors" aria-hidden />
-
-      <div className="flex items-center gap-1 font-mono text-xs font-bold tracking-wider">
-        <span
-          className={`transition-colors duration-200 ${
-            displayLocale === "fr"
-              ? "text-[#F26D3D]"
-              : "text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300"
-          }`}
-        >
-          FR
-        </span>
-        <span className="text-slate-300 dark:text-slate-600 text-[10px]" aria-hidden>/</span>
-        <span
-          className={`transition-colors duration-200 ${
-            displayLocale === "en"
-              ? "text-[#F26D3D]"
-              : "text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300"
-          }`}
-        >
-          EN
-        </span>
-      </div>
-
-      {/* Point lumineux actif */}
-      <span
-        className="h-1.5 w-1.5 rounded-full bg-[#F26D3D] shadow-[0_0_8px_#F26D3D]"
-        aria-hidden
-      />
+      <Globe className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-100 transition-colors" aria-hidden />
+      <span className="font-mono text-xs font-bold tracking-wider">
+        {displayLocale.toUpperCase()}
+      </span>
+      <span className="text-[10px] text-slate-400 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors font-mono">
+        ⇄ {targetLocale.toUpperCase()}
+      </span>
     </button>
   );
 }

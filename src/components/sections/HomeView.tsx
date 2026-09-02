@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { LazySection, SectionSkeleton } from "@/components/ui/LazySection";
 
@@ -63,17 +63,21 @@ const FaqSection = dynamic(
   { loading: () => <SectionSkeleton {...SECTION_SKELETONS.faq} /> }
 );
 
+import { FALLBACK_METRICS_FR, FALLBACK_METRICS_EN } from "@/lib/content/fallbacks";
+
 interface HomeViewProps {
   onNavigate: (view: ViewKey) => void;
   onNavigateDetail: (view: ViewKey, id: string) => void;
 }
 
 export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { metrics: DB_METRICS } = useAppContent();
 
   // Metric stats affichées dans la section 02 Preuve rapide
-  const displayStats = DB_METRICS.slice(0, 4).map((m) => ({ v: m.value, l: m.label }));
+  const statsFallback = locale === "en" ? FALLBACK_METRICS_EN : FALLBACK_METRICS_FR;
+  const statsSource = DB_METRICS.length > 0 ? DB_METRICS : statsFallback;
+  const displayStats = statsSource.slice(0, 4).map((m) => ({ v: m.value, l: m.label }));
 
   return (
     <div className="space-y-24 md:space-y-32 pb-16">
@@ -193,15 +197,16 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
             <p className="relative max-w-2xl mx-auto text-slate-700 dark:text-slate-300 mb-8 text-base leading-relaxed">
               {t("home.section.cta.desc")}
             </p>
-            <MovingButton
+            <Button
               onClick={() => onNavigate("contact")}
               variant="primary"
               size="lg"
+              icon={<ArrowRight className="h-4 w-4" aria-hidden />}
+              iconPosition="right"
               className="relative neon-glow"
             >
               {t("home.section.cta.button")}
-              <ArrowRight className="h-4 w-4" aria-hidden />
-            </MovingButton>
+            </Button>
           </div>
         </div>
       </section>

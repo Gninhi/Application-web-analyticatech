@@ -10,7 +10,7 @@ import { collectErrors } from "./helpers";
 
 const STATIC_ROUTES = [
   { path: "/", titleContains: "Analyticatech" },
-  { path: "/services", titleContains: "Services" },
+  { path: "/services", titleContains: "Expertises" },
   { path: "/services/01", titleContains: "RAG" },
   { path: "/solutions", titleContains: "Solutions" },
   { path: "/insights", titleContains: "Insights" },

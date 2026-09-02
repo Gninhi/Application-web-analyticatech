@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   },
   description:
 
-    "Cabinet de conseil IA en France : architecture d'agents LLM, RAG, automatisation workflows et transformation digitale. 127+ missions livrées, 38% de coûts réduits. Experts LangChain, n8n, Power BI, SecNumCloud.",
+    "Cabinet de conseil IA en France : architecture d'agents LLM, RAG, automatisation workflows et transformation digitale. 48+ missions livrées, 35% de coûts réduits. Experts LangChain, n8n, Power BI, SecNumCloud.",
   keywords: [
     // Mots-clés principaux (haute intention)
     "cabinet conseil IA",
@@ -94,7 +94,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Analyticatech — Cabinet de conseil en IA, Agents & Automatisation",
     description:
-      "Architecture d'agents LLM, RAG, automatisation et transformation digitale. 127+ missions livrées. Experts LangChain, n8n, SecNumCloud.",
+      "Architecture d'agents LLM, RAG, automatisation et transformation digitale. 48+ missions livrées. Experts LangChain, n8n, SecNumCloud.",
     siteName: "Analyticatech",
     type: "website",
     locale: "fr_FR",
@@ -112,7 +112,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Analyticatech — Cabinet conseil IA & Automatisation",
     description:
-      "Agents LLM, RAG, automatisation, transformation digitale. 127+ missions livrées.",
+      "Agents LLM, RAG, automatisation, transformation digitale. 48+ missions livrées.",
     images: ["/og-image.jpg"],
   },
   alternates: {
@@ -168,12 +168,17 @@ export default async function RootLayout({
   const content = await getAppContent(locale);
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} className="dark" suppressHydrationWarning>
       <head>
         {/* Preconnect & DNS-prefetch pour les ressources critiques externes */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        {/* Script d'init du thème synchrone : garantit 0 FOUC / flash blanc au rechargement */}
+        <script
+          nonce={nonce}
+          dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
+        />
       </head>
 
       <body

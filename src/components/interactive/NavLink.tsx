@@ -31,6 +31,7 @@ export function NavLink({
   onNavigate,
   className,
   children,
+  ...props
 }: NavLinkProps) {
   const classNameValue = cn(
     "relative inline-flex items-center min-h-8 transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 rounded-lg",
@@ -78,7 +79,7 @@ export function NavLink({
   }
 
   return (
-    <button className={classNameValue} aria-current={active ? "page" : undefined} onClick={onNavigate}>
+    <button type="button" className={classNameValue} aria-current={active ? "page" : undefined} onClick={onNavigate} {...props}>
       {content}
     </button>
   );

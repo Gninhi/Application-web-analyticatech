@@ -55,7 +55,7 @@ export function HeroCard({
       <button
         type="button"
         onClick={() => onNavigateDetail("blog-detail", post.slug)}
-        aria-label={`${t("common.read")} : ${post.title}`}
+        aria-label={`${t("common.readArticle")} : ${post.title}`}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         className="group relative block w-full overflow-hidden rounded-[28px] text-left glass-card grain flex flex-col lg:grid lg:grid-cols-[1.05fr_1fr] focus-visible:outline-2 focus-visible:outline-[color:var(--ca)] focus-visible:outline-offset-2"
@@ -92,7 +92,9 @@ export function HeroCard({
             <span className="h-px w-4 bg-border" aria-hidden />
             <span className="inline-flex items-center gap-1.5">
               <Clock className="h-3 w-3" style={{ color: accent }} aria-hidden />
-              {post.readingTime}
+              {post.readingTime.includes("lecture") || post.readingTime.includes("read")
+                ? post.readingTime
+                : `${post.readingTime.replace(/\s*min.*/i, "")} ${t("common.read")}`}
             </span>
             <span className="h-px w-4 bg-border" aria-hidden />
             <span className="inline-flex items-center gap-1.5">
@@ -116,7 +118,7 @@ export function HeroCard({
           </p>
 
           <span className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-foreground transition-colors duration-300 group-hover:text-[var(--ca)]">
-            {t("common.read")}
+            {t("common.readArticle")}
             <ArrowUpRight
               className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               style={{ color: accent }}

@@ -7,11 +7,10 @@ import {
   Lock,
   CheckCircle2,
   AlertTriangle,
-  Loader2,
   ChevronRight,
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n/provider";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { TerminalField } from "./TerminalField";
 import { useContactForm } from "@/lib/hooks/useContactForm";
 import { cn } from "@/lib/utils/cn";
@@ -182,26 +181,18 @@ export function ContactForm() {
 
           {/* Bouton EXÉCUTER */}
           <div className="pt-2">
-            <MovingButton
+            <Button
               type="submit"
               disabled={status === "submitting"}
-              variant="primary"
+              loading={status === "submitting"}
+              variant="terminal"
               size="lg"
-              className="group w-full neon-glow font-bold"
+              icon={<ChevronRight className="h-4 w-4" aria-hidden />}
+              iconPosition="left"
+              className="w-full font-bold"
             >
-              {status === "submitting" ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-                  {t("contact.encrypting")}
-                </>
-              ) : (
-                <>
-                  <ChevronRight className="h-4 w-4" aria-hidden />
-                  {t("contact.execute")}
-                  <ChevronRight className="h-4 w-4 rotate-180" aria-hidden />
-                </>
-              )}
-            </MovingButton>
+              {status === "submitting" ? t("contact.encrypting") : t("contact.execute")}
+            </Button>
           </div>
 
           {/* Messages de retour */}

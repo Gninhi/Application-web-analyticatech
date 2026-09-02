@@ -14,7 +14,7 @@ import {
   Sparkles,
   type LucideIcon,
 } from "lucide-react";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/provider";
 
 export interface PainPointItem {
@@ -71,16 +71,20 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
       {/* Liste des peines et résolution */}
       <div className="grid lg:grid-cols-12 gap-6 items-start">
         {/* Colonne Gauche : Liste des 5 peines thématiques */}
-        <div className="lg:col-span-6 space-y-3">
+        <div className="lg:col-span-6 space-y-3" role="tablist" aria-label={t("home.section.painpoints.title")}>
           {PAIN_POINTS.map((item, idx) => {
             const isSelected = activePainId === item.id;
             const Icon = item.icon;
             return (
               <motion.button
                 key={item.id}
+                type="button"
+                role="tab"
+                aria-selected={isSelected}
+                aria-label={`${item.sector} : ${item.problem}`}
                 onClick={() => setActivePainId(item.id)}
                 whileHover={{ x: 4 }}
-                className={`w-full text-left p-4 md:p-5 rounded-2xl border transition-all duration-300 flex items-start gap-4 cursor-pointer backdrop-blur-md ${
+                className={`w-full text-left p-4 md:p-5 rounded-2xl border transition-all duration-300 flex items-start gap-4 cursor-pointer backdrop-blur-md focus-visible:outline-2 focus-visible:outline-offset-2 ${
                   isSelected
                     ? "border-[#F26D3D] glass-strong shadow-lg shadow-[#F26D3D]/10"
                     : "glass hover:border-slate-400 dark:hover:border-slate-500"
@@ -214,15 +218,16 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
                       <span className="font-mono text-xs text-slate-500 dark:text-slate-400">
                         {t("painpoint.cta.hint")}
                       </span>
-                      <MovingButton
+                      <Button
                         onClick={onNavigateContact}
                         variant="primary"
                         size="sm"
+                        icon={<ArrowRight className="h-3.5 w-3.5" aria-hidden />}
+                        iconPosition="right"
                         className="neon-glow"
                       >
                         {t("painpoint.cta")}
-                        <ArrowRight className="h-3.5 w-3.5" aria-hidden />
-                      </MovingButton>
+                      </Button>
                     </div>
                   )}
                 </motion.div>

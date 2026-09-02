@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 
 interface ServiceCardActionProps {
   label: string;
@@ -14,20 +14,18 @@ interface ServiceCardActionProps {
  */
 export function ServiceCardAction({ label, onClick }: ServiceCardActionProps) {
   return (
-    <MovingButton
+    <Button
       onClick={(e) => {
         e.stopPropagation();
         onClick(e);
       }}
       variant="ghost"
       size="sm"
+      icon={<ChevronRight className="h-4 w-4" aria-hidden />}
+      iconPosition="right"
       className="group/btn self-start"
     >
       <span>{label}</span>
-      <ChevronRight
-        className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1.5"
-        aria-hidden
-      />
-    </MovingButton>
+    </Button>
   );
 }

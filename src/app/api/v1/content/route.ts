@@ -2,6 +2,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getAppContent } from "@/lib/services/content.service";
 import type { Locale } from "@/types/content";
 
+export const dynamic = "force-dynamic";
+
 /**
  * Route GET /api/v1/content?locale=en|fr
  *

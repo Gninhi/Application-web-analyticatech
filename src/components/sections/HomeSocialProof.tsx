@@ -6,7 +6,7 @@ import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
 import { StockTicker } from "@/components/interactive/StockTicker";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { SectionContainer } from "@/components/ui/SectionContainer";
 import { formatPostDate } from "@/lib/utils/date";
@@ -54,15 +54,16 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
               title={t("home.section.insights.title")}
               description={t("home.section.insights.desc")}
             />
-            <MovingButton
+            <Button
               onClick={() => onNavigate("blog")}
               variant="ghost"
               size="md"
+              icon={<ArrowRight className="h-4 w-4" aria-hidden />}
+              iconPosition="right"
               className="shrink-0"
             >
               {t("home.insights.all")}
-              <ArrowRight className="h-4 w-4" aria-hidden />
-            </MovingButton>
+            </Button>
           </div>
 
           {/* Grille éditoriale responsive */}
@@ -99,7 +100,9 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
 
                   <div className="pt-5 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-xs sm:text-sm font-mono text-slate-600 dark:text-slate-400">
                     <span>
-                      {t("home.insights.reading")} {featuredPost.readingTime}
+                      {featuredPost.readingTime.includes("lecture") || featuredPost.readingTime.includes("read")
+                        ? featuredPost.readingTime
+                        : `${featuredPost.readingTime.replace(/\s*min.*/i, "")} ${t("common.read")}`}
                     </span>
                     <span className="text-[#F26D3D] group-hover:translate-x-1.5 transition-transform inline-flex items-center gap-1.5 font-bold">
                       {t("home.insights.read")} <ArrowRight className="h-4 w-4" />
@@ -142,7 +145,9 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
 
                   <div className="pt-4 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-xs font-mono text-slate-600 dark:text-slate-400">
                     <span>
-                      {t("home.insights.reading")} {post.readingTime}
+                      {post.readingTime.includes("lecture") || post.readingTime.includes("read")
+                        ? post.readingTime
+                        : `${post.readingTime.replace(/\s*min.*/i, "")} ${t("common.read")}`}
                     </span>
                     <span className="text-[#F26D3D] group-hover:translate-x-1.5 transition-transform inline-flex items-center gap-1 font-bold">
                       {t("home.insights.read")} <ArrowRight className="h-3.5 w-3.5" />

@@ -58,7 +58,7 @@ export function ReportCard({
       <button
         type="button"
         onClick={() => onNavigateDetail("blog-detail", post.slug)}
-        aria-label={`${t("common.read")} : ${post.title}`}
+        aria-label={`${t("common.readArticle")} : ${post.title}`}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         className="group relative flex h-full w-full flex-col overflow-hidden rounded-[25px] text-left glass-card grain focus-visible:outline-2 focus-visible:outline-[color:var(--ca)] focus-visible:outline-offset-2"
@@ -103,7 +103,9 @@ export function ReportCard({
           <div className="absolute bottom-4 left-5 right-5 z-20 flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
             <span className="inline-flex items-center gap-1.5">
               <Clock className="h-3 w-3" style={{ color: accent }} aria-hidden />
-              {post.readingTime}
+              {post.readingTime.includes("lecture") || post.readingTime.includes("read")
+                ? post.readingTime
+                : `${post.readingTime.replace(/\s*min.*/i, "")} ${t("common.read")}`}
             </span>
             <span className="inline-flex items-center gap-1.5">
               <User className="h-3 w-3" style={{ color: accent }} aria-hidden />
@@ -143,18 +145,9 @@ export function ReportCard({
             ))}
           </div>
 
-          <div className="flex items-center justify-between border-t border-border pt-3">
-            <span
-              className="rounded-full border px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-widest"
-              style={{
-                borderColor: `color-mix(in srgb, ${accent} 30%, transparent)`,
-                color: accent,
-              }}
-            >
-              {post.categoryLabel}
-            </span>
+          <div className="flex items-center justify-end border-t border-border pt-3">
             <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground transition-colors duration-300 group-hover:text-[var(--ca)]">
-              {t("common.read")}
+              {t("common.readArticle")}
               <ArrowUpRight
                 className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                 style={{ color: accent }}

@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import type { ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ContactCta } from "@/components/ui/ContactCta";
 import { DetailNotFound } from "./DetailNotFound";
@@ -28,10 +28,15 @@ export function SolutionDetailView({ solutionSlug, onNavigate }: SolutionDetailV
     return (
       <div className="pt-28 md:pt-36 pb-20">
         <div className="mx-auto max-w-4xl px-4 md:px-6">
-          <MovingButton variant="ghost" size="sm" onClick={() => onNavigate("solutions")} className="mb-8">
-            <ArrowLeft className="h-4 w-4" aria-hidden />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onNavigate("solutions")}
+            icon={<ArrowLeft className="h-4 w-4" aria-hidden />}
+            className="mb-8"
+          >
             {`${t("common.back")} ${t("nav.solutions")}`}
-          </MovingButton>
+          </Button>
           <DetailNotFound
             label={t("detail.noData")}
             title={t("detail.unavailable.title")}
@@ -45,10 +50,15 @@ export function SolutionDetailView({ solutionSlug, onNavigate }: SolutionDetailV
   return (
     <div className="pt-28 md:pt-36 pb-20">
       <div className="mx-auto max-w-4xl px-4 md:px-6">
-        <MovingButton variant="ghost" size="sm" onClick={() => onNavigate("solutions")} className="mb-8">
-          <ArrowLeft className="h-4 w-4" aria-hidden />
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onNavigate("solutions")}
+          icon={<ArrowLeft className="h-4 w-4" aria-hidden />}
+          className="mb-8"
+        >
           {`${t("common.back")} ${t("nav.solutions")}`}
-        </MovingButton>
+        </Button>
 
         <motion.div
           initial={{ opacity: 0, y: 18 }}
@@ -70,6 +80,11 @@ export function SolutionDetailView({ solutionSlug, onNavigate }: SolutionDetailV
               {t("common.impact")}
             </p>
             <p className="font-display text-xl font-bold text-[#F26D3D]">{solution.impact}</p>
+            {solution.methodology && (
+              <p className="mt-1.5 font-mono text-xs text-slate-500 dark:text-slate-400">
+                {solution.methodology}
+              </p>
+            )}
           </div>
 
           <div className="flex flex-wrap gap-2">

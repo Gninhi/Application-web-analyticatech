@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Search, FlaskConical, Factory, TrendingUp, Check, ArrowRight, ShieldCheck } from "lucide-react";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { MethodOrbit } from "@/components/sections/MethodOrbit";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils/cn";
@@ -87,15 +87,19 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
         </div>
 
         {/* === Stepper mobile/tablette (l'orbite est masquée sous lg) === */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:hidden">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:hidden" role="tablist" aria-label={t("home.section.method")}>
           {METHOD_STEPS.map((step, idx) => {
             const isActive = idx === activeStepIndex;
             const StepIcon = step.icon;
             return (
               <button
                 key={step.number}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                aria-label={`${step.number} — ${step.title}`}
                 onClick={() => setActiveStepIndex(idx)}
-                className={`relative flex flex-col p-4 rounded-2xl border text-left transition-all duration-300 ${
+                className={`relative flex flex-col p-4 rounded-2xl border text-left transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 ${
                   isActive
                     ? "border-[#F26D3D] glass-strong shadow-lg shadow-[#F26D3D]/10"
                     : "glass hover:border-slate-400 dark:hover:border-slate-500"
@@ -183,15 +187,16 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                     </div>
 
                     {onNavigateContact && (
-                      <MovingButton
+                      <Button
                         onClick={onNavigateContact}
                         variant="primary"
                         size="md"
+                        icon={<ArrowRight className="h-4 w-4" aria-hidden />}
+                        iconPosition="right"
                         className="neon-glow"
                       >
                         {t("method.cta")}
-                        <ArrowRight className="h-4 w-4" aria-hidden />
-                      </MovingButton>
+                      </Button>
                     )}
                   </div>
 

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
 
 interface ContactCtaProps {
@@ -48,15 +48,16 @@ export function ContactCta({
       className={cn("glass-card rounded-2xl p-6 md:p-8 text-center", className)}
     >
       <p className="text-slate-600 dark:text-slate-300 mb-4">{question}</p>
-      <MovingButton
+      <Button
         variant="primary"
         size={size}
         onClick={() => onNavigate("contact")}
+        icon={withIcon ? <ArrowUpRight className="h-4 w-4" aria-hidden /> : undefined}
+        iconPosition="right"
         className={glow ? "neon-glow" : undefined}
       >
         {cta}
-        {withIcon && <ArrowUpRight className="h-4 w-4" aria-hidden />}
-      </MovingButton>
+      </Button>
     </motion.div>
   );
 }

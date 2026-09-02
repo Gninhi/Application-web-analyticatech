@@ -5,7 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, TrendingUp } from "lucide-react";
 import { type SolutionDTO, type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { BorderRotate } from "@/components/ui/animated-gradient-border";
 import { tint, getSolutionAccent } from "@/lib/utils/colors";
 
@@ -211,18 +211,23 @@ export function SolutionCard({
           </p>
 
           {/* Impact sectoriel */}
-          <div className="relative rounded-xl p-3.5 md:p-4 mb-4 flex items-center gap-3.5 overflow-hidden" style={impactStyle}>
+          <div className="relative rounded-xl p-3.5 md:p-4 mb-4 flex items-start gap-3.5 overflow-hidden" style={impactStyle}>
             <span className="absolute inset-y-2 left-0 w-0.5 rounded-full" style={{ background: accent }} aria-hidden />
-            <span className="h-10 w-10 shrink-0 rounded-lg border flex items-center justify-center" style={chipStyle}>
+            <span className="h-10 w-10 shrink-0 rounded-lg border flex items-center justify-center mt-0.5" style={chipStyle}>
               <TrendingUp className="h-5 w-5" style={{ color: accent }} aria-hidden />
             </span>
-            <div>
+            <div className="min-w-0 flex-1">
               <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground mb-0.5">
                 {t("common.impact")}
               </p>
               <p className="font-display text-lg md:text-xl font-bold leading-snug" style={{ color: accent }}>
                 {sol.impact}
               </p>
+              {sol.methodology && (
+                <p className="mt-1 text-[11px] leading-tight text-muted-foreground/80 font-mono">
+                  {sol.methodology}
+                </p>
+              )}
             </div>
           </div>
 
@@ -239,18 +244,19 @@ export function SolutionCard({
           </div>
 
           <div className="border-t border-border pt-4">
-            <MovingButton
+            <Button
               onClick={(e) => {
                 e.stopPropagation();
                 onNavigateDetail("solution-detail", sol.slug);
               }}
               variant="outline"
               size="md"
+              icon={<ArrowRight className="h-3.5 w-3.5" aria-hidden />}
+              iconPosition="right"
               className="group/btn w-full"
             >
               {t("solutions.card.cta")}
-              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" aria-hidden />
-            </MovingButton>
+            </Button>
           </div>
         </div>
       </article>

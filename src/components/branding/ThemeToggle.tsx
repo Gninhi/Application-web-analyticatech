@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "@/components/branding/ThemeProvider";
 import { Sun, Moon } from "lucide-react";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
 
 /**
@@ -41,13 +41,14 @@ export function ThemeToggle() {
     : "Changer de thème";
 
   return (
-    <MovingButton
+    <Button
       onClick={toggle}
       aria-label={ariaLabel}
+      variant="secondary"
       iconOnly
-      borderRadius="0.625rem"
-      duration={4000}
-      className="h-10 w-10 bg-white/10 dark:bg-white/5 backdrop-blur-md text-slate-800 dark:text-slate-100 hover:text-[#F26D3D] relative overflow-hidden"
+      borderRadius="0.75rem"
+      showBorderAnimation={false}
+      className="h-9 w-9 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
     >
       <span
         className={cn(
@@ -57,7 +58,7 @@ export function ThemeToggle() {
           mounted && !isDark && "opacity-0 rotate-90 scale-50 absolute"
         )}
       >
-        <Sun className="h-5 w-5" aria-hidden />
+        <Sun className="h-4 w-4" aria-hidden />
       </span>
       <span
         className={cn(
@@ -67,8 +68,8 @@ export function ThemeToggle() {
           mounted && isDark && "opacity-0 -rotate-90 scale-50 absolute"
         )}
       >
-        <Moon className="h-5 w-5 text-slate-700" aria-hidden />
+        <Moon className="h-4 w-4" aria-hidden />
       </span>
-    </MovingButton>
+    </Button>
   );
 }

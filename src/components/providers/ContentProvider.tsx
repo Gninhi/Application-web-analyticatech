@@ -4,30 +4,18 @@ import { createContext, useContext, useState, useEffect, useRef, type ReactNode 
 
 import type { AppContentDTO, Locale } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
-import { FALLBACK_SERVICES_EN, FALLBACK_SOLUTIONS_EN } from "@/lib/content/fallbacks";
+import {
+  FALLBACK_SERVICES_EN,
+  FALLBACK_SOLUTIONS_EN,
+  FALLBACK_METRICS_EN,
+  FALLBACK_ACTIVITY_LOGS_EN,
+  FALLBACK_MARQUEE_KEYWORDS_EN,
+  FALLBACK_COMPANY_VALUES_EN,
+  FALLBACK_DELIVERY_STEPS_EN,
+  FALLBACK_TESTIMONIALS_EN,
+} from "@/lib/content/fallbacks";
 
 const ContentContext = createContext<AppContentDTO | null>(null);
-
-
-
-const ENGLISH_MARQUEE_KEYWORDS = [
-  "RAG ARCHITECTURES",
-  "MULTI-AGENT COLLECTIVES",
-  "DBT & MODERN DATA STACK",
-  "N8N & TEMPORAL WORKFLOWS",
-  "ENTERPRISE AI GOVERNANCE",
-  "LLM BENCHMARK & EVALS",
-  "HIGH-PERFORMANCE DATA PLATFORMS",
-];
-
-const METRIC_TRANSLATIONS_EN: Record<string, string> = {
-  "ANS D'EXPERTISE R&D": "YEARS OF R&D EXPERTISE",
-  "DISPONIBILITÉ SYSTÈMES": "SYSTEM AVAILABILITY",
-  "PRÉCISION RAG (BENCHMARKS)": "RAG ACCURACY (BENCHMARKS)",
-  "RÉDUCTION TEMPS TRAITEMENT": "PROCESSING TIME REDUCTION",
-  "PROJETS LIVRÉS EN PROD": "PROJECTS DELIVERED TO PROD",
-  "ÉCONOMIES MOYENNES CONSTATÉES": "AVERAGE CLIENT SAVINGS",
-};
 
 /**
  * Crée un DTO d'appoint immédiat en anglais basé sur les constantes validées
@@ -39,11 +27,12 @@ function deriveEnglishFallbackContent(baseContent: AppContentDTO): AppContentDTO
     locale: "en",
     services: FALLBACK_SERVICES_EN,
     solutions: FALLBACK_SOLUTIONS_EN,
-    marqueeKeywords: ENGLISH_MARQUEE_KEYWORDS,
-    metrics: baseContent.metrics.map((m) => ({
-      ...m,
-      label: METRIC_TRANSLATIONS_EN[m.label.toUpperCase()] || m.label,
-    })),
+    metrics: FALLBACK_METRICS_EN,
+    activityLogs: FALLBACK_ACTIVITY_LOGS_EN,
+    marqueeKeywords: FALLBACK_MARQUEE_KEYWORDS_EN,
+    companyValues: FALLBACK_COMPANY_VALUES_EN,
+    deliverySteps: FALLBACK_DELIVERY_STEPS_EN,
+    testimonials: FALLBACK_TESTIMONIALS_EN,
   };
 }
 
@@ -66,6 +55,14 @@ export function ContentProvider({
 
   const fetchedLocalesRef = useRef<Set<Locale>>(new Set([initialContent.locale]));
   const pendingFetchesRef = useRef<Map<Locale, Promise<AppContentDTO | null>>>(new Map());
+
+  // Synchronise le cache si initialContent change (revalidation serveur / navigation)
+  useEffect(() => {
+    setContentCache((prev) => ({
+      ...prev,
+      [initialContent.locale]: initialContent,
+    }));
+  }, [initialContent]);
 
   // Synchronisation asynchrone avec l'API de contenu Supabase lorsqu'on passe sur une langue non encore chargée
   useEffect(() => {

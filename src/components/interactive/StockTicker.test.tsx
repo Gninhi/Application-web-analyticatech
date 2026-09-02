@@ -10,7 +10,7 @@ describe("StockTicker Component", () => {
 
     expect(html).toContain("[AI-01]");
     expect(html).toContain("IA");
-    expect(html).toContain("▲ 320ms");
+    expect(html).toContain("▲ 280ms");
     expect(html).toContain("[AGNT-02]");
     expect(html).toContain("Agents");
     expect(html).toContain("[RAG-06]");

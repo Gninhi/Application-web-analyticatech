@@ -24,7 +24,7 @@ describe("ServiceDetailView Component", () => {
     expect(html).toContain("SERVICE 01 — LLM, RAG HAUTE PRÉCISION & GARDE-FOUS");
 
     // Preuves chiffrées
-    expect(html).toContain("320 ms");
+    expect(html).toContain("280 ms");
     expect(html).toContain("LATENCE RAG P95");
     expect(html).toContain("94.2 %");
 
@@ -42,7 +42,7 @@ describe("ServiceDetailView Component", () => {
     expect(html).toContain("Une stack de production, pas de prototypage");
     expect(html).toContain("LangChain");
     expect(html).toContain("Mistral Large");
-    expect(html).toContain("-64%");
+    expect(html).toContain("-65%");
 
     // FAQ & CTA
     expect(html).toContain("Ce que nos clients demandent avant de démarrer");

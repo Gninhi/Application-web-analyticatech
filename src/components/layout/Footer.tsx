@@ -10,7 +10,7 @@ import { usePathname } from "next/navigation";
 import { viewToPath, getLocaleFromPath } from "@/lib/navigation/routes";
 import { NavLink } from "@/components/interactive/NavLink";
 import { Logo } from "@/components/branding/Logo";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
 
@@ -153,16 +153,15 @@ export function Footer() {
                   aria-label="Adresse email pour la newsletter"
                   className="terminal-input flex-1 min-w-0 min-h-9 rounded-lg bg-black/30 border border-black/10 dark:border-white/10 px-3 py-2 font-mono text-xs text-slate-800 dark:text-slate-100 placeholder:text-slate-500 outline-none transition"
                 />
-                <MovingButton
+                <Button
                   type="submit"
                   aria-label="S'abonner à la newsletter"
                   iconOnly
                   borderRadius="0.5rem"
                   duration={3500}
+                  icon={<Send className="h-4 w-4" aria-hidden />}
                   className="h-9 w-9 shrink-0 bg-[#C9470F] text-white hover:bg-[#B63C0C]"
-                >
-                  <Send className="h-4 w-4" aria-hidden />
-            </MovingButton>
+                />
               </div>
               {subscribed && (
                 <p className="font-mono text-[10px] text-[#4CAF50] uppercase tracking-wider">

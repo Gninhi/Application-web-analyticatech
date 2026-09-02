@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Database, BrainCircuit, Workflow, BarChart3, ArrowRight, Activity, CheckCircle2 } from "lucide-react";
+import { useI18n } from "@/lib/i18n/provider";
+import { useAppContent } from "@/components/providers/ContentProvider";
 import { cn } from "@/lib/utils/cn";
 
 export interface NodeItem {
@@ -16,51 +18,77 @@ export interface NodeItem {
   details: string[];
 }
 
-const NODES: NodeItem[] = [
-  {
-    id: "data",
-    step: "01",
-    title: "Données",
-    subtitle: "Ingestion & Centralisation",
-    description: "Captation continue des flux bruts (ERP, CRM, logs, bases SQL/NoSQL) avec nettoyage et souveraineté.",
-    icon: Database,
-    metrics: "1.2M events/s",
-    details: ["Connecteurs natifs REST/gRPC", "Chiffrement AES-256 bout en bout", "Conformité RGPD / SecNumCloud"],
-  },
-  {
-    id: "intelligence",
-    step: "02",
-    title: "Intelligence",
-    subtitle: "RAG & Noyau Cognitif",
-    description: "Enrichissement vectoriel, modélisation RAG et raisonnement LLM à faible latence et zéro hallucination.",
-    icon: BrainCircuit,
-    metrics: "320 ms latence",
-    details: ["Modèles hybrides (SaaS / Sovereign)", "Bases vectorielles distribuées", "Garde-fous de sécurité & auditability"],
-  },
-  {
-    id: "orchestration",
-    step: "03",
-    title: "Orchestration",
-    subtitle: "Workflows & Multi-Agents",
-    description: "Exécution automatisée de tâches complexes avec gestion d'état, boucle d'approbation et reprise sur erreur.",
-    icon: Workflow,
-    metrics: "99.98% fiabilité",
-    details: ["Agents autonomes en réseau", "Orchestration n8n / Temporal", "Human-in-the-loop configurable"],
-  },
-  {
-    id: "decision",
-    step: "04",
-    title: "Décision",
-    subtitle: "Pilotage & Impact Métier",
-    description: "Dashboards exécutifs temps réel, déclenchement d'actions automatiques et mesure continue du ROI.",
-    icon: BarChart3,
-    metrics: "640 KPIs actifs",
-    details: ["Couche sémantique dbt / PowerBI", "Alertes prédictives sur dérive", "Restitutions visuelles décisionnelles"],
-  },
-];
-
 export function LivingSystemGraph() {
+  const { locale } = useI18n();
+  const { metrics } = useAppContent();
   const [activeNodeId, setActiveNodeId] = useState<string>("intelligence");
+
+  const isEn = locale === "en";
+
+  const agentsCount = metrics.find((m) => m.key === "agents_production")?.value ?? "38";
+  const dashboardsCount = metrics.find((m) => m.key === "dashboards_decisional")?.value ?? "42";
+
+  const NODES: NodeItem[] = useMemo(
+    () => [
+      {
+        id: "data",
+        step: "01",
+        title: isEn ? "Data" : "Données",
+        subtitle: isEn ? "Ingestion & Centralization" : "Ingestion & Centralisation",
+        description: isEn
+          ? "Continuous capture of raw streams (ERP, CRM, logs, SQL/NoSQL databases) with cleaning and sovereignty."
+          : "Captation continue des flux bruts (ERP, CRM, logs, bases SQL/NoSQL) avec nettoyage et souveraineté.",
+        icon: Database,
+        metrics: isEn ? "28+ data sources" : "28+ sources data",
+        details: isEn
+          ? ["Native REST/gRPC connectors", "End-to-end AES-256 encryption", "GDPR / SecNumCloud compliance"]
+          : ["Connecteurs natifs REST/gRPC", "Chiffrement AES-256 bout en bout", "Conformité RGPD / SecNumCloud"],
+      },
+      {
+        id: "intelligence",
+        step: "02",
+        title: isEn ? "Intelligence" : "Intelligence",
+        subtitle: isEn ? "RAG & Cognitive Core" : "RAG & Noyau Cognitif",
+        description: isEn
+          ? "Vector enrichment, RAG modeling and low-latency LLM reasoning with zero hallucinations."
+          : "Enrichissement vectoriel, modélisation RAG et raisonnement LLM à faible latence et zéro hallucination.",
+        icon: BrainCircuit,
+        metrics: isEn ? "280 ms latency" : "280 ms latence",
+        details: isEn
+          ? ["Hybrid models (SaaS / Sovereign)", "Distributed vector stores", "Security guardrails & auditability"]
+          : ["Modèles hybrides (SaaS / Sovereign)", "Bases vectorielles distribuées", "Garde-fous de sécurité & auditability"],
+      },
+      {
+        id: "orchestration",
+        step: "03",
+        title: isEn ? "Orchestration" : "Orchestration",
+        subtitle: isEn ? "Workflows & Multi-Agents" : "Workflows & Multi-Agents",
+        description: isEn
+          ? "Automated execution of complex tasks with state management, approval loops and error recovery."
+          : "Exécution automatisée de tâches complexes avec gestion d'état, boucle d'approbation et reprise sur erreur.",
+        icon: Workflow,
+        metrics: isEn ? `${agentsCount} active agents` : `${agentsCount} agents actifs`,
+        details: isEn
+          ? ["Networked autonomous agents", "n8n / Temporal orchestration", "Configurable Human-in-the-loop"]
+          : ["Agents autonomes en réseau", "Orchestration n8n / Temporal", "Human-in-the-loop configurable"],
+      },
+      {
+        id: "decision",
+        step: "04",
+        title: isEn ? "Decision" : "Décision",
+        subtitle: isEn ? "Steering & Business Impact" : "Pilotage & Impact Métier",
+        description: isEn
+          ? "Real-time executive dashboards, automated action triggers and continuous ROI measurement."
+          : "Dashboards exécutifs temps réel, déclenchement d'actions automatiques et mesure continue du ROI.",
+        icon: BarChart3,
+        metrics: isEn ? `${dashboardsCount} active KPIs` : `${dashboardsCount} KPIs actifs`,
+        details: isEn
+          ? ["dbt / PowerBI semantic layer", "Predictive drift alerts", "Actionable visual analytics"]
+          : ["Couche sémantique dbt / PowerBI", "Alertes prédictives sur dérive", "Restitutions visuelles décisionnelles"],
+      },
+    ],
+    [isEn, agentsCount, dashboardsCount]
+  );
 
   return (
     <div className="relative overflow-hidden glass-card rounded-3xl p-6 md:p-10 transition-all">
@@ -83,15 +111,15 @@ export function LivingSystemGraph() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-8 border-b border-black/10 dark:border-white/10">
         <div>
           <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D]">
-            02 — SYSTÈME VIVANT
+            {isEn ? "05 — LIVING SYSTEM" : "05 — SYSTÈME VIVANT"}
           </span>
           <h2 className="font-display text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-50 mt-1">
-            De la donnée à la décision
+            {isEn ? "From Data to Decision" : "De la donnée à la décision"}
           </h2>
         </div>
         <div className="flex items-center gap-2 font-mono text-xs text-slate-400 dark:text-slate-300 bg-black/5 dark:bg-white/5 px-3 py-1.5 rounded-full self-start md:self-auto">
           <Activity className="h-3.5 w-3.5 text-[#F26D3D] animate-pulse" aria-hidden />
-          <span>Flux actif · Survolez un nœud pour explorer</span>
+          <span>{isEn ? "Live Stream · Hover node to inspect" : "Flux actif · Survolez un nœud pour explorer"}</span>
         </div>
       </div>
 
@@ -210,7 +238,9 @@ export function LivingSystemGraph() {
             >
               <div className="max-w-xl">
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="font-mono text-xs text-[#F26D3D] font-bold">Nœud {node.step}</span>
+                  <span className="font-mono text-xs text-[#F26D3D] font-bold">
+                    {isEn ? `Node ${node.step}` : `Nœud ${node.step}`}
+                  </span>
                   <span className="text-slate-300 dark:text-slate-300">•</span>
                   <span className="font-display font-semibold text-slate-800 dark:text-slate-100 text-sm">
                     {node.title} : {node.subtitle}

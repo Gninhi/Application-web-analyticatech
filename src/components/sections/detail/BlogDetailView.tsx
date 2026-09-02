@@ -5,7 +5,7 @@ import { ArrowLeft, Check } from "lucide-react";
 import type { ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { ContactCta } from "@/components/ui/ContactCta";
 import { formatPostDate } from "@/lib/utils/date";
 import { DetailNotFound } from "./DetailNotFound";
@@ -28,10 +28,15 @@ export function BlogDetailView({ postSlug, onNavigate }: BlogDetailViewProps) {
     return (
       <div className="pt-28 md:pt-36 pb-20">
         <div className="mx-auto max-w-3xl px-4 md:px-6">
-          <MovingButton variant="ghost" size="sm" onClick={() => onNavigate("blog")} className="mb-8">
-            <ArrowLeft className="h-4 w-4" aria-hidden />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onNavigate("blog")}
+            icon={<ArrowLeft className="h-4 w-4" aria-hidden />}
+            className="mb-8"
+          >
             {`${t("common.back")} ${t("nav.blog")}`}
-          </MovingButton>
+          </Button>
           <DetailNotFound
             label={t("detail.noData")}
             title={t("detail.unavailable.title")}
@@ -45,10 +50,15 @@ export function BlogDetailView({ postSlug, onNavigate }: BlogDetailViewProps) {
   return (
     <div className="pt-28 md:pt-36 pb-20">
       <div className="mx-auto max-w-3xl px-4 md:px-6">
-        <MovingButton variant="ghost" size="sm" onClick={() => onNavigate("blog")} className="mb-8">
-          <ArrowLeft className="h-4 w-4" aria-hidden />
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onNavigate("blog")}
+          icon={<ArrowLeft className="h-4 w-4" aria-hidden />}
+          className="mb-8"
+        >
           {`${t("common.back")} ${t("nav.blog")}`}
-        </MovingButton>
+        </Button>
 
         <motion.article
           initial={{ opacity: 0, y: 18 }}
@@ -62,7 +72,10 @@ export function BlogDetailView({ postSlug, onNavigate }: BlogDetailViewProps) {
                 {post.categoryLabel}
               </span>
               <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
-                {formatPostDate(post.date, locale)} · {post.readingTime}
+                {formatPostDate(post.date, locale)} ·{" "}
+                {post.readingTime.includes("lecture") || post.readingTime.includes("read")
+                  ? post.readingTime
+                  : `${post.readingTime.replace(/\s*min.*/i, "")} ${t("common.read")}`}
               </span>
             </div>
             <h1 className="font-display text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 tracking-tight mb-4">

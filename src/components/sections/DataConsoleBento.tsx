@@ -240,16 +240,43 @@ export function DataConsoleBento() {
     [allMetrics]
   );
 
+  const uptimeMetric = metrics.find((m) => m.key === "uptime_platform");
+  const automatedProcessesMetric = metrics.find((m) => m.key === "processes_automated");
+  const agentsMetric = metrics.find((m) => m.key === "agents_production");
+
+  const SIGNAL_CARDS = useMemo(
+    () => [
+      {
+        icon: Zap,
+        label: uptimeMetric?.label ?? (locale === "en" ? "System Availability" : "Disponibilité système"),
+        value: uptimeMetric?.value ?? "99.9%",
+        accent: "#F26D3D",
+      },
+      {
+        icon: Activity,
+        label: automatedProcessesMetric?.label ?? (locale === "en" ? "Automated Workflows" : "Flux automatisés"),
+        value: automatedProcessesMetric ? `${automatedProcessesMetric.value} flux` : "48 flux",
+        accent: "#3b82f6",
+      },
+      {
+        icon: BarChart2,
+        label: agentsMetric?.label ?? (locale === "en" ? "AI Agents in Production" : "Agents IA en production"),
+        value: agentsMetric?.value ?? "38",
+        accent: "#8b5cf6",
+      },
+      {
+        icon: Clock,
+        label: locale === "en" ? "P95 Latency" : "Latence P95",
+        value: "< 280 ms",
+        accent: "#10b981",
+      },
+    ],
+    [uptimeMetric, automatedProcessesMetric, agentsMetric, locale]
+  );
+
   if (metrics.length === 0) {
     return <SectionSkeleton minHeight={640} mobileMinHeight={1300} />;
   }
-
-  const SIGNAL_CARDS = [
-    { icon: Zap, label: "Disponibilité système", value: "99.98 %", accent: "#F26D3D" },
-    { icon: Activity, label: "Requêtes actives", value: "2 847", accent: "#3b82f6" },
-    { icon: BarChart2, label: "Agents déployés", value: "124", accent: "#8b5cf6" },
-    { icon: Clock, label: "Latence P95", value: "< 320 ms", accent: "#10b981" },
-  ] as const;
 
   return (
     <section className="relative" aria-labelledby="dataconsole-bento-heading">

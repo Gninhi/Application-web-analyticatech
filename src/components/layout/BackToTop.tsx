@@ -2,7 +2,7 @@
 
 import { ArrowUp } from "lucide-react";
 import { useScrollVisibility } from "@/hooks/useScrollState";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils/cn";
 
@@ -34,17 +34,16 @@ export function BackToTop() {
       )}
       aria-hidden={!visible}
     >
-      <MovingButton
+      <Button
         onClick={scrollToTop}
         aria-label={t("common.backToTop")}
         iconOnly
-        borderRadius="9999px"
+        borderRadius="0.75rem"
         duration={2500}
         tabIndex={visible ? 0 : -1}
-        className="h-12 w-12 bg-[#C9470F] text-white shadow-lg shadow-black/40 hover:bg-[#B63C0C] neon-glow focus-visible:outline-2 focus-visible:outline-offset-2"
-      >
-        <ArrowUp className="h-5 w-5" aria-hidden />
-      </MovingButton>
+        icon={<ArrowUp className="h-5 w-5" aria-hidden />}
+        className="h-11 w-11 bg-[#C9470F] text-white shadow-lg shadow-black/40 hover:bg-[#B63C0C] neon-glow focus-visible:outline-2 focus-visible:outline-offset-2"
+      />
     </div>
   );
 }

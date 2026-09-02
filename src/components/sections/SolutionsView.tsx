@@ -6,7 +6,7 @@ import { ArrowRight, Compass, Zap, ShieldCheck, Sparkles } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SectionContainer } from "@/components/ui/SectionContainer";
 import { SolutionCard } from "./solutions/SolutionCard";
@@ -148,15 +148,16 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
               <p className="relative text-slate-500 dark:text-slate-400 mb-8 max-w-md text-base leading-relaxed">
                 {t("solutions.final.desc")}
               </p>
-              <MovingButton
+              <Button
                 onClick={() => onNavigate("contact")}
                 variant="primary"
                 size="lg"
+                icon={<ArrowRight className="h-4 w-4" aria-hidden />}
+                iconPosition="right"
                 className="relative neon-glow"
               >
                 {t("solutions.final.cta")}
-                <ArrowRight className="h-4 w-4" aria-hidden />
-              </MovingButton>
+              </Button>
             </article>
           </motion.div>
         </div>

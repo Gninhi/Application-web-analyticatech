@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
 import { AlertTriangle, RefreshCw, Home, Mail } from "lucide-react";
 import { SectionContainer } from "@/components/ui/SectionContainer";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
 
 interface ErrorProps {
@@ -73,29 +72,36 @@ export default function ErrorPage({ error, reset }: ErrorProps) {
 
           {/* Boutons d'action */}
           <div className="flex flex-wrap items-center justify-center gap-4">
-            <MovingButton
+            <Button
               variant="primary"
               size="lg"
               onClick={reset}
+              icon={<RefreshCw className="h-4 w-4" aria-hidden />}
+              iconPosition="left"
               className="neon-glow font-bold"
             >
-              <RefreshCw className="h-4 w-4" aria-hidden />
-              {t("error.retry")}
-            </MovingButton>
+              <span>{t("error.retry")}</span>
+            </Button>
 
-            <Link href={homeHref} className="inline-block">
-              <MovingButton variant="ghost" size="lg">
-                <Home className="h-4 w-4" aria-hidden />
-                {t("error.home")}
-              </MovingButton>
-            </Link>
+            <Button
+              href={homeHref}
+              variant="ghost"
+              size="lg"
+              icon={<Home className="h-4 w-4" aria-hidden />}
+              iconPosition="left"
+            >
+              <span>{t("error.home")}</span>
+            </Button>
 
-            <Link href={contactHref} className="inline-block">
-              <MovingButton variant="outline" size="lg">
-                <Mail className="h-4 w-4" aria-hidden />
-                {t("error.contact")}
-              </MovingButton>
-            </Link>
+            <Button
+              href={contactHref}
+              variant="outline"
+              size="lg"
+              icon={<Mail className="h-4 w-4" aria-hidden />}
+              iconPosition="left"
+            >
+              <span>{t("error.contact")}</span>
+            </Button>
           </div>
         </div>
       </SectionContainer>

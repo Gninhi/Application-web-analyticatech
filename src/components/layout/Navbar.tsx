@@ -10,7 +10,7 @@ import { ScrambleText } from "@/components/interactive/ScrambleText";
 import { Logo } from "@/components/branding/Logo";
 import { ThemeToggle } from "@/components/branding/ThemeToggle";
 import { LanguageToggle } from "@/components/branding/LanguageToggle";
-import { GlassButton } from "@/components/interactive/GlassButton";
+import { Button } from "@/components/ui/button";
 import { useScrollState } from "@/hooks/useScrollState";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
@@ -74,19 +74,19 @@ export function Navbar() {
             </span>
           </Link>
 
-          {/* Capsule Flottante Navigation & Actions (Design Liquid Glass Capsule) */}
+          {/* Capsule Flottante Navigation & Actions (Design Liquid Glass Capsule Premium) */}
           <nav
             aria-label="Navigation principale"
             className={cn(
-              "relative flex items-center gap-1 sm:gap-1.5 rounded-full border p-1 sm:p-1.5 transition-all duration-300 backdrop-blur-2xl shadow-lg",
+              "relative flex items-center gap-1 sm:gap-1.5 rounded-2xl border p-1 sm:p-1.5 transition-all duration-300 backdrop-blur-2xl shadow-xl",
               scrolled
-                ? "border-black/10 dark:border-white/10 bg-white/80 dark:bg-black/70 shadow-black/10 dark:shadow-black/60"
-                : "border-black/5 dark:border-white/[0.08] bg-white/70 dark:bg-slate-950/60 shadow-black/5 dark:shadow-black/40"
+                ? "border-black/10 dark:border-white/15 bg-white/90 dark:bg-[#06070B]/85 shadow-black/15 dark:shadow-black/60"
+                : "border-black/5 dark:border-white/10 bg-white/80 dark:bg-[#06070B]/75 shadow-black/10 dark:shadow-black/40"
             )}
           >
-            {/* Liseré supérieur lumineux */}
+            {/* Liseré supérieur lumineux spéculaire */}
             <span
-              className="pointer-events-none absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-white/80 dark:via-white/20 to-transparent"
+              className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/80 dark:via-white/25 to-transparent"
               aria-hidden="true"
             />
 
@@ -101,9 +101,9 @@ export function Navbar() {
                     key={item.key}
                     href={href}
                     className={cn(
-                      "relative rounded-full px-3 py-1.5 text-xs sm:text-sm font-medium tracking-tight transition-all duration-200 whitespace-nowrap",
+                      "relative rounded-xl px-3 py-1.5 text-xs sm:text-sm font-medium tracking-tight transition-all duration-200 whitespace-nowrap",
                       isActive
-                        ? "text-white bg-slate-900 dark:bg-white/15 dark:text-white shadow-sm"
+                        ? "text-white bg-slate-900 dark:bg-white/15 dark:text-white shadow-xs font-semibold"
                         : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
                     )}
                     aria-current={isActive ? "page" : undefined}
@@ -118,22 +118,22 @@ export function Navbar() {
             <span className="hidden sm:inline-block h-4 w-px bg-black/10 dark:bg-white/10 mx-1" aria-hidden="true" />
 
             {/* Toggles : Langue & Thème */}
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-1">
               <LanguageToggle />
               <ThemeToggle />
             </div>
 
-            {/* Bouton CTA Pilule haute visibilité Liquid Glass */}
-            <GlassButton
+            {/* Bouton CTA haute visibilité Liquid Glass — Arrondi standardisé */}
+            <Button
               onClick={handleCta}
               variant="primary"
               size="sm"
-              borderRadius="9999px"
+              icon={<ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />}
+              iconPosition="right"
               className="ml-1 shrink-0"
             >
               <span>{t("nav.cta")}</span>
-              <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
-            </GlassButton>
+            </Button>
           </nav>
         </div>
       </div>

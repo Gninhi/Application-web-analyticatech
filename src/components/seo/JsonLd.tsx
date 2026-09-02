@@ -146,7 +146,7 @@ export function JsonLd() {
           name: "Quels sont les résultats mesurables d'Analyticatech ?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "127+ missions livrées, 38% de coûts réduits en moyenne, 99.98% d'uptime plateforme, 4.9/5 de satisfaction C-Level, 1 204 processus automatisés, 312 agents IA en production, 8 500h économisées par mois.",
+            text: "48+ missions livrées, 35% de coûts réduits en moyenne, 99.9% d'uptime plateforme, 4.9/5 de satisfaction C-Level, 48 processus automatisés, 38 agents IA en production, 420h économisées par mois.",
           },
         },
         {

@@ -28,6 +28,7 @@ export function FilterPill({
 }: FilterPillProps) {
   return (
     <button
+      type="button"
       role="tab"
       aria-selected={active}
       className={cn(

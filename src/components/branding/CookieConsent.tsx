@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Cookie, Check, X } from "lucide-react";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils/cn";
 
@@ -95,44 +95,43 @@ export function CookieConsent() {
               {t("cookie.desc")}
             </p>
           </div>
-          <MovingButton
+          <Button
             onClick={() => saveChoice("refused")}
             aria-label={t("cookie.close")}
             iconOnly
             borderRadius="0.5rem"
             duration={4000}
             tabIndex={visible ? 0 : -1}
+            icon={<X className="h-4 w-4" aria-hidden />}
             className="shrink-0 h-8 w-8 bg-white/10 dark:bg-white/5 backdrop-blur-md text-slate-500 hover:text-slate-400 dark:hover:text-slate-400 dark:text-slate-300"
-          >
-            <X className="h-4 w-4" aria-hidden />
-          </MovingButton>
+          />
         </div>
 
         <div className="flex flex-col sm:flex-row gap-2 mt-4">
-          <MovingButton
+          <Button
             onClick={() => saveChoice("accepted")}
             variant="primary"
             size="sm"
             borderRadius="0.5rem"
             duration={2500}
             tabIndex={visible ? 0 : -1}
+            icon={<Check className="h-4 w-4" aria-hidden />}
             className="flex-1 neon-glow"
           >
-            <Check className="h-4 w-4" aria-hidden />
             {t("cookie.accept")}
-          </MovingButton>
-          <MovingButton
+          </Button>
+          <Button
             onClick={() => saveChoice("refused")}
             variant="ghost"
             size="sm"
             borderRadius="0.5rem"
             duration={3000}
             tabIndex={visible ? 0 : -1}
+            icon={<X className="h-4 w-4" aria-hidden />}
             className="flex-1"
           >
-            <X className="h-4 w-4" aria-hidden />
             {t("cookie.refuse")}
-          </MovingButton>
+          </Button>
         </div>
 
         <p className="mt-3 text-[10px] text-slate-600 dark:text-slate-400 font-mono">

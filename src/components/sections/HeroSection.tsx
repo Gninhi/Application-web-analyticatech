@@ -6,7 +6,7 @@ import { MoveRight, ArrowRight, ShieldCheck, Sparkles } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { SectionContainer } from "@/components/ui/SectionContainer";
-import { GlassButton } from "@/components/interactive/GlassButton";
+import { Button } from "@/components/ui/button";
 
 interface HeroSectionProps {
   onNavigate: (view: ViewKey) => void;
@@ -44,7 +44,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
   return (
     <section className="relative pt-32 sm:pt-40 md:pt-48 pb-16 sm:pb-24 overflow-hidden">
       {/* ============================================================ */}
-      {/* 1. FAISCEAU LUMINEUX COURBÉ & AMBIANCE COSMIQUE (CAPTURE)   */}
+      {/* 1. HALOS AMBIANTS & GRILLE COSMIQUE DE FOND                  */}
       {/* ============================================================ */}
       <div
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
@@ -56,57 +56,6 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
         {/* Halo bleu nuit / cosmique */}
         <div className="absolute top-1/4 right-0 w-[600px] h-[500px] bg-[radial-gradient(circle,rgba(2,40,89,0.25),transparent_70%)] dark:bg-[radial-gradient(circle,rgba(2,40,89,0.6),transparent_70%)] blur-3xl" />
 
-        {/* L'Arc de Lumière Incurvé (Cinematic Light Flare) */}
-        <svg
-          className="absolute top-8 sm:top-12 left-1/2 -translate-x-1/2 w-[1400px] max-w-none h-[480px] opacity-80 dark:opacity-90 mix-blend-screen pointer-events-none"
-          viewBox="0 0 1400 480"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <defs>
-            {/* Dégradé principal de la ligne de lumière */}
-            <linearGradient id="hero-beam-grad" x1="0%" y1="20%" x2="100%" y2="80%">
-              <stop offset="0%" stopColor="#F26D3D" stopOpacity="0" />
-              <stop offset="25%" stopColor="#F26D3D" stopOpacity="0.4" />
-              <stop offset="50%" stopColor="#FF9E68" stopOpacity="1" />
-              <stop offset="70%" stopColor="#F26D3D" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#022859" stopOpacity="0" />
-            </linearGradient>
-
-            {/* Dégradé de la lueur diffuse */}
-            <linearGradient id="hero-glow-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="20%" stopColor="#F26D3D" stopOpacity="0" />
-              <stop offset="50%" stopColor="#F26D3D" stopOpacity="0.45" />
-              <stop offset="80%" stopColor="#022859" stopOpacity="0" />
-            </linearGradient>
-
-            <filter id="beam-blur" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="16" />
-            </filter>
-          </defs>
-
-          {/* Halo diffus flou */}
-          <path
-            d="M 50 80 Q 700 300 1350 420"
-            stroke="url(#hero-glow-grad)"
-            strokeWidth="38"
-            strokeLinecap="round"
-            filter="url(#beam-blur)"
-          />
-
-          {/* Faisceau central éclatant */}
-          <path
-            d="M 50 80 Q 700 300 1350 420"
-            stroke="url(#hero-beam-grad)"
-            strokeWidth="3.5"
-            strokeLinecap="round"
-          />
-
-          {/* Point d'impact lumineux central */}
-          <circle cx="820" cy="330" r="80" fill="url(#hero-glow-grad)" filter="url(#beam-blur)" />
-          <circle cx="820" cy="330" r="3" fill="#FFFFFF" opacity="0.9" />
-        </svg>
-
         {/* Grille technique de fond très discrète */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_30%,#000_70%,transparent_100%)]" />
       </div>
@@ -116,20 +65,20 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
       {/* ============================================================ */}
       <SectionContainer className="relative z-10">
         <div className="mx-auto max-w-4xl text-center flex flex-col items-center">
-          {/* Badge Pilule Supérieur Interactif Liquid Glass */}
-          <GlassButton
+          {/* Badge Supérieur Interactif Liquid Glass — Arrondi standardisé */}
+          <Button
             onClick={() => onNavigate("services")}
             variant="secondary"
             size="sm"
-            borderRadius="9999px"
+            icon={<MoveRight className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden="true" />}
+            iconPosition="right"
             className="mb-8"
           >
-            <span className="flex h-2 w-2 rounded-full bg-[#F26D3D] animate-pulse" aria-hidden="true" />
+            <span className="flex h-2 w-2 rounded-full bg-[#F26D3D] animate-pulse mr-1" aria-hidden="true" />
             <span className="font-mono text-[11px] uppercase tracking-[0.2em] font-medium">
               {t("home.badge")}
             </span>
-            <MoveRight className="h-3.5 w-3.5 text-[#F26D3D] transition-transform duration-200 group-hover/glass:translate-x-1" aria-hidden="true" />
-          </GlassButton>
+          </Button>
 
           {/* Titre H1 avec Rotateur de Mots Fluide (Framer Motion) */}
           <h1 className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-[1.08] flex flex-col items-center">
@@ -168,51 +117,99 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
             </span>
           </h1>
 
+          {/* Trait Lumineux Courbé Repositionné Sous le Titre (Conforme Capture) */}
+          <div
+            className="relative mt-2 sm:mt-3.5 flex justify-center w-full max-w-[280px] sm:max-w-[360px] md:max-w-[420px] mx-auto pointer-events-none"
+            aria-hidden="true"
+          >
+            <svg
+              className="w-full h-4 sm:h-5 md:h-6 overflow-visible"
+              viewBox="0 0 360 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <linearGradient id="hero-underline-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#F26D3D" stopOpacity="0.15" />
+                  <stop offset="20%" stopColor="#F26D3D" stopOpacity="0.9" />
+                  <stop offset="50%" stopColor="#FFA066" stopOpacity="1" />
+                  <stop offset="80%" stopColor="#F26D3D" stopOpacity="0.9" />
+                  <stop offset="100%" stopColor="#F26D3D" stopOpacity="0.15" />
+                </linearGradient>
+                <filter id="hero-underline-glow" x="-20%" y="-100%" width="140%" height="300%">
+                  <feGaussianBlur stdDeviation="3.5" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* Halo diffus flou */}
+              <path
+                d="M 6 5 Q 180 18 354 5"
+                stroke="url(#hero-underline-grad)"
+                strokeWidth="7"
+                strokeLinecap="round"
+                opacity="0.6"
+                filter="url(#hero-underline-glow)"
+              />
+
+              {/* Faisceau / Trait central net et éclatant */}
+              <path
+                d="M 6 5 Q 180 18 354 5"
+                stroke="url(#hero-underline-grad)"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+              />
+            </svg>
+          </div>
+
           {/* Paragraphe Descriptif */}
           <p className="mt-6 max-w-2xl text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
             {t("home.hero.desc")}
           </p>
 
-          {/* Boutons d'Action (CTAs) Liquid Glass */}
+          {/* Boutons d'Action (CTAs) Liquid Glass — Arrondis standardisés de l'application */}
           <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto">
             {/* CTA 1 : Évaluer votre projet (Primaire) */}
-            <GlassButton
+            <Button
               onClick={() => onNavigate("contact")}
               variant="primary"
               size="lg"
-              borderRadius="9999px"
+              icon={<MoveRight className="h-4 w-4" aria-hidden="true" />}
+              iconPosition="right"
               className="w-full sm:w-auto"
             >
               <span>{t("home.hero.cta1")}</span>
-              <MoveRight className="h-4 w-4 transition-transform duration-200 group-hover/glass:translate-x-1" aria-hidden="true" />
-            </GlassButton>
+            </Button>
 
             {/* CTA 2 : Découvrir nos solutions (Secondaire / Outline) */}
-            <GlassButton
+            <Button
               onClick={() => onNavigate("solutions")}
               variant="outline"
               size="lg"
-              borderRadius="9999px"
+              icon={<ArrowRight className="h-4 w-4 text-slate-400 dark:text-slate-400" aria-hidden="true" />}
+              iconPosition="right"
               className="w-full sm:w-auto"
             >
               <span>{t("home.hero.cta2")}</span>
-              <ArrowRight className="h-4 w-4 text-slate-400 dark:text-slate-400 transition-transform duration-200 group-hover/glass:translate-x-0.5" aria-hidden="true" />
-            </GlassButton>
+            </Button>
           </div>
 
           {/* Barre de Réassurance / Métriques de Confiance */}
           <div className="mt-12 pt-6 border-t border-black/5 dark:border-white/5 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-mono uppercase tracking-wider">
             <span className="flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden="true" />
-              127+ missions déployées
+              {locale === "en" ? "48+ deployed missions" : "48+ missions déployées"}
             </span>
             <span className="hidden sm:inline text-slate-300 dark:text-slate-700">•</span>
             <span className="flex items-center gap-1.5">
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" aria-hidden="true" />
-              99.98% de fiabilité
+              {locale === "en" ? "99.9% availability" : "99.9% de disponibilité"}
             </span>
             <span className="hidden sm:inline text-slate-300 dark:text-slate-700">•</span>
-            <span>Hébergement SecNumCloud</span>
+            <span>{locale === "en" ? "SecNumCloud Hosting" : "Hébergement SecNumCloud"}</span>
           </div>
         </div>
       </SectionContainer>

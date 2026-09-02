@@ -61,6 +61,7 @@ export interface SolutionDTO {
   title: string;
   summary: string;
   impact: string;
+  methodology?: string;
   tags: string[];
   order: number;
 }

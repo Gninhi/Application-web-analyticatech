@@ -5,7 +5,7 @@ import { ArrowLeft, ShieldCheck, FileText } from "lucide-react";
 import type { ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
-import { MovingButton } from "@/components/interactive/MovingButton";
+import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ContactCta } from "@/components/ui/ContactCta";
 import { SectionContainer } from "@/components/ui/SectionContainer";
@@ -37,15 +37,15 @@ export function LegalView({ type, onNavigate }: LegalViewProps) {
     <div className="pt-28 md:pt-36 pb-20">
       <SectionContainer maxWidth="3xl">
         {/* Retour */}
-        <MovingButton
+        <Button
           variant="ghost"
           size="sm"
           onClick={() => onNavigate("home")}
+          icon={<ArrowLeft className="h-4 w-4" aria-hidden />}
           className="mb-8"
         >
-          <ArrowLeft className="h-4 w-4" aria-hidden />
           {t("legal.back")}
-        </MovingButton>
+        </Button>
 
         {/* En-tête */}
         <div className="mb-10">

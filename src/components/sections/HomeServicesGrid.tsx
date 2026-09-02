@@ -1,103 +1,84 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Sparkles } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
+import { useAppContent } from "@/components/providers/ContentProvider";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { SectionContainer } from "@/components/ui/SectionContainer";
 import { ServiceCard, type ServiceCardData, type BentoVariant } from "@/components/services/ServiceCard";
+import type { ServiceIconVariant } from "@/components/services/ServiceAnimatedIcon";
 
 interface HomeServicesGridProps {
   onNavigate: (view: ViewKey) => void;
   onNavigateDetail: (view: ViewKey, id: string) => void;
 }
 
+const SERVICE_CONFIGS: Record<
+  string,
+  { id: string; badge: string; iconVariant: ServiceIconVariant; accentColor: string; variant: BentoVariant }
+> = {
+  "01": { id: "ai", badge: "PRODUCTION READY", iconVariant: "orbit", accentColor: "#F26D3D", variant: "hero" },
+  "02": { id: "automation", badge: "ORCHESTRATION", iconVariant: "wave", accentColor: "#38BDF8", variant: "counterpart" },
+  "03": { id: "agents", badge: "AUTONOMIE & MCP", iconVariant: "spark", accentColor: "#10B981", variant: "counterpart" },
+  "04": { id: "bi", badge: "DÉCISIONNEL", iconVariant: "loop", accentColor: "#A855F7", variant: "hero" },
+};
+
 /**
  * HomeServicesGrid — Section "NOS SERVICES" (The Cognitive Bento Matrix).
  * Agence les 4 piliers d'expertise dans une composition Bento Grid 12 colonnes haut de gamme
- * avec sélecteur de focus interactif inspiré des meilleurs standards 21st.dev / Framer.
+ * avec données 100% dynamiques issues de ContentProvider.
  */
 export function HomeServicesGrid({ onNavigate: _onNavigate, onNavigateDetail }: HomeServicesGridProps) {
   const { t } = useI18n();
+  const { services } = useAppContent();
   const [activeFocus, setActiveFocus] = useState<string | null>(null);
 
-  // 4 Piliers d'expertise agencés en Bento Matrix 2x2 (7/5 + 5/7)
-  const SERVICE_CARDS: { data: ServiceCardData; variant: BentoVariant }[] = [
-    {
-      variant: "hero",
-      data: {
-        id: "ai",
-        serviceIndex: "01",
-        title: t("home.solution.ai.title"),
-        promise: t("home.solution.ai.promise"),
-        tagline: t("home.solution.ai.tagline"),
-        badge: "PRODUCTION READY",
-        iconVariant: "orbit",
+  // 4 Piliers d'expertise générés dynamiquement depuis les services
+  const SERVICE_CARDS = useMemo<{ data: ServiceCardData; variant: BentoVariant }[]>(() => {
+    return services.map((s, i) => {
+      const cfg = SERVICE_CONFIGS[s.index] || {
+        id: `service-${s.index}`,
+        badge: "EXPERT",
+        iconVariant: "orbit" as ServiceIconVariant,
         accentColor: "#F26D3D",
-        technologies: ["LangChain", "LangGraph", "OpenAI", "Pinecone", "vLLM"],
-        metrics: { label: t("home.solution.ai.metric"), value: "320 ms" },
-        secondaryMetric: { label: "Précision RAG", value: "94.2 %" },
-      },
-    },
-    {
-      variant: "counterpart",
-      data: {
-        id: "automation",
-        serviceIndex: "02",
-        title: t("home.solution.automation.title"),
-        promise: t("home.solution.automation.promise"),
-        tagline: t("home.solution.automation.tagline"),
-        badge: "ORCHESTRATION",
-        iconVariant: "wave",
-        accentColor: "#38BDF8",
-        technologies: ["n8n", "Zapier", "Temporal", "Airflow", "Python"],
-        metrics: { label: t("home.solution.automation.metric"), value: "-75 %" },
-        secondaryMetric: { label: "Heures sauvées", value: "8 500 h" },
-      },
-    },
-    {
-      variant: "counterpart",
-      data: {
-        id: "agents",
-        serviceIndex: "03",
-        title: t("home.solution.agents.title"),
-        promise: t("home.solution.agents.promise"),
-        tagline: t("home.solution.agents.tagline"),
-        badge: "AUTONOMIE & MCP",
-        iconVariant: "spark",
-        accentColor: "#10B981",
-        technologies: ["LangGraph", "CrewAI", "AutoGen", "MCP", "Redis", "Qdrant"],
-        metrics: { label: t("home.solution.agents.metric"), value: "87 %" },
-        secondaryMetric: { label: "Agents actifs", value: "312" },
-      },
-    },
-    {
-      variant: "hero",
-      data: {
-        id: "bi",
-        serviceIndex: "04",
-        title: t("home.solution.bi.title"),
-        promise: t("home.solution.bi.promise"),
-        tagline: t("home.solution.bi.tagline"),
-        badge: "DÉCISIONNEL",
-        iconVariant: "loop",
-        accentColor: "#A855F7",
-        technologies: ["Power BI", "dbt", "Snowflake", "BigQuery", "Looker"],
-        metrics: { label: t("home.solution.bi.metric"), value: "640+" },
-        secondaryMetric: { label: "Sources data", value: "120+" },
-      },
-    },
-  ];
+        variant: (i % 3 === 0 ? "hero" : "counterpart") as BentoVariant,
+      };
 
-  // Filtres d'onglets rapides — 4 piliers
-  const FOCUS_TABS = [
-    { id: "all", label: "Tous les piliers", index: "00", color: "#F26D3D" },
-    { id: "ai", label: "01 · Raisonnement & RAG", index: "01", color: "#F26D3D" },
-    { id: "automation", label: "02 · Automatisation & Workflows", index: "02", color: "#38BDF8" },
-    { id: "agents", label: "03 · Orchestration Multi-Agents", index: "03", color: "#10B981" },
-    { id: "bi", label: "04 · Data & Décision Augmentée", index: "04", color: "#A855F7" },
-  ];
+      return {
+        variant: cfg.variant,
+        data: {
+          id: cfg.id,
+          serviceIndex: s.index,
+          title: s.title,
+          promise: s.description,
+          tagline: s.tagline,
+          badge: cfg.badge,
+          iconVariant: cfg.iconVariant,
+          accentColor: cfg.accentColor,
+          technologies: s.technologies,
+          metrics: s.metrics[0] ?? { label: "Performance", value: "99.9%" },
+          secondaryMetric: s.metrics[1],
+        },
+      };
+    });
+  }, [services]);
+
+  // Filtres d'onglets dynamiques issus des services
+  const FOCUS_TABS = useMemo(() => {
+    const allTab = { id: "all", label: t("home.section.services.all") || "Tous les piliers", index: "00", color: "#F26D3D" };
+    const serviceTabs = services.map((s) => {
+      const cfg = SERVICE_CONFIGS[s.index];
+      return {
+        id: cfg?.id || `service-${s.index}`,
+        label: `${s.index} · ${s.title}`,
+        index: s.index,
+        color: cfg?.accentColor || "#F26D3D",
+      };
+    });
+    return [allTab, ...serviceTabs];
+  }, [services, t]);
 
 
   return (
@@ -110,15 +91,17 @@ export function HomeServicesGrid({ onNavigate: _onNavigate, onNavigateDetail }: 
         />
 
         {/* Sélecteur de Focus Interactif — Style 21st.dev */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-2" role="tablist" aria-label={t("home.section.services")}>
           {FOCUS_TABS.map((tab) => {
             const isSelected = activeFocus === tab.id || (tab.id === "all" && activeFocus === null);
             return (
               <button
                 key={tab.id}
                 type="button"
+                role="tab"
+                aria-selected={isSelected}
                 onClick={() => setActiveFocus(tab.id === "all" ? null : isSelected ? null : tab.id)}
-                className="group relative inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-xs uppercase tracking-wider transition-all duration-300 cursor-pointer backdrop-blur-md"
+                className="group relative inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-xs uppercase tracking-wider transition-all duration-300 cursor-pointer backdrop-blur-md focus-visible:outline-2 focus-visible:outline-offset-2"
                 style={{
                   borderColor: isSelected
                     ? `color-mix(in srgb, ${tab.color} 60%, transparent)`
