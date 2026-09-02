@@ -63,8 +63,9 @@ export function hashIp(ip: string): string {
 }
 
 /**
- * Écrit une entrée d'audit dans le fichier de logs (append-only).
- * Rotation automatique si le fichier dépasse MAX_FILE_SIZE.
+ * Écrit une entrée d'audit dans les logs.
+ * - Sur Vercel (serverless) : sortie stdout/stderr JSON structurée directe (capturée par les log drains Vercel).
+ * - En mode standalone / local : écriture fichier avec rotation automatique.
  */
 export function auditLog(entry: Omit<AuditEntry, "ts">): void {
   const fullEntry: AuditEntry = {
@@ -72,29 +73,41 @@ export function auditLog(entry: Omit<AuditEntry, "ts">): void {
     ...entry,
   };
 
-  const line = JSON.stringify(fullEntry) + "\n";
+  const line = JSON.stringify(fullEntry);
 
-  // Tentative d'écriture fichier (fallback console si fs non disponible)
+  // Sur Vercel / Serverless : stdout / stderr est le canal officiel
+  if (process.env.VERCEL) {
+    const level = fullEntry.level;
+    if (level === "CRITICAL" || level === "ALERT") {
+      console.error("[AUDIT]", line);
+    } else if (level === "WARN") {
+      console.warn("[AUDIT]", line);
+    } else {
+      // eslint-disable-next-line no-console
+      console.info("[AUDIT]", line);
+    }
+    return;
+  }
+
+  // Standalone / Local : tentative d'écriture fichier avec rotation
   try {
-    // Rotation si nécessaire
     if (existsSync(LOG_FILE)) {
       const stats = statSync(LOG_FILE);
       if (stats.size > MAX_FILE_SIZE) {
         rotateLogs();
       }
     }
-    appendFileSync(LOG_FILE, line, "utf8");
+    appendFileSync(LOG_FILE, line + "\n", "utf8");
   } catch {
-    // Fallback : console (serverless, Vercel, etc.)
+    // Fallback console si le système de fichiers est en lecture seule
     const level = fullEntry.level;
     if (level === "CRITICAL" || level === "ALERT") {
-      console.error("[AUDIT]", line.trim());
+      console.error("[AUDIT]", line);
     } else if (level === "WARN") {
-      console.warn("[AUDIT]", line.trim());
+      console.warn("[AUDIT]", line);
     } else {
-      // INFO : fallback légitime hors environnement fichier (serverless/Vercel)
       // eslint-disable-next-line no-console
-      console.info("[AUDIT]", line.trim());
+      console.info("[AUDIT]", line);
     }
   }
 }

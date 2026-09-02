@@ -30,9 +30,36 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/**": ["src/lib/db/supabase-ca-2021.crt"],
   },
-  // Security headers globaux — appliqués sur TOUTES les routes
+  // Configuration optimisée pour images modernes (AVIF + WebP)
+  images: {
+    formats: ["image/avif", "image/webp"],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 31536000,
+  },
+  // Compression Brotli / Gzip active au niveau serveur Next.js
+  compress: true,
+  // Security & Cache headers globaux
   async headers() {
     return [
+      {
+        source: "/services/:all*(webp|png|jpg|jpeg|svg)",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      {
+        source: "/screenshots/:all*(webp|png|jpg|jpeg|svg)",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      {
+        source: "/:file(logo\\.svg|og-image\\.jpg|og-image\\.png|llms\\.txt|favicon\\.ico)",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" },
+        ],
+      },
       {
         source: "/(.*)",
         headers: [

@@ -9,8 +9,14 @@ import {
 
 /** Route "/services/[index]" — détail d'un service. */
 export function ServiceDetailRoute({ index }: { index: string }) {
-  const { handleNavigate } = useViewNavigation();
-  return <ServiceDetailView serviceIndex={index} onNavigate={handleNavigate} />;
+  const { handleNavigate, handleNavigateDetail } = useViewNavigation();
+  return (
+    <ServiceDetailView
+      serviceIndex={index}
+      onNavigate={handleNavigate}
+      onNavigateDetail={handleNavigateDetail}
+    />
+  );
 }
 
 /** Route "/solutions/[slug]" — détail d'une solution. */

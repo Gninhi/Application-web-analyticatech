@@ -1,4 +1,4 @@
-import { BrainCircuit, Workflow, Bot, BarChart3 } from "lucide-react";
+import { BrainCircuit, Workflow, Bot, BarChart3, type LucideIcon } from "lucide-react";
 
 /**
  * Registre centralisé des icônes / images de fond / overlays mesh
@@ -7,12 +7,12 @@ import { BrainCircuit, Workflow, Bot, BarChart3 } from "lucide-react";
  */
 
 /** Map statique des icônes Lucide par nom de service. */
-export const SERVICE_ICONS = {
+export const SERVICE_ICONS: Record<string, LucideIcon> = {
   BrainCircuit,
   Workflow,
   Bot,
   BarChart3,
-} as const;
+};
 
 /** Images de fond « version marque » : fonds procéduraux générés dans
  *  l'identité du site (base navy + mesh aux couleurs d'accent de chaque
@@ -32,9 +32,9 @@ export function getServiceBgImage(index: string): string {
 /** Dégradés mesh superposés à l'image pour cohérence brand. */
 const MESH_OVERLAY: Record<string, string> = {
   "01": "radial-gradient(ellipse 70% 90% at 15% 20%, rgba(242,109,61,0.35), transparent 55%), radial-gradient(ellipse 60% 80% at 90% 90%, rgba(2,40,89,0.7), transparent 60%)",
-  "02": "radial-gradient(ellipse 70% 90% at 20% 85%, rgba(242,109,61,0.3), transparent 55%), radial-gradient(ellipse 60% 80% at 85% 15%, rgba(255,174,107,0.18), transparent 60%)",
-  "03": "radial-gradient(ellipse 70% 90% at 85% 30%, rgba(56,189,248,0.22), transparent 55%), radial-gradient(ellipse 60% 80% at 10% 80%, rgba(2,40,89,0.7), transparent 60%)",
-  "04": "radial-gradient(ellipse 70% 90% at 25% 20%, rgba(242,109,61,0.28), transparent 55%), radial-gradient(ellipse 60% 80% at 80% 85%, rgba(168,85,247,0.18), transparent 60%)",
+  "02": "radial-gradient(ellipse 70% 90% at 20% 85%, rgba(56,189,248,0.30), transparent 55%), radial-gradient(ellipse 60% 80% at 85% 15%, rgba(2,40,89,0.7), transparent 60%)",
+  "03": "radial-gradient(ellipse 70% 90% at 85% 30%, rgba(16,185,129,0.28), transparent 55%), radial-gradient(ellipse 60% 80% at 10% 80%, rgba(2,40,89,0.7), transparent 60%)",
+  "04": "radial-gradient(ellipse 70% 90% at 25% 20%, rgba(168,85,247,0.28), transparent 55%), radial-gradient(ellipse 60% 80% at 80% 85%, rgba(2,40,89,0.7), transparent 60%)",
 };
 
 /** Retourne le dégradé mesh overlay pour un index de service. */
@@ -46,10 +46,10 @@ export function getServiceMeshOverlay(index: string): string {
  *  chip icône, grand chiffre, valeurs metrics). Teintes alignées sur les
  *  mesh overlays pour une identité cohérente, lisibles sur les 2 thèmes. */
 const SERVICE_ACCENT: Record<string, string> = {
-  "01": "#F26D3D",
-  "02": "#F26D3D",
-  "03": "#38BDF8",
-  "04": "#A855F7",
+  "01": "#F26D3D", // Orange marque — Raisonnement & RAG
+  "02": "#38BDF8", // Bleu azur — Automatisation & Workflows
+  "03": "#10B981", // Vert émeraude — Orchestration Multi-Agents
+  "04": "#A855F7", // Violet moderne — Data & Décision Augmentée
 };
 
 /** Retourne la couleur d'accent d'un service. */

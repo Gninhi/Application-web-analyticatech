@@ -41,15 +41,21 @@ export function useScrollState(): ScrollState {
         const scrolled = currentY > SCROLL_THRESHOLDS.glassEffect;
         const atTop = currentY < SCROLL_THRESHOLDS.autoHide;
 
-        // Auto-hide : masque si on scroll vers le bas (après autoHide)
-        let hidden = state.hidden;
-        if (currentY > SCROLL_THRESHOLDS.autoHide && delta > SCROLL_THRESHOLDS.scrollDelta) {
-          hidden = true;
-        } else if (delta < -SCROLL_THRESHOLDS.scrollDelta || atTop) {
-          hidden = false;
-        }
+        setState((prev) => {
+          let hidden = prev.hidden;
+          if (currentY > SCROLL_THRESHOLDS.autoHide && delta > SCROLL_THRESHOLDS.scrollDelta) {
+            hidden = true;
+          } else if (delta < -SCROLL_THRESHOLDS.scrollDelta || atTop) {
+            hidden = false;
+          }
 
-        setState({ scrollY: currentY, scrolled, hidden, atTop });
+          if (prev.scrolled === scrolled && prev.hidden === hidden && prev.atTop === atTop) {
+            return prev; // Bailout React : aucun re-render !
+          }
+
+          return { scrollY: currentY, scrolled, hidden, atTop };
+        });
+
         lastScrollY.current = currentY;
         ticking = false;
       });
@@ -58,7 +64,7 @@ export function useScrollState(): ScrollState {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [state.hidden]);
+  }, []);
 
   return state;
 }

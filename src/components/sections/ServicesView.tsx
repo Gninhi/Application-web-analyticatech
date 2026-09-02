@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useEffect, useRef, useState, type CSSProperties } from "react";
+import Image from "next/image";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import {
   ArrowUpRight,
@@ -401,11 +402,22 @@ function ServiceDeckCard({
     >
       {/* Décor : image en parallaxe + mesh + voile adaptatif */}
       <motion.div
-        className="service-card-bg absolute inset-0 bg-cover bg-center"
+        className="service-card-bg absolute inset-0 overflow-hidden"
         data-testid="service-card-bg"
-        style={{ backgroundImage: `url(${bgImage})`, y: bgY, scale: 1.1 }}
+        style={{ y: bgY, scale: 1.1 }}
         aria-hidden
-      />
+      >
+        <Image
+          src={bgImage}
+          alt=""
+          fill
+          sizes="100vw"
+          priority={index === 0}
+          loading={index === 0 ? "eager" : "lazy"}
+          quality={80}
+          className="object-cover object-center"
+        />
+      </motion.div>
       <div className="absolute inset-0" style={{ background: meshOverlay }} aria-hidden />
       <div
         className="absolute inset-0"

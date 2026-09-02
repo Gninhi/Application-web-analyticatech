@@ -2,6 +2,7 @@
 
 import { type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { ParticleTypography } from "@/components/interactive/ParticleTypography";
 
 interface PageHeaderProps {
   /** Kicker mono orange (rendu avec le préfixe "// " sauf en mode icône). */
@@ -27,13 +28,11 @@ interface PageHeaderProps {
 }
 
 /**
- * PageHeader — en-tête de page centralisé, purement présentatif.
+ * PageHeader — en-tête de page centralisé, interactif et modulaire.
  *
- * Reproduit le nouveau traitement du titre de la page d'accueil :
- * ligne 1 en ardoise, ligne accent en dégradé de marque animé
- * (`.text-shimmer`, globals.css). Aucune animation d'entrée : le
- * composant reçoit un titre et l'affiche immédiatement. Gère aussi la
- * variante "icône" des pages légales et l'alignement centré.
+ * Intègre ParticleTypography pour un effet de particules fluide au survol
+ * sur les grands titres tout en conservant 100% de la fidélité typographique,
+ * des couleurs et du référencement SEO (balise h1 sémantique).
  */
 export function PageHeader({
   kicker,
@@ -80,29 +79,16 @@ export function PageHeader({
               {"// " + kicker}
             </p>
           )}
-          <h1 className={cn("font-display font-bold tracking-tight leading-[1.05]", sizeClass)}>
-            <span
-              className={cn(
-                "block",
-                gradient ? "text-shimmer" : "text-slate-900 dark:text-slate-100"
-              )}
-            >
-              {title}
-            </span>
-            {accent && <span className="block text-shimmer">{accent}</span>}
-          </h1>
+          <ParticleTypography
+            title={title}
+            accent={accent}
+            subtitle={subtitle}
+            gradient={gradient}
+            align={align}
+            as="h1"
+            className={sizeClass}
+          />
         </>
-      )}
-
-      {subtitle && (
-        <p
-          className={cn(
-            "mt-3 text-2xl md:text-3xl font-medium text-slate-500 dark:text-slate-300",
-            centered && "mx-auto max-w-2xl"
-          )}
-        >
-          {subtitle}
-        </p>
       )}
 
       {description && (

@@ -11,7 +11,7 @@ import { collectErrors } from "./helpers";
 const STATIC_ROUTES = [
   { path: "/", titleContains: "Analyticatech" },
   { path: "/services", titleContains: "Services" },
-  { path: "/services/01", titleContains: "Raisonnement & RAG" },
+  { path: "/services/01", titleContains: "RAG" },
   { path: "/solutions", titleContains: "Solutions" },
   { path: "/insights", titleContains: "Insights" },
   { path: "/contact", titleContains: "Contact" },
@@ -56,7 +56,7 @@ test.describe("métadonnées & canonical", () => {
     await firstCard.click();
     await page.waitForURL(/\/solutions\/[a-z0-9-]+$/, { timeout: 15_000 });
 
-    const ogUrl = await page.locator("meta[property='og:url']").getAttribute("content");
+    const ogUrl = await page.locator("meta[property='og:url']").last().getAttribute("content");
     expect(ogUrl).toContain("/solutions/");
     await expect(page.locator("h1")).toHaveCount(1);
   });

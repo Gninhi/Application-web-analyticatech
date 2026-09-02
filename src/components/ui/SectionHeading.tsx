@@ -1,23 +1,21 @@
-"use client";
-
-import { motion } from "framer-motion";
-
 interface SectionHeadingProps {
   tag: string;
   title: string;
   description?: string;
   align?: "left" | "center" | "right";
+  className?: string;
 }
 
 /**
  * SectionHeading — en-tête de section unifié (tag mono orange + titre display + description).
- * Évite la duplication de markup dans chaque vue.
+ * Composant serveur pur ultra-léger (zéro JavaScript, zéro Framer Motion).
  */
 export function SectionHeading({
   tag,
   title,
   description,
   align = "left",
+  className = "",
 }: SectionHeadingProps) {
   const alignClass =
     align === "center"
@@ -27,12 +25,7 @@ export function SectionHeading({
         : "";
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 18 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className={`max-w-3xl ${alignClass}`}
-    >
+    <div className={`max-w-3xl ${alignClass} ${className}`}>
       <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3 font-bold">
         {tag}
       </p>
@@ -44,6 +37,6 @@ export function SectionHeading({
           {description}
         </p>
       )}
-    </motion.div>
+    </div>
   );
 }

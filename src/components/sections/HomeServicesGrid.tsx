@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronRight, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
-import { MovingButton } from "@/components/interactive/MovingButton";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { SectionContainer } from "@/components/ui/SectionContainer";
 import { ServiceCard, type ServiceCardData, type BentoVariant } from "@/components/services/ServiceCard";
@@ -19,7 +18,7 @@ interface HomeServicesGridProps {
  * Agence les 4 piliers d'expertise dans une composition Bento Grid 12 colonnes haut de gamme
  * avec sélecteur de focus interactif inspiré des meilleurs standards 21st.dev / Framer.
  */
-export function HomeServicesGrid({ onNavigate, onNavigateDetail }: HomeServicesGridProps) {
+export function HomeServicesGrid({ onNavigate: _onNavigate, onNavigateDetail }: HomeServicesGridProps) {
   const { t } = useI18n();
   const [activeFocus, setActiveFocus] = useState<string | null>(null);
 
@@ -51,7 +50,7 @@ export function HomeServicesGrid({ onNavigate, onNavigateDetail }: HomeServicesG
         tagline: t("home.solution.automation.tagline"),
         badge: "ORCHESTRATION",
         iconVariant: "wave",
-        accentColor: "#F26D3D",
+        accentColor: "#38BDF8",
         technologies: ["n8n", "Zapier", "Temporal", "Airflow", "Python"],
         metrics: { label: t("home.solution.automation.metric"), value: "-75 %" },
         secondaryMetric: { label: "Heures sauvées", value: "8 500 h" },
@@ -67,7 +66,7 @@ export function HomeServicesGrid({ onNavigate, onNavigateDetail }: HomeServicesG
         tagline: t("home.solution.agents.tagline"),
         badge: "AUTONOMIE & MCP",
         iconVariant: "spark",
-        accentColor: "#38BDF8",
+        accentColor: "#10B981",
         technologies: ["LangGraph", "CrewAI", "AutoGen", "MCP", "Redis", "Qdrant"],
         metrics: { label: t("home.solution.agents.metric"), value: "87 %" },
         secondaryMetric: { label: "Agents actifs", value: "312" },
@@ -95,10 +94,11 @@ export function HomeServicesGrid({ onNavigate, onNavigateDetail }: HomeServicesG
   const FOCUS_TABS = [
     { id: "all", label: "Tous les piliers", index: "00", color: "#F26D3D" },
     { id: "ai", label: "01 · Raisonnement & RAG", index: "01", color: "#F26D3D" },
-    { id: "automation", label: "02 · Automatisation & Workflows", index: "02", color: "#F26D3D" },
-    { id: "agents", label: "03 · Orchestration Multi-Agents", index: "03", color: "#38BDF8" },
+    { id: "automation", label: "02 · Automatisation & Workflows", index: "02", color: "#38BDF8" },
+    { id: "agents", label: "03 · Orchestration Multi-Agents", index: "03", color: "#10B981" },
     { id: "bi", label: "04 · Data & Décision Augmentée", index: "04", color: "#A855F7" },
   ];
+
 
   return (
     <section className="relative">
@@ -172,19 +172,6 @@ export function HomeServicesGrid({ onNavigate, onNavigateDetail }: HomeServicesG
               </div>
             );
           })}
-        </div>
-
-        {/* CTA global vers le catalogue des services */}
-        <div className="mt-14 text-center">
-          <MovingButton
-            onClick={() => onNavigate("services")}
-            variant="outline"
-            size="md"
-            className="group"
-          >
-            {t("nav.services")} — {t("services.title1")} {t("services.title2")}
-            <ChevronRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden />
-          </MovingButton>
         </div>
       </SectionContainer>
     </section>

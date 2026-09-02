@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Send, ShieldCheck, Github, Linkedin, Twitter } from "lucide-react";
+
 import { type ViewKey } from "@/types/content";
-import { viewToPath } from "@/lib/navigation/routes";
+import { usePathname } from "next/navigation";
+import { viewToPath, getLocaleFromPath } from "@/lib/navigation/routes";
 import { NavLink } from "@/components/interactive/NavLink";
 import { Logo } from "@/components/branding/Logo";
 import { MovingButton } from "@/components/interactive/MovingButton";
@@ -46,6 +48,8 @@ function useUtcClock() {
 }
 
 export function Footer() {
+  const pathname = usePathname() || "/";
+  const currentLocale = getLocaleFromPath(pathname);
   const utc = useUtcClock();
   const { t } = useI18n();
   const { navItems, services, siteConfig } = useAppContent();
@@ -80,15 +84,14 @@ export function Footer() {
 
             {/* Indicateur de statut système */}
             <div className="inline-flex items-center gap-2.5 rounded-lg glass px-3 py-2">
-              <motion.span
-                className="h-2 w-2 rounded-full bg-[#4CAF50]"
-                animate={{ opacity: [1, 0.3, 1], scale: [1, 0.85, 1] }}
-                transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+              <span
+                className="h-2 w-2 rounded-full bg-[#4CAF50] animate-pulse"
                 aria-hidden
               />
               <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-300">
                 System Online
               </span>
+
               <span className="mx-1 h-3 w-px bg-black/15 dark:bg-white/15" aria-hidden />
               <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
                 UTC {utc}
@@ -104,7 +107,7 @@ export function Footer() {
             <ul className="space-y-2.5">
               {NAV_ITEMS.map((item) => (
                 <li key={item.key}>
-                  <NavLink variant="footer" href={viewToPath(item.key)}>
+                  <NavLink variant="footer" href={viewToPath(item.key, undefined, currentLocale)}>
                     {item.label}
                   </NavLink>
                 </li>
@@ -121,7 +124,7 @@ export function Footer() {
               {services.slice(0, 5).map((s) => (
                 <li key={s.id}>
                   <Link
-                    href={viewToPath("service-detail", s.index)}
+                    href={viewToPath("service-detail", s.index, currentLocale)}
                     className="hover:text-[#F26D3D] transition-colors"
                   >
                     {s.title}
@@ -199,19 +202,19 @@ export function Footer() {
               © {new Date().getFullYear()} Analyticatech — {t("footer.copyright")}
           </p>
             <Link
-              href="/confidentialite"
+              href={viewToPath("rgpd", undefined, currentLocale)}
               className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] px-2 py-1"
             >
               {t("footer.confidentiality")}
             </Link>
             <Link
-              href="/mentions-legales"
+              href={viewToPath("legal", undefined, currentLocale)}
               className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] px-2 py-1"
             >
               {t("footer.legal")}
             </Link>
             <Link
-              href="/a-propos"
+              href={viewToPath("about", undefined, currentLocale)}
               className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] px-2 py-1"
             >
               {t("footer.about")}

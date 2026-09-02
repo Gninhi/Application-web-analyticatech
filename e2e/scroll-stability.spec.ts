@@ -37,7 +37,6 @@ test.describe("stabilité au scroll", () => {
     }
 
     // Attendre que les chunks dynamiques + intersections soient résolus.
-    await page.waitForLoadState("networkidle");
     await page.waitForFunction(
       () => document.querySelectorAll("[data-lazy-mounted='false']").length === 0,
       undefined,
@@ -49,24 +48,34 @@ test.describe("stabilité au scroll", () => {
 
   test("la hauteur de page reste stable après le chargement réseau", async ({ page }) => {
     await page.goto(HOME, { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(500);
 
     // Monte tout d'abord les sections hors écran (scroll + retour) pour
     // déclencher les remplacements squelette → contenu.
     const maxY = await page.evaluate(() => document.documentElement.scrollHeight);
-    await scrollToInstant(page, maxY);
-    await page.waitForTimeout(400);
+    const steps = 8;
+    for (let i = 1; i <= steps; i++) {
+      await scrollToInstant(page, (maxY / steps) * i);
+      await page.waitForTimeout(100);
+    }
+    await page.waitForFunction(
+      () => document.querySelectorAll("[data-lazy-mounted='false']").length === 0,
+      undefined,
+      { timeout: 15_000 }
+    );
     await scrollToInstant(page, 0);
-    await page.waitForTimeout(400);
+    await page.evaluate(() => document.fonts.ready);
+    await page.waitForTimeout(1200);
 
     const before = await page.evaluate(() => document.documentElement.scrollHeight);
-    await page.waitForTimeout(1200);
+    await page.waitForTimeout(1000);
     const after = await page.evaluate(() => document.documentElement.scrollHeight);
 
     // Tolérance : ±1 px (arrondi de sous-pixel au scroll).
     expect(Math.abs(after - before)).toBeLessThanOrEqual(1);
   });
 });
+
 
 test.describe("stabilité au scroll — mobile", () => {
   test.use({ viewport: { width: 375, height: 812 } });
@@ -81,7 +90,6 @@ test.describe("stabilité au scroll — mobile", () => {
       await page.waitForTimeout(120);
     }
 
-    await page.waitForLoadState("networkidle");
     await page.waitForFunction(
       () => document.querySelectorAll("[data-lazy-mounted='false']").length === 0,
       undefined,

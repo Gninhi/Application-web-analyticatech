@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import { getStaticPageMetadata } from "@/lib/services/page-meta";
 import { InsightsRoute } from "@/components/routes/InsightsRoute";
-import type { Locale } from "@/types/content";
+
+export const revalidate = 3600; // 1h
 
 export async function generateMetadata(): Promise<Metadata> {
-  const locale = (((await cookies()).get("NEXT_LOCALE")?.value) as Locale) || "fr";
-  return getStaticPageMetadata(locale, "insights");
+  return getStaticPageMetadata("fr", "insights");
 }
 
-/** Route "/insights" — vue Insights (articles). */
+/** Route "/insights" — vue Insights (articles) (ISR 1h). */
 export default function InsightsPage() {
   return <InsightsRoute />;
 }

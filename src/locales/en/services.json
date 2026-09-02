@@ -1,0 +1,22 @@
+{
+  "services.title1": "Four expert capabilities,",
+  "services.title2": "zero gray area between them",
+  "services.kicker": "Services — Stacking Sequence",
+  "services.desc": "Each service is a foundational layer of our architecture. Scroll: cards stack and lock at the top, revealing each layer of operational intelligence.",
+  "services.method.tag": "Delivery Methodology",
+  "services.method.title": "From Scoping to Run, Without Friction",
+  "services.scrollHint": "Scroll to reveal",
+  "services.method.desc": "Our delivery model follows a 4-phase iterative lifecycle, each delivering observable value. No speculative 'big bang': every increment is deployed to production and monitored.",
+  "services.method.cta": "Scope Your Project",
+  "services.card.cta": "Initiate Service",
+  "services.card.explore": "Explore Detailed Architecture",
+  "services.card.deliverables": "Key Deliverables",
+  "services.persona.all": "All Expertise",
+  "services.persona.ceo": "Executive",
+  "services.persona.architect": "Architect",
+  "services.persona.operational": "Operations",
+  "services.persona.ceo-label": "CEO",
+  "services.persona.architect-label": "Architect",
+  "services.persona.operational-label": "Ops",
+  "services.persona.selected": "Persona: {persona}"
+}

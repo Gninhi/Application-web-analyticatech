@@ -10,9 +10,9 @@ import { DEFAULT_SITE_CONFIG } from "@/lib/content/site";
 const PAGE_COPY: Record<Locale, Record<string, { title: string; description: string }>> = {
   fr: {
     services: {
-      title: "Services — Conseil en IA, Agents & Automatisation",
+      title: "Nos Expertises IA & Data | Analyticatech",
       description:
-        "Quatre couches d'expertise empilées : Raisonnement & RAG, Automatisation & Workflows, Orchestration Multi-Agents, Data & Décision Augmentée. Chaque service livré avec méthode, sécurité et ROI mesuré.",
+        "Quatre expertises clés empilées : Raisonnement & RAG, Automatisation & Workflows, Orchestration Multi-Agents, Data & Décision Augmentée. Chaque service livré avec méthode, sécurité et ROI mesuré.",
     },
     solutions: {
       title: "Solutions sectorielles — IA & Automatisation par métier",
@@ -20,12 +20,12 @@ const PAGE_COPY: Record<Locale, Record<string, { title: string; description: str
         "Des solutions prêtes à adapter pour la banque, l'industrie, le retail, le secteur public et plus : agents IA, automatisation de workflows, BI et pilotage décisionnel.",
     },
     insights: {
-      title: "Insights — Rapports techniques & retours de terrain",
+      title: "Insights — Analyses & Ressources IA | Analyticatech",
       description:
-        "Nos architectes partagent leurs analyses : patterns de production, choix d'outillage et leçons apprises sur les missions IA et automatisation.",
+        "Nos architectes partagent leurs analyses : patterns de production, choix d'outillage et retours d'expérience sur les missions IA, agents et automatisation.",
     },
     contact: {
-      title: "Contact — Établissons une connexion sécurisée",
+      title: "Contact | Analyticatech",
       description:
         "Décrivez votre besoin. Un architecte Solution Analyticatech vous répond sous 24h ouvrées. Échanges chiffrés et confidentiels.",
     },
@@ -39,7 +39,7 @@ const PAGE_COPY: Record<Locale, Record<string, { title: string; description: str
       description:
         "Mentions légales d'Analyticatech : éditeur du site, hébergement, propriété intellectuelle et coordonnées.",
     },
-"a-propos": {
+    "a-propos": {
       title: "À propos d'Analyticatech",
       description:
         "Cabinet de conseil en IA, Agents & Automatisation : mission, vision et valeurs. Du POC à la production, avec précision, sécurité et impact mesuré.",
@@ -47,39 +47,40 @@ const PAGE_COPY: Record<Locale, Record<string, { title: string; description: str
   },
   en: {
     services: {
-      title: "Services — AI, Agents & Automation Consulting",
+      title: "Our AI & Data Capabilities | Analyticatech",
       description:
-        "Four stacked layers of expertise: Reasoning & RAG, Automation & Workflows, Multi-Agent Orchestration, Data & Augmented Decision. Every service delivered with method, security and measurable ROI.",
+        "Four stacked layers of expertise: Reasoning & RAG, Automation & Workflows, Multi-Agent Orchestration, Data & Augmented Decision. Engineered for enterprise scale, security, and measurable ROI.",
     },
     solutions: {
-      title: "Industry Solutions — AI & Automation by sector",
+      title: "Industry Solutions — Enterprise AI & Workflow Automation",
       description:
-        "Ready-to-adapt solutions for banking, industry, retail, public sector and more: AI agents, workflow automation, BI and augmented decision.",
+        "Production-ready architectures tailored for Banking & Insurance, Healthcare, Logistics, and Public Sector: autonomous agents, automated workflows, and executive BI.",
     },
     insights: {
-      title: "Insights — Technical reports & field feedback",
+      title: "Insights — AI Analysis & Resources | Analyticatech",
       description:
-        "Our architects share their analysis: production patterns, tooling choices and lessons learned on AI and automation missions.",
+        "Senior architects share frontline analysis: production patterns, tooling trade-offs, and field-tested architecture lessons on AI and multi-agent systems.",
     },
     contact: {
-      title: "Contact — Let's establish a secure connection",
+      title: "Contact | Analyticatech",
       description:
-        "Describe your needs. An Analyticatech Solution Architect will respond within 24 business hours. Encrypted, confidential exchanges.",
+        "Describe your enterprise requirements. A Senior Solutions Architect will respond within 24 business hours. End-to-end encrypted and confidential.",
     },
+
     confidentialite: {
-      title: "Privacy Policy — GDPR",
+      title: "Privacy Policy — GDPR Compliance",
       description:
-        "Analyticatech's privacy policy: personal data, GDPR, 90-day retention, no resale and no training on your data.",
+        "Analyticatech's privacy policy: personal data protection, GDPR compliance, 90-day data retention, zero data resale or model training.",
     },
     "mentions-legales": {
-      title: "Legal notice",
+      title: "Legal Notice & Corporate Information",
       description:
-        "Analyticatech legal notice: site publisher, hosting, intellectual property and contact details.",
+        "Analyticatech regulatory information: site publisher, SecNumCloud hosting, intellectual property, and registered company details.",
     },
     "a-propos": {
-      title: "About Analyticatech",
+      title: "About Analyticatech — Autonomous Systems Engineering",
       description:
-        "Consulting firm in AI, Agents & Automation: mission, vision and values. From POC to production, with precision, security and measurable impact.",
+        "Independent AI, Multi-Agent, and Digital Transformation engineering consultancy: mission, vision, and core values. From POC to production with verifiable business impact.",
     },
   },
 };
@@ -92,9 +93,10 @@ interface PageMetaInput {
 }
 
 /**
- * Construit les métadonnées d'une page secondaire : canonical propre à l'URL,
- * Open Graph / Twitter cohérents, image OG issue de la DB (ou repli og-image.jpg).
- * Les mots-clés et le template de titre proviennent du layout racine.
+ * Construit les métadonnées d'une page :
+ * - Canonical auto-référent vers l'URL exacte dans sa propre langue.
+ * - Balises hreflang réciproques complètes (fr, en, fr-FR, en-US, x-default).
+ * - Open Graph et Twitter Cards localisés avec locale/alternateLocale.
  */
 export async function buildPageMetadata({
   locale,
@@ -107,15 +109,29 @@ export async function buildPageMetadata({
   const canonicalUrl = `${site.url}${path}`;
   const imageUrl = seo.ogImageUrl ?? `${site.url}/og-image.jpg`;
 
+  const frPath = path.startsWith("/en") ? path.replace(/^\/en/, "") || "/" : path;
+  const enPath = path.startsWith("/en") ? path : path === "/" ? "/en" : `/en${path}`;
+
   return {
     title,
     description,
-    alternates: { canonical: canonicalUrl },
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        fr: `${site.url}${frPath}`,
+        en: `${site.url}${enPath}`,
+        "fr-FR": `${site.url}${frPath}`,
+        "en-US": `${site.url}${enPath}`,
+        "x-default": `${site.url}${frPath}`,
+      },
+    },
     openGraph: {
       title,
       description,
       url: canonicalUrl,
       siteName: site.siteName,
+      locale: locale === "en" ? "en_US" : "fr_FR",
+      alternateLocale: locale === "en" ? ["fr_FR"] : ["en_US"],
       images: [{ url: imageUrl }],
       type: "website",
     },
@@ -134,7 +150,8 @@ export async function getStaticPageMetadata(
   routeKey: "services" | "solutions" | "insights" | "contact" | "confidentialite" | "mentions-legales" | "a-propos"
 ): Promise<Metadata> {
   const copy = PAGE_COPY[locale][routeKey] ?? PAGE_COPY.fr[routeKey];
-  const path = STATIC_ROUTE_PATHS[routeKey];
+  const basePath = STATIC_ROUTE_PATHS[routeKey];
+  const path = locale === "en" ? `/en${basePath}` : basePath;
   return buildPageMetadata({ locale, path, title: copy.title, description: copy.description });
 }
 

@@ -1,0 +1,22 @@
+{
+  "solutions.title1": "Industry-Specific Solutions,",
+  "solutions.title2": "in orbit",
+  "solutions.kicker": "Solutions — Orbital Drift",
+  "solutions.desc": "Scroll vertically: operational use cases drift horizontally along an orbital sequence. Each solution is production-ready and tailored to your enterprise context.",
+  "solutions.card.cta": "Learn More",
+  "solutions.card.viewDetail": "View Details",
+  "solutions.drift.label": "Orbital Drift Sequence",
+  "solutions.phase.lead": "Preparation",
+  "solutions.phase.drift": "Drift",
+  "solutions.phase.release": "Release",
+  "solutions.final.title": "Is Your Industry Not Listed?",
+  "solutions.final.desc": "We engineer custom architectures. Let's discuss your specific operational use case in a 30-minute scoping session.",
+  "solutions.final.cta": "Express Scoping Brief",
+  "solutions.confiance.sovereignty": "Guaranteed Sovereignty",
+  "solutions.confiance.sovereignty.desc": "SecNumCloud-compliant hosting, end-to-end encrypted data pipelines, and audited codebase.",
+  "solutions.confiance.time": "Accelerated Time-to-Value",
+  "solutions.confiance.time.desc": "First production increment deployed within 6 weeks on average.",
+  "solutions.confiance.long": "Long-Term Partnership",
+  "solutions.confiance.long.desc": "From discovery to continuous run: a dedicated engineering squad without disruptive turnover.",
+  "solutions.filter.all": "All Industries"
+}

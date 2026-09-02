@@ -160,7 +160,7 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
         type="tech"
         keywords={MARQUEE_KEYWORDS}
         direction="left"
-        speed={36}
+        speed={70}
       />
 
       {/* ============ 03 — TÉMOIGNAGES CLIENTS & AVIS ============ */}
@@ -213,7 +213,7 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
         type="clients"
         clients={displayClients}
         direction="right"
-        speed={40}
+        speed={80}
       />
     </div>
   );

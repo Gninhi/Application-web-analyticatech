@@ -1,77 +1,218 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
+import React, { useState, useEffect, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MoveRight, ArrowRight, ShieldCheck, Sparkles } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
-import { MovingButton } from "@/components/interactive/MovingButton";
-import { HeroParallaxPatternShowcase } from "@/components/interactive/HeroParallaxPatternShowcase";
 import { SectionContainer } from "@/components/ui/SectionContainer";
+import { GlassButton } from "@/components/interactive/GlassButton";
 
 interface HeroSectionProps {
   onNavigate: (view: ViewKey) => void;
 }
 
 /**
- * HeroSection — bloc d'ouverture de l'accueil.
- * Intègre un système de carte avec motif interactif et parallaxe 3D réactif au curseur.
- * Les animations d'entrée sont en CSS (transform only) pour rester visibles dès
- * le SSR et ne pas bloquer le thread principal.
+ * HeroSection — Bloc d'ouverture cinématique avec faisceau lumineux et rotateur de mots.
+ *
+ * Inspiré par l'esthétique spatiale de la capture et le système d'animation Framer Motion :
+ * - Faisceau lumineux courbé incandescent (#F26D3D) réactif aux thèmes clair et sombre.
+ * - Rotateur typographique de mots-clés dynamiques avec animation spring fluide.
+ * - 100% centré, net, SSR-compatible sans aucun CLS.
  */
 export function HeroSection({ onNavigate }: HeroSectionProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+
+  // Mots-clés en rotation dynamique selon la locale
+  const rotatingWords = useMemo(
+    () =>
+      locale === "en"
+        ? ["INTELLIGENT", "AUTONOMOUS", "RESILIENT", "DATA-DRIVEN", "SOVEREIGN"]
+        : ["INTELLIGENTS", "AUTONOMES", "RÉSILIENTS", "DÉCISIONNELS", "SOUVERAINS"],
+    [locale]
+  );
+
+  const [wordIndex, setWordIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setWordIndex((prev) => (prev + 1) % rotatingWords.length);
+    }, 2400);
+    return () => clearInterval(timer);
+  }, [rotatingWords.length]);
 
   return (
-    <section className="relative pt-32 md:pt-44 pb-8">
-      <SectionContainer>
-        <div className="grid lg:grid-cols-12 gap-10 lg:gap-8 items-center">
-          <div className="lg:col-span-7">
-            <div className="inline-flex items-center gap-2 rounded-full glass px-3.5 py-1.5 mb-7 border border-black/10 dark:border-white/10 animate-rise-up-sm">
-              <span className="h-2 w-2 rounded-full bg-[#F26D3D] animate-pulse" aria-hidden />
-              <span className="text-[11px] uppercase tracking-[0.25em] text-slate-700 dark:text-slate-200 font-medium [font-family:ui-monospace,SFMono-Regular,Menlo,monospace]">
-                {t("home.badge")}
-              </span>
-            </div>
+    <section className="relative pt-32 sm:pt-40 md:pt-48 pb-16 sm:pb-24 overflow-hidden">
+      {/* ============================================================ */}
+      {/* 1. FAISCEAU LUMINEUX COURBÉ & AMBIANCE COSMIQUE (CAPTURE)   */}
+      {/* ============================================================ */}
+      <div
+        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+        aria-hidden="true"
+      >
+        {/* Halo ambiant supérieur */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[450px] bg-[radial-gradient(ellipse_at_top,rgba(242,109,61,0.18),transparent_70%)] dark:bg-[radial-gradient(ellipse_at_top,rgba(242,109,61,0.25),transparent_70%)] blur-3xl opacity-90" />
 
-            {/* H1 sémantique indexable exigé par le Blueprint — une phrase complète.
-                Texte statique : toujours affiché en entier (pas d'effet de brouillage
-                qui pouvait laisser le titre partiel ou brouillé). */}
-            <h1 className="font-display font-bold tracking-tight text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05]">
-              <span className="block animate-rise-up anim-delay-150">
-                <span className="text-slate-900 dark:text-slate-100">{t("home.hero.title1")} </span>
-                <span className="text-shimmer">{t("home.hero.keyword")}</span>
-              </span>
-              <span className="mt-2 block text-2xl sm:text-3xl md:text-4xl font-medium text-slate-500 dark:text-slate-300 animate-rise-up anim-delay-450">
-                {t("home.hero.title2")}
-              </span>
-            </h1>
+        {/* Halo bleu nuit / cosmique */}
+        <div className="absolute top-1/4 right-0 w-[600px] h-[500px] bg-[radial-gradient(circle,rgba(2,40,89,0.25),transparent_70%)] dark:bg-[radial-gradient(circle,rgba(2,40,89,0.6),transparent_70%)] blur-3xl" />
 
-            <p className="mt-7 max-w-3xl text-lg md:text-xl text-slate-700 dark:text-slate-300 leading-relaxed font-normal animate-rise-up anim-delay-500">
-              {t("home.hero.desc")}
-            </p>
+        {/* L'Arc de Lumière Incurvé (Cinematic Light Flare) */}
+        <svg
+          className="absolute top-8 sm:top-12 left-1/2 -translate-x-1/2 w-[1400px] max-w-none h-[480px] opacity-80 dark:opacity-90 mix-blend-screen pointer-events-none"
+          viewBox="0 0 1400 480"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            {/* Dégradé principal de la ligne de lumière */}
+            <linearGradient id="hero-beam-grad" x1="0%" y1="20%" x2="100%" y2="80%">
+              <stop offset="0%" stopColor="#F26D3D" stopOpacity="0" />
+              <stop offset="25%" stopColor="#F26D3D" stopOpacity="0.4" />
+              <stop offset="50%" stopColor="#FF9E68" stopOpacity="1" />
+              <stop offset="70%" stopColor="#F26D3D" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#022859" stopOpacity="0" />
+            </linearGradient>
 
-            <div className="mt-9 flex flex-col sm:flex-row items-start sm:items-center gap-4 animate-rise-up anim-delay-700">
-              <MovingButton
-                onClick={() => onNavigate("contact")}
-                variant="primary"
-                size="lg"
-                className="group neon-glow"
-              >
-                {t("home.hero.cta1")}
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
-              </MovingButton>
-              <MovingButton
-                onClick={() => onNavigate("solutions")}
-                variant="ghost"
-                size="lg"
-              >
-                {t("home.hero.cta2")}
-              </MovingButton>
-            </div>
+            {/* Dégradé de la lueur diffuse */}
+            <linearGradient id="hero-glow-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="20%" stopColor="#F26D3D" stopOpacity="0" />
+              <stop offset="50%" stopColor="#F26D3D" stopOpacity="0.45" />
+              <stop offset="80%" stopColor="#022859" stopOpacity="0" />
+            </linearGradient>
+
+            <filter id="beam-blur" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="16" />
+            </filter>
+          </defs>
+
+          {/* Halo diffus flou */}
+          <path
+            d="M 50 80 Q 700 300 1350 420"
+            stroke="url(#hero-glow-grad)"
+            strokeWidth="38"
+            strokeLinecap="round"
+            filter="url(#beam-blur)"
+          />
+
+          {/* Faisceau central éclatant */}
+          <path
+            d="M 50 80 Q 700 300 1350 420"
+            stroke="url(#hero-beam-grad)"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+          />
+
+          {/* Point d'impact lumineux central */}
+          <circle cx="820" cy="330" r="80" fill="url(#hero-glow-grad)" filter="url(#beam-blur)" />
+          <circle cx="820" cy="330" r="3" fill="#FFFFFF" opacity="0.9" />
+        </svg>
+
+        {/* Grille technique de fond très discrète */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_30%,#000_70%,transparent_100%)]" />
+      </div>
+
+      {/* ============================================================ */}
+      {/* 2. CONTENU PRINCIPAL CENTRÉ                                 */}
+      {/* ============================================================ */}
+      <SectionContainer className="relative z-10">
+        <div className="mx-auto max-w-4xl text-center flex flex-col items-center">
+          {/* Badge Pilule Supérieur Interactif Liquid Glass */}
+          <GlassButton
+            onClick={() => onNavigate("services")}
+            variant="secondary"
+            size="sm"
+            borderRadius="9999px"
+            className="mb-8"
+          >
+            <span className="flex h-2 w-2 rounded-full bg-[#F26D3D] animate-pulse" aria-hidden="true" />
+            <span className="font-mono text-[11px] uppercase tracking-[0.2em] font-medium">
+              {t("home.badge")}
+            </span>
+            <MoveRight className="h-3.5 w-3.5 text-[#F26D3D] transition-transform duration-200 group-hover/glass:translate-x-1" aria-hidden="true" />
+          </GlassButton>
+
+          {/* Titre H1 avec Rotateur de Mots Fluide (Framer Motion) */}
+          <h1 className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-[1.08] flex flex-col items-center">
+            {/* Ligne 1 : Titre fixe */}
+            <span className="block">
+              {locale === "en" ? "AI Architectures &" : "DES SYSTÈMES"}
+            </span>
+
+            {/* Ligne 2 : Mot dynamique en rotation fluide */}
+            <span className="relative flex w-full justify-center overflow-hidden h-[1.18em] my-1 sm:my-2">
+              <span className="invisible select-none" aria-hidden="true">
+                {rotatingWords[0]}
+              </span>
+              <AnimatePresence mode="popLayout" initial={false}>
+                <motion.span
+                  key={wordIndex}
+                  initial={{ opacity: 0, y: 50, filter: "blur(6px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -50, filter: "blur(6px)" }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 70,
+                    damping: 14,
+                    mass: 0.8,
+                  }}
+                  className="absolute font-display font-bold text-shimmer tracking-tight"
+                >
+                  {rotatingWords[wordIndex]}
+                </motion.span>
+              </AnimatePresence>
+            </span>
+
+            {/* Ligne 3 : Sous-titre d'ancrage */}
+            <span className="block font-medium text-2xl sm:text-3xl md:text-4xl text-slate-600 dark:text-slate-300 tracking-normal mt-1">
+              {t("home.hero.title2")}
+            </span>
+          </h1>
+
+          {/* Paragraphe Descriptif */}
+          <p className="mt-6 max-w-2xl text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+            {t("home.hero.desc")}
+          </p>
+
+          {/* Boutons d'Action (CTAs) Liquid Glass */}
+          <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto">
+            {/* CTA 1 : Évaluer votre projet (Primaire) */}
+            <GlassButton
+              onClick={() => onNavigate("contact")}
+              variant="primary"
+              size="lg"
+              borderRadius="9999px"
+              className="w-full sm:w-auto"
+            >
+              <span>{t("home.hero.cta1")}</span>
+              <MoveRight className="h-4 w-4 transition-transform duration-200 group-hover/glass:translate-x-1" aria-hidden="true" />
+            </GlassButton>
+
+            {/* CTA 2 : Découvrir nos solutions (Secondaire / Outline) */}
+            <GlassButton
+              onClick={() => onNavigate("solutions")}
+              variant="outline"
+              size="lg"
+              borderRadius="9999px"
+              className="w-full sm:w-auto"
+            >
+              <span>{t("home.hero.cta2")}</span>
+              <ArrowRight className="h-4 w-4 text-slate-400 dark:text-slate-400 transition-transform duration-200 group-hover/glass:translate-x-0.5" aria-hidden="true" />
+            </GlassButton>
           </div>
 
-          {/* Carte avec motif interactif et système parallaxe 3D */}
-          <div className="lg:col-span-5 animate-scale-in anim-delay-300">
-            <HeroParallaxPatternShowcase />
+          {/* Barre de Réassurance / Métriques de Confiance */}
+          <div className="mt-12 pt-6 border-t border-black/5 dark:border-white/5 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-mono uppercase tracking-wider">
+            <span className="flex items-center gap-1.5">
+              <Sparkles className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden="true" />
+              127+ missions déployées
+            </span>
+            <span className="hidden sm:inline text-slate-300 dark:text-slate-700">•</span>
+            <span className="flex items-center gap-1.5">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" aria-hidden="true" />
+              99.98% de fiabilité
+            </span>
+            <span className="hidden sm:inline text-slate-300 dark:text-slate-700">•</span>
+            <span>Hébergement SecNumCloud</span>
           </div>
         </div>
       </SectionContainer>

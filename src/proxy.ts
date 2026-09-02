@@ -89,17 +89,50 @@ export function proxy(req: NextRequest) {
     });
   }
 
-  // 4. Prépare la réponse
-  const res = NextResponse.next();
+  // 4. Détection et propagation de la locale bilingue (FR racine / EN sous /en)
+  const isEnRoute = pathname === "/en" || pathname.startsWith("/en/");
+  const cookieLocale = req.cookies.get("NEXT_LOCALE")?.value;
+  const acceptLang = req.headers.get("accept-language") || "";
 
-  // 5. CSP nonce-based — un nonce par requête, appliqué aux scripts inline
+  // Détection 1ère visite : si visiteur arrive sur "/" sans cookie et que son navigateur est anglophone
+  if (pathname === "/" && !cookieLocale && acceptLang.toLowerCase().startsWith("en")) {
+    const url = req.nextUrl.clone();
+    url.pathname = "/en";
+    const redirectRes = NextResponse.redirect(url, { status: 307 });
+    redirectRes.cookies.set("NEXT_LOCALE", "en", {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365, // 1 an
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    });
+    return redirectRes;
+  }
+
+  const effectiveLocale = isEnRoute ? "en" : "fr";
+
+  // 5. Prépare la réponse
+  const res = NextResponse.next();
+  res.headers.set("x-locale", effectiveLocale);
+  res.headers.set("x-pathname", pathname);
+
+  // Synchronise le cookie si sur une route explicite /en
+  if (isEnRoute && cookieLocale !== "en") {
+    res.cookies.set("NEXT_LOCALE", "en", {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    });
+  }
+
+  // 6. CSP nonce-based — un nonce par requête, appliqué aux scripts inline
   //    de Next et à notre script d'init du thème (header x-nonce lu dans
   //    RootLayout). Remplace 'unsafe-inline' côté script-src.
   const nonce = generateToken();
   res.headers.set("x-nonce", nonce);
   res.headers.set("Content-Security-Policy", buildCsp(nonce));
 
-  // 6. Pose le cookie CSRF si absent (double-submit pattern)
+  // 7. Pose le cookie CSRF si absent (double-submit pattern)
   if (!req.cookies.has(CSRF_COOKIE)) {
     const token = generateToken();
     res.cookies.set(CSRF_COOKIE, token, {
@@ -111,7 +144,7 @@ export function proxy(req: NextRequest) {
     });
   }
 
-  // 7. Security headers additionnels
+  // 8. Security headers additionnels
   res.headers.set("X-Content-Type-Options", "nosniff");
   res.headers.set("X-Frame-Options", "DENY");
   res.headers.set("Referrer-Policy", "no-referrer");
@@ -182,10 +215,9 @@ function generateToken(): string {
 
 export const config = {
   matcher: [
-    // `services` était exclu pour les images statiques /services/*.webp — mais
-    // la conversion en routes réelles (/services, /services/[index]) impose
-    // que ces pages passent par le proxy (CSP nonce + en-têtes de sécurité).
-    // Les réponses d'images restent inoffensives sous CSP (headers seuls).
-    "/((?!_next/static|_next/image|favicon.ico|logo.svg|robots.txt).*)",
+    // Exclusion des assets statiques et extensions de fichiers pour éviter
+    // l'émission de cookies CSRF / CSP nonces sur des ressources mises en cache Edge/CDN.
+    // Toutes les routes pages (/services, /solutions/...) et API continuent de passer par le proxy.
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt|xml|woff|woff2|ttf|eot)$).*)",
   ],
 };

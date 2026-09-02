@@ -1,0 +1,13 @@
+{
+  "footer.nav.title": "Navigation",
+  "footer.expertises.title": "Expertise",
+  "footer.newsletter.title": "Insights Newsletter",
+  "footer.newsletter.desc": "Receive our technical insights on production-grade AI.",
+  "footer.newsletter.placeholder": "you@company.com",
+  "footer.newsletter.confirmed": "✓ Subscription confirmed",
+  "footer.copyright": "All rights reserved",
+  "footer.confidentiality": "Privacy Policy",
+  "footer.legal": "Legal Notice",
+  "footer.about": "About",
+  "footer.compliance": "ISO 27001 · GDPR"
+}

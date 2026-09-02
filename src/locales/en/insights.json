@@ -1,0 +1,15 @@
+{
+  "blog.title1": "Technical Reports &",
+  "blog.title2": "Engineering Debriefs",
+  "blog.kicker": "Insights — Technical Reports",
+  "blog.desc": "Our architects share their frontline analysis: production patterns, tooling trade-offs, and field-tested architecture lessons.",
+  "blog.featured": "Featured",
+  "blog.filter.all": "All Reports",
+  "blog.filter.aria": "Filter by category",
+  "blog.filter.entries.one": "entry",
+  "blog.filter.entries.other": "entries",
+  "blog.empty": "No reports found in this category.",
+  "insights.readingTime": "min read",
+  "insights.readArticle": "Read Article",
+  "insights.search.placeholder": "Search by keyword, architecture, framework..."
+}

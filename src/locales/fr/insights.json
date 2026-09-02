@@ -1,0 +1,15 @@
+{
+  "blog.title1": "Rapports techniques &",
+  "blog.title2": "retours de terrain",
+  "blog.kicker": "Insights — Rapports Techniques",
+  "blog.desc": "Nos architectes partagent leurs analyses : patterns de production, choix d'outillage et leçons apprises sur les missions.",
+  "blog.featured": "À la une",
+  "blog.filter.all": "Tous les rapports",
+  "blog.filter.aria": "Filtrer par catégorie",
+  "blog.filter.entries.one": "entrée",
+  "blog.filter.entries.other": "entrées",
+  "blog.empty": "Aucun rapport dans cette catégorie.",
+  "insights.readingTime": "min de lecture",
+  "insights.readArticle": "Lire l'article",
+  "insights.search.placeholder": "Rechercher par mot-clé, technologie..."
+}

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils/cn";
+import { useI18n } from "@/lib/i18n";
 
 export interface TechTickerItem {
   code: string;
@@ -57,7 +58,7 @@ export type StockTickerProps =
 // DONNÉES PAR DÉFAUT ENRICHIES POUR L'ESTHÉTIQUE TRADING BOURSE
 // ============================================================
 
-const DEFAULT_TECH_TICKERS: TechTickerItem[] = [
+const DEFAULT_TECH_TICKERS_FR: TechTickerItem[] = [
   { code: "RAG-01", name: "Raisonnement & RAG", delta: "▲ 320ms", status: "LIVE" },
   { code: "AGNT-02", name: "Multi-Agents Swarms", delta: "▲ 87% AUTO", status: "LIVE" },
   { code: "AUTO-03", name: "Workflows n8n & Orchestration", delta: "▲ -75% LAT", status: "PROD" },
@@ -70,7 +71,20 @@ const DEFAULT_TECH_TICKERS: TechTickerItem[] = [
   { code: "GOV-10", name: "Gouvernance des Données", delta: "● PII MASK", status: "ACTIF" },
 ];
 
-const DEFAULT_CLIENT_TICKERS: ClientTickerItem[] = [
+const DEFAULT_TECH_TICKERS_EN: TechTickerItem[] = [
+  { code: "RAG-01", name: "Reasoning & RAG", delta: "▲ 320ms", status: "LIVE" },
+  { code: "AGNT-02", name: "Multi-Agent Swarms", delta: "▲ 87% AUTO", status: "LIVE" },
+  { code: "AUTO-03", name: "n8n Workflows & Orchestration", delta: "▲ -75% LAT", status: "PROD" },
+  { code: "DATA-04", name: "Data Platform & dbt Core", delta: "▲ 640+ KPI", status: "ONLINE" },
+  { code: "LLM-05", name: "vLLM Inference & Guardrails", delta: "▲ 94.2% ACC", status: "LIVE" },
+  { code: "VCTR-06", name: "Pinecone Vector Search", delta: "▲ <15ms", status: "ACTIVE" },
+  { code: "SOUV-07", name: "Cloud Sovereignty & GDPR", delta: "● 100% EU", status: "AUDITED" },
+  { code: "PROD-08", name: "Cloud CI/CD Deployment", delta: "▲ 99.98% UP", status: "STABLE" },
+  { code: "TRFM-09", name: "Cognitive Transformation", delta: "▲ 3.2x ROI", status: "LIVE" },
+  { code: "GOV-10", name: "Data Governance & Privacy", delta: "● PII MASK", status: "ACTIVE" },
+];
+
+const DEFAULT_CLIENT_TICKERS_FR: ClientTickerItem[] = [
   { code: "NOVA", name: "NovaFinance", sector: "FINTECH", status: "PROD ACTIVE" },
   { code: "AXIO", name: "Axiom Stratégie", sector: "CONSEIL", status: "PROD ACTIVE" },
   { code: "HELI", name: "Helios Energy", sector: "ÉNERGIE", status: "PROD ACTIVE" },
@@ -80,6 +94,19 @@ const DEFAULT_CLIENT_TICKERS: ClientTickerItem[] = [
   { code: "VRTX", name: "Vortex Health", sector: "BIOTECH", status: "PROD ACTIVE" },
   { code: "ZNTH", name: "Zenith Media", sector: "MÉDIA", status: "PROD ACTIVE" },
   { code: "PLRS", name: "Polaris Capital", sector: "INVESTISSEMENT", status: "PROD ACTIVE" },
+  { code: "NRDC", name: "Nordic Systems", sector: "CLOUD INFRA", status: "PROD ACTIVE" },
+];
+
+const DEFAULT_CLIENT_TICKERS_EN: ClientTickerItem[] = [
+  { code: "NOVA", name: "NovaFinance", sector: "FINTECH", status: "PROD ACTIVE" },
+  { code: "AXIO", name: "Axiom Strategy", sector: "CONSULTING", status: "PROD ACTIVE" },
+  { code: "HELI", name: "Helios Energy", sector: "ENERGY", status: "PROD ACTIVE" },
+  { code: "MRDN", name: "Meridian Logistics", sector: "SUPPLY CHAIN", status: "PROD ACTIVE" },
+  { code: "QNTM", name: "Quantum Retail", sector: "E-COMMERCE", status: "PROD ACTIVE" },
+  { code: "ORBT", name: "Orbit Aerospace", sector: "INDUSTRY", status: "PROD ACTIVE" },
+  { code: "VRTX", name: "Vortex Health", sector: "BIOTECH", status: "PROD ACTIVE" },
+  { code: "ZNTH", name: "Zenith Media", sector: "MEDIA", status: "PROD ACTIVE" },
+  { code: "PLRS", name: "Polaris Capital", sector: "INVESTMENT", status: "PROD ACTIVE" },
   { code: "NRDC", name: "Nordic Systems", sector: "CLOUD INFRA", status: "PROD ACTIVE" },
 ];
 
@@ -115,10 +142,12 @@ const TICKER_META_DICTIONARY: Record<string, { code: string; delta: string; stat
 export function StockTicker(props: StockTickerProps) {
   const {
     direction = props.type === "clients" ? "right" : "left",
-    speed = props.type === "clients" ? 40 : 36,
+    speed = props.type === "clients" ? 65 : 60,
     className,
     pauseOnHover = true,
   } = props;
+
+  const { locale } = useI18n();
 
   // Construction des items selon le type
   let renderedItems: React.ReactNode[] = [];
@@ -142,7 +171,7 @@ export function StockTicker(props: StockTickerProps) {
         };
       });
     } else {
-      itemsToUse = DEFAULT_TECH_TICKERS;
+      itemsToUse = locale === "en" ? DEFAULT_TECH_TICKERS_EN : DEFAULT_TECH_TICKERS_FR;
     }
 
     renderedItems = itemsToUse.map((item, idx) => (
@@ -186,7 +215,7 @@ export function StockTicker(props: StockTickerProps) {
         status: "PROD ACTIVE",
       }));
     } else {
-      itemsToUse = DEFAULT_CLIENT_TICKERS;
+      itemsToUse = locale === "en" ? DEFAULT_CLIENT_TICKERS_EN : DEFAULT_CLIENT_TICKERS_FR;
     }
 
     renderedItems = itemsToUse.map((item, idx) => (
@@ -230,11 +259,9 @@ export function StockTicker(props: StockTickerProps) {
 
   if (renderedItems.length === 0) return null;
 
-  // Répétition pour garantir une boucle sans coupure sur tous formats d'écran
+  // Répétition pour garantir une boucle infinie continue (translation -50%)
   const baseItems = renderedItems.length < 6 ? [...renderedItems, ...renderedItems] : renderedItems;
-  const half1 = [...baseItems, ...baseItems];
-  const half2 = [...baseItems, ...baseItems];
-  const fullTrackItems = [...half1, ...half2];
+  const fullTrackItems = [...baseItems, ...baseItems];
 
   const trackClass = direction === "left" ? "stock-ticker-track-left" : "stock-ticker-track-right";
 

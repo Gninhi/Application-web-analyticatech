@@ -1,0 +1,22 @@
+{
+  "services.title1": "Quatre expertises,",
+  "services.title2": "sans zone grise entre elles",
+  "services.kicker": "Services — Séquence d'Empilement",
+  "services.desc": "Chaque service est une couche de notre monolithe. Défilez : les cartes se superposent et se collent en haut — la précédente disparaît sous la suivante, révélation par révélation.",
+  "services.method.tag": "Méthode de livraison",
+  "services.method.title": "Du cadrage au run, sans rupture",
+  "services.scrollHint": "Défiler pour révéler",
+  "services.method.desc": "Notre livraison suit un cycle itératif à 4 phases, chacune livrant de la valeur observable. Aucun « big bang » : chaque incrément est mis en production et monitoré.",
+  "services.method.cta": "Cadrer votre mission",
+  "services.card.cta": "Démarrer ce service",
+  "services.card.explore": "Explorer la fiche détaillée",
+  "services.card.deliverables": "Livrables clés",
+  "services.persona.all": "Toutes les expertises",
+  "services.persona.ceo": "Dirigeant",
+  "services.persona.architect": "Architecte",
+  "services.persona.operational": "Opérationnel",
+  "services.persona.ceo-label": "CEO",
+  "services.persona.architect-label": "Architect",
+  "services.persona.operational-label": "Ops",
+  "services.persona.selected": "Persona : {persona}"
+}

@@ -44,3 +44,13 @@ Finish work with `lint → typecheck → test:unit`; run e2e (or at least the to
 - DB is Supabase Postgres through the Prisma pooler URL (`DATABASE_URL` / `DIRECT_URL`; `DATABASE_SSL`). Prisma 7 uses the new `prisma-client` generator emitting into **`src/generated/prisma`** — generated, never hand-edit. `postinstall` and `vercel-build` run `prisma generate`; `npm run seed` (`tsx prisma/seed.ts`) seeds content.
 - Env keys (`.env.example`): `DATABASE_URL`, `DIRECT_URL`, `DATABASE_SSL`, `RESEND_API_KEY` (email), `MAIL_FROM`/`MAIL_TO`, `IP_SALT`, `ALLOWED_ORIGINS`, `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_APP_VERSION`. `NEXT_PUBLIC_*` are public — never put secrets there.
 - Vercel: `next.config.ts` sets `output: "standalone"` only off-Vercel, and reads `NEXT_DIST_DIR` for the output dir.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

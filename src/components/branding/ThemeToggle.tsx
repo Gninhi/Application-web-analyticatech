@@ -3,14 +3,14 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "@/components/branding/ThemeProvider";
 import { Sun, Moon } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { MovingButton } from "@/components/interactive/MovingButton";
+import { cn } from "@/lib/utils/cn";
 
 /**
  * ThemeToggle — bouton de bascule entre thème clair et sombre.
  *
  * Utilise next-themes pour persister le choix (localStorage).
- * Animation Framer Motion sur l'icône (rotation + fondu).
+ * Animation CSS fluide (rotation + fondu) sans Framer Motion.
  *
  * Hydration-safe : l'aria-label et l'icône ne dépendent du thème
  * qu'après le montage (mounted=true). Avant, on utilise des valeurs
@@ -47,33 +47,28 @@ export function ThemeToggle() {
       iconOnly
       borderRadius="0.625rem"
       duration={4000}
-      className="h-10 w-10 bg-white/10 dark:bg-white/5 backdrop-blur-md text-slate-800 dark:text-slate-100 hover:text-[#F26D3D]"
+      className="h-10 w-10 bg-white/10 dark:bg-white/5 backdrop-blur-md text-slate-800 dark:text-slate-100 hover:text-[#F26D3D] relative overflow-hidden"
     >
-      {mounted && (
-        <AnimatePresence mode="wait" initial={false}>
-          {isDark ? (
-            <motion.span
-              key="sun"
-              initial={{ rotate: -90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: 90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Sun className="h-5 w-5" aria-hidden />
-           </motion.span>
-          ) : (
-            <motion.span
-              key="moon"
-              initial={{ rotate: 90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: -90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Moon className="h-5 w-5 text-slate-700" aria-hidden />
-           </motion.span>
-          )}
-        </AnimatePresence>
-      )}
-   </MovingButton>
+      <span
+        className={cn(
+          "inline-flex items-center justify-center transition-all duration-300 ease-out",
+          !mounted && "opacity-100 rotate-0",
+          mounted && isDark && "opacity-100 rotate-0 scale-100",
+          mounted && !isDark && "opacity-0 rotate-90 scale-50 absolute"
+        )}
+      >
+        <Sun className="h-5 w-5" aria-hidden />
+      </span>
+      <span
+        className={cn(
+          "inline-flex items-center justify-center transition-all duration-300 ease-out",
+          !mounted && "opacity-0 -rotate-90 scale-50 absolute",
+          mounted && !isDark && "opacity-100 rotate-0 scale-100",
+          mounted && isDark && "opacity-0 -rotate-90 scale-50 absolute"
+        )}
+      >
+        <Moon className="h-5 w-5 text-slate-700" aria-hidden />
+      </span>
+    </MovingButton>
   );
 }

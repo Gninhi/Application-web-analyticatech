@@ -1,52 +1,73 @@
 import type { MetadataRoute } from "next";
 import { getAppContent } from "@/lib/services/content.service";
 
-// Le contenu dynamique (services, solutions, articles) vient de la DB à la
-// requête : on force la génération à la demande pour que les URLs de détail
-// reflètent toujours le contenu réel (cohérent avec les pages, toutes
-// dynamiques). Le contenu est dédupliqué par requête via React `cache()`.
-export const dynamic = "force-dynamic";
+// Sitemap généré et mis en cache Edge via ISR (revalidation quotidienne 24h).
+export const revalidate = 86400; // 24h
+
 
 /**
- * Sitemap — indexation complète.
+ * Sitemap — indexation complète bilingue (FR racine / EN sous /en/).
  *
- * Depuis la conversion en vraies routes App Router, toutes les pages sont
- * deep-linkables : routes statiques (services, solutions, insights, contact,
- * légal, à-propos) + entités dynamiques (services/[index], solutions/[slug],
- * insights/[slug]) issues du contenu DB. En mode offline (DB injoignable),
- * seules les routes statiques sont exposées — jamais d'URL fantôme.
- *
- * `lastModified` est volontairement stable (et non "now") : un sitemap qui
- * change de date à chaque requête provoque un re-crawl inutile des moteurs.
+ * Expose l'ensemble des routes FR et EN avec leurs relations alternates.languages
+ * pour un référencement international (SEO multilingue Google).
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://analyticatech.fr";
-  // Date stable de la dernière refonte de contenu majeure.
   const lastModified = new Date("2026-07-27");
 
   const entries: MetadataRoute.Sitemap = [];
-  const push = (
-    url: string,
+
+  const pushPair = (
+    frPath: string,
+    enPath: string,
     priority: number,
     changeFrequency: "daily" | "weekly" | "monthly" | "yearly" = "weekly"
   ) => {
-    entries.push({ url: `${baseUrl}${url}`, lastModified, changeFrequency, priority });
+    const alternates = {
+      languages: {
+        fr: `${baseUrl}${frPath}`,
+        en: `${baseUrl}${enPath}`,
+        "fr-FR": `${baseUrl}${frPath}`,
+        "en-US": `${baseUrl}${enPath}`,
+        "x-default": `${baseUrl}${frPath}`,
+      },
+    };
+
+    // Entrée FR
+    entries.push({
+      url: `${baseUrl}${frPath}`,
+      lastModified,
+      changeFrequency,
+      priority,
+      alternates,
+    });
+
+    // Entrée EN
+    entries.push({
+      url: `${baseUrl}${enPath}`,
+      lastModified,
+      changeFrequency,
+      priority: Math.max(0.1, priority - 0.05),
+      alternates,
+    });
   };
 
-  push("/", 1.0);
-  push("/services", 0.9);
-  push("/solutions", 0.9);
-  push("/insights", 0.9);
-  push("/contact", 0.8);
-  push("/a-propos", 0.6);
-  push("/confidentialite", 0.3);
-  push("/mentions-legales", 0.3);
+  pushPair("/", "/en", 1.0);
+  pushPair("/services", "/en/services", 0.9);
+  pushPair("/solutions", "/en/solutions", 0.9);
+  pushPair("/insights", "/en/insights", 0.9);
+  pushPair("/contact", "/en/contact", 0.8);
+  pushPair("/a-propos", "/en/a-propos", 0.6);
+  pushPair("/confidentialite", "/en/confidentialite", 0.3);
+  pushPair("/mentions-legales", "/en/mentions-legales", 0.3);
 
   try {
     const content = await getAppContent("fr");
-    content.services.forEach((s) => push(`/services/${s.index}`, 0.7));
-    content.solutions.forEach((s) => push(`/solutions/${s.slug}`, 0.7));
-    content.blogPosts.forEach((p) => push(`/insights/${p.slug}`, 0.6, "monthly"));
+    content.services.forEach((s) => pushPair(`/services/${s.index}`, `/en/services/${s.index}`, 0.7));
+    content.solutions.forEach((s) => pushPair(`/solutions/${s.slug}`, `/en/solutions/${s.slug}`, 0.7));
+    content.blogPosts.forEach((p) =>
+      pushPair(`/insights/${p.slug}`, `/en/insights/${p.slug}`, 0.6, "monthly")
+    );
   } catch {
     // Offline : seules les routes statiques ci-dessus sont exposées.
   }

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 import { ThemeProvider } from "@/components/branding/ThemeProvider";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
 import { GlobalErrorBoundary } from "@/components/system/GlobalErrorBoundary";
 import { SiteShell } from "@/components/layout/SiteShell";
 import { getAppContent } from "@/lib/services/content.service";
@@ -15,7 +15,7 @@ import type { Locale } from "@/types/content";
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["600", "700"],
   display: "swap",
   preload: true,
   adjustFontFallback: true,
@@ -33,7 +33,7 @@ const inter = Inter({
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
+  weight: ["400", "700"],
   display: "swap",
   preload: false, // Mono moins critique — pas de preload pour économiser la bande passante
 });
@@ -41,10 +41,11 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://analyticatech.fr"),
   title: {
-    default: "Analyticatech — Cabinet de conseil en IA, Agents & Automatisation",
+    default: "Analyticatech — Architectures IA, Automatisation & Data d'Entreprise",
     template: "%s | Analyticatech",
   },
   description:
+
     "Cabinet de conseil IA en France : architecture d'agents LLM, RAG, automatisation workflows et transformation digitale. 127+ missions livrées, 38% de coûts réduits. Experts LangChain, n8n, Power BI, SecNumCloud.",
   keywords: [
     // Mots-clés principaux (haute intention)
@@ -146,6 +147,8 @@ export const metadata: Metadata = {
 // varie, c'est ce que React doit ignorer lors de l'hydratation.
 const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem("theme");var dark=t?t==="dark":true;var c=document.documentElement.classList;c.remove("light","dark");c.add(dark?"dark":"light")}catch(e){}})();`;
 
+import { VercelMonitoring } from "@/components/system/VercelMonitoring";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -156,49 +159,41 @@ export default async function RootLayout({
   // aussi à notre script d'init du thème.
   const nonce = (await headers()).get("x-nonce") ?? "";
 
-  // Locale issue du cookie (même logique que le toggle i18n) puis contenu
-  // complet du site. `getAppContent` est `cache()` : les pages et les
-  // generateMetadata réutilisent ce résultat (un seul fetch DB par requête).
-  const locale = (((await cookies()).get("NEXT_LOCALE")?.value) as Locale) || "fr";
+  const headerLocale = (await headers()).get("x-locale");
+  const cookieLocale = (await cookies()).get("NEXT_LOCALE")?.value;
+  const locale: Locale =
+    headerLocale === "en" || headerLocale === "fr"
+      ? headerLocale
+      : (cookieLocale as Locale) || "fr";
   const content = await getAppContent(locale);
 
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
+      <head>
+        {/* Preconnect & DNS-prefetch pour les ressources critiques externes */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+      </head>
+
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <script
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
           nonce={nonce}
-          suppressHydrationWarning
           dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
         />
         <ThemeProvider>
-          {/* Preload manuel des fichiers de police principaux (Inter latin +
-              Space Grotesk latin). Turbopack n'émet pas les <link rel=preload>
-              de next/font : sans ce preload, les polices ne sont découvertes
-              qu'après parsing des CSS render-blocking, ce qui retarde le swap
-              des polices et donc le LCP. Les noms de fichiers sont stables
-              (dérivés du contenu des polices). */}
-          <link
-            rel="preload"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-            href="/_next/static/media/0c89a48fa5027cee-s.p.2cyn07wtgehh0.woff2"
-          />
-          <link
-            rel="preload"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-            href="/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
-          />
           <GlobalErrorBoundary>
             <SiteShell content={content}>{children}</SiteShell>
           </GlobalErrorBoundary>
-          <Toaster />
         </ThemeProvider>
+        <VercelMonitoring />
       </body>
     </html>
   );
 }
+
+

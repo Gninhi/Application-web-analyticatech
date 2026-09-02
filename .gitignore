@@ -58,6 +58,7 @@ logs/
 next-env.d.ts
 local-*
 .claude
+.mcp.json
 .z-ai-config
 
 # === Base de données locale (la prod utilise sa propre URL) ===

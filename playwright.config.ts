@@ -11,8 +11,10 @@ const BASE_URL = `http://localhost:${PORT}`;
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
+  workers: 2,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
+
   reporter: process.env.CI ? "github" : "list",
   timeout: 60_000,
   expect: {
@@ -25,7 +27,11 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: {
+        ...devices["Desktop Chrome"],
+        locale: "fr-FR",
+        extraHTTPHeaders: { "accept-language": "fr-FR,fr;q=0.9,en;q=0.8" },
+      },
     },
   ],
   webServer: {

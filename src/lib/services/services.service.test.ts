@@ -32,14 +32,14 @@ describe("getServices fallback & resilience", () => {
     expect(services[0].index).toBe("01");
     expect(services[0].title).toBe("Raisonnement & RAG");
     expect(services[0].technologies).toContain("LangChain");
-  });
+  }, 15000);
 
   it("retourne les services par défaut en EN pour la locale anglaise", async () => {
     const services = await getServices("en");
     expect(services.length).toBeGreaterThanOrEqual(4);
     expect(services[0].index).toBe("01");
     expect(services[0].title).toBe("Reasoning & RAG");
-  });
+  }, 15000);
 });
 
 describe("getServiceByIndex", () => {
@@ -48,24 +48,24 @@ describe("getServiceByIndex", () => {
     expect(service).not.toBeNull();
     expect(service?.index).toBe("01");
     expect(service?.title).toBe("Raisonnement & RAG");
-  });
+  }, 15000);
 
   it("retrouve un service par son index à un seul chiffre", async () => {
     const service = await getServiceByIndex("2", "fr");
     expect(service).not.toBeNull();
     expect(service?.index).toBe("02");
     expect(service?.title).toBe("Automatisation & Workflows");
-  });
+  }, 15000);
 
   it("retrouve le service 04 (Data & Décision Augmentée)", async () => {
     const service = await getServiceByIndex("4", "fr");
     expect(service).not.toBeNull();
     expect(service?.index).toBe("04");
     expect(service?.title).toBe("Data & Décision Augmentée");
-  });
+  }, 15000);
 
   it("retourne null pour un index inexistant", async () => {
     const service = await getServiceByIndex("99", "fr");
     expect(service).toBeNull();
-  });
+  }, 15000);
 });

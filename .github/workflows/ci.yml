@@ -30,7 +30,9 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run build
+      - run: npm run check:perf
       - run: npm run test:unit
+
 
   e2e:
     name: e2e (Playwright, Chromium)

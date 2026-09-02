@@ -162,7 +162,7 @@ async function seed() {
       index: "02",
       iconKey: "Workflow",
       bgImagePath: "/services/bg-03-auto.webp",
-      meshOverlay: "radial-gradient(ellipse 70% 90% at 20% 85%, rgba(242,109,61,0.3), transparent 55%), radial-gradient(ellipse 60% 80% at 85% 15%, rgba(255,174,107,0.18), transparent 60%)",
+      meshOverlay: "radial-gradient(ellipse 70% 90% at 20% 85%, rgba(56,189,248,0.30), transparent 55%), radial-gradient(ellipse 60% 80% at 85% 15%, rgba(2,40,89,0.7), transparent 60%)",
       order: 2,
       fr: {
         title: "Automatisation & Workflows",
@@ -190,7 +190,7 @@ async function seed() {
       index: "03",
       iconKey: "Bot",
       bgImagePath: "/services/bg-04-agents.webp",
-      meshOverlay: "radial-gradient(ellipse 70% 90% at 85% 30%, rgba(56,189,248,0.22), transparent 55%), radial-gradient(ellipse 60% 80% at 10% 80%, rgba(2,40,89,0.7), transparent 60%)",
+      meshOverlay: "radial-gradient(ellipse 70% 90% at 85% 30%, rgba(16,185,129,0.28), transparent 55%), radial-gradient(ellipse 60% 80% at 10% 80%, rgba(2,40,89,0.7), transparent 60%)",
       order: 3,
       fr: {
         title: "Orchestration Multi-Agents",
@@ -218,8 +218,9 @@ async function seed() {
       index: "04",
       iconKey: "BarChart3",
       bgImagePath: "/services/bg-05-bi.webp",
-      meshOverlay: "radial-gradient(ellipse 70% 90% at 25% 20%, rgba(242,109,61,0.28), transparent 55%), radial-gradient(ellipse 60% 80% at 80% 85%, rgba(168,85,247,0.18), transparent 60%)",
+      meshOverlay: "radial-gradient(ellipse 70% 90% at 25% 20%, rgba(168,85,247,0.28), transparent 55%), radial-gradient(ellipse 60% 80% at 80% 85%, rgba(2,40,89,0.7), transparent 60%)",
       order: 4,
+
       fr: {
         title: "Data & Décision Augmentée",
         tagline: "Data & décision augmentée",
@@ -1044,22 +1045,23 @@ async function seed() {
   await db.seoMetadataTranslation.upsert({
     where: { seoMetadataId_locale: { seoMetadataId: seoMeta.id, locale: "fr" } },
     update: {
-      title: "Analyticatech — Cabinet d'Architecture IA & Transformation",
-      description: "Cabinet de conseil et d'ingénierie spécialisé dans l'Intelligence Artificielle, les Systèmes Agentiques et l'Automatisation critique.",
-      keywords: ["IA", "Agents IA", "LangChain", "RAG", "Transformation Digitale", "BI", "Automatisation", "n8n"],
-      ogTitle: "Analyticatech — Architecture IA & Systems Agentiques",
-      ogDescription: "Cabinet de conseil et d'ingénierie IA, automatisation et cloud-native pour systèmes critiques.",
+      title: "Analyticatech — Architectures IA, Automatisation & Data d'Entreprise",
+      description: "Cabinet de conseil et d'ingénierie spécialisé dans l'Intelligence Artificielle, les Systèmes Agentiques, l'Automatisation de Workflows et la Data Décisionnelle.",
+      keywords: ["IA", "Agents IA", "LangChain", "RAG", "Data", "BI", "Automatisation", "n8n"],
+      ogTitle: "Analyticatech — Architectures IA, Automatisation & Data d'Entreprise",
+      ogDescription: "Cabinet de conseil et d'ingénierie IA, automatisation critique et architectures data pour entreprises.",
     },
     create: {
       seoMetadataId: seoMeta.id,
       locale: "fr",
-      title: "Analyticatech — Cabinet d'Architecture IA & Transformation",
-      description: "Cabinet de conseil et d'ingénierie spécialisé dans l'Intelligence Artificielle, les Systèmes Agentiques et l'Automatisation critique.",
-      keywords: ["IA", "Agents IA", "LangChain", "RAG", "Transformation Digitale", "BI", "Automatisation", "n8n"],
-      ogTitle: "Analyticatech — Architecture IA & Systems Agentiques",
-      ogDescription: "Cabinet de conseil et d'ingénierie IA, automatisation et cloud-native pour systèmes critiques.",
+      title: "Analyticatech — Architectures IA, Automatisation & Data d'Entreprise",
+      description: "Cabinet de conseil et d'ingénierie spécialisé dans l'Intelligence Artificielle, les Systèmes Agentiques, l'Automatisation de Workflows et la Data Décisionnelle.",
+      keywords: ["IA", "Agents IA", "LangChain", "RAG", "Data", "BI", "Automatisation", "n8n"],
+      ogTitle: "Analyticatech — Architectures IA, Automatisation & Data d'Entreprise",
+      ogDescription: "Cabinet de conseil et d'ingénierie IA, automatisation critique et architectures data pour entreprises.",
     },
   });
+
 
   await db.seoMetadataTranslation.upsert({
     where: { seoMetadataId_locale: { seoMetadataId: seoMeta.id, locale: "en" } },

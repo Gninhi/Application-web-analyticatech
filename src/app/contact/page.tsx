@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import { getStaticPageMetadata } from "@/lib/services/page-meta";
 import { ContactRoute } from "@/components/routes/ContactRoute";
-import type { Locale } from "@/types/content";
+
+export const revalidate = 86400; // 24h
 
 export async function generateMetadata(): Promise<Metadata> {
-  const locale = (((await cookies()).get("NEXT_LOCALE")?.value) as Locale) || "fr";
-  return getStaticPageMetadata(locale, "contact");
+  return getStaticPageMetadata("fr", "contact");
 }
 
-/** Route "/contact" — vue Contact. */
+/** Route "/contact" — vue Contact (statique / ISR 24h). */
 export default function ContactPage() {
   return <ContactRoute />;
 }

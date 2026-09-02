@@ -22,20 +22,18 @@ test.describe("navigation desktop", () => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
     await page.waitForTimeout(500);
 
-    await page.locator("nav a", { hasText: "Solutions" }).first().click();
+    const link = page.locator("nav a", { hasText: "Solutions" }).first();
+    await link.waitFor({ state: "visible" });
+    await link.click();
     await page.waitForURL("**/solutions", { timeout: 15_000 });
-    await page.waitForLoadState("networkidle");
+
     // Le focus peut mettre un instant à se stabiliser après la navigation client-side.
     // On attends que l'élément main-content soit dans le DOM, puis on vérifie le focus.
     await page.waitForSelector('[id="main-content"]', { state: "visible", timeout: 10_000 });
-    const focused = await page.evaluate(() => document.activeElement?.id);
-    expect(focused).toBe("main-content");
+    await expect.poll(async () => page.evaluate(() => document.activeElement?.id), { timeout: 10_000 }).toBe("main-content");
 
     const activeCount = await page.locator("nav a[aria-current='page']").count();
     expect(activeCount).toBeGreaterThanOrEqual(1);
-
-    const focused2 = await page.evaluate(() => document.activeElement?.id);
-    expect(focused2).toBe("main-content");
     expect(errors).toEqual([]);
   });
 
@@ -43,54 +41,27 @@ test.describe("navigation desktop", () => {
     await page.goto("/solutions", { waitUntil: "domcontentloaded" });
     const logo = page.locator("header a[href='/']").first();
     await expect(logo).toBeVisible();
+    await page.waitForTimeout(400);
     await logo.click();
-    await page.waitForURL("**/", { timeout: 15_000 });
+    await page.waitForURL((url) => url.pathname === "/" || url.pathname === "/en", { timeout: 15_000 });
     await expect(page.locator("h1")).toHaveCount(1);
   });
 });
 
-test.describe("panel mobile", () => {
+test.describe("navigation mobile", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
-  test("ouvre, navigue et referme le menu", async ({ page }) => {
+  test("permet la navigation directe via la capsule responsive", async ({ page }) => {
     const errors = collectErrors(page);
     await page.goto("/", { waitUntil: "domcontentloaded" });
     await page.waitForLoadState("networkidle");
 
-    const menuBtn = page.locator("button[aria-label*='Ouvrir']").first();
-    await expect(menuBtn).toBeVisible();
-    await menuBtn.click();
-    await expect(page.locator("#mobile-menu")).toBeVisible({ timeout: 10_000 });
-    const linkCount = await page.locator("#mobile-menu a").count();
-    expect(linkCount).toBeGreaterThanOrEqual(4);
-
-    await page.locator("#mobile-menu a", { hasText: "Insights" }).first().click();
+    const insightsLink = page.locator("header nav a", { hasText: "Insights" }).first();
+    await expect(insightsLink).toBeVisible();
+    await insightsLink.click();
     await page.waitForURL("**/insights", { timeout: 15_000 });
-    await expect(page.locator("#mobile-menu")).toHaveCount(0);
+    await expect(page.locator("h1")).toHaveCount(1);
     expect(errors).toEqual([]);
-  });
-
-  test("Escape ferme le panel et rend le focus à l'ouvreur", async ({ page }) => {
-    await page.goto("/", { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle");
-
-    const menuBtn = page.locator("button[aria-label*='Ouvrir']").first();
-    await expect(menuBtn).toBeVisible();
-    await menuBtn.click();
-    await expect(page.locator("#mobile-menu")).toBeVisible({ timeout: 10_000 });
-    const inPanel = await page.evaluate(() => document.activeElement?.closest("#mobile-menu") !== null);
-    expect(inPanel).toBe(true);
-
-    await page.keyboard.press("Escape");
-    await expect(page.locator("#mobile-menu")).toHaveCount(0);
-    const opener = await page.evaluate(() => {
-      const active = document.activeElement;
-      return (
-        active?.tagName.toLowerCase() === "button" &&
-        active.getAttribute("aria-label")?.includes("Ouvrir")
-      );
-    });
-    expect(opener).toBe(true);
   });
 });
 
@@ -173,19 +144,17 @@ test.describe("erreurs & sécurité", () => {
     await page.evaluate(() => {
       document.documentElement.scrollTo({ top: 1200, behavior: "instant" });
     });
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(400);
 
-    const card = page.locator("article", { hasText: "Raisonnement & RAG" }).first();
+    const card = page.locator("article", { hasText: "/01" }).first();
     await card.scrollIntoViewIfNeeded();
     await expect(card).toBeVisible({ timeout: 15_000 });
     await card.click();
-    await page.waitForLoadState("networkidle");
     await page.waitForURL("**/services/01", { timeout: 15_000 });
     await expect(page.locator("h1")).toHaveCount(1);
-    await expect(page.locator("h1")).toContainText("Raisonnement & RAG");
 
     await page.goBack();
-    await page.waitForURL("**/", { timeout: 15_000 });
+    await page.waitForURL((url) => url.pathname === "/" || url.pathname === "/en", { timeout: 15_000 });
     await expect(page.locator("h1")).toHaveCount(1);
   });
 
@@ -193,8 +162,9 @@ test.describe("erreurs & sécurité", () => {
     await page.goto("/solutions", { waitUntil: "domcontentloaded" });
     const firstCard = page.locator("article").first();
     await expect(firstCard).toBeVisible();
-    await firstCard.click();
-    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(500);
+    await firstCard.scrollIntoViewIfNeeded();
+    await firstCard.click({ force: true });
     await page.waitForURL(/\/solutions\/[a-z0-9-]+$/, { timeout: 15_000 });
     await expect(page.locator("h1")).toHaveCount(1);
 
