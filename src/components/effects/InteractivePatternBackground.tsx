@@ -64,38 +64,38 @@ export function InteractivePatternBackground({
     };
 
     const updatePosition = () => {
-      // Interpolation fluide (easing) pour un mouvement réactif et doux
+      // Interpolation fluide (easing)
       currentX += (targetX - currentX) * 0.15;
       currentY += (targetY - currentY) * 0.15;
 
-      container.style.setProperty("--mouse-x", `${currentX}px`);
-      container.style.setProperty("--mouse-y", `${currentY}px`);
+      if (glow) {
+        glow.style.transform = `translate3d(${currentX - glowRadius}px, ${currentY - glowRadius}px, 0)`;
+      }
 
-      // Continue tant que le curseur est présent dans la fenêtre.
-      if (running) animationFrameId = requestAnimationFrame(updatePosition);
+      // Arrêt automatique dès que le halo a rejoint le curseur (libère le fil principal pour l'INP)
+      const dist = Math.hypot(targetX - currentX, targetY - currentY);
+      if (running && dist > 0.5) {
+        animationFrameId = requestAnimationFrame(updatePosition);
+      } else {
+        running = false;
+      }
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    window.addEventListener("mouseleave", handleMouseLeave);
+    window.addEventListener("mouseleave", handleMouseLeave, { passive: true });
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseleave", handleMouseLeave);
       if (running) cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [glowRadius]);
 
   return (
     <div
       ref={containerRef}
       className={cn("fixed inset-0 -z-10 pointer-events-none overflow-hidden", className)}
       aria-hidden="true"
-      style={
-        {
-          "--mouse-x": "-1000px",
-          "--mouse-y": "-1000px",
-        } as React.CSSProperties
-      }
     >
       {/* 1. Dégradé de fond principal */}
       <div className="absolute inset-0 theme-bg-gradient" />
@@ -119,24 +119,19 @@ export function InteractivePatternBackground({
         }}
       />
 
-      {/* 4. Halo lumineux radial qui suit la souris en temps réel */}
+      {/* 4. Halo lumineux radial accéléré par le GPU (translate3d sans repaint CPU) */}
       <div
         ref={glowRef}
-        className="absolute inset-0 transition-opacity duration-300"
+        className="absolute top-0 left-0 pointer-events-none transition-opacity duration-300 will-change-transform"
         style={{
-          background: `radial-gradient(${glowRadius}px circle at var(--mouse-x) var(--mouse-y), rgba(242, 109, 61, 0.22), var(--halo-blue) 45%, transparent 75%)`,
+          width: `${glowRadius * 2}px`,
+          height: `${glowRadius * 2}px`,
+          transform: "translate3d(-1000px, -1000px, 0)",
+          background: `radial-gradient(circle, rgba(242, 109, 61, 0.20) 0%, var(--halo-blue) 42%, transparent 70%)`,
         }}
       />
 
-      {/* 5. Second halo de profondeur (bleu cyan réactif) */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(${glowRadius * 1.4}px circle at var(--mouse-x) var(--mouse-y), var(--halo-blue), transparent 70%)`,
-        }}
-      />
-
-      {/* 6. Voile pour assurer un contraste et une lisibilité parfaite des cartes */}
+      {/* 5. Voile pour assurer un contraste et une lisibilité parfaite des cartes */}
       <div className="absolute inset-0 theme-overlay" />
     </div>
   );

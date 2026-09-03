@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { headers, cookies } from "next/headers";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
-import Script from "next/script";
 import { ThemeProvider } from "@/components/branding/ThemeProvider";
 import "./globals.css";
 import { GlobalErrorBoundary } from "@/components/system/GlobalErrorBoundary";
@@ -170,10 +169,6 @@ export default async function RootLayout({
   return (
     <html lang={locale} className="dark" suppressHydrationWarning>
       <head>
-        {/* Preconnect & DNS-prefetch pour les ressources critiques externes */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         {/* Script d'init du thème synchrone : garantit 0 FOUC / flash blanc au rechargement */}
         <script
           nonce={nonce}
@@ -184,12 +179,6 @@ export default async function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <Script
-          id="theme-init"
-          strategy="beforeInteractive"
-          nonce={nonce}
-          dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
-        />
         <ThemeProvider>
           <GlobalErrorBoundary>
             <SiteShell content={content}>{children}</SiteShell>
