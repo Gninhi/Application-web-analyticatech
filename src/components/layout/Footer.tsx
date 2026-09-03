@@ -13,6 +13,7 @@ import { Logo } from "@/components/branding/Logo";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
+import { isValidSocialUrl } from "@/lib/content/site";
 
 const SOCIAL_ICONS = { Linkedin, Twitter, Github };
 
@@ -175,21 +176,23 @@ export function Footer() {
                 { label: "LinkedIn", url: siteConfig.socialLinkedin, icon: "Linkedin" },
                 { label: "Twitter / X", url: siteConfig.socialTwitter, icon: "Twitter" },
                 { label: "GitHub", url: siteConfig.socialGithub, icon: "Github" },
-              ].filter((s) => s.url).map((social) => {
-                const Icon = SOCIAL_ICONS[social.icon as keyof typeof SOCIAL_ICONS];
-                return (
-                  <a
-                    key={social.label}
-                    href={social.url ?? "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg glass text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] transition-colors"
-                    aria-label={social.label}
-                  >
-                    <Icon className="h-4 w-4" aria-hidden />
-                  </a>
-                );
-              })}
+              ]
+                .filter((s): s is { label: string; url: string; icon: string } => isValidSocialUrl(s.url))
+                .map((social) => {
+                  const Icon = SOCIAL_ICONS[social.icon as keyof typeof SOCIAL_ICONS];
+                  return (
+                    <a
+                      key={social.label}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-9 w-9 items-center justify-center rounded-lg glass text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] transition-colors"
+                      aria-label={social.label}
+                    >
+                      <Icon className="h-4 w-4" aria-hidden />
+                    </a>
+                  );
+                })}
             </div>
           </div>
         </div>

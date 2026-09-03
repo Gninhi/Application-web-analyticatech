@@ -93,3 +93,51 @@ export function useScrollVisibility(threshold: number = SCROLL_THRESHOLDS.backTo
 
   return visible;
 }
+
+/**
+ * useScrollProgress — hook pour suivre la progression du scroll (0 à 100%)
+ * et la visibilité au-delà d'un seuil.
+ * Throttle via requestAnimationFrame avec bailout React pour éviter les re-renders inutiles.
+ */
+export function useScrollProgress(threshold: number = SCROLL_THRESHOLDS.backToTop) {
+  const [data, setData] = useState<{ progress: number; visible: boolean }>({
+    progress: 0,
+    visible: false,
+  });
+
+  useEffect(() => {
+    let ticking = false;
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const currentY = window.scrollY;
+        const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const currentProgress = totalHeight > 0
+          ? Math.min(100, Math.max(0, Math.round((currentY / totalHeight) * 100)))
+          : 0;
+        const isVisible = currentY > threshold;
+
+        setData((prev) => {
+          if (prev.visible === isVisible && prev.progress === currentProgress) {
+            return prev;
+          }
+          return { progress: currentProgress, visible: isVisible };
+        });
+
+        ticking = false;
+      });
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [threshold]);
+
+  return data;
+}

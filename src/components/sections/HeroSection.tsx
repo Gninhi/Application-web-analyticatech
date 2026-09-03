@@ -7,6 +7,7 @@ import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { SectionContainer } from "@/components/ui/SectionContainer";
 import { Button } from "@/components/ui/button";
+import { KEY_STATS_CONFIG } from "@/data/stats";
 
 interface HeroSectionProps {
   onNavigate: (view: ViewKey) => void;
@@ -201,15 +202,19 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
           <div className="mt-12 pt-6 border-t border-black/5 dark:border-white/5 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-mono uppercase tracking-wider">
             <span className="flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden="true" />
-              {locale === "en" ? "48+ deployed missions" : "48+ missions déployées"}
+              {locale === "en"
+                ? `${KEY_STATS_CONFIG.missions.value} deployed missions`
+                : `${KEY_STATS_CONFIG.missions.value} missions déployées`}
             </span>
             <span className="hidden sm:inline text-slate-300 dark:text-slate-700">•</span>
             <span className="flex items-center gap-1.5">
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" aria-hidden="true" />
-              {locale === "en" ? "99.9% availability" : "99.9% de disponibilité"}
+              {locale === "en"
+                ? `${KEY_STATS_CONFIG.uptime.value} availability`
+                : `${KEY_STATS_CONFIG.uptime.value} de disponibilité`}
             </span>
             <span className="hidden sm:inline text-slate-300 dark:text-slate-700">•</span>
-            <span>{locale === "en" ? "SecNumCloud Hosting" : "Hébergement SecNumCloud"}</span>
+            <span>{locale === "en" ? "SecNumCloud Ready" : "Compatible SecNumCloud"}</span>
           </div>
         </div>
       </SectionContainer>

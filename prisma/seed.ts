@@ -20,9 +20,9 @@ async function seed() {
       postalCode: "75008",
       country: "France",
       countryCode: "FR",
-      socialLinkedin: "https://www.linkedin.com",
-      socialTwitter: "https://twitter.com",
-      socialGithub: "https://github.com",
+      socialLinkedin: "https://www.linkedin.com/company/102606877",
+      socialTwitter: null,
+      socialGithub: null,
       geoLat: 48.8688,
       geoLng: 2.3314,
     },
@@ -38,9 +38,9 @@ async function seed() {
       postalCode: "75008",
       country: "France",
       countryCode: "FR",
-      socialLinkedin: "https://www.linkedin.com",
-      socialTwitter: "https://twitter.com",
-      socialGithub: "https://github.com",
+      socialLinkedin: "https://www.linkedin.com/company/102606877",
+      socialTwitter: null,
+      socialGithub: null,
       geoLat: 48.8688,
       geoLng: 2.3314,
     },
@@ -387,16 +387,16 @@ async function seed() {
       slug: "public-data",
       sectorFr: "Public",
       sectorEn: "Public Sector",
-      impact: "SecNumCloud · temps réel",
+      impact: "Cloud Souverain · temps réel",
       order: 6,
-      tags: ["Souverain", "SecNumCloud", "Open Data"],
+      tags: ["Souverain", "SecNumCloud Ready", "Open Data"],
       fr: {
         title: "Plateforme data souveraine secteur public",
-        summary: "Entrepôt souverain conforme SecNumCloud pour le rapprochement de données administratives et la production d'indicateurs de politique publique en continu.",
+        summary: "Entrepôt souverain déployable sur cloud qualifié SecNumCloud pour le rapprochement de données administratives et la production d'indicateurs de politique publique en continu.",
       },
       en: {
         title: "Sovereign Data Platform for the Public Sector",
-        summary: "SecNumCloud-compliant sovereign data warehouse for cross-referencing administrative data and continuously producing public policy indicators.",
+        summary: "SecNumCloud-deployable sovereign data warehouse for cross-referencing administrative data and continuously producing public policy indicators.",
       },
     },
   ];
@@ -463,7 +463,7 @@ async function seed() {
       categoryKey: "IA",
       date: new Date("2025-09-14"),
       readingTime: "11 min",
-      author: "L. Marchand",
+      author: "Martial GNINHI",
       tags: ["Agents", "LangGraph", "Production"],
       fr: {
         title: "Industrialiser les agents IA : du POC au système agentique en production",
@@ -479,7 +479,7 @@ async function seed() {
       categoryKey: "IA",
       date: new Date("2025-08-28"),
       readingTime: "9 min",
-      author: "S. Benali",
+      author: "Martial GNINHI",
       tags: ["RAG", "Évaluation", "LLM"],
       fr: {
         title: "Évaluer un système RAG : métriques, biais et garde-fous",
@@ -495,7 +495,7 @@ async function seed() {
       categoryKey: "Automatisation",
       date: new Date("2025-08-12"),
       readingTime: "7 min",
-      author: "T. Nguyen",
+      author: "Martial GNINHI",
       tags: ["n8n", "Temporal", "Workflows"],
       fr: {
         title: "n8n vs Temporal : choisir son orchestrateur d'automatisation",
@@ -511,7 +511,7 @@ async function seed() {
       categoryKey: "BI",
       date: new Date("2025-07-30"),
       readingTime: "8 min",
-      author: "C. Roth",
+      author: "Martial GNINHI",
       tags: ["dbt", "Semantic", "Power BI"],
       fr: {
         title: "La couche sémantique : le chaînon manquant de votre BI",
@@ -527,7 +527,7 @@ async function seed() {
       categoryKey: "Architecture",
       date: new Date("2025-07-15"),
       readingTime: "12 min",
-      author: "L. Marchand",
+      author: "Martial GNINHI",
       tags: ["Event-driven", "Kafka", "Agents"],
       fr: {
         title: "Architecture event-driven pour systèmes multi-agents",
@@ -543,7 +543,7 @@ async function seed() {
       categoryKey: "Architecture",
       date: new Date("2025-06-29"),
       readingTime: "6 min",
-      author: "T. Nguyen",
+      author: "Martial GNINHI",
       tags: ["FinOps", "Kubernetes", "Cloud"],
       fr: {
         title: "FinOps cloud-native : réduire sa facture sans sacrifier l'uptime",
@@ -613,7 +613,7 @@ async function seed() {
       },
       features: [
         { fr: "Détection multi-menaces simultanée", en: "Simultaneous multi-threat detection" },
-        { fr: "Monitoring 24/7 des LLM en production", en: "24/7 monitoring of production LLMs" },
+        { fr: "Monitoring continu des LLM en production", en: "Continuous monitoring of production LLMs" },
         { fr: "Alerting configurable par criticité", en: "Configurable alerting by criticality" },
       ],
     },
@@ -725,12 +725,12 @@ async function seed() {
       author: "N. Haddad",
       order: 3,
       fr: {
-        quote: "Une plateforme data souveraine livrée en 4 mois, conforme SecNumCloud. Fini les chiffres contradictoires entre directions : une seule source de vérité.",
+        quote: "Une plateforme data souveraine livrée en 4 mois, hébergée sur cloud qualifié SecNumCloud. Fini les chiffres contradictoires entre directions : une seule source de vérité.",
         role: "DSI Secteur Public",
         company: "Collectivité Territoriale",
       },
       en: {
-        quote: "A sovereign data platform delivered in 4 months, SecNumCloud-compliant. No more contradictory figures across departments: a single source of truth.",
+        quote: "A sovereign data platform delivered in 4 months, hosted on a SecNumCloud-qualified cloud. No more contradictory figures across departments: a single source of truth.",
         role: "Public Sector CIO",
         company: "Local Authority",
       },
@@ -881,8 +881,8 @@ async function seed() {
     },
     {
       iconKey: "Users", order: 4,
-      fr: { title: "Souveraineté", description: "Vos données restent les vôtres. Hébergement SecNumCloud, code ouvert, aucune dépendance fournisseur." },
-      en: { title: "Sovereignty", description: "Your data stays yours. SecNumCloud hosting, open code, zero vendor lock-in." },
+      fr: { title: "Souveraineté", description: "Vos données restent les vôtres. Déploiement sur clouds souverains qualifiés SecNumCloud, code ouvert, aucune dépendance fournisseur." },
+      en: { title: "Sovereignty", description: "Your data stays yours. Deployment on SecNumCloud-qualified clouds, open code, zero vendor lock-in." },
     },
   ];
 
@@ -922,8 +922,8 @@ async function seed() {
     },
     {
       iconKey: "Workflow", order: 4,
-      fr: { label: "04 · Run & Scale", description: "Supervision 24/7, finops, amélioration continue" },
-      en: { label: "04 · Run & Scale", description: "24/7 monitoring, FinOps, continuous improvement" },
+      fr: { label: "04 · Run & Scale", description: "Supervision continue, finops, amélioration continue" },
+      en: { label: "04 · Run & Scale", description: "Continuous monitoring, FinOps, continuous improvement" },
     },
   ];
 
@@ -990,18 +990,47 @@ async function seed() {
   const legalSections = [
     {
       order: 1,
-      fr: { heading: "1. Éditeur du site", body: "Analyticatech\n60 rue François 1er, 75008 Paris\nEmail : contact@analyticatech.fr\nTéléphone : +33 7 68 61 13 10" },
-      en: { heading: "1. Site Publisher", body: "Analyticatech\n60 rue François 1er, 75008 Paris\nEmail: contact@analyticatech.fr\nPhone: +33 7 68 61 13 10" },
+      fr: {
+        heading: "1. Éditeur du site",
+        body: "Le site https://analyticatech.fr est édité par la société Analyticatech, société par actions simplifiée (SAS) au capital de 1 000,00 €.\nSiège social réel : 60 rue François 1er, 75008 Paris, France.\nImmatriculation : SIREN 984 609 198 — SIRET 984 609 198 00010 (RCS Paris).\nNuméro de TVA intracommunautaire : FR96984609198.\nDirecteur de la publication : Martial GNINHI, en sa qualité de Président de la SAS.\nActivité exercée : Conseil en systèmes et logiciels informatiques (Code NAF/APE : 62.02A).",
+      },
+      en: {
+        heading: "1. Site Publisher",
+        body: "The website https://analyticatech.fr is published by Analyticatech, SAS with share capital of €1,000.00.\nRegistered office: 60 rue François 1er, 75008 Paris, France.\nRegistration: SIREN 984 609 198 — SIRET 984 609 198 00010 (RCS Paris).\nVAT Number: FR96984609198.\nPublishing Director: Martial GNINHI, as President.\nBusiness activity: Computer systems and software consulting (NAF/APE: 62.02A).",
+      },
     },
     {
       order: 2,
-      fr: { heading: "2. Hébergement", body: "Le site est hébergé sur une infrastructure cloud conforme SecNumCloud, située en Union Européenne. Les données ne quittent jamais le territoire européen." },
-      en: { heading: "2. Hosting", body: "The website is hosted on a SecNumCloud-compliant cloud infrastructure located within the European Union." },
+      fr: {
+        heading: "2. Hébergeur du site web",
+        body: "Hébergement du site internet vitrine : Hostinger (Hostinger International Ltd., 61 Lordou Vironos Street, 6023 Larnaca, Chypre — https://www.hostinger.fr/contact).\n\nDistinction essentielle avec les données clients : L'hébergement web susmentionné est dédié exclusivement à la diffusion publique du site vitrine. Il est strictement distinct et étanche des infrastructures cloud souveraines (SecNumCloud, VPC privés clients, ISO 27001) hébergeant et traitant les données clients dans le cadre de nos missions de conseil en intelligence artificielle et data, régies par des accords de traitement de données (DPA) et de confidentialité (NDA).",
+      },
+      en: {
+        heading: "2. Website Hosting Provider",
+        body: "Showcase website hosting provider: Hostinger (Hostinger International Ltd., 61 Lordou Vironos Street, 6023 Larnaca, Cyprus — https://www.hostinger.fr/contact).\n\nKey distinction with client mission data: Public website hosting is strictly decoupled and isolated from sovereign enterprise cloud infrastructures (SecNumCloud, client VPCs, ISO 27001) hosting and processing client data for AI consulting engagements, governed by bespoke DPAs and NDAs.",
+      },
     },
     {
       order: 3,
-      fr: { heading: "3. Propriété intellectuelle", body: "L'ensemble des contenus présents sur ce site est la propriété exclusive d'Analyticatech. Toute reproduction sans autorisation est interdite." },
-      en: { heading: "3. Intellectual Property", body: "All content on this site is the exclusive property of Analyticatech. Any unauthorized reproduction is strictly prohibited." },
+      fr: {
+        heading: "3. Propriété intellectuelle",
+        body: "L'ensemble des éléments constituant ce site (architecture, textes, articles, codes, composants graphiques, visualisations, marques et logos) est la propriété exclusive d'Analyticatech ou fait l'objet d'une autorisation d'exploitation. Toute reproduction, représentation, extraction ou diffusion, totale ou partielle, sans accord écrit préalable est interdite (articles L. 111-1 et suivants du Code de la Propriété Intellectuelle). Conformément à l'article L. 122-5-3 du CPI, Analyticatech s'oppose expressément à toute fouille automatisée de textes et de données (TDM) à des fins d'entraînement d'IA tierces.",
+      },
+      en: {
+        heading: "3. Intellectual Property",
+        body: "All contents of this site (architecture, copy, codes, visuals, graphics, logos) are the exclusive property of Analyticatech. Any unauthorized reproduction, scraping or representation is prohibited under French Intellectual Property law. Analyticatech expressly opts out of text and data mining (TDM) for unauthorized AI training.",
+      },
+    },
+    {
+      order: 4,
+      fr: {
+        heading: "4. Contact",
+        body: "Pour toute demande légale, information ou réclamation : Email : contact@analyticatech.fr | Téléphone : +33 7 68 61 13 10 | Adresse : 60 rue François 1er, 75008 Paris, France | Formulaire en ligne accessible sur la page /contact. Réponse sous 24 à 48 heures ouvrées.",
+      },
+      en: {
+        heading: "4. Contact",
+        body: "For any legal inquiries, corporate information or claims: Email: contact@analyticatech.fr | Phone: +33 7 68 61 13 10 | Address: 60 rue François 1er, 75008 Paris, France | Secure online form at /contact.",
+      },
     },
   ];
 

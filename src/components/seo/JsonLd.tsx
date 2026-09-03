@@ -2,6 +2,9 @@
 
 import Script from "next/script";
 import { useAppContentOptional } from "@/components/providers/ContentProvider";
+import { KEY_STATS_CONFIG } from "@/data/stats";
+
+import { isValidSocialUrl } from "@/lib/content/site";
 
 /**
  * JsonLd — injecte le structured data (JSON-LD) via next/script.
@@ -25,7 +28,7 @@ export function JsonLd() {
     siteConfig.socialLinkedin,
     siteConfig.socialTwitter,
     siteConfig.socialGithub,
-  ].filter(Boolean) as string[];
+  ].filter((url): url is string => isValidSocialUrl(url));
 
   const schemas: Record<string, unknown>[] = [
     // Organization
@@ -127,10 +130,10 @@ export function JsonLd() {
         },
         {
           "@type": "Question",
-          name: "Analyticatech est-il conforme RGPD et SecNumCloud ?",
+          name: "Analyticatech est-il conforme RGPD et compatible cloud souverain ?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Oui. Analyticatech est conforme ISO 27001, SecNumCloud, RGPD, SOC 2, HDS et EN 301 549. Les données sont chiffrées bout-en-bout (TLS 1.3, AES-256) et hébergées en Union Européenne.",
+            text: "Oui. Analyticatech applique une stricte conformité RGPD, un chiffrement bout-en-bout (TLS 1.3, AES-256) et conçoit des architectures déployables sur des infrastructures souveraines européennes qualifiées SecNumCloud.",
           },
         },
         {
@@ -138,7 +141,7 @@ export function JsonLd() {
           name: "Quel est le délai de réponse d'Analyticatech ?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Premier accusé de réception sous 2h ouvrées, réponse d'un architecte sous 24h ouvrées, atelier de cadrage proposé sous 5 jours. Disponibilité 24/7 pour les urgences critiques.",
+            text: "Premier accusé de réception sous 2h ouvrées, réponse d'un architecte sous 24h ouvrées, atelier de cadrage proposé sous 5 jours. Équipe joignable du lundi au vendredi de 9h30 à 17h30.",
           },
         },
         {
@@ -146,7 +149,7 @@ export function JsonLd() {
           name: "Quels sont les résultats mesurables d'Analyticatech ?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "48+ missions livrées, 35% de coûts réduits en moyenne, 99.9% d'uptime plateforme, 4.9/5 de satisfaction C-Level, 48 processus automatisés, 38 agents IA en production, 420h économisées par mois.",
+            text: `${KEY_STATS_CONFIG.missions.value} missions livrées, ${KEY_STATS_CONFIG.costReduction.value} de coûts réduits en moyenne, ${KEY_STATS_CONFIG.uptime.value} d'uptime plateforme, ${KEY_STATS_CONFIG.satisfaction.value} de satisfaction C-Level, 48 processus automatisés, 38 agents IA en production, 420h économisées par mois.`,
           },
         },
         {
@@ -154,7 +157,7 @@ export function JsonLd() {
           name: "Comment se déroule une mission avec Analyticatech ?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "4 phases : Discovery (atelier de cadrage, architecture cible), Build (sprints de 2 semaines, démos en production), Hardening (audit sécurité, tests de charge, conformité RGPD), Run & Scale (supervision 24/7, finops, amélioration continue).",
+            text: "4 phases : Discovery (atelier de cadrage, architecture cible), Build (sprints de 2 semaines, démos en production), Hardening (audit sécurité, tests de charge, conformité RGPD), Run & Scale (supervision continue, finops, amélioration continue).",
           },
         },
       ],

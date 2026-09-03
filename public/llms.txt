@@ -23,24 +23,24 @@
 
 LangChain, LangGraph, OpenAI, Pinecone, Hugging Face, vLLM, Kubernetes, Terraform, AWS, Azure, GitOps, Microservices, n8n, Zapier, Temporal, Apache Airflow, Make, Python, CrewAI, AutoGen, MCP, Redis, Qdrant, Power BI, dbt, Snowflake, BigQuery, Looker, Superset
 
-## Certifications & conformité
+## Conformité & Sécurité
 
-ISO 27001, SecNumCloud, RGPD, SOC 2, HDS, EN 301 549
+RGPD, Déploiements clouds souverains qualifiés SecNumCloud, Chiffrement AES-256 / TLS 1.3
 
 ## Contact
 
-- Email : contact@analyticatech.com
+- Email : contact@analyticatech.fr
 - Téléphone : +33 7 68 61 13 10
 - Adresse : 60 rue François 1er, 75008 Paris, France
-- LinkedIn : https://www.linkedin.com
-- Réponse sous 24h ouvrées
+- LinkedIn : https://www.linkedin.com/company/102606877
+- Réponse sous 24h ouvrées (Support opérationnel 9h30 - 17h30 du lundi au vendredi)
 
 ## Méthode de delivery
 
 1. Discovery : Atelier de cadrage, architecture cible, ROI projet
 2. Build : Sprints de 2 semaines, démos en production, observabilité
 3. Hardening : Audit sécurité, tests de charge, conformité RGPD
-4. Run & Scale : Supervision 24/7, finops, amélioration continue
+4. Run & Scale : Supervision continue, finops, amélioration continue
 
 ## Insights
 
@@ -53,7 +53,7 @@ ISO 27001, SecNumCloud, RGPD, SOC 2, HDS, EN 301 549
 
 ## URLs
 
-- https://analyticatech.com (FR)
-- https://analyticatech.com/en (EN)
-- https://analyticatech.com/sitemap.xml
-- https://analyticatech.com/robots.txt
+- https://analyticatech.fr (FR)
+- https://analyticatech.fr/en (EN)
+- https://analyticatech.fr/sitemap.xml
+- https://analyticatech.fr/robots.txt

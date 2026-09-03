@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { db } from "@/lib/db/client";
-import { DEFAULT_SITE_CONFIG } from "@/lib/content/site";
+import { DEFAULT_SITE_CONFIG, isValidSocialUrl } from "@/lib/content/site";
 import type { SiteConfigDTO, CompanyValueDTO, DeliveryStepDTO, ActivityLogDTO, Locale } from "@/types/content";
 import {
   FALLBACK_MARQUEE_KEYWORDS_FR,
@@ -19,6 +19,14 @@ export const getSiteConfig = cache(async (): Promise<SiteConfigDTO> => {
       where: { id: "singleton" },
     });
 
+    const envLinkedin = process.env.SOCIAL_LINKEDIN_URL || process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN_URL;
+    const envTwitter = process.env.SOCIAL_TWITTER_URL || process.env.NEXT_PUBLIC_SOCIAL_TWITTER_URL;
+    const envGithub = process.env.SOCIAL_GITHUB_URL || process.env.NEXT_PUBLIC_SOCIAL_GITHUB_URL;
+
+    const rawLinkedin = envLinkedin || config?.socialLinkedin || DEFAULT_SITE_CONFIG.socialLinkedin;
+    const rawTwitter = envTwitter || config?.socialTwitter || DEFAULT_SITE_CONFIG.socialTwitter;
+    const rawGithub = envGithub || config?.socialGithub || DEFAULT_SITE_CONFIG.socialGithub;
+
     return {
       siteName: config?.siteName || DEFAULT_SITE_CONFIG.siteName,
       url: config?.url || DEFAULT_SITE_CONFIG.url,
@@ -30,9 +38,9 @@ export const getSiteConfig = cache(async (): Promise<SiteConfigDTO> => {
       postalCode: config?.postalCode || DEFAULT_SITE_CONFIG.postalCode,
       country: config?.country || DEFAULT_SITE_CONFIG.country,
       countryCode: config?.countryCode || DEFAULT_SITE_CONFIG.countryCode,
-      socialLinkedin: config?.socialLinkedin || DEFAULT_SITE_CONFIG.socialLinkedin,
-      socialTwitter: config?.socialTwitter || DEFAULT_SITE_CONFIG.socialTwitter,
-      socialGithub: config?.socialGithub || DEFAULT_SITE_CONFIG.socialGithub,
+      socialLinkedin: isValidSocialUrl(rawLinkedin) ? rawLinkedin : null,
+      socialTwitter: isValidSocialUrl(rawTwitter) ? rawTwitter : null,
+      socialGithub: isValidSocialUrl(rawGithub) ? rawGithub : null,
       geoLat: config?.geoLat ?? DEFAULT_SITE_CONFIG.geoLat,
       geoLng: config?.geoLng ?? DEFAULT_SITE_CONFIG.geoLng,
     };

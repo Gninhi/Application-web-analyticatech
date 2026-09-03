@@ -364,7 +364,7 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
         title: "Déploiement & Run",
         description: "Mise en production progressive, supervision active des jobs et optimisation continue.",
         duration: "Continu",
-        deliverable: "Supervision 24/7 & Maintenance proactive",
+        deliverable: "Supervision continue & Maintenance proactive",
       },
     ],
     sectorCases: [
@@ -1068,7 +1068,7 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
         title: "Deployment & Proactive Run",
         description: "Gradual production rollout, active job monitoring, and continuous pipeline optimization.",
         duration: "Ongoing",
-        deliverable: "24/7 Monitoring & Proactive Maintenance",
+        deliverable: "Continuous Monitoring & Proactive Maintenance",
       },
     ],
     sectorCases: [
@@ -1241,7 +1241,7 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
         title: "Production Rollout & Run",
         description: "Deployment with complete tracing, token optimization, and continuous skill refinement.",
         duration: "Ongoing",
-        deliverable: "24/7 Supervision & Capability Evolution",
+        deliverable: "Continuous Supervision & Capability Evolution",
       },
     ],
     sectorCases: [

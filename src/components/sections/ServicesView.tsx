@@ -411,7 +411,7 @@ function ServiceDeckCard({
           sizes="100vw"
           priority={index === 0}
           loading={index === 0 ? "eager" : "lazy"}
-          quality={80}
+          quality={75}
           className="object-cover object-center"
         />
       </motion.div>

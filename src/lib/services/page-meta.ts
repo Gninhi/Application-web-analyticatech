@@ -75,7 +75,7 @@ const PAGE_COPY: Record<Locale, Record<string, { title: string; description: str
     "mentions-legales": {
       title: "Legal Notice & Corporate Information",
       description:
-        "Analyticatech regulatory information: site publisher, SecNumCloud hosting, intellectual property, and registered company details.",
+        "Analyticatech regulatory information: site publisher, web hosting, intellectual property, and registered company details.",
     },
     "a-propos": {
       title: "About Analyticatech — Autonomous Systems Engineering",

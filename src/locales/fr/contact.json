@@ -35,8 +35,8 @@
   "contact.sla.architect.v": "< 24h ouvrées",
   "contact.sla.workshop": "Atelier de cadrage proposé",
   "contact.sla.workshop.v": "< 5 jours",
-  "contact.sla.urgent": "Disponibilités d'urgence",
-  "contact.sla.urgent.v": "24/7 critique",
+  "contact.sla.urgent": "Plage de disponibilité",
+  "contact.sla.urgent.v": "9h30 - 17h30 (lun-ven)",
   "contact.confidentiality.title": "Confidentialité garantie",
   "contact.confidentiality.desc": "Vos informations sont traitées en toute confidentialité. Nous signons systématiquement un NDA avant tout échange technique détaillé. Données supprimées sous 90 jours en l'absence de suite."
 }

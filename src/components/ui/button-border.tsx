@@ -126,13 +126,3 @@ export const ButtonBorder = React.forwardRef<HTMLButtonElement, ButtonBorderProp
   }
 );
 ButtonBorder.displayName = "ButtonBorder";
-
-/** Composant de démonstration fourni */
-export function ButtonDemo() {
-  return (
-    <div className="flex gap-3 items-center">
-      <Button variant="outline">Action 1</Button>
-      <Button variant="primary">Animated Border</Button>
-    </div>
-  );
-}

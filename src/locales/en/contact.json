@@ -35,8 +35,8 @@
   "contact.sla.architect.v": "< 24 business hours",
   "contact.sla.workshop": "Scoping Workshop Proposed",
   "contact.sla.workshop.v": "< 5 business days",
-  "contact.sla.urgent": "Critical Emergency Support",
-  "contact.sla.urgent.v": "24/7 Critical",
+  "contact.sla.urgent": "Operating Hours & Support",
+  "contact.sla.urgent.v": "9:30 AM - 5:30 PM (Mon-Fri)",
   "contact.confidentiality.title": "Guaranteed Confidentiality",
   "contact.confidentiality.desc": "Your information is treated with strict confidentiality. We systematically execute a mutual NDA before any in-depth technical discussion. Data is permanently purged within 90 days if not pursued."
 }

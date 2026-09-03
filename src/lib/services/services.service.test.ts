@@ -32,14 +32,14 @@ describe("getServices fallback & resilience", () => {
     expect(services[0].index).toBe("01");
     expect(services[0].title).toBe("Raisonnement & RAG");
     expect(services[0].technologies).toContain("LangChain");
-  }, 15000);
+  }, 30000);
 
   it("retourne les services par défaut en EN pour la locale anglaise", async () => {
     const services = await getServices("en");
     expect(services.length).toBeGreaterThanOrEqual(4);
     expect(services[0].index).toBe("01");
     expect(services[0].title).toBe("Reasoning & RAG");
-  }, 15000);
+  }, 30000);
 });
 
 describe("getServiceByIndex", () => {

@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import { ArrowRight } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
-import { useAppContent } from "@/components/providers/ContentProvider";
 import { Button } from "@/components/ui/button";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { LazySection, SectionSkeleton } from "@/components/ui/LazySection";
@@ -63,7 +62,7 @@ const FaqSection = dynamic(
   { loading: () => <SectionSkeleton {...SECTION_SKELETONS.faq} /> }
 );
 
-import { FALLBACK_METRICS_FR, FALLBACK_METRICS_EN } from "@/lib/content/fallbacks";
+import { getKeyStats } from "@/data/stats";
 
 interface HomeViewProps {
   onNavigate: (view: ViewKey) => void;
@@ -72,12 +71,9 @@ interface HomeViewProps {
 
 export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
   const { t, locale } = useI18n();
-  const { metrics: DB_METRICS } = useAppContent();
 
-  // Metric stats affichées dans la section 02 Preuve rapide
-  const statsFallback = locale === "en" ? FALLBACK_METRICS_EN : FALLBACK_METRICS_FR;
-  const statsSource = DB_METRICS.length > 0 ? DB_METRICS : statsFallback;
-  const displayStats = statsSource.slice(0, 4).map((m) => ({ v: m.value, l: m.label }));
+  // Statistiques clés centralisées (Source unique de vérité : src/data/stats.ts)
+  const displayStats = getKeyStats(locale);
 
   return (
     <div className="space-y-24 md:space-y-32 pb-16">

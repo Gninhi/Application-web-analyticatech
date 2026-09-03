@@ -7,6 +7,7 @@ import "./globals.css";
 import { GlobalErrorBoundary } from "@/components/system/GlobalErrorBoundary";
 import { SiteShell } from "@/components/layout/SiteShell";
 import { getAppContent } from "@/lib/services/content.service";
+import { KEY_STATS_CONFIG } from "@/data/stats";
 import type { Locale } from "@/types/content";
 
 /* === Typographie du Design System "Corporate Cyberpunk" ===
@@ -45,8 +46,7 @@ export const metadata: Metadata = {
     template: "%s | Analyticatech",
   },
   description:
-
-    "Cabinet de conseil IA en France : architecture d'agents LLM, RAG, automatisation workflows et transformation digitale. 48+ missions livrées, 35% de coûts réduits. Experts LangChain, n8n, Power BI, SecNumCloud.",
+    `Cabinet de conseil IA en France : architecture d'agents LLM, RAG, automatisation workflows et transformation digitale. ${KEY_STATS_CONFIG.missions.value} missions livrées, ${KEY_STATS_CONFIG.costReduction.value} de coûts réduits. Experts LangChain, n8n, Power BI, Clouds Souverains (SecNumCloud).`,
   keywords: [
     // Mots-clés principaux (haute intention)
     "cabinet conseil IA",
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     "n8n automatisation",
     "Power BI dashboard",
     "agents cognitifs",
-    "IA souveraine SecNumCloud",
+    "IA souveraine compatible SecNumCloud",
     // Mots-clés sectoriels
     "IA finance",
     "IA logistique",
@@ -94,7 +94,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Analyticatech — Cabinet de conseil en IA, Agents & Automatisation",
     description:
-      "Architecture d'agents LLM, RAG, automatisation et transformation digitale. 48+ missions livrées. Experts LangChain, n8n, SecNumCloud.",
+      `Architecture d'agents LLM, RAG, automatisation et transformation digitale. ${KEY_STATS_CONFIG.missions.value} missions livrées. Experts LangChain, n8n, Clouds Souverains (SecNumCloud).`,
     siteName: "Analyticatech",
     type: "website",
     locale: "fr_FR",

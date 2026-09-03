@@ -5,6 +5,37 @@
 
 import type { SiteConfigDTO } from "@/types/content";
 
+/**
+ * Valide si une URL de réseau social correspond à un profil/compte réel
+ * et non à un nom de domaine racine générique sans identifiant ou une valeur vide.
+ */
+export function isValidSocialUrl(url?: string | null): boolean {
+  if (!url) return false;
+  const trimmed = url.trim();
+  if (!trimmed || trimmed === "#") return false;
+  // Exclure les domaines racines génériques sans handle/profil
+  const genericRoots = [
+    "https://linkedin.com",
+    "https://www.linkedin.com",
+    "http://linkedin.com",
+    "http://www.linkedin.com",
+    "https://twitter.com",
+    "https://www.twitter.com",
+    "http://twitter.com",
+    "http://www.twitter.com",
+    "https://x.com",
+    "https://www.x.com",
+    "http://x.com",
+    "http://www.x.com",
+    "https://github.com",
+    "https://www.github.com",
+    "http://github.com",
+    "http://www.github.com",
+  ];
+  const normalized = trimmed.replace(/\/+$/, "");
+  return !genericRoots.includes(normalized);
+}
+
 export const SITE_CONFIG = {
   name: "Analyticatech",
   url: "https://analyticatech.fr",
@@ -19,10 +50,31 @@ export const SITE_CONFIG = {
     countryCode: "FR",
   },
   social: {
-    linkedin: "https://www.linkedin.com",
-    twitter: "https://twitter.com",
-    github: "https://github.com",
+    linkedin:
+      process.env.SOCIAL_LINKEDIN_URL ||
+      process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN_URL ||
+      "https://www.linkedin.com/company/102606877",
+    twitter:
+      process.env.SOCIAL_TWITTER_URL ||
+      process.env.NEXT_PUBLIC_SOCIAL_TWITTER_URL ||
+      "",
+    github:
+      process.env.SOCIAL_GITHUB_URL ||
+      process.env.NEXT_PUBLIC_SOCIAL_GITHUB_URL ||
+      "",
   },
+} as const;
+
+/**
+ * Configuration éditoriale centralisée pour les articles et analyses sur /insights.
+ * Permet de définir l'auteur réel (ou "Équipe Analyticatech") en un seul endroit.
+ */
+export const BLOG_CONFIG = {
+  defaultAuthor:
+    process.env.BLOG_DEFAULT_AUTHOR ||
+    process.env.NEXT_PUBLIC_BLOG_DEFAULT_AUTHOR ||
+    "Martial GNINHI",
+  overrideAllAuthors: true,
 } as const;
 
 /** Config site de repli typée — source unique de vérité (miroir de SITE_CONFIG). */
@@ -37,9 +89,9 @@ export const DEFAULT_SITE_CONFIG: SiteConfigDTO = {
   postalCode: SITE_CONFIG.address.postalCode,
   country: SITE_CONFIG.address.country,
   countryCode: SITE_CONFIG.address.countryCode,
-  socialLinkedin: SITE_CONFIG.social.linkedin,
-  socialTwitter: SITE_CONFIG.social.twitter,
-  socialGithub: SITE_CONFIG.social.github,
+  socialLinkedin: isValidSocialUrl(SITE_CONFIG.social.linkedin) ? SITE_CONFIG.social.linkedin : null,
+  socialTwitter: isValidSocialUrl(SITE_CONFIG.social.twitter) ? SITE_CONFIG.social.twitter : null,
+  socialGithub: isValidSocialUrl(SITE_CONFIG.social.github) ? SITE_CONFIG.social.github : null,
   geoLat: 48.8688,
   geoLng: 2.3314,
 };

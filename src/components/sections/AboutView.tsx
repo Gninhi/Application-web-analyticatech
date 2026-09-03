@@ -13,9 +13,8 @@ import { SectionContainer } from "@/components/ui/SectionContainer";
 import {
   FALLBACK_COMPANY_VALUES_FR,
   FALLBACK_COMPANY_VALUES_EN,
-  FALLBACK_METRICS_FR,
-  FALLBACK_METRICS_EN,
 } from "@/lib/content/fallbacks";
+import { getKeyStats } from "@/data/stats";
 
 interface AboutViewProps {
   onNavigate: (view: ViewKey) => void;
@@ -25,7 +24,7 @@ const VALUE_ICONS: Record<string, LucideIcon> = { Target, Eye, Heart, Users };
 
 export function AboutView({ onNavigate }: AboutViewProps) {
   const { t, locale } = useI18n();
-  const { companyValues: DB_VALUES, metrics: DB_METRICS } = useAppContent();
+  const { companyValues: DB_VALUES } = useAppContent();
 
   const valuesFallback = locale === "en" ? FALLBACK_COMPANY_VALUES_EN : FALLBACK_COMPANY_VALUES_FR;
   const valuesSource = DB_VALUES.length > 0 ? DB_VALUES : valuesFallback;
@@ -35,9 +34,8 @@ export function AboutView({ onNavigate }: AboutViewProps) {
     description: v.description,
   }));
 
-  const statsFallback = locale === "en" ? FALLBACK_METRICS_EN : FALLBACK_METRICS_FR;
-  const statsSource = DB_METRICS.length > 0 ? DB_METRICS : statsFallback;
-  const STATS = statsSource.slice(0, 4).map((m) => ({ v: m.value, l: m.label }));
+  // Statistiques clés centralisées (Source unique de vérité : src/data/stats.ts)
+  const STATS = getKeyStats(locale);
 
   return (
     <div className="pt-28 md:pt-36 pb-20">

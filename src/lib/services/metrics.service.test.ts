@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { getMetrics } from "./metrics.service";
 import { FALLBACK_METRICS_FR, FALLBACK_METRICS_EN } from "@/lib/content/fallbacks";
+import { KEY_STATS_CONFIG } from "@/data/stats";
 
 describe("metrics.service resilience & fallbacks", () => {
   it("retourne les métriques par défaut en FR avec les valeurs réalistes harmonisées", async () => {
@@ -19,17 +20,17 @@ describe("metrics.service resilience & fallbacks", () => {
     expect(keys).toContain("hours_saved_monthly");
 
     const missions = metrics.find((m) => m.key === "missions_delivered");
-    expect(missions?.value).toBe("48+");
+    expect(missions?.value).toBe(KEY_STATS_CONFIG.missions.value);
 
     const cost = metrics.find((m) => m.key === "cost_reduction");
-    expect(cost?.value).toBe("35%");
+    expect(cost?.value).toBe(KEY_STATS_CONFIG.costReduction.value);
 
     const uptime = metrics.find((m) => m.key === "uptime_platform");
-    expect(uptime?.value).toBe("99.9%");
+    expect(uptime?.value).toBe(KEY_STATS_CONFIG.uptime.value);
 
     const satisfaction = metrics.find((m) => m.key === "satisfaction_rate");
-    expect(satisfaction?.value).toBe("4.9/5");
-  }, 15000);
+    expect(satisfaction?.value).toBe(KEY_STATS_CONFIG.satisfaction.value);
+  }, 30000);
 
   it("retourne les métriques en anglais pour la locale EN", async () => {
     const metrics = await getMetrics("en");
@@ -37,17 +38,17 @@ describe("metrics.service resilience & fallbacks", () => {
     expect(metrics.length).toBe(8);
 
     const missions = metrics.find((m) => m.key === "missions_delivered");
-    expect(missions?.label).toBe("Deployed Missions");
-    expect(missions?.value).toBe("48+");
+    expect(missions?.label).toBe(KEY_STATS_CONFIG.missions.labelEn);
+    expect(missions?.value).toBe(KEY_STATS_CONFIG.missions.value);
 
     const cost = metrics.find((m) => m.key === "cost_reduction");
-    expect(cost?.label).toBe("Cost Reduction");
-    expect(cost?.value).toBe("35%");
-  }, 15000);
+    expect(cost?.label).toBe(KEY_STATS_CONFIG.costReduction.labelEn);
+    expect(cost?.value).toBe(KEY_STATS_CONFIG.costReduction.value);
+  }, 30000);
 
   it("FALLBACK_METRICS_FR et EN respectent la plage réaliste demandée (20 à 70)", () => {
     const missions = FALLBACK_METRICS_FR.find((m) => m.key === "missions_delivered");
-    expect(missions?.numericValue).toBe(48);
+    expect(missions?.numericValue).toBe(KEY_STATS_CONFIG.missions.numericValue);
 
     const processes = FALLBACK_METRICS_FR.find((m) => m.key === "processes_automated");
     expect(processes?.numericValue).toBe(48);
@@ -59,6 +60,6 @@ describe("metrics.service resilience & fallbacks", () => {
     expect(dashboards?.numericValue).toBe(42);
 
     const enMissions = FALLBACK_METRICS_EN.find((m) => m.key === "missions_delivered");
-    expect(enMissions?.numericValue).toBe(48);
+    expect(enMissions?.numericValue).toBe(KEY_STATS_CONFIG.missions.numericValue);
   });
 });

@@ -139,7 +139,7 @@
   "demo.after.desc": "Déploiement d'un agent cognitif RAG couplé à un pipeline d'automatisation n8n et un dashboard décisionnel PowerBI avec audit-trail continu.",
   "demo.after.point1": "Temps de traitement : Réduit à < 280ms (-65%)",
   "demo.after.point2": "Taux d'erreur de re-saisie : 0% (Validation automatique)",
-  "demo.after.point3": "Visibilité exécutive : Dashboard temps réel 24/7",
+  "demo.after.point3": "Visibilité exécutive : Dashboard temps réel en continu",
   "demo.after.point4": "ROI mesuré : 3.5x sur la première année",
   "demo.after.cta": "Obtenir un diagnostic similaire",
   "demo.after.m1.label": "Temps de traitement",
