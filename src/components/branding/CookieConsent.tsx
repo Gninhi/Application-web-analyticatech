@@ -162,7 +162,7 @@ export function CookieConsent() {
       aria-live="polite"
       aria-hidden={!visible}
     >
-      <div className="glass-card rounded-2xl border border-black/15 dark:border-white/15 p-5 md:p-6 shadow-2xl bg-white/95 dark:bg-[#011C40]/95 backdrop-blur-2xl">
+      <div className="glass-card rounded-2xl border border-black/15 dark:border-white/15 p-5 md:p-6 shadow-2xl bg-white/95 dark:bg-[#06070B]/95 backdrop-blur-2xl">
         {/* En-tête avec Kicker technique // et icône dédiée */}
         <div className="flex items-start gap-3.5 mb-3.5">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 text-[#F26D3D] shadow-xs">
@@ -210,7 +210,7 @@ export function CookieConsent() {
                 {t("cookie.accept")}
               </Button>
 
-              {/* Tout refuser : Même dimension, même typographie, fond solide bleu nuit haute visibilité */}
+              {/* Tout refuser : Même dimension, même typographie, fond solide sans bleu haute visibilité */}
               <Button
                 onClick={handleRefuseAll}
                 variant="secondary"
@@ -218,7 +218,7 @@ export function CookieConsent() {
                 borderRadius="0.75rem"
                 tabIndex={visible ? 0 : -1}
                 icon={<X className="h-4 w-4" aria-hidden="true" />}
-                className="flex-1 font-mono uppercase tracking-wider text-xs font-semibold h-10 bg-[#022859] hover:bg-[#022873] text-white border border-[#3B82F6]/30 dark:bg-[#022859] dark:hover:bg-[#022873] dark:text-white dark:border-white/20 shadow-xs"
+                className="flex-1 font-mono uppercase tracking-wider text-xs font-semibold h-10 bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-300 dark:bg-white/10 dark:hover:bg-white/15 dark:text-white dark:border-white/20 shadow-xs"
               >
                 {t("cookie.refuse")}
               </Button>
@@ -283,7 +283,7 @@ export function CookieConsent() {
                     "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F26D3D] focus-visible:ring-offset-2",
                     analyticsEnabled
                       ? "bg-[#F26D3D] shadow-[0_0_12px_rgba(242,109,61,0.45)]"
-                      : "bg-slate-300 dark:bg-slate-700"
+                      : "bg-slate-300 dark:bg-white/15 dark:border dark:border-white/10"
                   )}
                 >
                   <span className="sr-only">{t("cookie.category.analytics.title")}</span>
