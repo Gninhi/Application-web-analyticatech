@@ -25,6 +25,10 @@ const Toaster = dynamic(
   () => import("@/components/ui/toaster").then((m) => m.Toaster),
   { ssr: false }
 );
+const PostHogTelemetry = dynamic(
+  () => import("@/components/telemetry/PostHogProvider").then((m) => m.PostHogTelemetry),
+  { ssr: false }
+);
 
 interface SiteShellProps {
   content: AppContentDTO;
@@ -109,6 +113,9 @@ function SiteShellInner({ children }: { children: React.ReactNode }) {
 
       {/* Bandeau consentement cookies RGPD */}
       <CookieConsent />
+
+      {/* Télémétrie PostHog RGPD (chargement conditionné au consentement) */}
+      <PostHogTelemetry />
 
       {/* Notifications toast */}
       <Toaster />

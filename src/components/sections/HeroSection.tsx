@@ -178,6 +178,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               onClick={() => onNavigate("contact")}
               variant="primary"
               size="lg"
+              data-cta="hero_evaluer_projet"
               icon={<MoveRight className="h-4 w-4" aria-hidden="true" />}
               iconPosition="right"
               className="w-full sm:w-auto"
@@ -190,6 +191,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               onClick={() => onNavigate("solutions")}
               variant="outline"
               size="lg"
+              data-cta="hero_decouvrir_solutions"
               icon={<ArrowRight className="h-4 w-4 text-slate-400 dark:text-slate-400" aria-hidden="true" />}
               iconPosition="right"
               className="w-full sm:w-auto"

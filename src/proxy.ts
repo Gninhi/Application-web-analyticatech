@@ -181,8 +181,8 @@ function buildCsp(nonce: string): string {
   if (isDev) scriptSrc.push("'unsafe-eval'");
 
   const connectSrc = isDev
-    ? "'self' ws://localhost:* http://localhost:* ws://127.0.0.1:* http://127.0.0.1:*"
-    : "'self'";
+    ? "'self' ws://localhost:* http://localhost:* ws://127.0.0.1:* http://127.0.0.1:* https://eu.i.posthog.com https://eu-assets.i.posthog.com"
+    : "'self' https://eu.i.posthog.com https://eu-assets.i.posthog.com";
 
   const frameSrc = isDev
     ? "'self' http://localhost:* http://127.0.0.1:*"
@@ -195,6 +195,8 @@ function buildCsp(nonce: string): string {
     "font-src 'self' https://fonts.gstatic.com data:",
     "img-src 'self' data: blob: https:",
     `connect-src ${connectSrc}`,
+    "worker-src 'self' blob:",
+    "child-src 'self' blob:",
     `frame-src ${frameSrc}`,
     "frame-ancestors 'none'",
     "base-uri 'self'",
@@ -215,9 +217,8 @@ function generateToken(): string {
 
 export const config = {
   matcher: [
-    // Exclusion des assets statiques et extensions de fichiers pour éviter
-    // l'émission de cookies CSRF / CSP nonces sur des ressources mises en cache Edge/CDN.
-    // Toutes les routes pages (/services, /solutions/...) et API continuent de passer par le proxy.
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt|xml|woff|woff2|ttf|eot)$).*)",
+    // Exclusion des assets statiques, extensions de fichiers et du reverse proxy télémétrie
+    // pour éviter l'application de CSRF tokens / limitations de taille sur les payloads télémétrie.
+    "/((?!_next/static|_next/image|_edge-relay|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt|xml|woff|woff2|ttf|eot)$).*)",
   ],
 };

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { contactSchema, type ContactApiResponse } from "@/lib/validation/schemas";
 import { safeFetch, FetchError } from "@/lib/http/safe-fetch";
 import { useI18n } from "@/lib/i18n/provider";
+import { getTelemetryDistinctId, trackContactFormSubmitted } from "@/instrumentation-client";
 
 export interface ContactFormState {
   prenom: string;
@@ -99,6 +100,7 @@ export function useContactForm() {
           .find((c) => c.startsWith("at-csrf="))
           ?.split("=")[1] ?? "";
 
+      const posthogId = getTelemetryDistinctId();
       const res = await safeFetch<ContactApiResponse>("/api/v1/contact", {
         method: "POST",
         body: JSON.stringify(result.data),
@@ -106,6 +108,7 @@ export function useContactForm() {
         retries: 1,
         headers: {
           "x-csrf-token": csrfToken,
+          ...(posthogId ? { "x-posthog-id": posthogId } : {}),
         },
       });
 
@@ -114,6 +117,13 @@ export function useContactForm() {
         setServerMsg(res.message);
         setReference(res.reference ?? "");
         setForm(EMPTY_CONTACT_FORM);
+
+        // Télémétrie PostHog : confirmation d'envoi sans aucune donnée personnelle
+        trackContactFormSubmitted({
+          subject_length: result.data.sujet.length,
+          has_company: Boolean(result.data.entreprise),
+          reference: res.reference,
+        });
       } else {
         setStatus("error");
         setServerMsg(res.message);

@@ -43,6 +43,23 @@ const nextConfig: NextConfig = {
   },
   // Compression Brotli / Gzip active au niveau serveur Next.js
   compress: true,
+  // Reverse proxy pour PostHog EU (contourne les bloqueurs tout en restant discret)
+  async rewrites() {
+    return [
+      {
+        source: "/_edge-relay/static/:path*",
+        destination: "https://eu-assets.i.posthog.com/static/:path*",
+      },
+      {
+        source: "/_edge-relay/:path*",
+        destination: "https://eu.i.posthog.com/:path*",
+      },
+      {
+        source: "/_edge-relay/decide",
+        destination: "https://eu.i.posthog.com/decide",
+      },
+    ];
+  },
   // Security & Cache headers globaux
   async headers() {
     return [

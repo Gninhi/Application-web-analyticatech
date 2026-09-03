@@ -19,20 +19,25 @@ interface ConsentData {
 
 /**
  * Vérifie si le consentement a déjà été donné pour la version courante.
- * Pure function, pas de setState.
  */
-function hasValidConsent(): boolean {
-  if (typeof window === "undefined") return false;
+export function getStoredConsent(): ConsentChoice | null {
+  if (typeof window === "undefined") return null;
   try {
     const stored = localStorage.getItem(CONSENT_KEY);
     if (stored) {
       const data: ConsentData = JSON.parse(stored);
-      return data.version === CONSENT_VERSION;
+      if (data.version === CONSENT_VERSION) {
+        return data.choice;
+      }
     }
   } catch {
-    // localStorage corrompu → on re-demande
+    // localStorage corrompu ou indisponible
   }
-  return false;
+  return null;
+}
+
+function hasValidConsent(): boolean {
+  return getStoredConsent() !== null;
 }
 
 /**
@@ -40,8 +45,8 @@ function hasValidConsent(): boolean {
  *
  * - S'affiche une seule fois (localStorage) tant que la version est valide.
  * - Boutons "Tout accepter" / "Tout refuser".
- * - Si refusé : aucun cookie non-essentiel n'est posé.
- * - Si accepté : autorise les cookies analytics.
+ * - Si refusé : aucun cookie non-essentiel n'est posé, télémétrie désactivée (opt-out).
+ * - Si accepté : autorise les cookies analytics et active PostHog (opt-in).
  *
  * Optimisé CSS pur (zéro runtime Framer Motion).
  */
@@ -66,6 +71,8 @@ export function CookieConsent() {
     } catch {
       // localStorage indisponible (mode privé) → on continue sans persister
     }
+    // Notification immédiate pour les services tiers (PostHog, etc.)
+    window.dispatchEvent(new CustomEvent("at:consent-change", { detail: choice }));
     setVisible(false);
   };
 

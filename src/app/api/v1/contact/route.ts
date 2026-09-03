@@ -11,6 +11,7 @@ import { isOriginAllowed } from "@/lib/security/origin";
 import { MAX_BODY_SIZE } from "@/lib/content/site";
 import { db } from "@/lib/db/client";
 import { sendContactNotification } from "@/lib/email/mailer";
+import { captureServerEvent } from "@/lib/posthog-server";
 
 /**
  * POST /api/v1/contact — endpoint sécurisé en défense en profondeur.
@@ -291,6 +292,24 @@ export async function POST(req: NextRequest) {
     reference,
     entreprise: sanitized.entreprise,
     sujet_len: sanitized.sujet.length,
+  });
+
+  // 13. Télémétrie serveur PostHog (non bloquant, ID déterministe, 0 PII)
+  const clientPosthogId = req.headers.get("x-posthog-id");
+  const serverDistinctId =
+    clientPosthogId && clientPosthogId.trim() !== "" && clientPosthogId.toLowerCase() !== "anonymous"
+      ? clientPosthogId
+      : fingerprint;
+
+  void captureServerEvent({
+    distinctId: serverDistinctId,
+    event: "contact_form_processed_server",
+    properties: {
+      reference,
+      has_company: Boolean(sanitized.entreprise),
+      subject_len: sanitized.sujet.length,
+      status: "success",
+    },
   });
 
   return json(

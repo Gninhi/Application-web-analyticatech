@@ -3,6 +3,7 @@
 import React from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { trackClientException } from "@/instrumentation-client";
 
 interface Props {
   children: React.ReactNode;
@@ -28,8 +29,15 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
-    // En production : envoyer vers un service de monitoring (Sentry, etc.)
     console.error("[Analyticatech] System failure:", error, info.componentStack);
+    try {
+      trackClientException(error, {
+        componentStack: info.componentStack || undefined,
+        route: typeof window !== "undefined" ? window.location.pathname : undefined,
+      });
+    } catch {
+      // Évite tout plantage en cascade
+    }
   }
 
   handleReload = () => {

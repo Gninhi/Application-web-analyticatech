@@ -131,6 +131,7 @@ export function Navbar() {
               borderRadius={12}
               duration={4}
               beamSize={24}
+              data-cta="navbar_demander_audit"
               icon={<ArrowUpRight className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden="true" />}
               iconPosition="right"
               className="hidden sm:inline-flex ml-1 shrink-0 font-mono text-xs font-semibold uppercase tracking-wider text-slate-900 dark:text-white hover:text-[#F26D3D] hover:border-[#F26D3D]/40"
