@@ -4,41 +4,40 @@ import { GlassButton } from "@/components/interactive/GlassButton";
 import { MovingButton } from "@/components/interactive/MovingButton";
 import { Button } from "@/components/ui/button";
 
-describe("GlassButton component", () => {
-  it("rend correctement un bouton liquid glass primary", () => {
+describe("Unified Button & GlassButton system", () => {
+  it("rend correctement un bouton primary avec la bordure animée", () => {
     const html = renderToStaticMarkup(
       <GlassButton variant="primary" size="lg">
         Lancer mon projet
       </GlassButton>
     );
-    expect(html).toContain("glass-button-wrap");
-    expect(html).toContain("glass-btn-primary");
-    expect(html).toContain("glass-button-shadow");
-    expect(html).toContain("glass-button-sheen");
+    expect(html).toContain("bg-[#03318C]");
     expect(html).toContain("Lancer mon projet");
+    expect(html).toContain("pointer-events-none");
+    expect(html).toContain("aspect-square");
   });
 
-  it("rend les variantes secondary, outline, ghost et subtle avec leurs classes respectives", () => {
+  it("rend les variantes secondary, outline, ghost et subtle avec leurs styles respectifs", () => {
     const secondaryHtml = renderToStaticMarkup(
       <GlassButton variant="secondary">Nouveau</GlassButton>
     );
-    expect(secondaryHtml).toContain("glass-btn-secondary");
+    expect(secondaryHtml).toContain("Nouveau");
 
     const outlineHtml = renderToStaticMarkup(
       <GlassButton variant="outline">Découvrir</GlassButton>
     );
-    expect(outlineHtml).toContain("glass-btn-outline");
-    expect(outlineHtml).toContain("glass-shadow-outline");
+    expect(outlineHtml).toContain("Découvrir");
+    expect(outlineHtml).toContain("pointer-events-none");
 
     const ghostHtml = renderToStaticMarkup(
       <GlassButton variant="ghost">Retour</GlassButton>
     );
-    expect(ghostHtml).toContain("glass-btn-ghost");
+    expect(ghostHtml).toContain("Retour");
 
     const subtleHtml = renderToStaticMarkup(
       <GlassButton variant="subtle">Options</GlassButton>
     );
-    expect(subtleHtml).toContain("glass-btn-subtle");
+    expect(subtleHtml).toContain("Options");
   });
 
   it("supporte le rendu polymorphique Link lorsque href est fourni", () => {
@@ -49,7 +48,6 @@ describe("GlassButton component", () => {
     );
     expect(html).toContain("<a");
     expect(html).toContain('href="/contact"');
-    expect(html).toContain("glass-btn-primary");
     expect(html).toContain("Nous contacter");
   });
 
@@ -69,7 +67,7 @@ describe("GlassButton component", () => {
         EXÉCUTER
       </Button>
     );
-    expect(html).toContain("glass-btn-terminal");
+    expect(html).toContain("font-mono");
     expect(html).toContain("EXÉCUTER");
   });
 
@@ -100,23 +98,20 @@ describe("GlassButton component", () => {
     expect(rightHtml).toContain("icon-test-right");
   });
 
-  it("MovingButton et Button sont compatibles et intègrent le système Liquid Glass", () => {
+  it("MovingButton et Button sont compatibles et unifiés", () => {
     const movingHtml = renderToStaticMarkup(
       <MovingButton variant="primary" size="md">
         Action Principale
       </MovingButton>
     );
-    expect(movingHtml).toContain("glass-button-wrap");
-    expect(movingHtml).toContain("glass-btn-primary");
     expect(movingHtml).toContain("Action Principale");
+    expect(movingHtml).toContain("bg-[#03318C]");
 
     const buttonHtml = renderToStaticMarkup(
       <Button variant="secondary" size="sm">
         Standard Button
       </Button>
     );
-    expect(buttonHtml).toContain("glass-btn-secondary");
     expect(buttonHtml).toContain("Standard Button");
   });
 });
-

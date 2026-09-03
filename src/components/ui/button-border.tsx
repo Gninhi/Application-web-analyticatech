@@ -1,59 +1,138 @@
 "use client";
 
+import React from "react";
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils/cn";
+import { cn } from "@/lib/utils";
+import { Button, type ButtonProps } from "@/components/ui/button";
 
-interface AnimatedButtonBorderProps {
-  /** Rayon du chemin offset-path rect() round, en px. Défaut : 12. */
-  borderRadius?: number;
-  /** Durée d'un tour complet en secondes. Défaut : 5. */
+export interface AnimatedButtonBorderProps {
+  /** Rayon de courbure en pixels ou chaîne CSS pour l'offsetPath rect(). Défaut : 14 */
+  borderRadius?: number | string;
+  /** Durée d'un cycle complet en secondes. Défaut : 4 */
   duration?: number;
-  /** Largeur du faisceau lumineux en px. Défaut : 24. */
+  /** Largeur du faisceau lumineux en px. Défaut : 24 */
   beamSize?: number;
-  /** Dégradé personnalisé pour le faisceau lumineux. */
+  beamWidth?: number;
+  /** Dégradé Tailwind / CSS du faisceau lumineux */
+  gradientClassName?: string;
   beamGradient?: string;
   className?: string;
 }
 
 /**
- * AnimatedButtonBorder — faisceau dégradé qui parcourt la bordure d'un bouton.
+ * AnimatedButtonBorder — Liseré lumineux dynamique serpent :
+ * - Thème Sombre : Faisceau serpent Bleu (#3B82F6 / #60A5FA)
+ * - Thème Clair  : Faisceau serpent Orange (#F26D3D)
  *
- * Le faisceau suit un offset-path `rect()` arrondi ; un mask
- * (padding-box ∩ border-box) ne le révèle que sur l'anneau de bordure,
- * sans toucher au contenu. `pointer-events-none` : le clic et la couleur
- * du bouton ne sont jamais modifiés. À placer à l'intérieur d'un bouton
- * `relative` (c'est le cas de MovingButton et GlassButton).
+ * Utilise CSS offset-path rect() avec masque composite pour illuminer
+ * uniquement le contour sans altérer l'intérieur ni les interactions utilisateur.
  */
 export function AnimatedButtonBorder({
-  borderRadius = 12,
-  duration = 5,
-  beamSize = 24,
+  borderRadius = 14,
+  duration = 4,
+  beamSize,
+  beamWidth,
+  gradientClassName,
   beamGradient,
   className,
 }: AnimatedButtonBorderProps) {
+  const width = beamWidth ?? beamSize ?? 24;
+  const radiusVal =
+    typeof borderRadius === "number" ? `${borderRadius}px` : borderRadius;
+
   return (
     <div
-      aria-hidden
+      aria-hidden="true"
       className={cn(
-        "-inset-px pointer-events-none absolute rounded-[inherit] border-2 border-transparent overflow-hidden",
-        "[-webkit-mask-composite:source-in] [mask-composite:intersect]",
-        "[mask-clip:padding-box,border-box]",
-        "[mask-image:linear-gradient(transparent,transparent),linear-gradient(#000,#000)]",
+        "-inset-px pointer-events-none absolute rounded-[inherit] border-2 border-transparent border-inset [mask-clip:padding-box,border-box]",
+        "[-webkit-mask-composite:source-in] [mask-composite:intersect] [mask-image:linear-gradient(transparent,transparent),linear-gradient(#000,#000)]",
         className
       )}
     >
       <motion.div
-        className="absolute aspect-square"
-        style={{
-          width: beamSize,
-          backgroundImage:
-            beamGradient ??
-            "linear-gradient(90deg, transparent, #F26D3D 40%, #FFB26A 60%, #03318C 85%, transparent)",
-          offsetPath: `rect(0 auto auto 0 round ${borderRadius}px)`,
+        className={cn(
+          "absolute aspect-square bg-gradient-to-r",
+          !beamGradient &&
+            (gradientClassName ??
+              "from-transparent via-[#F26D3D] to-[#F26D3D] dark:via-[#3B82F6] dark:to-[#3B82F6]")
+        )}
+        animate={{
+          offsetDistance: ["0%", "100%"],
         }}
-        animate={{ offsetDistance: ["0%", "100%"] }}
-        transition={{ repeat: Number.POSITIVE_INFINITY, duration, ease: "linear" }}
+        style={{
+          width,
+          ...(beamGradient ? { backgroundImage: beamGradient } : {}),
+          offsetPath: `rect(0 auto auto 0 round ${radiusVal})`,
+        }}
+        transition={{
+          repeat: Number.POSITIVE_INFINITY,
+          duration,
+          ease: "linear",
+        }}
       />
+    </div>
+  );
+}
+
+export interface ButtonBorderProps extends ButtonProps {
+  borderRadius?: number | string;
+  duration?: number;
+  beamWidth?: number;
+  beamSize?: number;
+  gradientClassName?: string;
+  beamGradient?: string;
+  borderClassName?: string;
+  showAnimatedBorder?: boolean;
+}
+
+/**
+ * ButtonBorder — Composant bouton officiel intégrant directement la bordure animée.
+ */
+export const ButtonBorder = React.forwardRef<HTMLButtonElement, ButtonBorderProps>(
+  (
+    {
+      children,
+      className,
+      variant = "outline",
+      borderRadius = 14,
+      duration = 4,
+      beamWidth,
+      beamSize,
+      gradientClassName,
+      beamGradient,
+      borderClassName: _borderClassName,
+      showAnimatedBorder = true,
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <Button
+        ref={ref}
+        variant={variant}
+        borderRadius={borderRadius}
+        duration={duration}
+        beamWidth={beamWidth}
+        beamSize={beamSize}
+        gradientClassName={gradientClassName}
+        beamGradient={beamGradient}
+        showBorderAnimation={showAnimatedBorder}
+        className={className}
+        {...props}
+      >
+        {children}
+      </Button>
+    );
+  }
+);
+ButtonBorder.displayName = "ButtonBorder";
+
+/** Composant de démonstration fourni */
+export function ButtonDemo() {
+  return (
+    <div className="flex gap-3 items-center">
+      <Button variant="outline">Action 1</Button>
+      <Button variant="primary">Animated Border</Button>
     </div>
   );
 }

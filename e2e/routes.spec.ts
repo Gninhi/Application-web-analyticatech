@@ -52,8 +52,8 @@ test.describe("métadonnées & canonical", () => {
     await page.goto("/solutions", { waitUntil: "domcontentloaded" });
     const firstCard = page.locator("article").first();
     await expect(firstCard).toBeVisible();
-    await page.waitForTimeout(500);
-    await firstCard.click();
+    await firstCard.scrollIntoViewIfNeeded();
+    await firstCard.click({ force: true });
     await page.waitForURL(/\/solutions\/[a-z0-9-]+$/, { timeout: 15_000 });
 
     const ogUrl = await page.locator("meta[property='og:url']").last().getAttribute("content");

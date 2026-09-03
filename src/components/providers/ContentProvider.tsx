@@ -58,10 +58,13 @@ export function ContentProvider({
 
   // Synchronise le cache si initialContent change (revalidation serveur / navigation)
   useEffect(() => {
-    setContentCache((prev) => ({
-      ...prev,
-      [initialContent.locale]: initialContent,
-    }));
+    const handle = requestAnimationFrame(() => {
+      setContentCache((prev) => ({
+        ...prev,
+        [initialContent.locale]: initialContent,
+      }));
+    });
+    return () => cancelAnimationFrame(handle);
   }, [initialContent]);
 
   // Synchronisation asynchrone avec l'API de contenu Supabase lorsqu'on passe sur une langue non encore chargée

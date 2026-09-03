@@ -80,7 +80,7 @@
   --color-card-foreground: var(--fg);
   --color-popover: var(--surface);
   --color-popover-foreground: var(--fg);
-  --color-primary: var(--accent);
+  --color-primary: #03318C;
   --color-primary-foreground: #ffffff;
   --color-secondary: var(--surface-2);
   --color-secondary-foreground: var(--fg);
@@ -112,7 +112,7 @@
   --bg: #06070B;
   --fg: oklch(0.95 0.02 250);          /* blanc cassé */
   --fg-muted: oklch(0.76 0.02 250);    /* slate-300 */
-  --fg-link: #F26D3D;                   /* orange pour liens en sombre */
+  --fg-link: #60A5FA;                   /* bleu lumineux pour liens en sombre */
   --surface: rgba(96, 116, 168, 0.12); /* reflet bleuté subtil (halo haut) */
   --surface-2: rgba(255, 255, 255, 0.05);
   --accent: #F26D3D;

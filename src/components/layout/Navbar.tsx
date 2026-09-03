@@ -10,7 +10,7 @@ import { ScrambleText } from "@/components/interactive/ScrambleText";
 import { Logo } from "@/components/branding/Logo";
 import { ThemeToggle } from "@/components/branding/ThemeToggle";
 import { LanguageToggle } from "@/components/branding/LanguageToggle";
-import { Button } from "@/components/ui/button";
+import { ButtonBorder } from "@/components/ui/button-border";
 import { useScrollState } from "@/hooks/useScrollState";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
@@ -60,16 +60,16 @@ export function Navbar() {
         hidden ? "-translate-y-full" : "translate-y-0"
       )}
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="flex items-center justify-between gap-3">
+      <div className="mx-auto max-w-7xl px-2 sm:px-6">
+        <div className="flex items-center justify-between gap-1.5 sm:gap-3">
           {/* Logo Analyticatech */}
           <Link
             href={currentLocale === "en" ? "/en" : "/"}
-            className="group flex items-center gap-2.5 rounded-xl px-2 py-1.5 transition-transform hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-[#F26D3D] shrink-0"
+            className="group flex items-center gap-2 rounded-xl px-1.5 py-1 sm:px-2 sm:py-1.5 transition-transform hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-[#F26D3D] shrink-0"
             aria-label={`${t("nav.home")} — AnalyticaTech`}
           >
-            <Logo size={32} delay={0.2} />
-            <span className="font-display text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-slate-50">
+            <Logo size={28} delay={0.2} />
+            <span className="font-display text-sm sm:text-lg font-bold tracking-tight text-slate-900 dark:text-slate-50 hidden xs:inline-block">
               Analytica<span className="text-[#F26D3D]">tech</span>
             </span>
           </Link>
@@ -78,7 +78,7 @@ export function Navbar() {
           <nav
             aria-label="Navigation principale"
             className={cn(
-              "relative flex items-center gap-1 sm:gap-1.5 rounded-2xl border p-1 sm:p-1.5 transition-all duration-300 backdrop-blur-2xl shadow-xl",
+              "relative flex items-center gap-0.5 sm:gap-1.5 rounded-2xl border p-0.5 sm:p-1.5 transition-all duration-300 backdrop-blur-2xl shadow-xl max-w-full overflow-hidden",
               scrolled
                 ? "border-black/10 dark:border-white/15 bg-white/90 dark:bg-[#06070B]/85 shadow-black/15 dark:shadow-black/60"
                 : "border-black/5 dark:border-white/10 bg-white/80 dark:bg-[#06070B]/75 shadow-black/10 dark:shadow-black/40"
@@ -91,7 +91,7 @@ export function Navbar() {
             />
 
             {/* Liens de navigation */}
-            <div className="flex items-center overflow-x-auto no-scrollbar py-0.5 px-1">
+            <div className="flex items-center overflow-x-auto no-scrollbar py-0.5 px-0.5 sm:px-1">
               {NAV_ITEMS.map((item) => {
                 const isActive = activeView === item.key;
                 const href = viewToPath(item.key, undefined, currentLocale);
@@ -101,7 +101,7 @@ export function Navbar() {
                     key={item.key}
                     href={href}
                     className={cn(
-                      "relative rounded-xl px-3 py-1.5 text-xs sm:text-sm font-medium tracking-tight transition-all duration-200 whitespace-nowrap",
+                      "relative rounded-xl px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium tracking-tight transition-all duration-200 whitespace-nowrap",
                       isActive
                         ? "text-white bg-slate-900 dark:bg-white/15 dark:text-white shadow-xs font-semibold"
                         : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
@@ -123,17 +123,20 @@ export function Navbar() {
               <ThemeToggle />
             </div>
 
-            {/* Bouton CTA haute visibilité Liquid Glass — Arrondi standardisé */}
-            <Button
+            {/* Bouton CTA haute visibilité avec bordure animée pure */}
+            <ButtonBorder
               onClick={handleCta}
-              variant="primary"
+              variant="outline"
               size="sm"
-              icon={<ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />}
+              borderRadius={12}
+              duration={4}
+              beamSize={24}
+              icon={<ArrowUpRight className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden="true" />}
               iconPosition="right"
-              className="ml-1 shrink-0"
+              className="hidden sm:inline-flex ml-1 shrink-0 font-mono text-xs font-semibold uppercase tracking-wider text-slate-900 dark:text-white hover:text-[#F26D3D] hover:border-[#F26D3D]/40"
             >
               <span>{t("nav.cta")}</span>
-            </Button>
+            </ButtonBorder>
           </nav>
         </div>
       </div>
