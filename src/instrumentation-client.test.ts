@@ -34,8 +34,10 @@ vi.mock("posthog-js", () => {
 });
 
 // Mock de CookieConsent helper
+const mockIsAnalyticsAllowed = vi.fn().mockReturnValue(true);
 vi.mock("@/components/branding/CookieConsent", () => ({
   getStoredConsent: vi.fn().mockReturnValue(null),
+  isAnalyticsAllowed: () => mockIsAnalyticsAllowed(),
 }));
 
 import {
@@ -77,7 +79,16 @@ describe("instrumentation-client", () => {
     (globalThis as unknown as { document?: unknown }).document = originalDoc;
   });
 
-  it("initialise PostHog avec opt_out_capturing_by_default: true et le reverse proxy", () => {
+  it("ne charge ni n'initialise PostHog si le consentement est absent ou refusé (Règle CNIL bloquante)", () => {
+    mockIsAnalyticsAllowed.mockReturnValueOnce(false);
+    const result = initTelemetryClient();
+
+    expect(result).toBeNull();
+    expect(mockInit).not.toHaveBeenCalled();
+  });
+
+  it("initialise PostHog avec opt_out_capturing_by_default: true et le reverse proxy quand consenti", () => {
+    mockIsAnalyticsAllowed.mockReturnValue(true);
     initTelemetryClient();
 
     expect(mockInit).toHaveBeenCalledWith(

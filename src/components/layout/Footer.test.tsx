@@ -130,4 +130,11 @@ describe("Footer Social Links", () => {
     expect(html).toContain("https://github.com/analyticatech-org");
     expect(html).not.toContain('aria-label="Twitter / X"');
   });
+
+  it("affiche le bouton permanent de gestion des cookies conforme CNIL", () => {
+    const content = createMockContent();
+    const html = renderFooter(content);
+
+    expect(html).toContain("Gestion des cookies");
+  });
 });

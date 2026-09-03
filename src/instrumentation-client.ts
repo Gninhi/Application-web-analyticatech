@@ -1,11 +1,15 @@
 import posthog from "posthog-js";
-import { getStoredConsent } from "@/components/branding/CookieConsent";
+import {
+  isAnalyticsAllowed,
+  type ConsentProof,
+} from "@/components/branding/CookieConsent";
 
 /**
  * Instrumentation Client PostHog (Next.js App Router).
  *
- * Principes RGPD & Sécurité :
- * - `opt_out_capturing_by_default: true` : aucun événement ni cookie avant consentement.
+ * Principes CNIL 2026 & Sécurité :
+ * - Aucun script ni appel réseau PostHog avant le consentement explicite de l'utilisateur.
+ * - `opt_out_capturing_by_default: true` : aucun événement ni cookie avant accord.
  * - Reverse proxy discret : les requêtes passent par `/_edge-relay` (notre propre domaine).
  * - Autocapture désactivée : télémétrie 100% maîtrisée, typée et intentionnelle.
  * - Masquage complet du Session Replay : champs de saisie, emails et textes sensibles masqués.
@@ -14,8 +18,18 @@ import { getStoredConsent } from "@/components/branding/CookieConsent";
 
 let isClientInitialized = false;
 
-export function initTelemetryClient(): typeof posthog | null {
+/**
+ * Initialise le client PostHog si et seulement si l'utilisateur a accordé son consentement
+ * pour la mesure d'audience ou si l'initialisation est expressément demandée (forceInit).
+ */
+export function initTelemetryClient(forceInit = false): typeof posthog | null {
   if (typeof window === "undefined") return null;
+
+  // Règle CNIL bloquante : aucun chargement avant clic explicite
+  if (!forceInit && !isAnalyticsAllowed()) {
+    return null;
+  }
+
   if (isClientInitialized) return posthog;
 
   const apiKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
@@ -59,9 +73,7 @@ export function initTelemetryClient(): typeof posthog | null {
       return payload;
     },
     loaded: (ph) => {
-      // Synchronisation avec le bandeau de consentement stocké
-      const currentConsent = getStoredConsent();
-      if (currentConsent === "accepted") {
+      if (isAnalyticsAllowed()) {
         ph.opt_in_capturing();
       } else {
         ph.opt_out_capturing();
@@ -69,18 +81,26 @@ export function initTelemetryClient(): typeof posthog | null {
     },
   });
 
-  // Écoute dynamique des décisions utilisateur sur le bandeau de consentement
-  window.addEventListener("at:consent-change", ((e: CustomEvent<"accepted" | "refused">) => {
-    if (e.detail === "accepted") {
-      posthog.opt_in_capturing();
-    } else {
+  isClientInitialized = true;
+  return posthog;
+}
+
+// Écoute dynamique globale des décisions utilisateur sur le bandeau de consentement
+if (typeof window !== "undefined") {
+  window.addEventListener("at:consent-change", ((e: CustomEvent<ConsentProof | "accepted" | "refused">) => {
+    const isAllowed =
+      typeof e.detail === "string"
+        ? e.detail === "accepted"
+        : e.detail?.choices?.analytics === true;
+
+    if (isAllowed) {
+      const ph = initTelemetryClient(true);
+      ph?.opt_in_capturing();
+    } else if (isClientInitialized) {
       posthog.opt_out_capturing();
       posthog.reset();
     }
   }) as EventListener);
-
-  isClientInitialized = true;
-  return posthog;
 }
 
 /**

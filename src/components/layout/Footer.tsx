@@ -66,6 +66,12 @@ export function Footer() {
     setTimeout(() => setSubscribed(false), 4000);
   };
 
+  const handleOpenCookiePreferences = () => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("at:open-cookie-preferences"));
+    }
+  };
+
   return (
     <footer className="relative mt-auto border-t border-black/10 dark:border-white/10 glass-card">
       <div className="mx-auto max-w-7xl px-4 md:px-6 py-12 md:py-16">
@@ -215,6 +221,13 @@ export function Footer() {
             >
               {t("footer.legal")}
             </Link>
+            <button
+              type="button"
+              onClick={handleOpenCookiePreferences}
+              className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] px-2 py-1 cursor-pointer transition-colors"
+            >
+              {t("footer.cookies")}
+            </button>
             <Link
               href={viewToPath("about", undefined, currentLocale)}
               className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] px-2 py-1"

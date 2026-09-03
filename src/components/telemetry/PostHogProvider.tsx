@@ -9,10 +9,14 @@ import {
   trackScrollDepth,
   trackClientException,
 } from "@/instrumentation-client";
+import {
+  isAnalyticsAllowed,
+  type ConsentProof,
+} from "@/components/branding/CookieConsent";
 
 /**
  * Composant client gérant le cycle de vie de la télémétrie PostHog :
- * - Initialisation lazy au montage (sans bloquer le rendu FCP)
+ * - Initialisation lazy au montage conditionnée au consentement CNIL 2026
  * - Suivi automatique des routes Next.js ($pageview)
  * - Suivi des paliers de scroll (25%, 50%, 75%, 90%) sur les pages de contenu
  * - Suivi des clics sur les boutons CTA
@@ -23,12 +27,35 @@ export function PostHogTelemetry() {
   const searchParams = useSearchParams();
   const reportedScrollMilestones = useRef<Set<number>>(new Set());
 
-  // 1. Initialisation client PostHog
+  // 1. Initialisation client PostHog (seulement si consentement préalablement accordé)
   useEffect(() => {
-    initTelemetryClient();
+    if (isAnalyticsAllowed()) {
+      initTelemetryClient();
+    }
   }, []);
 
-  // 2. Vue de page ($pageview) à chaque transition de route
+  // 2. Écoute dynamique du consentement pour déclencher la première vue de page si accordée
+  useEffect(() => {
+    const handleConsent = (e: Event) => {
+      const customEvent = e as CustomEvent<ConsentProof | "accepted" | "refused">;
+      const allowed =
+        typeof customEvent.detail === "string"
+          ? customEvent.detail === "accepted"
+          : customEvent.detail?.choices?.analytics === true;
+
+      if (allowed) {
+        const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : "");
+        trackPageView(url);
+      }
+    };
+
+    window.addEventListener("at:consent-change", handleConsent);
+    return () => {
+      window.removeEventListener("at:consent-change", handleConsent);
+    };
+  }, [pathname, searchParams]);
+
+  // 3. Vue de page ($pageview) à chaque transition de route (si consenti)
   useEffect(() => {
     const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : "");
     trackPageView(url);
