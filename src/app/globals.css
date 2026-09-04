@@ -803,11 +803,10 @@
   }
 
   /* === ORBITE DE LA MÉTHODE (MethodOrbit) ===
-     Anneau rotatif piloté par CSS uniquement : la piste (.orbit-track) tourne
-     en continu, le contenu de chaque nœud contre-tourne (même keyframes en
+     Anneau rotatif piloté par CSS : la piste (.orbit-track) tourne
+     en continu (64s), le contenu de chaque nœud contre-tourne (même keyframes en
      reverse) pour rester lisible à tout instant. Pause au survol de l'orbite.
-     Reduced-motion : la règle globale gèle toutes les animations (anneau
-     statique, nœuds positionnés à leurs angles de base). */
+     Reduced-motion : gelée automatiquement par la règle globale. */
   .orbit-stage {
     --orbit-r: clamp(118px, 15vw, 178px);
   }
@@ -819,15 +818,17 @@
   .orbit-ring--outer {
     inset: 0;
     border: 1px dashed var(--glass-card-border);
+    transition: border-color 0.3s ease;
   }
   .orbit-ring--inner {
-    inset: 17%;
+    inset: 18%;
     border: 1px solid var(--glass-rim-soft);
+    transition: border-color 0.3s ease;
   }
   .orbit-track {
     position: absolute;
     inset: 0;
-    animation: orbit-spin 48s linear infinite;
+    animation: orbit-spin 64s linear infinite;
   }
   .orbit-node {
     position: absolute;
@@ -837,7 +838,7 @@
   }
   .orbit-node-content {
     transform: translate(-50%, -50%);
-    animation: orbit-spin 48s linear infinite reverse;
+    animation: orbit-spin 64s linear infinite reverse;
   }
   .orbit-stage:hover .orbit-track,
   .orbit-stage:hover .orbit-node-content,
@@ -845,9 +846,30 @@
   .orbit-stage:focus-within .orbit-node-content {
     animation-play-state: paused;
   }
-  /* Halo radial doux derrière le hub central */
+  /* Halo respirant thermique du hub central */
   .orbit-hub-halo {
-    background: radial-gradient(circle, rgba(242, 109, 61, 0.18) 0%, transparent 65%);
+    background: radial-gradient(circle, rgba(242, 109, 61, 0.28) 0%, rgba(242, 109, 61, 0.08) 45%, transparent 70%);
+    animation: hub-breathe 3.6s ease-in-out infinite;
+  }
+  :root.light .orbit-hub-halo,
+  html.light .orbit-hub-halo {
+    background: radial-gradient(circle, rgba(242, 109, 61, 0.20) 0%, rgba(242, 109, 61, 0.05) 50%, transparent 70%);
+  }
+  /* Onde de sonar périodique émise par le hub */
+  .orbit-sonar-pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 112px;
+    height: 112px;
+    border-radius: 9999px;
+    border: 1px solid rgba(242, 109, 61, 0.45);
+    pointer-events: none;
+    animation: sonar-ripple 3.6s cubic-bezier(0.1, 0.6, 0.3, 1) infinite;
+  }
+  :root.light .orbit-sonar-pulse,
+  html.light .orbit-sonar-pulse {
+    border-color: rgba(242, 109, 61, 0.32);
   }
 
   /* Grille de fond militaire (menu mobile) */
@@ -1035,6 +1057,45 @@
 @keyframes orbit-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+/* Respiration douce thermique du glow central (3.6s) */
+@keyframes hub-breathe {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.35;
+    filter: blur(24px);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.22);
+    opacity: 0.8;
+    filter: blur(36px);
+  }
+}
+
+/* Onde concentrique sonar émise par le hub */
+@keyframes sonar-ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0.65);
+    opacity: 0.7;
+  }
+  65% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* Défilement du flux d'énergie le long du faisceau laser */
+@keyframes laser-stream {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 32px 0;
+  }
 }
 
 /* Animations dédiées Stock Ticker (Style Bourse / Bloomberg) */

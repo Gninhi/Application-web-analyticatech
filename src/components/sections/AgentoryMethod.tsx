@@ -131,17 +131,33 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
           })}
         </div>
 
-        {/* === Panneau de détail — crossfade grid-stack (hauteur stable) === */}
+        {/* === Panneau de détail — crossfade grid-stack avec émanation spatiale (hauteur stable) === */}
         <div className="lg:col-span-7">
           <div className="relative overflow-hidden glass-card rounded-3xl p-6 md:p-10 grid">
+            {/* Lueur d'ambiance diffuse émanant du flux de la phase active */}
+            <div
+              className="pointer-events-none absolute -top-16 -left-16 h-72 w-72 rounded-full opacity-25 dark:opacity-20 transition-all duration-700 blur-3xl"
+              style={{
+                background: `radial-gradient(circle, ${METHOD_STEPS[activeStepIndex]?.color ?? "#F26D3D"}, transparent 70%)`,
+              }}
+              aria-hidden
+            />
+
             {METHOD_STEPS.map((step, idx) => {
               const isActive = idx === activeStepIndex;
               return (
                 <motion.div
                   key={step.number}
                   initial={false}
-                  animate={{ opacity: isActive ? 1 : 0 }}
-                  transition={{ duration: 0.3 }}
+                  animate={{
+                    opacity: isActive ? 1 : 0,
+                    x: isActive ? 0 : -16,
+                    scale: isActive ? 1 : 0.985,
+                  }}
+                  transition={{
+                    duration: 0.35,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
                   inert={!isActive}
                   className={cn(
                     "col-start-1 row-start-1 grid lg:grid-cols-12 gap-8 items-center",
