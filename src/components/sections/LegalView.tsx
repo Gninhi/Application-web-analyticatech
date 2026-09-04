@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ArrowLeft, ShieldCheck, FileText } from "lucide-react";
 import type { ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
@@ -57,12 +56,9 @@ export function LegalView({ type, onNavigate }: LegalViewProps) {
 
         {/* Sections */}
         <div className="space-y-8">
-          {sections.map((section, i) => (
-            <motion.section
+          {sections.map((section) => (
+            <section
               key={section.id}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: i * 0.06 }}
               className="glass-card rounded-2xl p-6 md:p-8"
             >
               <h2 className="font-display text-lg md:text-xl font-bold text-slate-900 dark:text-slate-50 mb-3">
@@ -71,7 +67,7 @@ export function LegalView({ type, onNavigate }: LegalViewProps) {
               <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">
                 {section.body}
               </p>
-            </motion.section>
+            </section>
           ))}
         </div>
 

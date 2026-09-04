@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import {
   ArrowLeft,
   Building2,
@@ -82,11 +81,8 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
           {/* ========================================================================= */}
           {/* 1. ÉDITEUR DU SITE */}
           {/* ========================================================================= */}
-          <motion.section
+          <section
             id="editeur"
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.05 }}
             className="glass-card rounded-2xl p-6 md:p-8 border border-black/5 dark:border-white/10"
           >
             <div className="flex items-center gap-3 mb-4">
@@ -210,16 +206,13 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                 </dd>
               </div>
             </dl>
-          </motion.section>
+          </section>
 
           {/* ========================================================================= */}
           {/* 2. HÉBERGEUR DU SITE WEB (DISTINCT DES DONNÉES CLIENTS) */}
           {/* ========================================================================= */}
-          <motion.section
+          <section
             id="hebergeur"
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
             className="glass-card rounded-2xl p-6 md:p-8 border border-black/5 dark:border-white/10"
           >
             <div className="flex items-center gap-3 mb-4">
@@ -321,16 +314,13 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                 </div>
               </div>
             </div>
-          </motion.section>
+          </section>
 
           {/* ========================================================================= */}
           {/* 3. PROPRIÉTÉ INTELLECTUELLE */}
           {/* ========================================================================= */}
-          <motion.section
+          <section
             id="propriete-intellectuelle"
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.15 }}
             className="glass-card rounded-2xl p-6 md:p-8 border border-black/5 dark:border-white/10"
           >
             <div className="flex items-center gap-3 mb-4">
@@ -400,16 +390,13 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                 </p>
               </div>
             </div>
-          </motion.section>
+          </section>
 
           {/* ========================================================================= */}
           {/* 4. CONTACT */}
           {/* ========================================================================= */}
-          <motion.section
+          <section
             id="contact"
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
             className="glass-card rounded-2xl p-6 md:p-8 border border-black/5 dark:border-white/10"
           >
             <div className="flex items-center gap-3 mb-4">
@@ -499,7 +486,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
               relatif à la validité, l&apos;interprétation ou l&apos;exécution des présentes, et à défaut de résolution
               amiable, les tribunaux compétents du ressort de la Cour d&apos;appel de Paris seront seuls compétents.
             </div>
-          </motion.section>
+          </section>
         </div>
 
         {/* CTA Contact en bas de page */}

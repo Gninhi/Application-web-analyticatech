@@ -84,4 +84,10 @@ describe("MentionsLegalesView — Conformité LCEN Article 6-III", () => {
     expect(html).toContain("L. 122-5-3");
     expect(html).toContain("Text and Data Mining");
   });
+
+  it("garantit que les sections ne sont pas masquées à opacity:0 au rendu SSR (lisible sans JS)", () => {
+    const html = renderWithProviders(<MentionsLegalesView onNavigate={() => {}} />);
+    expect(html).not.toContain("opacity:0");
+    expect(html).not.toContain("opacity: 0");
+  });
 });

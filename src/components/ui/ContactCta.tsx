@@ -42,7 +42,7 @@ export function ContactCta({
 }: ContactCtaProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 15 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay }}
       className={cn("glass-card rounded-2xl p-6 md:p-8 text-center", className)}
