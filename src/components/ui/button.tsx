@@ -20,9 +20,9 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-[#03318C] text-white border border-[#03318C]/50 hover:bg-[#022873] shadow-sm hover:shadow-[0_0_24px_rgba(3,49,140,0.35)] dark:bg-[#F26D3D] dark:text-white dark:border-[#F26D3D]/50 dark:hover:bg-[#d95d30] dark:hover:shadow-[0_0_24px_rgba(242,109,61,0.35)] active:scale-[0.98]",
+          "bg-[#03318C] text-white border border-[#03318C]/50 hover:bg-[#022873] shadow-sm hover:shadow-[0_0_24px_rgba(3,49,140,0.35)] dark:bg-[#F26D3D] dark:text-slate-950 dark:font-semibold dark:border-[#F26D3D]/50 dark:hover:bg-[#ff7b4b] dark:hover:shadow-[0_0_24px_rgba(242,109,61,0.35)] active:scale-[0.98]",
         primary:
-          "bg-[#03318C] text-white border border-[#03318C]/50 hover:bg-[#022873] shadow-sm hover:shadow-[0_0_24px_rgba(3,49,140,0.35)] dark:bg-[#F26D3D] dark:text-white dark:border-[#F26D3D]/50 dark:hover:bg-[#d95d30] dark:hover:shadow-[0_0_24px_rgba(242,109,61,0.35)] active:scale-[0.98]",
+          "bg-[#03318C] text-white border border-[#03318C]/50 hover:bg-[#022873] shadow-sm hover:shadow-[0_0_24px_rgba(3,49,140,0.35)] dark:bg-[#F26D3D] dark:text-slate-950 dark:font-semibold dark:border-[#F26D3D]/50 dark:hover:bg-[#ff7b4b] dark:hover:shadow-[0_0_24px_rgba(242,109,61,0.35)] active:scale-[0.98]",
         outline:
           "border border-[#03318C]/40 bg-background/80 backdrop-blur-xs text-[#03318C] hover:text-[#03318C] hover:border-[#03318C] hover:bg-[#03318C]/10 dark:border-white/15 dark:bg-white/5 dark:text-white dark:hover:text-[#60A5FA] dark:hover:border-[#3B82F6]/50 dark:hover:bg-white/10 active:scale-[0.98]",
         secondary:

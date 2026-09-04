@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import { useRef, type CSSProperties } from "react";
 import type { LucideIcon } from "lucide-react";
 import { Waypoints } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
@@ -36,18 +36,27 @@ export function MethodOrbit({ nodes, activeIndex, onSelect, centerLabel }: Metho
   const activeNode = nodes[activeIndex] ?? nodes[0];
   const activeDeg = (360 / count) * activeIndex;
 
-  // Parallax discret de la grille de fond
-  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
+  // Parallax discret de la grille de fond sans re-render
+  const gridRef = useRef<HTMLDivElement>(null);
+  const stageRectRef = useRef<DOMRect | null>(null);
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    stageRectRef.current = e.currentTarget.getBoundingClientRect();
+  };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+    const rect = stageRectRef.current;
+    if (!rect || !gridRef.current) return;
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setMouseOffset({ x: Math.round(x * 12), y: Math.round(y * 12) });
+    gridRef.current.style.transform = `translate3d(${Math.round(x * 12)}px, ${Math.round(y * 12)}px, 0)`;
   };
 
   const handleMouseLeave = () => {
-    setMouseOffset({ x: 0, y: 0 });
+    stageRectRef.current = null;
+    if (gridRef.current) {
+      gridRef.current.style.transform = "translate3d(0, 0, 0)";
+    }
   };
 
   return (
@@ -55,15 +64,14 @@ export function MethodOrbit({ nodes, activeIndex, onSelect, centerLabel }: Metho
       className="orbit-stage relative mx-auto hidden aspect-square w-full max-w-[480px] select-none lg:block"
       role="tablist"
       aria-label={centerLabel}
+      onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
       {/* 1. Grille stellaire d'arrière-plan avec parallax subtil sous la souris */}
       <div
+        ref={gridRef}
         className="pointer-events-none absolute inset-[-8%] rounded-full transition-transform duration-300 ease-out"
-        style={{
-          transform: `translate3d(${mouseOffset.x}px, ${mouseOffset.y}px, 0)`,
-        }}
         aria-hidden
       >
         <svg

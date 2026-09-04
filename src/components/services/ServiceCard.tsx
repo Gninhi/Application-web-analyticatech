@@ -49,18 +49,23 @@ export function ServiceCard({
 }: ServiceCardProps) {
   const accent = service.accentColor ?? "#F26D3D";
   const cardRef = useRef<HTMLDivElement>(null);
+  const cardRectRef = useRef<DOMRect | null>(null);
   const goToDetail = () => onNavigateDetail(service.serviceIndex);
 
   // Glow radial fin suivant le curseur (pattern bento : rayon court, discret)
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    cardRectRef.current = e.currentTarget.getBoundingClientRect();
+  };
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = cardRef.current;
     if (!el) return;
-    const rect = el.getBoundingClientRect();
+    const rect = cardRectRef.current || el.getBoundingClientRect();
     el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
     el.style.setProperty("--my", `${e.clientY - rect.top}px`);
   };
 
   const handleMouseLeave = () => {
+    cardRectRef.current = null;
     const el = cardRef.current;
     if (!el) return;
     el.style.setProperty("--mx", "-200px");
@@ -77,6 +82,7 @@ export function ServiceCard({
     >
       <div
         ref={cardRef}
+        onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         className="relative h-full w-full glass-card grain rounded-[28px] overflow-hidden p-6 sm:p-7 flex flex-col justify-between gap-6 transition-all duration-300 group-hover:border-opacity-60"

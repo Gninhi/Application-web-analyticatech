@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties } from "react";
+import { type CSSProperties, useRef } from "react";
 import { ArrowUpRight, Clock, Newspaper, User } from "lucide-react";
 import { type BlogPostDTO, type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
@@ -32,13 +32,19 @@ export function HeroCard({
   const num = String(index + 1).padStart(2, "0");
   const borderColors = { primary: accent, secondary: tint(accent, 44), accent: tint(accent, 96) };
 
+  const cardRectRef = useRef<DOMRect | null>(null);
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
+    cardRectRef.current = e.currentTarget.getBoundingClientRect();
+  };
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const el = e.currentTarget;
-    const rect = el.getBoundingClientRect();
+    const rect = cardRectRef.current || el.getBoundingClientRect();
     el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
     el.style.setProperty("--my", `${e.clientY - rect.top}px`);
   };
   const handleMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
+    cardRectRef.current = null;
     const el = e.currentTarget;
     el.style.setProperty("--mx", "-200px");
     el.style.setProperty("--my", "-200px");
@@ -55,7 +61,7 @@ export function HeroCard({
       <button
         type="button"
         onClick={() => onNavigateDetail("blog-detail", post.slug)}
-        aria-label={`${t("common.readArticle")} : ${post.title}`}
+        onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         className="group relative block w-full overflow-hidden rounded-[28px] text-left glass-card grain flex flex-col lg:grid lg:grid-cols-[1.05fr_1fr] focus-visible:outline-2 focus-visible:outline-[color:var(--ca)] focus-visible:outline-offset-2"

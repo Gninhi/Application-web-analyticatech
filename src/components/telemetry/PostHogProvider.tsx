@@ -102,14 +102,23 @@ export function PostHogTelemetry() {
     if (!isScrollTrackedRoute) return;
 
     let ticking = false;
+    let cachedDocHeight = 1;
+
+    const measureDocHeight = () => {
+      cachedDocHeight = Math.max(
+        1,
+        document.documentElement.scrollHeight - window.innerHeight
+      );
+    };
+    measureDocHeight();
 
     const handleScroll = () => {
       if (ticking) return;
       ticking = true;
 
       requestAnimationFrame(() => {
-        const scrollTop = window.scrollY || document.documentElement.scrollTop;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollTop = window.scrollY;
+        const docHeight = cachedDocHeight;
         if (docHeight <= 0) {
           ticking = false;
           return;
@@ -132,8 +141,13 @@ export function PostHogTelemetry() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", measureDocHeight, { passive: true });
+    const timer = setTimeout(measureDocHeight, 500);
+
     return () => {
+      clearTimeout(timer);
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", measureDocHeight);
     };
   }, [pathname]);
 

@@ -57,15 +57,19 @@ function readStoredTheme(): Theme {
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  // Lazy init depuis localStorage (client). En SSR/localStorage absent →
-  // DEFAULT_THEME. Aucun consommateur ne rend de markup dépendant du thème
-  // avant le montage (ThemeToggle attend `mounted`), donc pas de mismatch.
-  const [theme, setThemeState] = useState<Theme>(readStoredTheme);
+  // Init stable à DEFAULT_THEME pour garantir 100% de parité SSR/client
+  // et éliminer l'erreur d'hydratation React #418.
+  const [theme, setThemeState] = useState<Theme>(DEFAULT_THEME);
+
+  // Synchronisation avec le stockage local après montage (non bloquant pour l'hydratation)
+  useEffect(() => {
+    const stored = readStoredTheme();
+    if (stored !== DEFAULT_THEME) {
+      requestAnimationFrame(() => setThemeState(stored));
+    }
+  }, []);
 
   // Sync DOM : pose la classe du thème au montage et à chaque changement
-  // (le script inline noncé l'a déjà posée avant le paint ; ceci couvre les
-  // cas où il n'aurait pas pu s'exécuter). Écriture DOM uniquement — pas de
-  // setState (règle react-hooks/set-state-in-effect).
   useEffect(() => {
     applyThemeClass(theme);
   }, [theme]);

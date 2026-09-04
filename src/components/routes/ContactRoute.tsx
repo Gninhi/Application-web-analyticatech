@@ -1,8 +1,13 @@
 "use client";
 
 import { ContactView } from "@/components/sections/ContactView";
+import { SectionErrorBoundary } from "@/components/system/SectionErrorBoundary";
 
-/** Route "/contact" — vue Contact (aucune prop de navigation requise). */
+/** Route "/contact" — vue Contact protégée par Error Boundary. */
 export function ContactRoute() {
-  return <ContactView />;
+  return (
+    <SectionErrorBoundary sectionName="Contact & Diagnostic">
+      <ContactView />
+    </SectionErrorBoundary>
+  );
 }

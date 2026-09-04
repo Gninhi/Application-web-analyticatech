@@ -243,10 +243,10 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                 </dt>
                 <dd className="font-display font-semibold text-slate-900 dark:text-slate-50">
                   Hostinger
+                  <span className="block text-xs font-normal text-slate-500 dark:text-slate-400 mt-1">
+                    Hostinger International Ltd.
+                  </span>
                 </dd>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  Hostinger International Ltd.
-                </p>
               </div>
 
               <div className="rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 p-4">
@@ -419,7 +419,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
               via les canaux suivants :
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-6">
+            <dl className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-6">
               <div className="rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 p-4">
                 <dt className="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
                   Courrier électronique
@@ -431,10 +431,10 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                   >
                     contact@analyticatech.fr
                   </a>
+                  <span className="block text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    Réponse sous 24 à 48 heures ouvrées
+                  </span>
                 </dd>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  Réponse sous 24 à 48 heures ouvrées
-                </p>
               </div>
 
               <div className="rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 p-4">
@@ -448,10 +448,10 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                   >
                     +33 7 68 61 13 10
                   </a>
+                  <span className="block text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    Du lundi au vendredi, 9h00 - 18h30 (CET)
+                  </span>
                 </dd>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  Du lundi au vendredi, 9h00 - 18h30 (CET)
-                </p>
               </div>
 
               <div className="rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 p-4">
@@ -478,7 +478,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                   </button>
                 </dd>
               </div>
-            </div>
+            </dl>
 
             <div className="pt-4 border-t border-black/5 dark:border-white/5 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
               <strong className="text-slate-700 dark:text-slate-300">Droit applicable et juridiction :</strong>{" "}

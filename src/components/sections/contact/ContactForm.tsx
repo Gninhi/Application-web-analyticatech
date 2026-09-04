@@ -49,6 +49,7 @@ export function ContactForm() {
             <TerminalField
               label={t("contact.fields.prenom")}
               name="prenom"
+              autoComplete="given-name"
               placeholder="Aïcha"
               value={form.prenom}
               onChange={(v) => update("prenom", v)}
@@ -58,6 +59,7 @@ export function ContactForm() {
             <TerminalField
               label={t("contact.fields.nom")}
               name="nom"
+              autoComplete="family-name"
               placeholder="Benkacem"
               value={form.nom}
               onChange={(v) => update("nom", v)}
@@ -71,6 +73,7 @@ export function ContactForm() {
               label={t("contact.fields.email")}
               name="email"
               type="email"
+              autoComplete="email"
               placeholder="a.benkacem@entreprise.com"
               value={form.email}
               onChange={(v) => update("email", v)}
@@ -80,6 +83,7 @@ export function ContactForm() {
             <TerminalField
               label={t("contact.fields.entreprise")}
               name="entreprise"
+              autoComplete="organization"
               placeholder="Novabank SA"
               value={form.entreprise}
               onChange={(v) => update("entreprise", v)}
@@ -155,6 +159,8 @@ export function ContactForm() {
             type="text"
             name="companyUrl"
             tabIndex={-1}
+            aria-hidden="true"
+            aria-label="Ne pas remplir"
             autoComplete="off"
             value={form.companyUrl}
             onChange={(e) => update("companyUrl", e.target.value)}
@@ -164,6 +170,8 @@ export function ContactForm() {
             type="text"
             name="website"
             tabIndex={-1}
+            aria-hidden="true"
+            aria-label="Ne pas remplir"
             autoComplete="off"
             value={form.website}
             onChange={(e) => update("website", e.target.value)}
@@ -173,6 +181,8 @@ export function ContactForm() {
             type="text"
             name="fax"
             tabIndex={-1}
+            aria-hidden="true"
+            aria-label="Ne pas remplir"
             autoComplete="off"
             value={form.fax}
             onChange={(e) => update("fax", e.target.value)}

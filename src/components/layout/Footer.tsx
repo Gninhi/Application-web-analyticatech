@@ -108,9 +108,9 @@ export function Footer() {
 
           {/* Navigation secondaire */}
           <nav className="md:col-span-2" aria-label={t("footer.nav.title")}>
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] mb-4">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] mb-4">
               {t("footer.nav.title")}
-            </h3>
+            </h2>
             <ul className="space-y-2.5">
               {NAV_ITEMS.map((item) => (
                 <li key={item.key}>
@@ -124,9 +124,9 @@ export function Footer() {
 
           {/* Expertises */}
           <div className="md:col-span-3">
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] mb-4">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] mb-4">
               {t("footer.expertises.title")}
-            </h3>
+            </h2>
             <ul className="space-y-2.5 text-sm text-slate-500 dark:text-slate-400">
               {services.slice(0, 5).map((s) => (
                 <li key={s.id}>
@@ -143,16 +143,19 @@ export function Footer() {
 
           {/* Newsletter */}
           <div className="md:col-span-3">
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] mb-4">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] mb-4">
               {t("footer.newsletter.title")}
-            </h3>
+            </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
               {t("footer.newsletter.desc")}
             </p>
             <form onSubmit={handleSubscribe} className="space-y-2">
               <div className="flex items-center gap-1.5">
                 <input
+                  id="footer-newsletter-email"
+                  name="email"
                   type="email"
+                  autoComplete="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}

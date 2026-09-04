@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Search, FlaskConical, Factory, TrendingUp, Check, ArrowRight, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MethodOrbit } from "@/components/sections/MethodOrbit";
+import { SectionErrorBoundary } from "@/components/system/SectionErrorBoundary";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils/cn";
 
@@ -72,18 +73,20 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
       <div className="grid items-center gap-10 lg:grid-cols-12">
         {/* === Orbite (desktop) : les 4 phases gravitent autour du hub === */}
         <div className="lg:col-span-5">
-          <MethodOrbit
-            nodes={METHOD_STEPS.map((s) => ({
-              number: s.number,
-              title: s.title,
-              duration: s.duration,
-              icon: s.icon,
-              color: s.color,
-            }))}
-            activeIndex={activeStepIndex}
-            onSelect={setActiveStepIndex}
-            centerLabel={t("home.section.method")}
-          />
+          <SectionErrorBoundary sectionName="Diagramme Orbital de la Méthode">
+            <MethodOrbit
+              nodes={METHOD_STEPS.map((s) => ({
+                number: s.number,
+                title: s.title,
+                duration: s.duration,
+                icon: s.icon,
+                color: s.color,
+              }))}
+              activeIndex={activeStepIndex}
+              onSelect={setActiveStepIndex}
+              centerLabel={t("home.section.method")}
+            />
+          </SectionErrorBoundary>
         </div>
 
         {/* === Stepper mobile/tablette (l'orbite est masquée sous lg) === */}

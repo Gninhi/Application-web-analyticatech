@@ -104,16 +104,26 @@ export function useScrollProgress(threshold: number = SCROLL_THRESHOLDS.backToTo
     progress: 0,
     visible: false,
   });
+  const cachedTotalHeight = useRef<number>(1);
 
   useEffect(() => {
     let ticking = false;
+
+    const measureHeight = () => {
+      cachedTotalHeight.current = Math.max(
+        1,
+        document.documentElement.scrollHeight - window.innerHeight
+      );
+    };
+
+    measureHeight();
 
     const onScroll = () => {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
         const currentY = window.scrollY;
-        const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const totalHeight = cachedTotalHeight.current;
         const currentProgress = totalHeight > 0
           ? Math.min(100, Math.max(0, Math.round((currentY / totalHeight) * 100)))
           : 0;
@@ -132,10 +142,13 @@ export function useScrollProgress(threshold: number = SCROLL_THRESHOLDS.backToTo
 
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
+    window.addEventListener("resize", measureHeight, { passive: true });
+    const timer = setTimeout(measureHeight, 500);
+
     return () => {
+      clearTimeout(timer);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", measureHeight);
     };
   }, [threshold]);
 

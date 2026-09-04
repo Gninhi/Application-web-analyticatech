@@ -1,7 +1,7 @@
 "use client";
 
-import { type CSSProperties } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { type CSSProperties, useRef } from "react";
+import { motion } from "framer-motion";
 import { ArrowRight, TrendingUp } from "lucide-react";
 import { type SolutionDTO, type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
@@ -14,23 +14,28 @@ export interface SolutionCardProps {
   index: number;
   total: number;
   onNavigateDetail: (view: ViewKey, id: string) => void;
+  isVisible?: boolean;
 }
 
 /**
  * Carte solution — grand format avec en-tête technique, impact sectoriel
  * et navigation vers la fiche détaillée.
+ * Optimisée pour un scroll fluide 60fps :
+ * - Gel des animations coûteuses (conic-gradient et balayage) quand hors-écran
+ * - Cache du getBoundingClientRect sur mouseenter pour supprimer le layout thrashing
  */
 export function SolutionCard({
   solution,
   index,
   total,
   onNavigateDetail,
+  isVisible = true,
 }: SolutionCardProps) {
   const { t } = useI18n();
   const sol = solution;
   const num = String(index + 1).padStart(2, "0");
   const accent = getSolutionAccent(sol.order);
-  const reduceMotion = useReducedMotion();
+  const cardRectRef = useRef<DOMRect | null>(null);
 
   // En-tête image — esthétique premium minimaliste
   const headerGradient = `linear-gradient(135deg, #050a18 0%, #0a1328 55%, color-mix(in srgb, ${accent} 22%, #050a18) 130%)`;
@@ -55,14 +60,19 @@ export function SolutionCard({
     background: `linear-gradient(90deg, color-mix(in srgb, ${accent} 8%, transparent), transparent)`,
   };
 
-  // Spot lumineux suivant le curseur
+  // Spot lumineux suivant le curseur — calcul optimisé sans forced reflow
+  const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
+    cardRectRef.current = e.currentTarget.getBoundingClientRect();
+  };
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    const rect = cardRectRef.current;
+    if (!rect) return;
     const el = e.currentTarget;
-    const rect = el.getBoundingClientRect();
     el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
     el.style.setProperty("--my", `${e.clientY - rect.top}px`);
   };
   const handleMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
+    cardRectRef.current = null;
     const el = e.currentTarget;
     el.style.setProperty("--mx", "-200px");
     el.style.setProperty("--my", "-200px");
@@ -74,6 +84,7 @@ export function SolutionCard({
     <BorderRotate
       onClick={goToDetail}
       className="group shrink-0 w-[82vw] sm:w-[68vw] md:w-[54vw] lg:w-[42vw] h-[78vh] cursor-pointer"
+      animationMode={isVisible ? "auto-rotate" : "rotate-on-hover"}
       animationSpeed={9}
       borderRadius={30}
       borderWidth={2}
@@ -82,10 +93,16 @@ export function SolutionCard({
     >
       <article
         onClick={goToDetail}
+        onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         className="relative h-full w-full glass-card grain rounded-[28px] overflow-hidden flex flex-col"
-        style={{ "--sa": accent, "--mx": "-200px", "--my": "-200px" } as CSSProperties}
+        style={{
+          "--sa": accent,
+          "--mx": "-200px",
+          "--my": "-200px",
+          contentVisibility: isVisible ? "visible" : "auto",
+        } as CSSProperties}
       >
         {/* Liseré supérieur — teinte du secteur */}
         <div
@@ -130,8 +147,8 @@ export function SolutionCard({
           {/* Halo accent doux */}
           <div className="absolute inset-0" style={{ background: headerGlow }} aria-hidden />
 
-          {/* Balayage lumineux */}
-          {!reduceMotion && (
+          {/* Balayage lumineux (gelé si carte hors champ) */}
+          {isVisible && (
             <motion.div
               initial={{ x: "-140%" }}
               animate={{ x: "140%" }}
@@ -198,9 +215,9 @@ export function SolutionCard({
           className="relative z-20 flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain p-5 md:p-7 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[var(--glass-card-border)] [&::-webkit-scrollbar-track]:bg-transparent"
           style={{ scrollbarWidth: "thin", scrollbarColor: "var(--glass-card-border) transparent" }}
         >
-          <h3 className="font-display text-2xl md:text-3xl font-bold tracking-tight mb-3 text-foreground transition-colors duration-300 group-hover:text-[var(--sa)]">
+          <h2 className="font-display text-2xl md:text-3xl font-bold tracking-tight mb-3 text-foreground transition-colors duration-300 group-hover:text-[var(--sa)]">
             {sol.title}
-          </h3>
+          </h2>
           <div
             className="mb-4 h-px w-14"
             style={{ background: `linear-gradient(90deg, ${accent}, transparent)` }}

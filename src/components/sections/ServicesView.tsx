@@ -139,9 +139,9 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
               {t("services.persona.filter") || "Vue ciblée :"}
             </span>
             {[
-              { id: "ceo" as const, label: t("services.persona.ceo-label"), ariaLabel: t("services.persona.ceo"), color: "#F26D3D" },
-              { id: "architect" as const, label: t("services.persona.architect-label"), ariaLabel: t("services.persona.architect-label"), color: "#43A047" },
-              { id: "operational" as const, label: t("services.persona.operational-label"), ariaLabel: t("services.persona.operational-label"), color: "#38BDF8" },
+              { id: "ceo" as const, label: t("services.persona.ceo-label"), color: "#F26D3D" },
+              { id: "architect" as const, label: t("services.persona.architect-label"), color: "#43A047" },
+              { id: "operational" as const, label: t("services.persona.operational-label"), color: "#38BDF8" },
             ].map((p) => {
               const isSelected = activePersona === p.id;
               return (
@@ -150,7 +150,6 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
                   type="button"
                   role="tab"
                   aria-selected={isSelected}
-                  aria-label={p.ariaLabel}
                   onClick={() => handleSelectPersona(p.id)}
                   className={cn(
                     "glass rounded-lg px-3.5 py-1.5 font-mono text-xs uppercase tracking-wider cursor-pointer transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2",
@@ -339,6 +338,7 @@ function ServiceDeckCard({
   const meshOverlay = service.meshOverlay ?? getServiceMeshOverlay(service.index);
   const accent = getServiceAccent(service.index);
   const panelRef = useRef<HTMLDivElement>(null);
+  const panelRectRef = useRef<DOMRect | null>(null);
 
   const isLast = index === total - 1;
 
@@ -353,23 +353,22 @@ function ServiceDeckCard({
 
   // Parallaxe du décor : l'image de fond dérive très légèrement (±1.5%) à
   // l'opposé du scroll pendant que la carte monte.
-  //
-  // NOTE hydratation : le range est volontairement déterministe (jamais
-  // branché sur useReducedMotion, qui vaut null en SSR → mismatch serveur/
-  // client). La désactivation sous prefers-reduced-motion se fait en CSS
-  // (`.service-card-bg` + @media) pour rester identique entre les deux.
   const bgY = useTransform(progress, [0, 1], ["1.5%", "-1.5%"]);
 
   // Spot lumineux suivant le curseur (pattern 21st.dev) : 2 variables CSS
-  // posées au survol, aucun transform pendant le scroll.
+  // posées au survol, sans forced reflow pendant le déplacement
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    panelRectRef.current = e.currentTarget.getBoundingClientRect();
+  };
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = panelRef.current;
     if (!el) return;
-    const rect = el.getBoundingClientRect();
+    const rect = panelRectRef.current || el.getBoundingClientRect();
     el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
     el.style.setProperty("--my", `${e.clientY - rect.top}px`);
   };
   const handleMouseLeave = () => {
+    panelRectRef.current = null;
     const el = panelRef.current;
     if (!el) return;
     el.style.setProperty("--mx", "-200px");
@@ -436,6 +435,7 @@ function ServiceDeckCard({
       <div className="relative z-10 w-full max-w-6xl">
         <div
           ref={panelRef}
+          onMouseEnter={handleMouseEnter}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           data-testid="service-card-panel"

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 import { ArrowRight, Compass, Zap, ShieldCheck, Sparkles } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
@@ -17,61 +17,161 @@ interface SolutionsViewProps {
   onNavigateDetail: (view: ViewKey, id: string) => void;
 }
 
+interface SectionGeometry {
+  top: number;
+  range: number;
+  maxDrift: number;
+}
+
 /**
- * SolutionsView — catalogue interactif en scroll horizontal.
+ * SolutionsView — catalogue interactif en dérive latérale ultra-fluide (60 FPS).
  *
- * Structure du scroll (3 phases) :
- *  1. STAGING (0% → 15%) : la section se met en place, la piste
- *     horizontale est immobile, la 1ère carte est centrée/staged.
- *  2. DRIFT   (15% → 85%): la piste horizontale translate de gauche
- *     à droite, révélant les cartes successives.
- *  3. RELEASE (85% → 100%): la piste est immobile sur la dernière
- *     carte, puis la section libère le scroll vertical.
+ * Optimisations Scroll & Compositeur GPU :
+ *  1. Mesures de géométrie (top, range, maxDrift) mises en cache via ResizeObserver
+ *     -> STRICTEMENT AUCUNE lecture de layout (getBoundingClientRect, offsetHeight) pendant le scroll.
+ *  2. Scroll listener passif { passive: true } throttlé par requestAnimationFrame
+ *     -> Une seule lecture de window.scrollY par frame.
+ *  3. Dérive horizontale appliquée en transform3d direct sur le compositeur GPU
+ *     -> Zéro recalcul de reflow/layout dans la boucle d'animation.
+ *  4. IntersectionObserver avec marge de 250px pour geler les cartes hors-champ
+ *     -> Seules les cartes visibles ou immédiatement adjacentes calculent leurs effets.
  */
 export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewProps) {
   const { t } = useI18n();
   const { solutions: SOLUTIONS } = useAppContent();
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const pinSectionRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const geometryRef = useRef<SectionGeometry>({ top: 0, range: 1, maxDrift: 0 });
+  const rafIdRef = useRef<number | null>(null);
 
-  // Décalage horizontal total (px) pour amener la dernière carte au bord droit.
-  const [drift, setDrift] = useState(0);
-
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    const measure = () => {
-      const vw = window.innerWidth;
-      const trackWidth = track.scrollWidth;
-      const startPx = vw * 0.05;
-      setDrift(Math.max(0, trackWidth - vw + vw * 0.04 + startPx));
-    };
-    measure();
-    window.addEventListener("resize", measure);
-    const ro = new ResizeObserver(measure);
-    ro.observe(track);
-    return () => {
-      window.removeEventListener("resize", measure);
-      ro.disconnect();
-    };
-  }, [SOLUTIONS.length]);
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
+  // État de visibilité par index de carte
+  const [visibleMap, setVisibleMap] = useState<Record<number, boolean>>({
+    0: true,
+    1: true,
   });
 
-  // x mappé sur la portion centrale [0.15, 0.85] → lead-in & lead-out
-  const x = useTransform(scrollYProgress, [0.15, 0.85], [0, -drift]);
-  // Indicateur de progression (même plage que x)
+  // Motion values pour les indicateurs sans re-render React
+  const scrollYProgress = useMotionValue(0);
   const progressWidth = useTransform(scrollYProgress, [0.15, 0.85], ["0%", "100%"]);
-  // Opacité de la barre de progression (s'allume pendant le drift)
   const driftActive = useTransform(
     scrollYProgress,
     [0.14, 0.16, 0.84, 0.86],
     [0.3, 1, 1, 0.3]
   );
+
+  // Mise à jour de la dérive sur le compositeur GPU
+  const updateScrollPosition = useCallback(() => {
+    rafIdRef.current = null;
+    const { top, range, maxDrift } = geometryRef.current;
+    if (range <= 0) return;
+
+    const currentScrollY = window.scrollY;
+    const progress = Math.max(0, Math.min(1, (currentScrollY - top) / range));
+    scrollYProgress.set(progress);
+
+    // Mappage du drift sur l'intervalle [0.15, 0.85]
+    let driftFraction = 0;
+    if (progress <= 0.15) {
+      driftFraction = 0;
+    } else if (progress >= 0.85) {
+      driftFraction = 1;
+    } else {
+      driftFraction = (progress - 0.15) / 0.7;
+    }
+
+    const currentX = driftFraction * maxDrift;
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translate3d(-${currentX}px, 0, 0)`;
+    }
+  }, [scrollYProgress]);
+
+  // Handler de scroll passif synchronisé avec le refresh rate de l'écran
+  const onScroll = useCallback(() => {
+    if (rafIdRef.current === null) {
+      rafIdRef.current = requestAnimationFrame(updateScrollPosition);
+    }
+  }, [updateScrollPosition]);
+
+  // Calcul géométrique (uniquement sur resize ou changement de contenu)
+  const measureGeometry = useCallback(() => {
+    const pinSection = pinSectionRef.current;
+    const track = trackRef.current;
+    if (!pinSection || !track) return;
+
+    const vh = window.innerHeight;
+    const vw = window.innerWidth;
+    const rect = pinSection.getBoundingClientRect();
+    const top = rect.top + window.scrollY;
+    const pinHeight = pinSection.offsetHeight;
+    const range = Math.max(1, pinHeight - vh);
+
+    const trackWidth = track.scrollWidth;
+    const startPx = vw * 0.05;
+    const maxDrift = Math.max(0, trackWidth - vw + vw * 0.04 + startPx);
+
+    geometryRef.current = { top, range, maxDrift };
+    updateScrollPosition();
+  }, [updateScrollPosition]);
+
+  useEffect(() => {
+    measureGeometry();
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", measureGeometry, { passive: true });
+
+    const ro = new ResizeObserver(() => {
+      measureGeometry();
+    });
+
+    if (trackRef.current) ro.observe(trackRef.current);
+    if (pinSectionRef.current) ro.observe(pinSectionRef.current);
+
+    return () => {
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", measureGeometry);
+      ro.disconnect();
+    };
+  }, [measureGeometry, onScroll]);
+
+  // IntersectionObserver pour geler l'activité des cartes hors du viewport
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        setVisibleMap((prev) => {
+          let changed = false;
+          const next = { ...prev };
+          for (const entry of entries) {
+            const idxStr = (entry.target as HTMLElement).dataset.cardIndex;
+            if (idxStr !== undefined) {
+              const idx = parseInt(idxStr, 10);
+              if (next[idx] !== entry.isIntersecting) {
+                next[idx] = entry.isIntersecting;
+                changed = true;
+              }
+            }
+          }
+          return changed ? next : prev;
+        });
+      },
+      {
+        root: null,
+        rootMargin: "0px 250px 0px 250px", // Pré-chauffe les cartes 250px avant l'entrée dans l'écran
+        threshold: 0.01,
+      }
+    );
+
+    cardRefs.current.forEach((el) => {
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [SOLUTIONS.length]);
 
   // Hauteur totale : lead-in + drift + lead-out
   const totalHeight = `${(SOLUTIONS.length + 1) * 100}vh`;
@@ -108,25 +208,34 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
         </SectionContainer>
       </section>
 
-      {/* === Piste horizontale pin === */}
-      <section className="relative" style={{ height: totalHeight }}>
+      {/* === Piste horizontale pinée === */}
+      <section ref={pinSectionRef} className="relative" style={{ height: totalHeight }}>
         <div className="sticky top-0 h-screen flex items-center overflow-hidden">
           {/* Indicateur de phase */}
           <PhaseIndicator progress={scrollYProgress} />
 
-          <motion.div
+          <div
             ref={trackRef}
-            style={{ x }}
+            style={{ willChange: "transform" }}
             className="flex gap-5 md:gap-8 pl-[6vw] md:pl-[8vw] pr-[6vw]"
           >
             {SOLUTIONS.map((sol, i) => (
-              <SolutionCard
+              <div
                 key={sol.id}
-                solution={sol}
-                index={i}
-                total={SOLUTIONS.length}
-                onNavigateDetail={onNavigateDetail}
-              />
+                ref={(el) => {
+                  cardRefs.current[i] = el;
+                }}
+                data-card-index={i}
+                className="shrink-0"
+              >
+                <SolutionCard
+                  solution={sol}
+                  index={i}
+                  total={SOLUTIONS.length}
+                  isVisible={visibleMap[i] ?? (i < 2)}
+                  onNavigateDetail={onNavigateDetail}
+                />
+              </div>
             ))}
 
             {/* Carte finale CTA */}
@@ -159,7 +268,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
                 {t("solutions.final.cta")}
               </Button>
             </article>
-          </motion.div>
+          </div>
         </div>
       </section>
 

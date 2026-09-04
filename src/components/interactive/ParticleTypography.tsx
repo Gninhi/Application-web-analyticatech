@@ -1,33 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import { useRef, type CSSProperties, type ElementType } from "react";
 import { cn } from "@/lib/utils/cn";
 
 export interface ParticleTypographyProps {
-  /** Classes CSS additionnelles pour le conteneur */
-  className?: string;
-  /** Ligne 1 du titre (ou texte principal) */
   title: string;
-  /** Mot-clé accentué sur la même ligne (ex: "INTELLIGENTS" sur l'accueil) */
   titleAccent?: string;
-  /** Ligne 2 accentuée (ex: "sans zone grise entre elles") */
   accent?: string;
-  /** Sous-titre secondaire (rendu sous le titre) */
   subtitle?: string;
-  /** Balise sémantique pour le SEO. Défaut : "h1" */
-  as?: "h1" | "h2" | "h3" | "div";
-  /** Applique le dégradé de marque sur la totalité de la première ligne */
+  className?: string;
+  as?: ElementType;
   gradient?: boolean;
-  /** Alignement horizontal */
-  align?: "left" | "center";
+  align?: "left" | "center" | "right";
 }
 
 /**
- * ParticleTypography — Typographie premium, fluide et interactive.
+ * ParticleTypography — Typographie éditoriale haute performance.
  *
- * - Rendu SSR & Client immédiat : aucun masquage (invisible) ni décalage de layout (CLS = 0).
- * - Effet de lueur et dégradé text-shimmer interactif réactif au survol du curseur.
- * - Accessibilité SEO maximale : balise sémantique h1/h2 native lisible par les moteurs de recherche.
+ * Rendu textuel sémantique pur pour le SEO et l'accessibilité avec un halo
+ * interactif fluide accéléré par le compositeur GPU (sans re-render React au déplacement de la souris).
  */
 export function ParticleTypography({
   className,
@@ -39,22 +30,33 @@ export function ParticleTypography({
   gradient = false,
   align = "left",
 }: ParticleTypographyProps) {
-  const [mousePos, setMousePos] = useState<{ x: number; y: number } | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    rectRef.current = e.currentTarget.getBoundingClientRect();
+  };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
+    const el = containerRef.current;
+    if (!el) return;
+    const rect = rectRef.current || el.getBoundingClientRect();
+    el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+    el.style.setProperty("--my", `${e.clientY - rect.top}px`);
   };
 
   const handleMouseLeave = () => {
-    setMousePos(null);
+    rectRef.current = null;
+    const el = containerRef.current;
+    if (!el) return;
+    el.style.setProperty("--mx", "-300px");
+    el.style.setProperty("--my", "-300px");
   };
 
   return (
     <div
+      ref={containerRef}
+      onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={cn(
@@ -62,17 +64,16 @@ export function ParticleTypography({
         align === "center" && "text-center",
         className
       )}
+      style={{ "--mx": "-300px", "--my": "-300px" } as CSSProperties}
     >
-      {/* Halo interactif subtil au survol du titre */}
-      {mousePos && (
-        <div
-          className="pointer-events-none absolute -inset-4 rounded-3xl opacity-40 dark:opacity-30 blur-2xl transition-opacity duration-300"
-          style={{
-            background: `radial-gradient(280px circle at ${mousePos.x}px ${mousePos.y}px, rgba(242, 109, 61, 0.22), transparent 80%)`,
-          }}
-          aria-hidden="true"
-        />
-      )}
+      {/* Halo interactif subtil au survol du titre — compositeur GPU direct sans re-render React */}
+      <div
+        className="pointer-events-none absolute -inset-4 rounded-3xl opacity-0 group-hover/typography:opacity-40 dark:group-hover/typography:opacity-30 blur-2xl transition-opacity duration-300"
+        style={{
+          background: "radial-gradient(280px circle at var(--mx) var(--my), rgba(242, 109, 61, 0.22), transparent 80%)",
+        }}
+        aria-hidden="true"
+      />
 
       <Component className="relative font-display font-bold tracking-tight leading-[1.05]">
         {/* Première ligne : Titre principal + mot-clé accentué */}
@@ -88,29 +89,22 @@ export function ParticleTypography({
           {titleAccent && (
             <>
               {" "}
-              <span className="text-shimmer font-bold inline-block transition-transform duration-300 group-hover/typography:scale-[1.01]">
-                {titleAccent}
-              </span>
+              <span className="text-[#F26D3D]">{titleAccent}</span>
             </>
           )}
         </span>
 
-        {/* Deuxième ligne accentuée (si fournie) */}
+        {/* Ligne d'accentuation secondaire (si fournie) */}
         {accent && (
-          <span className="block text-shimmer mt-1 font-bold">
+          <span className="block mt-1 md:mt-2 text-[#F26D3D]">
             {accent}
           </span>
         )}
       </Component>
 
-      {/* Sous-titre secondaire (si fourni) */}
+      {/* Sous-titre explicatif avec espacement proportionnel */}
       {subtitle && (
-        <p
-          className={cn(
-            "mt-3 text-2xl sm:text-3xl md:text-4xl font-normal text-slate-600 dark:text-slate-300 leading-snug tracking-normal",
-            align === "center" && "mx-auto max-w-2xl"
-          )}
-        >
+        <p className="mt-4 md:mt-6 font-mono text-xs md:text-sm uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 max-w-xl">
           {subtitle}
         </p>
       )}

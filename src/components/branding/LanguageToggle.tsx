@@ -49,7 +49,7 @@ export function LanguageToggle() {
     ? "Passer en anglais (Switch to English)"
     : "Switch to French (Passer en français)";
 
-  const ariaLabel = `${displayLocale.toUpperCase()} · ${actionLabel}`;
+  const ariaLabel = `${displayLocale.toUpperCase()} ⇄ ${targetLocale.toUpperCase()} · ${actionLabel}`;
 
   return (
     <button
@@ -63,7 +63,7 @@ export function LanguageToggle() {
       <span className="font-mono text-xs font-bold tracking-wider">
         {displayLocale.toUpperCase()}
       </span>
-      <span className="text-[10px] text-slate-400 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors font-mono">
+      <span className="text-[10px] text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors font-mono font-medium">
         ⇄ {targetLocale.toUpperCase()}
       </span>
     </button>

@@ -8,6 +8,7 @@ export interface TerminalFieldProps {
   onChange: (v: string) => void;
   placeholder?: string;
   type?: string;
+  autoComplete?: string;
   error?: string;
   required?: boolean;
 }
@@ -19,6 +20,7 @@ export function TerminalField({
   onChange,
   placeholder,
   type = "text",
+  autoComplete,
   error,
   required,
 }: TerminalFieldProps) {
@@ -34,6 +36,7 @@ export function TerminalField({
         id={name}
         name={name}
         type={type}
+        autoComplete={autoComplete}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}

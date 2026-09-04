@@ -12,9 +12,9 @@ export function ContactSidePanel() {
     <aside className="lg:col-span-2 space-y-5">
       {/* Canaux de contact directs */}
       <div className="glass-card rounded-2xl p-6">
-        <h3 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] mb-4">
+        <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] mb-4">
           {t("contact.channels")}
-        </h3>
+        </h2>
         <ul className="space-y-4">
           <li className="flex items-start gap-3">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/20">
@@ -61,9 +61,9 @@ export function ContactSidePanel() {
 
       {/* Engagements de réponse & SLA */}
       <div className="glass-card rounded-2xl p-6">
-        <h3 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] mb-4">
+        <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] mb-4">
           {t("contact.sla.title")}
-        </h3>
+        </h2>
         <div className="space-y-3">
           {[
             { l: t("contact.sla.ack"), v: t("contact.sla.ack.v") },

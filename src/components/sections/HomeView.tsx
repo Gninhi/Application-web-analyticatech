@@ -89,9 +89,9 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
                 <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] font-bold">
                   {t("home.section.proof")}
                 </span>
-                <h3 className="font-display text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-50 mt-1">
+                <h2 className="font-display text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-50 mt-1">
                   {t("home.proof.heading")}
-                </h3>
+                </h2>
               </div>
               <span className="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-white/50 dark:bg-white/5 px-4 py-2 rounded-full border border-black/5 dark:border-white/10">
                 {t("home.section.proof.tagline")}

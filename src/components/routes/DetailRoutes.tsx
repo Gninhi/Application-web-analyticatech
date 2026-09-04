@@ -6,27 +6,38 @@ import {
   SolutionDetailView,
   BlogDetailView,
 } from "@/components/sections/DetailView";
+import { SectionErrorBoundary } from "@/components/system/SectionErrorBoundary";
 
 /** Route "/services/[index]" — détail d'un service. */
 export function ServiceDetailRoute({ index }: { index: string }) {
   const { handleNavigate, handleNavigateDetail } = useViewNavigation();
   return (
-    <ServiceDetailView
-      serviceIndex={index}
-      onNavigate={handleNavigate}
-      onNavigateDetail={handleNavigateDetail}
-    />
+    <SectionErrorBoundary sectionName="Détail Service">
+      <ServiceDetailView
+        serviceIndex={index}
+        onNavigate={handleNavigate}
+        onNavigateDetail={handleNavigateDetail}
+      />
+    </SectionErrorBoundary>
   );
 }
 
 /** Route "/solutions/[slug]" — détail d'une solution. */
 export function SolutionDetailRoute({ slug }: { slug: string }) {
   const { handleNavigate } = useViewNavigation();
-  return <SolutionDetailView solutionSlug={slug} onNavigate={handleNavigate} />;
+  return (
+    <SectionErrorBoundary sectionName="Détail Solution">
+      <SolutionDetailView solutionSlug={slug} onNavigate={handleNavigate} />
+    </SectionErrorBoundary>
+  );
 }
 
 /** Route "/insights/[slug]" — détail d'un article. */
 export function PostDetailRoute({ slug }: { slug: string }) {
   const { handleNavigate } = useViewNavigation();
-  return <BlogDetailView postSlug={slug} onNavigate={handleNavigate} />;
+  return (
+    <SectionErrorBoundary sectionName="Détail Article">
+      <BlogDetailView postSlug={slug} onNavigate={handleNavigate} />
+    </SectionErrorBoundary>
+  );
 }
