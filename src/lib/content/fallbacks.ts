@@ -310,6 +310,20 @@ export const FALLBACK_SOLUTIONS_FR: SolutionDTO[] = [
     tags: ["Reinforcement Learning", "Smart Grid", "Arbitrage"],
     order: 6,
   },
+  {
+    id: "sol-7",
+    slug: "dealscoop",
+    sector: "M&A & Private Equity",
+    title: "Sourcing d'opportunités M&A par l'IA",
+    summary: "Détection continue de signaux d'affaires faibles et forts (gouvernance, recrutements clés, expansion, indices de transmission) et scoring d'alignement avec vos thèses d'investissement pour générer un deal flow propriétaire qualifié (hors marché) pour fonds de Private Equity, banques d'affaires et directions M&A.",
+    impact: "Origination propriétaire continue · Scoring d'alignement sur-mesure",
+    impactLabel: "Capacité & Méthode",
+    statusBadge: "Nouvelle offre",
+    statusType: "new",
+    methodology: "Pipeline multi-sources (greffes, signaux RH, actualités régionales) calibré sur vos thèses d'investissement et critères de build-up.",
+    tags: ["Origination", "Signaux d'affaires", "Scoring M&A"],
+    order: 7,
+  },
 ];
 
 /** Solutions par défaut EN (repli offline pour /en/solutions et /en/solutions/[slug]). */
@@ -379,6 +393,20 @@ export const FALLBACK_SOLUTIONS_EN: SolutionDTO[] = [
     methodology: "Simulation and operational feedback across energy grid operations, 2024–2025.",
     tags: ["Reinforcement Learning", "Smart Grid", "Arbitrage"],
     order: 6,
+  },
+  {
+    id: "sol-7",
+    slug: "dealscoop",
+    sector: "M&A & Private Equity",
+    title: "AI-Powered M&A Deal Sourcing",
+    summary: "Continuous monitoring of weak and strong business signals (governance shifts, key hires, expansion, succession triggers) and investment thesis alignment scoring to generate qualified, proprietary (off-market) deal flow for Private Equity firms, M&A advisors, and corporate development teams.",
+    impact: "Continuous proprietary origination · Tailored thesis scoring",
+    impactLabel: "Capability & Methodology",
+    statusBadge: "New offering",
+    statusType: "new",
+    methodology: "Multi-source pipeline (company registries, talent signals, regional press) calibrated to your investment thesis and build-up criteria.",
+    tags: ["Origination", "Business Signals", "M&A Scoring"],
+    order: 7,
   },
 ];
 
@@ -825,6 +853,7 @@ export const FALLBACK_BLOG_CATEGORIES_FR: BlogCategoryDTO[] = [
   { id: "cat-1", key: "ia", label: "Intelligence Artificielle", colorClass: "text-[#F26D3D]", order: 1 },
   { id: "cat-2", key: "automation", label: "Automatisation", colorClass: "text-[#38BDF8]", order: 2 },
   { id: "cat-3", key: "data", label: "Data & Décision", colorClass: "text-[#A855F7]", order: 3 },
+  { id: "cat-4", key: "architecture", label: "Architecture & Infra", colorClass: "text-[#10B981]", order: 4 },
 ];
 
 /** Catégories du blog par défaut EN. */
@@ -832,6 +861,7 @@ export const FALLBACK_BLOG_CATEGORIES_EN: BlogCategoryDTO[] = [
   { id: "cat-1", key: "ia", label: "Artificial Intelligence", colorClass: "text-[#F26D3D]", order: 1 },
   { id: "cat-2", key: "automation", label: "Automation", colorClass: "text-[#38BDF8]", order: 2 },
   { id: "cat-3", key: "data", label: "Data & Decision", colorClass: "text-[#A855F7]", order: 3 },
+  { id: "cat-4", key: "architecture", label: "Architecture & Infra", colorClass: "text-[#10B981]", order: 4 },
 ];
 
 /** Articles de blog / insights par défaut FR. */
@@ -872,6 +902,42 @@ export const FALLBACK_BLOG_POSTS_FR: BlogPostDTO[] = [
     author: "Martial GNINHI",
     tags: ["dbt", "Snowflake", "BI", "Semantic Layer"],
   },
+  {
+    id: "post-4",
+    slug: "agents-production-2025",
+    title: "Industrialiser les agents IA : du POC au système agentique en production",
+    excerpt: "Pourquoi 80% des POC agents échouent à l'échelle et les 5 piliers d'architecture qui font la différence entre une démo et un système d'entreprise fiable.",
+    categoryKey: "ia",
+    categoryLabel: "Intelligence Artificielle",
+    date: "2025-09-14T00:00:00.000Z",
+    readingTime: "11 min",
+    author: "Martial GNINHI",
+    tags: ["Agents", "LangGraph", "Production", "MCP", "Langfuse"],
+  },
+  {
+    id: "post-5",
+    slug: "event-driven-agents",
+    title: "Architecture event-driven pour systèmes multi-agents",
+    excerpt: "Les agents ne communiquent pas par appels synchrones. Découvrez le pattern event-driven sur Kafka qui rend vos flottes d'agents résilientes et observables.",
+    categoryKey: "architecture",
+    categoryLabel: "Architecture & Infra",
+    date: "2025-07-15T00:00:00.000Z",
+    readingTime: "12 min",
+    author: "Martial GNINHI",
+    tags: ["Event-driven", "Kafka", "Multi-Agents", "Microservices"],
+  },
+  {
+    id: "post-6",
+    slug: "finops-cloud-native",
+    title: "FinOps cloud-native : réduire sa facture sans sacrifier l'uptime",
+    excerpt: "Comment diviser par deux le gaspillage de compute sur Kubernetes avec Karpenter, l'autoscaling par files de messages et une stratégie Spot étanche.",
+    categoryKey: "architecture",
+    categoryLabel: "Architecture & Infra",
+    date: "2025-06-29T00:00:00.000Z",
+    readingTime: "6 min",
+    author: "Martial GNINHI",
+    tags: ["FinOps", "Kubernetes", "Karpenter", "Cloud", "AWS"],
+  },
 ];
 
 /** Articles de blog / insights par défaut EN. */
@@ -911,6 +977,42 @@ export const FALLBACK_BLOG_POSTS_EN: BlogPostDTO[] = [
     readingTime: "5 min",
     author: "Martial GNINHI",
     tags: ["dbt", "Snowflake", "BI", "Semantic Layer"],
+  },
+  {
+    id: "post-4",
+    slug: "agents-production-2025",
+    title: "Industrializing AI Agents: From POC to Production-Grade Agentic Systems",
+    excerpt: "Why 80% of agent POCs fail to scale, and the 5 architectural pillars that make the difference between a demo and an enterprise-grade system.",
+    categoryKey: "ia",
+    categoryLabel: "Artificial Intelligence",
+    date: "2025-09-14T00:00:00.000Z",
+    readingTime: "11 min",
+    author: "Martial GNINHI",
+    tags: ["Agents", "LangGraph", "Production", "MCP", "Langfuse"],
+  },
+  {
+    id: "post-5",
+    slug: "event-driven-agents",
+    title: "Event-Driven Architecture for Multi-Agent Systems",
+    excerpt: "Agents don't communicate via synchronous HTTP calls. Discover the Kafka event-driven pattern ensuring autonomous fleets remain fault-tolerant.",
+    categoryKey: "architecture",
+    categoryLabel: "Architecture & Infra",
+    date: "2025-07-15T00:00:00.000Z",
+    readingTime: "12 min",
+    author: "Martial GNINHI",
+    tags: ["Event-driven", "Kafka", "Multi-Agents", "Microservices"],
+  },
+  {
+    id: "post-6",
+    slug: "finops-cloud-native",
+    title: "Cloud-Native FinOps: Cutting Infrastructure Costs Without Sacrificing Uptime",
+    excerpt: "How to halve Kubernetes compute waste with Karpenter, queue-based autoscaling, and zero-downtime spot instance strategies.",
+    categoryKey: "architecture",
+    categoryLabel: "Architecture & Infra",
+    date: "2025-06-29T00:00:00.000Z",
+    readingTime: "6 min",
+    author: "Martial GNINHI",
+    tags: ["FinOps", "Kubernetes", "Karpenter", "Cloud", "AWS"],
   },
 ];
 

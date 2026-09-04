@@ -9,20 +9,42 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ContactCta } from "@/components/ui/ContactCta";
 import { DetailNotFound } from "./DetailNotFound";
+import { getSolutionDetailData } from "@/lib/content/solutions-detail-data";
+import { SolutionDetailTemplate } from "./SolutionDetailTemplate";
 
 export interface SolutionDetailViewProps {
   solutionSlug: string;
   onNavigate: (view: ViewKey) => void;
+  onNavigateDetail?: (view: ViewKey, id: string) => void;
 }
 
 /**
  * SolutionDetailView — page de détail d'une solution sectorielle.
  * Résolue par slug (URL partageable), plus stable que l'UUID.
+ * Rend le template enrichi haute crédibilité si les données sont disponibles,
+ * sinon retombe élégamment sur le rendu standardisé.
  */
-export function SolutionDetailView({ solutionSlug, onNavigate }: SolutionDetailViewProps) {
-  const { t } = useI18n();
+export function SolutionDetailView({
+  solutionSlug,
+  onNavigate,
+  onNavigateDetail,
+}: SolutionDetailViewProps) {
+  const { t, locale } = useI18n();
   const { solutions } = useAppContent();
   const solution = solutions.find((s) => s.slug === solutionSlug);
+
+  // Recherche de données enrichies dans le registre
+  const detailData = getSolutionDetailData(solutionSlug, locale);
+
+  if (detailData) {
+    return (
+      <SolutionDetailTemplate
+        data={detailData}
+        onNavigate={onNavigate}
+        onNavigateDetail={onNavigateDetail}
+      />
+    );
+  }
 
   if (!solution) {
     return (

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Search, FlaskConical, Factory, TrendingUp, Check, ArrowRight, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { MethodOrbit } from "@/components/sections/MethodOrbit";
+import { Orbit3DMethod } from "@/components/ui/orbit-3d-method";
 import { SectionErrorBoundary } from "@/components/system/SectionErrorBoundary";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils/cn";
@@ -23,10 +23,9 @@ export interface MethodStep {
 }
 
 /* 4 phases en orbite : icônes + couleurs d'accent alignées sur la palette
-   des piliers (le vert #43A047 disparaît avec le service 02 — la palette est
-   rééquilibrée : orange marque / bleu agents / violet data / ambre). */
-const STEP_ICONS = [Search, FlaskConical, Factory, TrendingUp];
-const STEP_COLORS = ["#F26D3D", "#38BDF8", "#A855F7", "#F59E0B"];
+   de marque Analyticatech (Orange #F26D3D, Cyan #38BDF8, Violet #A855F7, Ambre #F59E0B) */
+const STEP_ICONS = [Search, FlaskConical, Factory, TrendingUp] as const;
+const STEP_COLORS = ["#F26D3D", "#38BDF8", "#A855F7", "#F59E0B"] as const;
 
 interface AgentoryMethodProps {
   onNavigateContact?: () => void;
@@ -34,9 +33,9 @@ interface AgentoryMethodProps {
 
 export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
   const { t } = useI18n();
-  const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
-  const METHOD_STEPS: MethodStep[] = Array.from({ length: 4 }, (_, i) => {
-    const n = i + 1;
+  const [activeStepIndex, setActiveStepIndex] = useState(0);
+
+  const METHOD_STEPS: MethodStep[] = [1, 2, 3, 4].map((n, i) => {
     return {
       number: `0${n}`,
       phase: t(`method.step${n}.phase`),
@@ -71,10 +70,10 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
       </div>
 
       <div className="grid items-center gap-10 lg:grid-cols-12">
-        {/* === Orbite (desktop) : les 4 phases gravitent autour du hub === */}
+        {/* === Visualisation 3D native CSS/GPU avec Hub Central & Orbites (desktop) === */}
         <div className="lg:col-span-5">
-          <SectionErrorBoundary sectionName="Diagramme Orbital de la Méthode">
-            <MethodOrbit
+          <SectionErrorBoundary sectionName="Visualisation 3D de la Méthode">
+            <Orbit3DMethod
               nodes={METHOD_STEPS.map((s) => ({
                 number: s.number,
                 title: s.title,
@@ -136,7 +135,10 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
 
         {/* === Panneau de détail — crossfade grid-stack avec émanation spatiale (hauteur stable) === */}
         <div className="lg:col-span-7">
-          <div className="relative overflow-hidden glass-card rounded-3xl p-6 md:p-10 grid">
+          <div
+            className="relative overflow-hidden glass-card rounded-3xl p-6 md:p-10 grid"
+            style={{ perspective: 1000, transformStyle: "preserve-3d" }}
+          >
             {/* Lueur d'ambiance diffuse émanant du flux de la phase active */}
             <div
               className="pointer-events-none absolute -top-16 -left-16 h-72 w-72 rounded-full opacity-25 dark:opacity-20 transition-all duration-700 blur-3xl"
@@ -154,11 +156,13 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                   initial={false}
                   animate={{
                     opacity: isActive ? 1 : 0,
-                    x: isActive ? 0 : -16,
-                    scale: isActive ? 1 : 0.985,
+                    x: isActive ? 0 : -14,
+                    scale: isActive ? 1 : 0.98,
+                    rotateY: isActive ? 0 : -3,
+                    z: isActive ? 0 : 15,
                   }}
                   transition={{
-                    duration: 0.35,
+                    duration: 0.38,
                     ease: [0.16, 1, 0.3, 1],
                   }}
                   inert={!isActive}

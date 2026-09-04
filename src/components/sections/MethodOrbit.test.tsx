@@ -73,7 +73,7 @@ describe("MethodOrbit — Système Orbital & Synergie des 4 Phases", () => {
     expect(html).toContain('aria-selected="false"');
   });
 
-  it("rend le hub central avec le label et le micro-badge vivant SYS.LIVE", () => {
+  it("rend le hub central avec le label épuré sans texte SYS.LIVE", () => {
     const html = renderToStaticMarkup(
       <MethodOrbit
         nodes={MOCK_NODES}
@@ -84,7 +84,7 @@ describe("MethodOrbit — Système Orbital & Synergie des 4 Phases", () => {
     );
 
     expect(html).toContain("07 — Méthode");
-    expect(html).toContain("SYS.LIVE");
+    expect(html).not.toContain("SYS.LIVE");
     expect(html).toContain("orbit-hub-halo");
     expect(html).toContain("orbit-sonar-pulse");
   });

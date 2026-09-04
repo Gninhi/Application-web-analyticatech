@@ -14,6 +14,7 @@ const SECTOR_TRANSLATIONS_EN: Record<string, string> = {
   "Aéro": "Aerospace",
   "Cybersécurité": "Cybersecurity",
   "Public": "Public Sector",
+  "M&A & Private Equity": "M&A & Private Equity",
 };
 
 const SOLUTION_METHODOLOGY_FR: Record<string, string> = {
@@ -26,6 +27,7 @@ const SOLUTION_METHODOLOGY_FR: Record<string, string> = {
   "industry-auto": "Résultats mesurés sur lignes de production industrielle instrumentées, 2024–2025.",
   "energy-smartgrid": "Modélisation et retours d'exploitation sur réseaux d'énergie, 2024–2025.",
   "public-data": "Modélisation et retours d'exploitation sur infrastructures publiques, 2024–2025.",
+  "dealscoop": "Pipeline multi-sources (greffes, signaux RH, actualités régionales) calibré sur vos thèses d'investissement et critères de build-up.",
 };
 
 const SOLUTION_METHODOLOGY_EN: Record<string, string> = {
@@ -38,6 +40,7 @@ const SOLUTION_METHODOLOGY_EN: Record<string, string> = {
   "industry-auto": "Measured on instrumented industrial manufacturing lines, 2024–2025.",
   "energy-smartgrid": "Simulation and operational feedback across energy grid operations, 2024–2025.",
   "public-data": "Simulation and operational feedback across public infrastructure, 2024–2025.",
+  "dealscoop": "Multi-source pipeline (company registries, talent signals, regional press) calibrated to your investment thesis and build-up criteria.",
 };
 
 export const getSolutions = cache(async (locale: Locale = "fr"): Promise<SolutionDTO[]> => {
@@ -76,6 +79,9 @@ export const getSolutions = cache(async (locale: Locale = "fr"): Promise<Solutio
         methodology,
         tags: sol.tags.map((t) => t.tag),
         order: sol.order,
+        statusBadge: sol.slug === "dealscoop" ? (locale === "en" ? "New offering" : "Nouvelle offre") : undefined,
+        statusType: sol.slug === "dealscoop" ? "new" : "deployed",
+        impactLabel: sol.slug === "dealscoop" ? (locale === "en" ? "Capability & Methodology" : "Capacité & Méthode") : undefined,
       };
     });
   } catch {

@@ -31,8 +31,8 @@ const mockPost: BlogPostDTO = {
 };
 
 describe("SolutionCard Component", () => {
-  it("affiche les chiffres d'impact et la note de méthodologie pour les 6 cas d'usage FR", () => {
-    expect(FALLBACK_SOLUTIONS_FR).toHaveLength(6);
+  it("affiche les informations pour les 7 cas d'usage FR, avec badge Nouvelle offre et Capacité & Méthode pour Dealscoop", () => {
+    expect(FALLBACK_SOLUTIONS_FR).toHaveLength(7);
 
     for (let i = 0; i < FALLBACK_SOLUTIONS_FR.length; i++) {
       const solution = FALLBACK_SOLUTIONS_FR[i];
@@ -40,7 +40,7 @@ describe("SolutionCard Component", () => {
         <SolutionCard
           solution={solution}
           index={i}
-          total={6}
+          total={7}
           onNavigateDetail={() => {}}
         />,
         "fr"
@@ -50,11 +50,17 @@ describe("SolutionCard Component", () => {
       expect(html).toContain(solution.impact);
       expect(solution.methodology).toBeDefined();
       expect(html).toContain(solution.methodology);
+
+      if (solution.slug === "dealscoop") {
+        expect(html).toContain("Nouvelle offre");
+        expect(html).toContain("Capacité & Méthode");
+        expect(html).not.toContain("Déployé en production");
+      }
     }
   });
 
-  it("affiche les chiffres d'impact et la note de méthodologie pour les 6 cas d'usage EN", () => {
-    expect(FALLBACK_SOLUTIONS_EN).toHaveLength(6);
+  it("affiche les chiffres d'impact et la note de méthodologie pour les 7 cas d'usage EN", () => {
+    expect(FALLBACK_SOLUTIONS_EN).toHaveLength(7);
 
     for (let i = 0; i < FALLBACK_SOLUTIONS_EN.length; i++) {
       const solution = FALLBACK_SOLUTIONS_EN[i];
@@ -62,7 +68,7 @@ describe("SolutionCard Component", () => {
         <SolutionCard
           solution={solution}
           index={i}
-          total={6}
+          total={7}
           onNavigateDetail={() => {}}
         />,
         "en"
@@ -72,6 +78,12 @@ describe("SolutionCard Component", () => {
       expect(html).toContain(solution.impact);
       expect(solution.methodology).toBeDefined();
       expect(html).toContain(solution.methodology);
+
+      if (solution.slug === "dealscoop") {
+        expect(html).toContain("New offering");
+        expect(html).toContain("Capability & Methodology");
+        expect(html).not.toContain("Deployed in Production");
+      }
     }
   });
 });

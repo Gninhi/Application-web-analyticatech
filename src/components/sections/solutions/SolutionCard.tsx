@@ -186,12 +186,19 @@ export function SolutionCard({
             </div>
           </div>
 
-          {/* Bottom row : statut déployé + hover hint */}
+          {/* Bottom row : statut déployé ou nouvelle offre + hover hint */}
           <div className="absolute bottom-4 left-5 right-5 z-20 flex items-center justify-between">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#4CAF50]/30 bg-[#4CAF50]/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-[#4CAF50] backdrop-blur-sm">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#4CAF50] animate-pulse" />
-              {t("common.deployed")}
-            </span>
+            {sol.statusType === "new" ? (
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-indigo-600 dark:text-indigo-400 backdrop-blur-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse" />
+                {sol.statusBadge ?? "Nouvelle offre"}
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#4CAF50]/30 bg-[#4CAF50]/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-[#4CAF50] backdrop-blur-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#4CAF50] animate-pulse" />
+                {sol.statusBadge ?? t("common.deployed")}
+              </span>
+            )}
             <span
               className="font-mono text-[10px] uppercase tracking-widest opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               style={{ color: accent }}
@@ -227,7 +234,7 @@ export function SolutionCard({
             {sol.summary}
           </p>
 
-          {/* Impact sectoriel */}
+          {/* Impact sectoriel ou Capacité & Méthode */}
           <div className="relative rounded-xl p-3.5 md:p-4 mb-4 flex items-start gap-3.5 overflow-hidden" style={impactStyle}>
             <span className="absolute inset-y-2 left-0 w-0.5 rounded-full" style={{ background: accent }} aria-hidden />
             <span className="h-10 w-10 shrink-0 rounded-lg border flex items-center justify-center mt-0.5" style={chipStyle}>
@@ -235,7 +242,7 @@ export function SolutionCard({
             </span>
             <div className="min-w-0 flex-1">
               <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground mb-0.5">
-                {t("common.impact")}
+                {sol.statusType === "new" ? (sol.impactLabel ?? "Capacité & Méthode") : t("common.impact")}
               </p>
               <p className="font-display text-lg md:text-xl font-bold leading-snug" style={{ color: accent }}>
                 {sol.impact}

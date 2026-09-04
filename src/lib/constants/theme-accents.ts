@@ -26,6 +26,7 @@ export const SOLUTION_ACCENTS: Record<string, string> = {
   "4": "#A855F7", // Santé & Pharma
   "5": "#F59E0B", // Services & B2B
   "6": "#22D3EE", // Secteur public & Énergie
+  "7": "#6366F1", // M&A & Private Equity (Indigo)
 };
 
 /**

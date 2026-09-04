@@ -24,20 +24,28 @@ export function ServiceDetailRoute({ index }: { index: string }) {
 
 /** Route "/solutions/[slug]" — détail d'une solution. */
 export function SolutionDetailRoute({ slug }: { slug: string }) {
-  const { handleNavigate } = useViewNavigation();
+  const { handleNavigate, handleNavigateDetail } = useViewNavigation();
   return (
     <SectionErrorBoundary sectionName="Détail Solution">
-      <SolutionDetailView solutionSlug={slug} onNavigate={handleNavigate} />
+      <SolutionDetailView
+        solutionSlug={slug}
+        onNavigate={handleNavigate}
+        onNavigateDetail={handleNavigateDetail}
+      />
     </SectionErrorBoundary>
   );
 }
 
 /** Route "/insights/[slug]" — détail d'un article. */
 export function PostDetailRoute({ slug }: { slug: string }) {
-  const { handleNavigate } = useViewNavigation();
+  const { handleNavigate, handleNavigateDetail } = useViewNavigation();
   return (
     <SectionErrorBoundary sectionName="Détail Article">
-      <BlogDetailView postSlug={slug} onNavigate={handleNavigate} />
+      <BlogDetailView
+        postSlug={slug}
+        onNavigate={handleNavigate}
+        onNavigateDetail={handleNavigateDetail}
+      />
     </SectionErrorBoundary>
   );
 }

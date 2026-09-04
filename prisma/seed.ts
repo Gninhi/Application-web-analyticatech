@@ -399,6 +399,22 @@ async function seed() {
         summary: "SecNumCloud-deployable sovereign data warehouse for cross-referencing administrative data and continuously producing public policy indicators.",
       },
     },
+    {
+      slug: "dealscoop",
+      sectorFr: "M&A & Private Equity",
+      sectorEn: "M&A & Private Equity",
+      impact: "Origination propriétaire continue · Scoring d'alignement sur-mesure",
+      order: 7,
+      tags: ["Origination", "Signaux d'affaires", "Scoring M&A"],
+      fr: {
+        title: "Sourcing d'opportunités M&A par l'IA",
+        summary: "Détection continue de signaux d'affaires faibles et forts (gouvernance, recrutements clés, expansion, indices de transmission) et scoring d'alignement avec vos thèses d'investissement pour générer un deal flow propriétaire qualifié (hors marché) pour fonds de Private Equity, banques d'affaires et directions M&A.",
+      },
+      en: {
+        title: "AI-Powered M&A Deal Sourcing",
+        summary: "Continuous monitoring of weak and strong business signals (governance shifts, key hires, expansion, succession triggers) and investment thesis alignment scoring to generate qualified, proprietary (off-market) deal flow for Private Equity firms, M&A advisors, and corporate development teams.",
+      },
+    },
   ];
 
   for (const sol of solutionsData) {

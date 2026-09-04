@@ -9,20 +9,42 @@ import { Button } from "@/components/ui/button";
 import { ContactCta } from "@/components/ui/ContactCta";
 import { formatPostDate } from "@/lib/utils/date";
 import { DetailNotFound } from "./DetailNotFound";
+import { getInsightDetailData } from "@/lib/content/insights-detail-data";
+import { InsightDetailTemplate } from "./InsightDetailTemplate";
 
 export interface BlogDetailViewProps {
   postSlug: string;
   onNavigate: (view: ViewKey) => void;
+  onNavigateDetail?: (view: ViewKey, id: string) => void;
 }
 
 /**
  * BlogDetailView — page de détail d'un article ou rapport technique.
  * Résolue par slug (URL partageable), plus stable que l'UUID.
+ * Rend le template enrichi haute crédibilité si les données enrichies sont disponibles,
+ * sinon retombe élégamment sur le rendu standardisé.
  */
-export function BlogDetailView({ postSlug, onNavigate }: BlogDetailViewProps) {
+export function BlogDetailView({
+  postSlug,
+  onNavigate,
+  onNavigateDetail,
+}: BlogDetailViewProps) {
   const { t, locale } = useI18n();
   const { blogPosts } = useAppContent();
   const post = blogPosts.find((p) => p.slug === postSlug);
+
+  // Recherche de données enrichies (avec gestion des alias)
+  const detailData = getInsightDetailData(postSlug, locale);
+
+  if (detailData) {
+    return (
+      <InsightDetailTemplate
+        data={detailData}
+        onNavigate={onNavigate}
+        onNavigateDetail={onNavigateDetail}
+      />
+    );
+  }
 
   if (!post) {
     return (

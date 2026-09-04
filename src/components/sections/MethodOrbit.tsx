@@ -125,14 +125,11 @@ export function MethodOrbit({ nodes, activeIndex, onSelect, centerLabel }: Metho
             {centerLabel}
           </span>
 
-          {/* Micro indicateur de statut actif */}
-          <div className="flex items-center gap-1.5 mt-0.5">
+          {/* Micro indicateur lumineux épuré */}
+          <div className="flex items-center justify-center mt-1">
             <span className="relative flex h-1.5 w-1.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#F26D3D] opacity-75" />
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#F26D3D]" />
-            </span>
-            <span className="font-mono text-[8px] uppercase tracking-wider text-[#F26D3D] font-bold">
-              SYS.LIVE
             </span>
           </div>
         </div>

@@ -64,6 +64,9 @@ export interface SolutionDTO {
   methodology?: string;
   tags: string[];
   order: number;
+  statusBadge?: string;
+  statusType?: "deployed" | "new" | "methodology";
+  impactLabel?: string;
 }
 
 export interface BlogCategoryDTO {

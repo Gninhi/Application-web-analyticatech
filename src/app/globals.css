@@ -1137,9 +1137,9 @@
   animation-play-state: paused !important;
 }
 
-/* Réduction des animations pour l'accessibilité (hors bandeaux d'information continue ticker) */
+/* Réduction des animations pour l'accessibilité (hors bandeaux continus et micro-interactions volontaires) */
 @media (prefers-reduced-motion: reduce) {
-  *:not(.stock-ticker-track-left):not(.stock-ticker-track-right):not(.stock-ticker-track-left *):not(.stock-ticker-track-right *),
+  *:not(.stock-ticker-track-left):not(.stock-ticker-track-right):not(.stock-ticker-track-left *):not(.stock-ticker-track-right *):not(.random-letter-swap):not(.random-letter-swap *),
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
@@ -1156,3 +1156,13 @@
     transform: none !important;
   }
 }
+
+/* Utilitaire no-scrollbar pour capsules et listes horizontales */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
