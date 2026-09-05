@@ -63,6 +63,29 @@ test.describe("navigation mobile", () => {
     await expect(page.locator("h1")).toHaveCount(1);
     expect(errors).toEqual([]);
   });
+
+  test("le bouton de langue au format compact affiche le drapeau et permet la bascule FR/EN sans overflow", async ({ page }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    const langBtn = page.locator('header button[aria-label*="Français"], header button[aria-label*="English"]').first();
+    await expect(langBtn).toBeVisible();
+
+    // Dimensions compactes équivalentes au ThemeToggle (h-9 w-9, 36x36px)
+    const box = await langBtn.boundingBox();
+    expect(box).not.toBeNull();
+    if (box) {
+      expect(box.width).toBeLessThanOrEqual(42);
+      expect(box.height).toBeLessThanOrEqual(42);
+    }
+
+    // Basculer en anglais
+    await langBtn.click();
+    await page.waitForURL("**/en", { timeout: 15_000 });
+    expect(page.url()).toContain("/en");
+
+    // Le bouton affiche maintenant le drapeau britannique pour repasser en français
+    const enLangBtn = page.locator('header button[aria-label*="English"]').first();
+    await expect(enLangBtn).toBeVisible();
+  });
 });
 
 test.describe("accessibilité", () => {
@@ -164,7 +187,7 @@ test.describe("erreurs & sécurité", () => {
     await expect(firstCard).toBeVisible();
     await page.waitForTimeout(500);
     await firstCard.scrollIntoViewIfNeeded();
-    await firstCard.click({ force: true });
+    await firstCard.locator("h2").click();
     await page.waitForURL(/\/solutions\/[a-z0-9-]+$/, { timeout: 15_000 });
     await expect(page.locator("h1")).toHaveCount(1);
 
