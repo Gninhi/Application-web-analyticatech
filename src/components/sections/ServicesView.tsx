@@ -363,7 +363,8 @@ function ServiceDeckCard({
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = panelRef.current;
     if (!el) return;
-    const rect = panelRectRef.current || el.getBoundingClientRect();
+    const rect = panelRectRef.current;
+    if (!rect) return;
     el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
     el.style.setProperty("--my", `${e.clientY - rect.top}px`);
   };
@@ -400,7 +401,7 @@ function ServiceDeckCard({
       <motion.div
         className="service-card-bg absolute inset-0 overflow-hidden"
         data-testid="service-card-bg"
-        style={{ y: bgY, scale: 1.1 }}
+        style={{ y: bgY, scale: 1.1, willChange: "transform" }}
         aria-hidden
       >
         <Image
@@ -408,8 +409,9 @@ function ServiceDeckCard({
           alt=""
           fill
           sizes="100vw"
-          priority={index === 0}
-          loading={index === 0 ? "eager" : "lazy"}
+          priority={index < 2}
+          loading={index < 2 ? "eager" : "lazy"}
+          decoding="async"
           quality={75}
           className="object-cover object-center"
         />

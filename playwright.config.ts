@@ -1,7 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const PORT = 3210;
-const BASE_URL = `http://localhost:${PORT}`;
+const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
 
 /**
  * Tests e2e — serveur de test isolé du build de production :

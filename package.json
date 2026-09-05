@@ -14,6 +14,7 @@
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "check:perf": "node scripts/check-performance-budget.mjs",
+    "check:fps": "node scripts/check-scroll-fps.mjs",
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
     "db:generate": "prisma generate",

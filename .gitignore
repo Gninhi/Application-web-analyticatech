@@ -74,6 +74,10 @@ screenshot-*.png
 /e2e/screenshots/
 
 # === Documentation interne / audits / suivi (non public) ===
+/*AUDIT*.md
+/*audit*.md
+/*REMEDIATION*.md
+/*remediation*.md
 /AUDIT.md
 /SUIVI.md
 /worklog.md

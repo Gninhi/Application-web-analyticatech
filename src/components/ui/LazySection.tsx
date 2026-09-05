@@ -18,8 +18,8 @@ import { cn } from "@/lib/utils/cn";
  *  - Une fois montée, une section n'est jamais démontée.
  */
 
-const PRELOAD_MARGIN = 1000; // px sous le viewport (≈ 1 viewport en avance)
-const IDLE_PRELOAD_VIEWPORTS = 2.5; // hauteurs de viewport préchargées à l'idle
+const PRELOAD_MARGIN = 1600; // px sous le viewport (≈ 2 viewports en avance pour cold scroll fluide)
+const IDLE_PRELOAD_VIEWPORTS = 4.0; // hauteurs de viewport préchargées à l'idle
 
 interface LazySectionProps {
   children: ReactNode;

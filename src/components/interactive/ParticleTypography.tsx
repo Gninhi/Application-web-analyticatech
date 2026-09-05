@@ -40,7 +40,8 @@ export function ParticleTypography({
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = containerRef.current;
     if (!el) return;
-    const rect = rectRef.current || el.getBoundingClientRect();
+    const rect = rectRef.current;
+    if (!rect) return;
     el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
     el.style.setProperty("--my", `${e.clientY - rect.top}px`);
   };

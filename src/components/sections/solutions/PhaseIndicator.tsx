@@ -12,9 +12,9 @@ export interface PhaseIndicatorProps {
  */
 export function PhaseIndicator({ progress }: PhaseIndicatorProps) {
   const { t } = useI18n();
-  const leadIn = useTransform(progress, [0, 0.15], [1, 0.3]);
-  const drift = useTransform(progress, [0.15, 0.16, 0.84, 0.85], [0.3, 1, 1, 0.3]);
-  const leadOut = useTransform(progress, [0.85, 1], [0.3, 1]);
+  const leadIn = useTransform(progress, [0, 0.05], [1, 0.3]);
+  const drift = useTransform(progress, [0.04, 0.06, 0.92, 0.94], [0.3, 1, 1, 0.3]);
+  const leadOut = useTransform(progress, [0.93, 1], [0.3, 1]);
 
   return (
     <div className="absolute top-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20 pointer-events-none">

@@ -59,7 +59,8 @@ export function ServiceCard({
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = cardRef.current;
     if (!el) return;
-    const rect = cardRectRef.current || el.getBoundingClientRect();
+    const rect = cardRectRef.current;
+    if (!rect) return;
     el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
     el.style.setProperty("--my", `${e.clientY - rect.top}px`);
   };

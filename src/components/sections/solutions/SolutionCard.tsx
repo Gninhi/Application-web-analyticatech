@@ -84,7 +84,7 @@ export function SolutionCard({
     <BorderRotate
       onClick={goToDetail}
       className="group shrink-0 w-[82vw] sm:w-[68vw] md:w-[54vw] lg:w-[42vw] h-[78vh] cursor-pointer"
-      animationMode={isVisible ? "auto-rotate" : "rotate-on-hover"}
+      animationMode="rotate-on-hover"
       animationSpeed={9}
       borderRadius={30}
       borderWidth={2}
