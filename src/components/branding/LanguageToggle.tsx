@@ -4,7 +4,7 @@ import { useTransition, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n/provider";
 import { getAlternatePath, getLocaleFromPath } from "@/lib/navigation/routes";
-import { Button } from "@/components/ui/button";
+import { NavbarActionToggle } from "@/components/branding/NavbarActionToggle";
 import type { Locale } from "@/types/content";
 
 /**
@@ -99,19 +99,14 @@ export function LanguageToggle() {
       : "Current language: English. Click to switch to French.";
 
   return (
-    <Button
+    <NavbarActionToggle
       onClick={handleToggle}
       aria-label={ariaLabel}
       title={title}
-      variant="secondary"
-      iconOnly
-      borderRadius="0.75rem"
-      showBorderAnimation={false}
-      className="h-9 w-9 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shrink-0"
     >
       <span className="relative inline-flex items-center justify-center overflow-hidden rounded-[2.5px] border border-black/15 dark:border-white/20 shadow-xs transition-transform duration-200 hover:scale-105 active:scale-95">
         {displayLocale === "fr" ? <FlagFR /> : <FlagEN />}
       </span>
-    </Button>
+    </NavbarActionToggle>
   );
 }

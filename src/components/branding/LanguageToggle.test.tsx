@@ -62,4 +62,13 @@ describe("LanguageToggle — Bouton compact format ThemeToggle avec drapeau de l
     expect(html).toContain('aria-label="Current language: English. Click to switch to French."');
     expect(html).toContain('title="Switch to French (Passer en français)"');
   });
+
+  it("intègre le liseré lumineux serpent animé (AnimatedButtonBorder) comme les autres boutons", () => {
+    const html = renderLanguageToggle("fr");
+    // Dégradé serpent orange (#F26D3D) / bleu (#3B82F6)
+    expect(html).toContain("#F26D3D");
+    expect(html).toContain("#3B82F6");
+    expect(html).toContain("pointer-events-none");
+    expect(html).toContain("aspect-square");
+  });
 });
