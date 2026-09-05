@@ -3,6 +3,7 @@
 import Script from "next/script";
 import { useAppContentOptional } from "@/components/providers/ContentProvider";
 import { KEY_STATS_CONFIG } from "@/data/stats";
+import { SLA_COMMITMENTS } from "@/data/commitments";
 
 import { isValidSocialUrl } from "@/lib/content/site";
 
@@ -133,7 +134,7 @@ export function JsonLd() {
           name: "Analyticatech est-il conforme RGPD et compatible cloud souverain ?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Oui. Analyticatech applique une stricte conformité RGPD, un chiffrement bout-en-bout (TLS 1.3, AES-256) et conçoit des architectures déployables sur des infrastructures souveraines européennes qualifiées SecNumCloud.",
+            text: "Oui. Analyticatech applique une stricte conformité RGPD, un chiffrement en transit (TLS 1.3) et au repos (AES-256) et conçoit des architectures déployables sur des infrastructures souveraines européennes qualifiées SecNumCloud.",
           },
         },
         {
@@ -141,7 +142,7 @@ export function JsonLd() {
           name: "Quel est le délai de réponse d'Analyticatech ?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Premier accusé de réception sous 2h ouvrées, réponse d'un architecte sous 24h ouvrées, atelier de cadrage proposé sous 5 jours. Équipe joignable du lundi au vendredi de 9h30 à 17h30.",
+            text: `Premier accusé de réception sous ${SLA_COMMITMENTS.ack.valueFr.replace("< ", "")}, réponse d'un architecte sous ${SLA_COMMITMENTS.architect.valueFr.replace("< ", "")}, atelier de cadrage proposé sous ${SLA_COMMITMENTS.workshop.valueFr.replace("< ", "")}. Équipe joignable ${SLA_COMMITMENTS.schedule.fullFr}.`,
           },
         },
         {

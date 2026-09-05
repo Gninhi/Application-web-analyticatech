@@ -41,8 +41,8 @@ export function LivingSystemGraph() {
         icon: Database,
         metrics: isEn ? "28+ data sources" : "28+ sources data",
         details: isEn
-          ? ["Native REST/gRPC connectors", "End-to-end AES-256 encryption", "GDPR & Sovereign Cloud Compliance"]
-          : ["Connecteurs natifs REST/gRPC", "Chiffrement AES-256 bout en bout", "Conformité RGPD & Cloud Souverain"],
+          ? ["Native REST/gRPC connectors", "AES-256 encryption (transit & rest)", "GDPR & Sovereign Cloud Compliance"]
+          : ["Connecteurs natifs REST/gRPC", "Chiffrement AES-256 (transit & repos)", "Conformité RGPD & Cloud Souverain"],
       },
       {
         id: "intelligence",

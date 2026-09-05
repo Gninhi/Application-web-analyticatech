@@ -1,12 +1,11 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { ArrowRight } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { Button } from "@/components/ui/button";
 import { HeroSection } from "@/components/sections/HeroSection";
-import { LazySection, SectionSkeleton } from "@/components/ui/LazySection";
+import { LazySection } from "@/components/ui/LazySection";
 
 /* === Chargement à la demande des sections sous la ligne de flottaison ===
  * Chaque section lourde (SVG animés, boucles rAF, marquees, bordures
@@ -29,38 +28,14 @@ const SECTION_SKELETONS = {
   faq: { minHeight: 640, mobileMinHeight: 850 },
 } as const;
 
-const HomeServicesGrid = dynamic(
-  () => import("@/components/sections/HomeServicesGrid").then((m) => m.HomeServicesGrid),
-  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.services} /> }
-);
-const BusinessPainPointsSection = dynamic(
-  () => import("@/components/sections/BusinessPainPointsSection").then((m) => m.BusinessPainPointsSection),
-  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.pains} /> }
-);
-const LivingSystemGraph = dynamic(
-  () => import("@/components/interactive/LivingSystemGraph").then((m) => m.LivingSystemGraph),
-  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.graph} /> }
-);
-const DataConsoleBento = dynamic(
-  () => import("@/components/sections/DataConsoleBento").then((m) => m.DataConsoleBento),
-  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.bento} /> }
-);
-const AgentoryMethod = dynamic(
-  () => import("@/components/sections/AgentoryMethod").then((m) => m.AgentoryMethod),
-  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.method} /> }
-);
-const BeforeAfterDemo = dynamic(
-  () => import("@/components/sections/BeforeAfterDemo").then((m) => m.BeforeAfterDemo),
-  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.demo} /> }
-);
-const HomeSocialProof = dynamic(
-  () => import("@/components/sections/HomeSocialProof").then((m) => m.HomeSocialProof),
-  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.proof} /> }
-);
-const FaqSection = dynamic(
-  () => import("@/components/sections/FaqSection").then((m) => m.FaqSection),
-  { loading: () => <SectionSkeleton {...SECTION_SKELETONS.faq} /> }
-);
+import { HomeServicesGrid } from "@/components/sections/HomeServicesGrid";
+import { BusinessPainPointsSection } from "@/components/sections/BusinessPainPointsSection";
+import { LivingSystemGraph } from "@/components/interactive/LivingSystemGraph";
+import { DataConsoleBento } from "@/components/sections/DataConsoleBento";
+import { AgentoryMethod } from "@/components/sections/AgentoryMethod";
+import { BeforeAfterDemo } from "@/components/sections/BeforeAfterDemo";
+import { HomeSocialProof } from "@/components/sections/HomeSocialProof";
+import { FaqSection } from "@/components/sections/FaqSection";
 
 import { getKeyStats } from "@/data/stats";
 
@@ -113,14 +88,14 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
       </section>
 
       {/* ============ 03 — LES SERVICES (BENTO COGNITIVE MATRIX) ============ */}
-      <LazySection {...SECTION_SKELETONS.services}>
+      <LazySection {...SECTION_SKELETONS.services} eager>
         <HomeServicesGrid onNavigate={onNavigate} onNavigateDetail={onNavigateDetail} />
       </LazySection>
 
       {/* ============ 04 — PROBLÈMES MÉTIERS ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <LazySection {...SECTION_SKELETONS.pains}>
+          <LazySection {...SECTION_SKELETONS.pains} eager>
             <BusinessPainPointsSection onNavigateContact={() => onNavigate("contact")} />
           </LazySection>
         </div>
@@ -129,21 +104,21 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
       {/* ============ 05 — SYSTÈME VIVANT ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <LazySection {...SECTION_SKELETONS.graph}>
+          <LazySection {...SECTION_SKELETONS.graph} eager>
             <LivingSystemGraph />
           </LazySection>
         </div>
       </section>
 
       {/* ============ 06 — DATA CONSOLE & TÉLÉMÉTRIE ============ */}
-      <LazySection {...SECTION_SKELETONS.bento}>
+      <LazySection {...SECTION_SKELETONS.bento} eager>
         <DataConsoleBento />
       </LazySection>
 
       {/* ============ 07 — MÉTHODE (STYLE FRAMER AGENTORY) ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <LazySection {...SECTION_SKELETONS.method}>
+          <LazySection {...SECTION_SKELETONS.method} eager>
             <AgentoryMethod onNavigateContact={() => onNavigate("contact")} />
           </LazySection>
         </div>
@@ -152,21 +127,21 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
       {/* ============ 08 — CAS / DÉMONSTRATION AVANT-APRÈS ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <LazySection {...SECTION_SKELETONS.demo}>
+          <LazySection {...SECTION_SKELETONS.demo} eager>
             <BeforeAfterDemo onNavigateContact={() => onNavigate("contact")} />
           </LazySection>
         </div>
       </section>
 
       {/* ============ 09 — INSIGHTS + TÉMOIGNAGES (MARQUEES INCLUS) ============ */}
-      <LazySection {...SECTION_SKELETONS.proof}>
+      <LazySection {...SECTION_SKELETONS.proof} eager>
         <HomeSocialProof onNavigate={onNavigate} />
       </LazySection>
 
       {/* ============ 10 — FAQ (ACCORDÉON SERVICE) ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <LazySection {...SECTION_SKELETONS.faq}>
+          <LazySection {...SECTION_SKELETONS.faq} eager>
             <FaqSection />
           </LazySection>
         </div>

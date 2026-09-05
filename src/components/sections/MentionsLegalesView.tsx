@@ -17,6 +17,11 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ContactCta } from "@/components/ui/ContactCta";
 import { SectionContainer } from "@/components/ui/SectionContainer";
+import {
+  SLA_COMMITMENTS,
+  getSupportScheduleNotice,
+  getResponseNotice,
+} from "@/data/commitments";
 
 interface MentionsLegalesViewProps {
   onNavigate: (view: ViewKey) => void;
@@ -426,13 +431,13 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                 </dt>
                 <dd>
                   <a
-                    href="mailto:contact@analyticatech.fr"
+                    href={`mailto:${SLA_COMMITMENTS.email}`}
                     className="font-mono font-medium text-slate-900 dark:text-slate-50 hover:text-[#F26D3D] transition-colors"
                   >
-                    contact@analyticatech.fr
+                    {SLA_COMMITMENTS.email}
                   </a>
                   <span className="block text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    Réponse sous 24 à 48 heures ouvrées
+                    {getResponseNotice(locale)}
                   </span>
                 </dd>
               </div>
@@ -443,13 +448,13 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                 </dt>
                 <dd>
                   <a
-                    href="tel:+33768611310"
+                    href={`tel:${SLA_COMMITMENTS.phone.replace(/\s+/g, "")}`}
                     className="font-mono font-medium text-slate-900 dark:text-slate-50 hover:text-[#F26D3D] transition-colors"
                   >
-                    +33 7 68 61 13 10
+                    {SLA_COMMITMENTS.phone}
                   </a>
                   <span className="block text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    Du lundi au vendredi, 9h00 - 18h30 (CET)
+                    {getSupportScheduleNotice(locale)}
                   </span>
                 </dd>
               </div>
