@@ -52,18 +52,14 @@ function SiteShellInner({ children }: { children: React.ReactNode }) {
       firstMount.current = false;
       return;
     }
-    const applyFocus = () => {
+    const rafId = requestAnimationFrame(() => {
       const el = document.getElementById("main-content");
       if (el) {
         el.focus({ preventScroll: true });
       }
-    };
-    applyFocus();
-    const rafId = requestAnimationFrame(applyFocus);
-    const timerId = setTimeout(applyFocus, 100);
+    });
     return () => {
       cancelAnimationFrame(rafId);
-      clearTimeout(timerId);
     };
   }, [pathname]);
 

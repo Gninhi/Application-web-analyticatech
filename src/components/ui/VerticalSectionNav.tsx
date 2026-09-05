@@ -35,80 +35,122 @@ export function VerticalSectionNav({
   const [mobileOpen, setMobileOpen] = useState(false);
   const rafRef = useRef<number | null>(null);
 
+  // Cache des positions géométriques des sections pour éliminer les reflows synchrones
+  const cachedMetricsRef = useRef<{
+    viewportHeight: number;
+    docHeight: number;
+    sections: { id: string; top: number; height: number }[];
+  }>({
+    viewportHeight: 0,
+    docHeight: 0,
+    sections: [],
+  });
+
+  const updateCachedMetrics = useCallback(() => {
+    if (typeof window === "undefined") return;
+    const scrollY = window.scrollY;
+    const viewportHeight = window.innerHeight;
+    const docHeight = document.documentElement.scrollHeight;
+    const sections = items.map((item) => {
+      const el = document.getElementById(item.id);
+      if (!el) return { id: item.id, top: 0, height: 0 };
+      const rect = el.getBoundingClientRect();
+      return {
+        id: item.id,
+        top: rect.top + scrollY,
+        height: rect.height,
+      };
+    });
+    cachedMetricsRef.current = { viewportHeight, docHeight, sections };
+  }, [items]);
+
   const calculateProgress = useCallback(() => {
     if (typeof window === "undefined") return;
 
-    const viewportHeight = window.innerHeight;
-    const triggerOffset = Math.min(220, viewportHeight * 0.3); // ligne de déclenchement sous la navbar
+    let { viewportHeight, docHeight, sections } = cachedMetricsRef.current;
+    if (viewportHeight === 0 || sections.length === 0) {
+      updateCachedMetrics();
+      ({ viewportHeight, docHeight, sections } = cachedMetricsRef.current);
+    }
+
+    const scrollY = window.scrollY;
+    const triggerOffset = Math.min(220, viewportHeight * 0.3);
 
     const progressMap: Record<string, number> = {};
     let currentActive = items[0]?.id ?? "";
 
-    items.forEach((item, index) => {
-      const el = document.getElementById(item.id);
-      if (!el) {
-        progressMap[item.id] = 0;
+    sections.forEach((sec, index) => {
+      if (sec.height <= 0) {
+        progressMap[sec.id] = 0;
         return;
       }
 
-      const rect = el.getBoundingClientRect();
-      const top = rect.top;
-      const height = rect.height;
+      const relativeTop = sec.top - scrollY;
 
       // Calcul du pourcentage de lecture de cette section
-      if (top > triggerOffset) {
-        // La section est encore en dessous de la ligne de déclenchement
-        progressMap[item.id] = 0;
-      } else if (top + height <= triggerOffset) {
-        // La section a été entièrement dépassée
-        progressMap[item.id] = 100;
+      if (relativeTop > triggerOffset) {
+        progressMap[sec.id] = 0;
+      } else if (relativeTop + sec.height <= triggerOffset) {
+        progressMap[sec.id] = 100;
       } else {
-        // En cours de lecture dans cette section
-        const traversed = triggerOffset - top;
-        const pct = Math.min(100, Math.max(0, (traversed / height) * 100));
-        progressMap[item.id] = pct;
-        currentActive = item.id;
+        const traversed = triggerOffset - relativeTop;
+        const pct = Math.min(100, Math.max(0, Math.round((traversed / sec.height) * 100)));
+        progressMap[sec.id] = pct;
+        currentActive = sec.id;
       }
 
-      // Si le haut de la section a franchi le trigger, elle devient l'active
-      if (top <= triggerOffset && (index === items.length - 1 || (top + height > triggerOffset))) {
-        currentActive = item.id;
+      if (relativeTop <= triggerOffset && (index === sections.length - 1 || (relativeTop + sec.height > triggerOffset))) {
+        currentActive = sec.id;
       }
     });
 
-    // Cas particulier : si on est tout en bas de la page, activer la dernière section
-    const scrollBottom = window.scrollY + window.innerHeight;
-    const docHeight = document.documentElement.scrollHeight;
+    // Cas particulier : fin de page
+    const scrollBottom = scrollY + viewportHeight;
     if (docHeight - scrollBottom < 80 && items.length > 0) {
       currentActive = items[items.length - 1].id;
       progressMap[currentActive] = 100;
     }
 
-    setSegmentProgress(progressMap);
-    setActiveId(currentActive);
-  }, [items]);
+    setActiveId((prev) => (prev === currentActive ? prev : currentActive));
+    setSegmentProgress((prev) => {
+      const keysA = Object.keys(prev);
+      const keysB = Object.keys(progressMap);
+      if (keysA.length === keysB.length && keysB.every((k) => prev[k] === progressMap[k])) {
+        return prev;
+      }
+      return progressMap;
+    });
+  }, [items, updateCachedMetrics]);
 
   useEffect(() => {
+    updateCachedMetrics();
+
     const handleScroll = () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(calculateProgress);
     };
 
+    const handleResize = () => {
+      updateCachedMetrics();
+      handleScroll();
+    };
+
     // Calcul initial différé via rAF pour respecter le lint react-hooks/set-state-in-effect
     const initTimer = requestAnimationFrame(() => {
+      updateCachedMetrics();
       calculateProgress();
     });
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize, { passive: true });
 
     return () => {
       cancelAnimationFrame(initTimer);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
+      window.removeEventListener("resize", handleResize);
     };
-  }, [calculateProgress]);
+  }, [calculateProgress, updateCachedMetrics]);
 
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);

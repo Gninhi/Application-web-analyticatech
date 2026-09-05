@@ -1,15 +1,14 @@
 import { describe, expect, it } from "vitest";
+import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { GlassButton } from "@/components/interactive/GlassButton";
-import { MovingButton } from "@/components/interactive/MovingButton";
 import { Button } from "@/components/ui/button";
 
-describe("Unified Button & GlassButton system", () => {
+describe("Unified Button component (src/components/ui/button.tsx)", () => {
   it("rend correctement un bouton primary avec la bordure animée", () => {
     const html = renderToStaticMarkup(
-      <GlassButton variant="primary" size="lg">
+      <Button variant="primary" size="lg">
         Lancer mon projet
-      </GlassButton>
+      </Button>
     );
     expect(html).toContain("bg-[#03318C]");
     expect(html).toContain("Lancer mon projet");
@@ -19,32 +18,32 @@ describe("Unified Button & GlassButton system", () => {
 
   it("rend les variantes secondary, outline, ghost et subtle avec leurs styles respectifs", () => {
     const secondaryHtml = renderToStaticMarkup(
-      <GlassButton variant="secondary">Nouveau</GlassButton>
+      <Button variant="secondary">Nouveau</Button>
     );
     expect(secondaryHtml).toContain("Nouveau");
 
     const outlineHtml = renderToStaticMarkup(
-      <GlassButton variant="outline">Découvrir</GlassButton>
+      <Button variant="outline">Découvrir</Button>
     );
     expect(outlineHtml).toContain("Découvrir");
     expect(outlineHtml).toContain("pointer-events-none");
 
     const ghostHtml = renderToStaticMarkup(
-      <GlassButton variant="ghost">Retour</GlassButton>
+      <Button variant="ghost">Retour</Button>
     );
     expect(ghostHtml).toContain("Retour");
 
     const subtleHtml = renderToStaticMarkup(
-      <GlassButton variant="subtle">Options</GlassButton>
+      <Button variant="subtle">Options</Button>
     );
     expect(subtleHtml).toContain("Options");
   });
 
   it("supporte le rendu polymorphique Link lorsque href est fourni", () => {
     const html = renderToStaticMarkup(
-      <GlassButton href="/contact" variant="primary">
+      <Button href="/contact" variant="primary">
         Nous contacter
-      </GlassButton>
+      </Button>
     );
     expect(html).toContain("<a");
     expect(html).toContain('href="/contact"');
@@ -53,9 +52,9 @@ describe("Unified Button & GlassButton system", () => {
 
   it("supporte le mode iconOnly et dimensions personnalisées", () => {
     const html = renderToStaticMarkup(
-      <GlassButton iconOnly className="h-10 w-10" aria-label="Action">
+      <Button iconOnly className="h-10 w-10" aria-label="Action">
         <span>⚡</span>
-      </GlassButton>
+      </Button>
     );
     expect(html).toContain("h-10 w-10");
     expect(html).toContain('aria-label="Action"');
@@ -74,7 +73,7 @@ describe("Unified Button & GlassButton system", () => {
   it("gère l'état loading avec un spinner et aria-busy", () => {
     const html = renderToStaticMarkup(
       <Button variant="terminal" size="lg" loading>
-        Chiffrement...
+        Transmission...
       </Button>
     );
     expect(html).toContain("animate-spin");
@@ -96,22 +95,5 @@ describe("Unified Button & GlassButton system", () => {
       </Button>
     );
     expect(rightHtml).toContain("icon-test-right");
-  });
-
-  it("MovingButton et Button sont compatibles et unifiés", () => {
-    const movingHtml = renderToStaticMarkup(
-      <MovingButton variant="primary" size="md">
-        Action Principale
-      </MovingButton>
-    );
-    expect(movingHtml).toContain("Action Principale");
-    expect(movingHtml).toContain("bg-[#03318C]");
-
-    const buttonHtml = renderToStaticMarkup(
-      <Button variant="secondary" size="sm">
-        Standard Button
-      </Button>
-    );
-    expect(buttonHtml).toContain("Standard Button");
   });
 });

@@ -2,7 +2,6 @@ import { describe, it, expect } from "vitest";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { RandomLetterSwap } from "@/components/ui/random-letter-swap";
-import RandomLetterSwapNav from "@/components/ui/m-random-letter-swap-1";
 
 describe("RandomLetterSwap (Animation de typographie et accessibilité)", () => {
   it("rend le texte de manière accessible avec aria-label et sr-only", () => {
@@ -27,13 +26,18 @@ describe("RandomLetterSwap (Animation de typographie et accessibilité)", () => 
     expect(html).toContain("custom-test-class");
   });
 
-  it("rend le composant de navigation m-random-letter-swap-1 sans erreur SSR", () => {
-    const html = renderToStaticMarkup(<RandomLetterSwapNav />);
+  it("rend le composant avec des paramètres personnalisés sans erreur SSR", () => {
+    const html = renderToStaticMarkup(
+      <RandomLetterSwap
+        label="Analyticatech"
+        staggerDuration={0.03}
+        reverse={true}
+        className="font-mono text-sm"
+      />
+    );
 
-    expect(html).toContain("Home");
-    expect(html).toContain("Work");
-    expect(html).toContain("About");
-    expect(html).toContain("Blog");
-    expect(html).toContain("Contact");
+    expect(html).toContain('aria-label="Analyticatech"');
+    expect(html).toContain('<span class="sr-only">Analyticatech</span>');
+    expect(html).toContain("font-mono text-sm");
   });
 });

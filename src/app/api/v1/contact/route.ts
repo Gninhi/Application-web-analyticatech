@@ -9,6 +9,7 @@ import { isSuspiciousUserAgent, readBodyWithLimit } from "@/lib/security/user-ag
 import { validateCsrfToken } from "@/lib/security/csrf";
 import { isOriginAllowed } from "@/lib/security/origin";
 import { MAX_BODY_SIZE } from "@/lib/content/site";
+import { SLA_COMMITMENTS } from "@/data/commitments";
 import { db } from "@/lib/db/client";
 import { sendContactNotification } from "@/lib/email/mailer";
 import { captureServerEvent } from "@/lib/posthog-server";
@@ -177,7 +178,7 @@ export async function POST(req: NextRequest) {
       return json(
         {
           success: true,
-          message: "Demande reçue. Un architecte vous répondra sous 24h.",
+          message: `Demande reçue. Un architecte vous répondra sous ${SLA_COMMITMENTS.architect.valueFr.replace("< ", "")}.`,
           reference: "AT-" + Date.now().toString(36).toUpperCase(),
         },
         200
@@ -316,7 +317,7 @@ export async function POST(req: NextRequest) {
     {
       success: true,
       message:
-        "Transmission sécurisée confirmée. Un architecte Analyticatech vous répondra sous 24h ouvrées.",
+        `Transmission sécurisée confirmée. Un architecte Analyticatech vous répondra sous ${SLA_COMMITMENTS.architect.valueFr.replace("< ", "")}.`,
       reference,
     },
     201

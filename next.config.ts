@@ -17,6 +17,8 @@ const nextConfig: NextConfig = {
   output: process.env.VERCEL ? undefined : "standalone",
   // Dossier de build isolé pour les tests e2e (ne touche pas au build prod).
   distDir: process.env.NEXT_DIST_DIR || ".next",
+  // Désactive l'en-tête x-powered-by: Next.js pour éviter la divulgation de version/technologie
+  poweredByHeader: false,
   reactStrictMode: true,
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],

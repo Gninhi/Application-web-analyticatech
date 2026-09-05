@@ -36,6 +36,7 @@ import { AgentoryMethod } from "@/components/sections/AgentoryMethod";
 import { BeforeAfterDemo } from "@/components/sections/BeforeAfterDemo";
 import { HomeSocialProof } from "@/components/sections/HomeSocialProof";
 import { FaqSection } from "@/components/sections/FaqSection";
+import { SectionErrorBoundary } from "@/components/system/SectionErrorBoundary";
 
 import { getKeyStats } from "@/data/stats";
 
@@ -89,14 +90,18 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
 
       {/* ============ 03 — LES SERVICES (BENTO COGNITIVE MATRIX) ============ */}
       <LazySection {...SECTION_SKELETONS.services} eager>
-        <HomeServicesGrid onNavigate={onNavigate} onNavigateDetail={onNavigateDetail} />
+        <SectionErrorBoundary sectionName="Bento Services">
+          <HomeServicesGrid onNavigate={onNavigate} onNavigateDetail={onNavigateDetail} />
+        </SectionErrorBoundary>
       </LazySection>
 
       {/* ============ 04 — PROBLÈMES MÉTIERS ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <LazySection {...SECTION_SKELETONS.pains} eager>
-            <BusinessPainPointsSection onNavigateContact={() => onNavigate("contact")} />
+            <SectionErrorBoundary sectionName="Problèmes Métiers">
+              <BusinessPainPointsSection onNavigateContact={() => onNavigate("contact")} />
+            </SectionErrorBoundary>
           </LazySection>
         </div>
       </section>
@@ -105,21 +110,27 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <LazySection {...SECTION_SKELETONS.graph} eager>
-            <LivingSystemGraph />
+            <SectionErrorBoundary sectionName="Système Vivant">
+              <LivingSystemGraph />
+            </SectionErrorBoundary>
           </LazySection>
         </div>
       </section>
 
       {/* ============ 06 — DATA CONSOLE & TÉLÉMÉTRIE ============ */}
       <LazySection {...SECTION_SKELETONS.bento} eager>
-        <DataConsoleBento />
+        <SectionErrorBoundary sectionName="Console de Données">
+          <DataConsoleBento />
+        </SectionErrorBoundary>
       </LazySection>
 
       {/* ============ 07 — MÉTHODE (STYLE FRAMER AGENTORY) ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <LazySection {...SECTION_SKELETONS.method} eager>
-            <AgentoryMethod onNavigateContact={() => onNavigate("contact")} />
+            <SectionErrorBoundary sectionName="Méthode">
+              <AgentoryMethod onNavigateContact={() => onNavigate("contact")} />
+            </SectionErrorBoundary>
           </LazySection>
         </div>
       </section>
@@ -128,21 +139,27 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <LazySection {...SECTION_SKELETONS.demo} eager>
-            <BeforeAfterDemo onNavigateContact={() => onNavigate("contact")} />
+            <SectionErrorBoundary sectionName="Démonstration Avant/Après">
+              <BeforeAfterDemo onNavigateContact={() => onNavigate("contact")} />
+            </SectionErrorBoundary>
           </LazySection>
         </div>
       </section>
 
       {/* ============ 09 — INSIGHTS + TÉMOIGNAGES (MARQUEES INCLUS) ============ */}
       <LazySection {...SECTION_SKELETONS.proof} eager>
-        <HomeSocialProof onNavigate={onNavigate} />
+        <SectionErrorBoundary sectionName="Témoignages & Preuves">
+          <HomeSocialProof onNavigate={onNavigate} />
+        </SectionErrorBoundary>
       </LazySection>
 
       {/* ============ 10 — FAQ (ACCORDÉON SERVICE) ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <LazySection {...SECTION_SKELETONS.faq} eager>
-            <FaqSection />
+            <SectionErrorBoundary sectionName="FAQ">
+              <FaqSection />
+            </SectionErrorBoundary>
           </LazySection>
         </div>
       </section>

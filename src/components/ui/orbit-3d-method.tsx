@@ -146,18 +146,29 @@ export function Orbit3DMethod({
   const opacityCache = useRef<number[]>([0, 0, 0, 0]);
 
   const [isClient, setIsClient] = useState(false);
-  const [isInView, setIsInView] = useState(true);
+  const [isInView, setIsInView] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const activeNode = nodes[activeIndex] ?? nodes[0];
 
-  // Initialisation client
+  // Initialisation client et détection de prefers-reduced-motion
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const listener = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mq.addEventListener("change", listener);
+
     const handle = requestAnimationFrame(() => {
+      setPrefersReducedMotion(mq.matches);
       setIsClient(true);
-      setIsInView(true);
     });
-    return () => cancelAnimationFrame(handle);
+
+    return () => {
+      mq.removeEventListener("change", listener);
+      cancelAnimationFrame(handle);
+    };
   }, []);
 
   // IntersectionObserver pour pause douce hors champ écran (0% CPU au scroll)
@@ -181,10 +192,6 @@ export function Orbit3DMethod({
     const handleVisibilityChange = () => {
       if (document.hidden) {
         setIsInView(false);
-      } else if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        const inView = rect.top < window.innerHeight + 120 && rect.bottom > -120;
-        setIsInView(inView);
       }
     };
 
@@ -203,9 +210,9 @@ export function Orbit3DMethod({
     targetSpeedsRef.current[index] = 1.0; // Reprise vitesse nominale
   }, []);
 
-  // Boucle d'animation GPU continue haute performance
+  // Boucle d'animation GPU continue haute performance (désactivée sous prefers-reduced-motion)
   useEffect(() => {
-    if (!isInView) return;
+    if (!isInView || prefersReducedMotion) return;
 
     let animFrameId: number;
     let lastTime = performance.now();
@@ -294,7 +301,7 @@ export function Orbit3DMethod({
 
     animFrameId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(animFrameId);
-  }, [isInView, activeIndex]);
+  }, [isInView, activeIndex, prefersReducedMotion]);
 
   // Positions statiques initiales (SSR)
   const initialPositions = COMPILED_ORBITS.map((cfg, idx) => {
