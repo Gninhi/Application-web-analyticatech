@@ -1147,9 +1147,27 @@
   animation-play-state: paused !important;
 }
 
+/* Animation de la jauge de défilement temporel des méthodes */
+@keyframes method-step-progress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.method-progress-bar {
+  animation: method-step-progress 9s linear forwards;
+}
+
+.method-progress-bar.paused {
+  animation-play-state: paused !important;
+}
+
 /* Réduction des animations pour l'accessibilité (hors bandeaux continus et micro-interactions volontaires) */
 @media (prefers-reduced-motion: reduce) {
-  *:not(.stock-ticker-track-left):not(.stock-ticker-track-right):not(.stock-ticker-track-left *):not(.stock-ticker-track-right *):not(.random-letter-swap):not(.random-letter-swap *):not(.orbit-comet):not(.orbit-comet *):not(.animate-laser-stream):not(.animate-laser-stream *),
+  *:not(.stock-ticker-track-left):not(.stock-ticker-track-right):not(.stock-ticker-track-left *):not(.stock-ticker-track-right *):not(.random-letter-swap):not(.random-letter-swap *):not(.orbit-comet):not(.orbit-comet *):not(.animate-laser-stream):not(.animate-laser-stream *):not(.method-progress-bar):not(.method-progress-bar *),
   *::before,
   *::after {
     animation-duration: 0.01ms !important;

@@ -1,8 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Search, FlaskConical, Factory, TrendingUp, Check, ArrowRight, ShieldCheck } from "lucide-react";
+import {
+  Search,
+  FlaskConical,
+  Factory,
+  TrendingUp,
+  Check,
+  ArrowRight,
+  ShieldCheck,
+  Play,
+  Pause,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Orbit3DMethod } from "@/components/ui/orbit-3d-method";
 import { SectionErrorBoundary } from "@/components/system/SectionErrorBoundary";
@@ -27,6 +37,9 @@ export interface MethodStep {
 const STEP_ICONS = [Search, FlaskConical, Factory, TrendingUp] as const;
 const STEP_COLORS = ["#F26D3D", "#38BDF8", "#A855F7", "#F59E0B"] as const;
 
+// Intervalle de lecture confortable : 9 secondes par phase
+const STEP_DURATION_MS = 9000;
+
 interface AgentoryMethodProps {
   onNavigateContact?: () => void;
 }
@@ -34,6 +47,12 @@ interface AgentoryMethodProps {
 export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
   const { t } = useI18n();
   const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const [isPausedByUser, setIsPausedByUser] = useState(false);
+  const [isCardHovered, setIsCardHovered] = useState(false);
+  const [isOrbitHovered, setIsOrbitHovered] = useState(false);
+  const [isInView, setIsInView] = useState(true);
+  const [isDocumentHidden, setIsDocumentHidden] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
   const METHOD_STEPS: MethodStep[] = [1, 2, 3, 4].map((n, i) => {
     return {
@@ -54,8 +73,56 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
     };
   });
 
+  // Détection de visibilité dans le viewport pour économiser les ressources
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { rootMargin: "150px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Détection du masquage de l'onglet
+  useEffect(() => {
+    const handleVisibility = () => {
+      setIsDocumentHidden(document.hidden);
+    };
+    document.addEventListener("visibilitychange", handleVisibility, { passive: true });
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
+  }, []);
+
+  const isAutoPlaying =
+    isInView &&
+    !isDocumentHidden &&
+    !isPausedByUser &&
+    !isCardHovered &&
+    !isOrbitHovered;
+
+  // Rotation automatique cadencée à 9s (mise en pause automatique au survol ou par action utilisateur)
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+
+    const timer = setTimeout(() => {
+      setActiveStepIndex((prev) => (prev + 1) % 4);
+    }, STEP_DURATION_MS);
+
+    return () => clearTimeout(timer);
+  }, [isAutoPlaying, activeStepIndex]);
+
+  const handleSelectStep = useCallback((index: number) => {
+    setActiveStepIndex(index);
+    setIsPausedByUser(false);
+  }, []);
+
   return (
-    <section className="relative py-12">
+    <section ref={sectionRef} className="relative py-12">
       {/* En-tête de section style Agentory */}
       <div className="max-w-3xl mb-12">
         <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] font-bold">
@@ -71,7 +138,11 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
 
       <div className="grid items-center gap-10 lg:grid-cols-12">
         {/* === Visualisation 3D native CSS/GPU avec Hub Central & Orbites (desktop) === */}
-        <div className="lg:col-span-5">
+        <div
+          className="lg:col-span-5"
+          onMouseEnter={() => setIsOrbitHovered(true)}
+          onMouseLeave={() => setIsOrbitHovered(false)}
+        >
           <SectionErrorBoundary sectionName="Visualisation 3D de la Méthode">
             <Orbit3DMethod
               nodes={METHOD_STEPS.map((s) => ({
@@ -82,14 +153,20 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                 color: s.color,
               }))}
               activeIndex={activeStepIndex}
-              onSelect={setActiveStepIndex}
+              onSelect={handleSelectStep}
               centerLabel={t("home.section.method")}
             />
           </SectionErrorBoundary>
         </div>
 
         {/* === Stepper mobile/tablette (l'orbite est masquée sous lg) === */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:hidden" role="tablist" aria-label={t("home.section.method")}>
+        <div
+          className="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:hidden"
+          role="tablist"
+          aria-label={t("home.section.method")}
+          onMouseEnter={() => setIsCardHovered(true)}
+          onMouseLeave={() => setIsCardHovered(false)}
+        >
           {METHOD_STEPS.map((step, idx) => {
             const isActive = idx === activeStepIndex;
             const StepIcon = step.icon;
@@ -100,13 +177,24 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                 role="tab"
                 aria-selected={isActive}
                 aria-label={`${step.number} — ${step.title}`}
-                onClick={() => setActiveStepIndex(idx)}
-                className={`relative flex flex-col p-4 rounded-2xl border text-left transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 ${
+                onClick={() => handleSelectStep(idx)}
+                className={`relative flex flex-col p-4 rounded-2xl border text-left transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 overflow-hidden ${
                   isActive
                     ? "border-[#F26D3D] glass-strong shadow-lg shadow-[#F26D3D]/10"
                     : "glass hover:border-slate-400 dark:hover:border-slate-500"
                 }`}
               >
+                {/* Jauge de progression de l'étape active sur mobile */}
+                {isActive && isAutoPlaying && (
+                  <span
+                    key={`mob-${activeStepIndex}-${isAutoPlaying}`}
+                    className="method-progress-bar absolute bottom-0 inset-x-0 h-1"
+                    style={{
+                      backgroundColor: step.color,
+                      animationDuration: `${STEP_DURATION_MS}ms`,
+                    }}
+                  />
+                )}
                 <div className="flex items-center justify-between mb-2">
                   <span
                     className={`font-mono text-xs font-bold ${
@@ -138,7 +226,34 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
           <div
             className="relative overflow-hidden glass-card rounded-3xl p-6 md:p-10 grid"
             style={{ perspective: 1000, transformStyle: "preserve-3d" }}
+            onMouseEnter={() => setIsCardHovered(true)}
+            onMouseLeave={() => setIsCardHovered(false)}
+            onTouchStart={() => setIsCardHovered(true)}
+            onTouchEnd={() => setIsCardHovered(false)}
           >
+            {/* Ligne de progression temporelle de lecture (9s par phase) */}
+            <div className="absolute top-0 inset-x-0 h-[3px] bg-black/5 dark:bg-white/10 overflow-hidden z-20">
+              {isAutoPlaying ? (
+                <div
+                  key={`desk-${activeStepIndex}-${isAutoPlaying}`}
+                  className="method-progress-bar h-full rounded-full"
+                  style={{
+                    backgroundColor: METHOD_STEPS[activeStepIndex]?.color ?? "#F26D3D",
+                    boxShadow: `0 0 10px ${METHOD_STEPS[activeStepIndex]?.color ?? "#F26D3D"}`,
+                    animationDuration: `${STEP_DURATION_MS}ms`,
+                  }}
+                />
+              ) : (
+                <div
+                  className="h-full w-full opacity-35 transition-colors"
+                  style={{
+                    backgroundColor: isPausedByUser
+                      ? "#F59E0B"
+                      : METHOD_STEPS[activeStepIndex]?.color ?? "#F26D3D",
+                  }}
+                />
+              )}
+            </div>
             {/* Lueur d'ambiance diffuse émanant du flux de la phase active */}
             <div
               className="pointer-events-none absolute -top-16 -left-16 h-72 w-72 rounded-full opacity-25 dark:opacity-20 transition-all duration-700 blur-3xl"
@@ -174,16 +289,54 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                 >
                   {/* Colonne gauche : Description & Phase */}
                   <div className="lg:col-span-7">
-                    <span
-                      className="font-mono text-[10px] uppercase tracking-widest px-3 py-1 rounded-full inline-block mb-4 border"
-                      style={{
-                        color: step.color,
-                        background: `color-mix(in srgb, ${step.color} 10%, transparent)`,
-                        borderColor: `color-mix(in srgb, ${step.color} 25%, transparent)`,
-                      }}
-                    >
-                      {step.phase}
-                    </span>
+                    <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                      <span
+                        className="font-mono text-[10px] uppercase tracking-widest px-3 py-1 rounded-full inline-block border"
+                        style={{
+                          color: step.color,
+                          background: `color-mix(in srgb, ${step.color} 10%, transparent)`,
+                          borderColor: `color-mix(in srgb, ${step.color} 25%, transparent)`,
+                        }}
+                      >
+                        {step.phase}
+                      </span>
+
+                      {/* Contrôle de lecture/pause de la rotation automatique */}
+                      <button
+                        type="button"
+                        onClick={() => setIsPausedByUser((p) => !p)}
+                        className={cn(
+                          "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono transition-all border cursor-pointer select-none focus-visible:outline-2 focus-visible:outline-offset-2",
+                          isPausedByUser
+                            ? "border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20"
+                            : "border-black/10 dark:border-white/15 bg-white/70 dark:bg-white/5 text-slate-600 dark:text-slate-300 hover:border-black/20 dark:hover:border-white/30"
+                        )}
+                        title={isPausedByUser ? t("method.auto.play") : t("method.auto.pause")}
+                        aria-label={isPausedByUser ? t("method.auto.play") : t("method.auto.pause")}
+                      >
+                        {isPausedByUser ? (
+                          <>
+                            <Play className="h-2.5 w-2.5 fill-current" aria-hidden />
+                            <span>{t("method.auto.paused")}</span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="relative flex h-2 w-2">
+                              <span
+                                className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+                                style={{ backgroundColor: step.color }}
+                              />
+                              <span
+                                className="relative inline-flex rounded-full h-2 w-2"
+                                style={{ backgroundColor: step.color }}
+                              />
+                            </span>
+                            <Pause className="h-2.5 w-2.5" aria-hidden />
+                            <span className="hidden sm:inline">{t("method.auto.label")}</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
 
                     <h3 className="font-display text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-50 mb-2">
                       {step.number}. {step.title}
