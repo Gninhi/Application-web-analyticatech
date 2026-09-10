@@ -247,9 +247,9 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                   Nom de l&apos;hébergeur
                 </dt>
                 <dd className="font-display font-semibold text-slate-900 dark:text-slate-50">
-                  Hostinger
+                  Vercel
                   <span className="block text-xs font-normal text-slate-500 dark:text-slate-400 mt-1">
-                    Hostinger International Ltd.
+                    Vercel Inc.
                   </span>
                 </dd>
               </div>
@@ -259,7 +259,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                   Adresse du siège
                 </dt>
                 <dd className="text-slate-900 dark:text-slate-100">
-                  61 Lordou Vironos Street, 6023 Larnaca, Chypre
+                  440 N Barranca Ave #4133, Covina, CA 91723, États-Unis
                 </dd>
               </div>
 
@@ -269,12 +269,12 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                 </dt>
                 <dd className="text-slate-900 dark:text-slate-100">
                   <a
-                    href="https://www.hostinger.fr/contact"
+                    href="https://vercel.com/contact"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-[#F26D3D] hover:underline"
                   >
-                    hostinger.fr/contact
+                    vercel.com/contact
                     <ExternalLink className="h-3 w-3" aria-hidden />
                   </a>
                 </dd>
@@ -292,7 +292,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                     B. Distinction essentielle : hébergement web vs données clients en mission
                   </h4>
                   <p className="text-xs md:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                    L&apos;hébergeur web susmentionné (Hostinger) intervient exclusivement dans le cadre de la
+                    L&apos;hébergeur web susmentionné (Vercel Inc.) intervient exclusivement dans le cadre de la
                     délivrance technique des pages publiques, scripts statiques et contenus institutionnels du
                     présent site vitrine.
                   </p>

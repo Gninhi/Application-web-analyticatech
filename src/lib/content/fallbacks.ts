@@ -632,71 +632,14 @@ export const FALLBACK_ACTIVITY_LOGS_EN: ActivityLogDTO[] = [
   { id: "log-7", time: "13:58:15", level: "ok", event: "Multi-agent orchestrator: 38 agents in sync" },
 ];
 
-/** Témoignages clients par défaut FR. */
-export const FALLBACK_TESTIMONIALS_FR: TestimonialDTO[] = [
-  {
-    id: "test-1",
-    author: "Marc Dupont",
-    role: "Directeur des Opérations",
-    company: "Groupe Industriel",
-    quote: "L'automatisation de nos 48 flux critiques a transformé notre quotidien avec 45% de gain de temps opérationnel.",
-    order: 1,
-  },
-  {
-    id: "test-2",
-    author: "Claire Valette",
-    role: "VP Engineering",
-    company: "Fintech Leader",
-    quote: "Leur architecture multi-agents nous a permis de déployer 38 agents cognitifs fiables et sous contrôle total.",
-    order: 2,
-  },
-  {
-    id: "test-3",
-    author: "Alexandre Roy",
-    role: "Chief Data Officer",
-    company: "Retail Omnicanal",
-    quote: "42 dashboards unifiés et des décisions instantanées. Une transformation moderne, structurée et durable.",
-    order: 3,
-  },
-];
+/** Témoignages clients par défaut FR (purgés). */
+export const FALLBACK_TESTIMONIALS_FR: TestimonialDTO[] = [];
 
-/** Témoignages clients par défaut EN. */
-export const FALLBACK_TESTIMONIALS_EN: TestimonialDTO[] = [
-  {
-    id: "test-1",
-    author: "Marc Dupont",
-    role: "Chief Operating Officer",
-    company: "Industrial Group",
-    quote: "Automating our 48 critical workflows transformed our day-to-day operations with 45% time saved.",
-    order: 1,
-  },
-  {
-    id: "test-2",
-    author: "Claire Valette",
-    role: "VP Engineering",
-    company: "Fintech Leader",
-    quote: "Their multi-agent architecture enabled us to deploy 38 cognitive agents under complete human oversight.",
-    order: 2,
-  },
-  {
-    id: "test-3",
-    author: "Alexandre Roy",
-    role: "Chief Data Officer",
-    company: "Omnichannel Retail",
-    quote: "42 unified dashboards and instant decision-making. A modern, structured, and long-lasting transformation.",
-    order: 3,
-  },
-];
+/** Témoignages clients par défaut EN (purgés). */
+export const FALLBACK_TESTIMONIALS_EN: TestimonialDTO[] = [];
 
-/** Logos et références clients par défaut. */
-export const FALLBACK_CLIENT_LOGOS: ClientLogoDTO[] = [
-  { id: "cl-1", name: "NovaFinance", sector: "Fintech", logoUrl: null, websiteUrl: "https://novafinance.example.com", order: 1 },
-  { id: "cl-2", name: "Axiom Conseil", sector: "Stratégie", logoUrl: null, websiteUrl: "https://axiom.example.com", order: 2 },
-  { id: "cl-3", name: "Helios Energy", sector: "Énergie", logoUrl: null, websiteUrl: "https://helios.example.com", order: 3 },
-  { id: "cl-4", name: "Vanguard Log", sector: "Logistique", logoUrl: null, websiteUrl: "https://vanguard.example.com", order: 4 },
-  { id: "cl-5", name: "TheraHealth", sector: "Santé", logoUrl: null, websiteUrl: "https://therahealth.example.com", order: 5 },
-  { id: "cl-6", name: "RetailPulse", sector: "Retail", logoUrl: null, websiteUrl: "https://retailpulse.example.com", order: 6 },
-];
+/** Logos et références clients par défaut (purgés). */
+export const FALLBACK_CLIENT_LOGOS: ClientLogoDTO[] = [];
 
 /** Mots-clés défilants Ticker FR. */
 export const FALLBACK_MARQUEE_KEYWORDS_FR: string[] = [
@@ -1141,7 +1084,7 @@ export const FALLBACK_LEGAL_SECTIONS_FR: LegalSectionDTO[] = [
     id: "leg-4",
     type: "legal",
     heading: "4. Coordonnées & Engagements de service",
-    body: "Pour toute demande institutionnelle, légale ou réclamation :\nEmail : contact@analyticatech.fr | Téléphone : +33 1 89 71 35 24 | Adresse : 60 rue François 1er, 75008 Paris, France.\nDisponibilité opérationnelle : du lundi au vendredi, 9h30 - 17h30 (CET).\nAccusé de réception des demandes sous 2h, réponse d'un architecte sous 24h ouvrées.",
+    body: "Pour toute demande institutionnelle, légale ou réclamation :\nEmail : contact@analyticatech.fr | Téléphone : +33 7 68 61 13 10 | Adresse : 60 rue François 1er, 75008 Paris, France.\nDisponibilité opérationnelle : du lundi au vendredi, 9h30 - 17h30 (CET).\nAccusé de réception des demandes sous 2h, réponse d'un architecte sous 24h ouvrées.",
     order: 4,
   },
   {
@@ -1201,7 +1144,7 @@ export const FALLBACK_LEGAL_SECTIONS_EN: LegalSectionDTO[] = [
     id: "leg-4",
     type: "legal",
     heading: "4. Contact & Service Commitments",
-    body: "For any legal inquiries, corporate information or claims:\nEmail: contact@analyticatech.fr | Phone: +33 1 89 71 35 24 | Address: 60 rue François 1er, 75008 Paris, France.\nOperational availability: Monday to Friday, 9:30 AM - 5:30 PM (CET).\nAutomated acknowledgement < 2h, architect reply < 24 business hours.",
+    body: "For any legal inquiries, corporate information or claims:\nEmail: contact@analyticatech.fr | Phone: +33 7 68 61 13 10 | Address: 60 rue François 1er, 75008 Paris, France.\nOperational availability: Monday to Friday, 9:30 AM - 5:30 PM (CET).\nAutomated acknowledgement < 2h, architect reply < 24 business hours.",
     order: 4,
   },
   {

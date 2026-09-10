@@ -11,17 +11,10 @@ export interface TechTickerItem {
   status: string;
 }
 
-export interface ClientTickerItem {
-  code: string;
-  name: string;
-  sector?: string | null;
-  status?: string | null;
-}
-
-export type TickerItem = TechTickerItem | ClientTickerItem;
+export type TickerItem = TechTickerItem;
 
 interface BaseStockTickerProps {
-  /** Sens du défilement. "left" (défaut pour tech) ou "right" (défaut pour clients) */
+  /** Sens du défilement. "left" (défaut) ou "right" */
   direction?: "left" | "right";
   /** Vitesse en secondes pour un cycle complet. Défaut : 35 */
   speed?: number;
@@ -37,22 +30,15 @@ export interface TechStockTickerProps extends BaseStockTickerProps {
   keywords?: string[];
 }
 
-export interface ClientStockTickerProps extends BaseStockTickerProps {
-  type: "clients";
-  items?: ClientTickerItem[];
-  clients?: Array<{ name: string; sector?: string | null }>;
-}
-
-export interface CustomStockTickerProps<T> extends BaseStockTickerProps {
+export interface CustomStockTickerProps<T = unknown> extends BaseStockTickerProps {
   type: "custom";
   items: T[];
   renderItem: (item: T, index: number) => React.ReactNode;
 }
 
-export type StockTickerProps =
+export type StockTickerProps<T = unknown> =
   | TechStockTickerProps
-  | ClientStockTickerProps
-  | CustomStockTickerProps<unknown>;
+  | CustomStockTickerProps<T>;
 
 // ============================================================
 // DONNÉES PAR DÉFAUT ENRICHIES POUR L'ESTHÉTIQUE TRADING BOURSE
@@ -84,31 +70,6 @@ const DEFAULT_TECH_TICKERS_EN: TechTickerItem[] = [
   { code: "GOV-10", name: "Data Governance & Privacy", delta: "● PII MASK", status: "ACTIVE" },
 ];
 
-const DEFAULT_CLIENT_TICKERS_FR: ClientTickerItem[] = [
-  { code: "NOVA", name: "NovaFinance", sector: "FINTECH", status: "PROD ACTIVE" },
-  { code: "AXIO", name: "Axiom Stratégie", sector: "CONSEIL", status: "PROD ACTIVE" },
-  { code: "HELI", name: "Helios Energy", sector: "ÉNERGIE", status: "PROD ACTIVE" },
-  { code: "MRDN", name: "Meridian Logistics", sector: "SUPPLY CHAIN", status: "PROD ACTIVE" },
-  { code: "QNTM", name: "Quantum Retail", sector: "E-COMMERCE", status: "PROD ACTIVE" },
-  { code: "ORBT", name: "Orbit Aerospace", sector: "INDUSTRIE", status: "PROD ACTIVE" },
-  { code: "VRTX", name: "Vortex Health", sector: "BIOTECH", status: "PROD ACTIVE" },
-  { code: "ZNTH", name: "Zenith Media", sector: "MÉDIA", status: "PROD ACTIVE" },
-  { code: "PLRS", name: "Polaris Capital", sector: "INVESTISSEMENT", status: "PROD ACTIVE" },
-  { code: "NRDC", name: "Nordic Systems", sector: "CLOUD INFRA", status: "PROD ACTIVE" },
-];
-
-const DEFAULT_CLIENT_TICKERS_EN: ClientTickerItem[] = [
-  { code: "NOVA", name: "NovaFinance", sector: "FINTECH", status: "PROD ACTIVE" },
-  { code: "AXIO", name: "Axiom Strategy", sector: "CONSULTING", status: "PROD ACTIVE" },
-  { code: "HELI", name: "Helios Energy", sector: "ENERGY", status: "PROD ACTIVE" },
-  { code: "MRDN", name: "Meridian Logistics", sector: "SUPPLY CHAIN", status: "PROD ACTIVE" },
-  { code: "QNTM", name: "Quantum Retail", sector: "E-COMMERCE", status: "PROD ACTIVE" },
-  { code: "ORBT", name: "Orbit Aerospace", sector: "INDUSTRY", status: "PROD ACTIVE" },
-  { code: "VRTX", name: "Vortex Health", sector: "BIOTECH", status: "PROD ACTIVE" },
-  { code: "ZNTH", name: "Zenith Media", sector: "MEDIA", status: "PROD ACTIVE" },
-  { code: "PLRS", name: "Polaris Capital", sector: "INVESTMENT", status: "PROD ACTIVE" },
-  { code: "NRDC", name: "Nordic Systems", sector: "CLOUD INFRA", status: "PROD ACTIVE" },
-];
 
 const TICKER_META_DICTIONARY: Record<string, { code: string; delta: string; status: string }> = {
   IA: { code: "AI-01", delta: "▲ 280ms", status: "LIVE" },
@@ -139,10 +100,10 @@ const TICKER_META_DICTIONARY: Record<string, { code: string; delta: string; stat
  * 4. Double estompage gauche / droite (masque CSS vectoriel + dégradés overlay)
  * 5. Pause fluide au survol
  */
-export function StockTicker(props: StockTickerProps) {
+export function StockTicker<T = unknown>(props: StockTickerProps<T>) {
   const {
-    direction = props.type === "clients" ? "right" : "left",
-    speed = props.type === "clients" ? 65 : 60,
+    direction = "left",
+    speed = 60,
     className,
     pauseOnHover = true,
   } = props;
@@ -195,52 +156,6 @@ export function StockTicker(props: StockTickerProps) {
         <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 whitespace-nowrap">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden />
           {item.status}
-        </span>
-
-        {/* Séparateur boursier orange */}
-        <span className="text-[#F26D3D]/40 font-mono text-xs font-bold ml-2 select-none" aria-hidden>
-          {"//"}
-        </span>
-      </div>
-    ));
-  } else if (props.type === "clients") {
-    let itemsToUse: ClientTickerItem[] = [];
-    if (props.items && props.items.length > 0) {
-      itemsToUse = props.items;
-    } else if (props.clients && props.clients.length > 0) {
-      itemsToUse = props.clients.map((c) => ({
-        code: c.name.replace(/[^a-zA-Z]/g, "").slice(0, 4).toUpperCase() || "CORP",
-        name: c.name,
-        sector: c.sector || "ENTERPRISE",
-        status: "PROD ACTIVE",
-      }));
-    } else {
-      itemsToUse = locale === "en" ? DEFAULT_CLIENT_TICKERS_EN : DEFAULT_CLIENT_TICKERS_FR;
-    }
-
-    renderedItems = itemsToUse.map((item, idx) => (
-      <div key={idx} className="flex items-center gap-3.5 px-6 group/client cursor-default select-none">
-        {/* Code Ticker Bleu Ciel */}
-        <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/25 tracking-wider whitespace-nowrap">
-          [{item.code}]
-        </span>
-
-        {/* Nom Entreprise */}
-        <span className="font-display text-sm md:text-base font-bold text-slate-800 dark:text-slate-100 group-hover/client:text-[#F26D3D] transition-colors whitespace-nowrap">
-          {item.name}
-        </span>
-
-        {/* Badge Secteur */}
-        {item.sector && (
-          <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full bg-white/60 dark:bg-white/5 border border-black/5 dark:border-white/10 whitespace-nowrap">
-            {item.sector}
-          </span>
-        )}
-
-        {/* Statut Déploiement */}
-        <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-emerald-600 dark:text-emerald-400 whitespace-nowrap">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />
-          {item.status || "PROD ACTIVE"}
         </span>
 
         {/* Séparateur boursier orange */}

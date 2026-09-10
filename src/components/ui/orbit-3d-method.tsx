@@ -146,29 +146,23 @@ export function Orbit3DMethod({
   const opacityCache = useRef<number[]>([0, 0, 0, 0]);
 
   const [isClient, setIsClient] = useState(false);
-  const [isInView, setIsInView] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [isInView, setIsInView] = useState(true);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  const activeIndexRef = useRef(activeIndex);
+  useEffect(() => {
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
 
   const activeNode = nodes[activeIndex] ?? nodes[0];
 
-  // Initialisation client et détection de prefers-reduced-motion
+  // Initialisation client
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const listener = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
-    mq.addEventListener("change", listener);
-
     const handle = requestAnimationFrame(() => {
-      setPrefersReducedMotion(mq.matches);
       setIsClient(true);
+      setIsInView(true);
     });
-
-    return () => {
-      mq.removeEventListener("change", listener);
-      cancelAnimationFrame(handle);
-    };
+    return () => cancelAnimationFrame(handle);
   }, []);
 
   // IntersectionObserver pour pause douce hors champ écran (0% CPU au scroll)
@@ -180,18 +174,22 @@ export function Orbit3DMethod({
       ([entry]) => {
         setIsInView(entry.isIntersecting);
       },
-      { rootMargin: "120px" }
+      { rootMargin: "200px" }
     );
 
     observer.observe(container);
     return () => observer.disconnect();
   }, [isClient]);
 
-  // Page Visibility API : met immédiatement en pause l'animation si l'onglet est masqué
+  // Page Visibility API : met en pause si masqué et rétablit dynamiquement le mouvement dès la reprise
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
         setIsInView(false);
+      } else if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight + 200 && rect.bottom > -200;
+        setIsInView(inView);
       }
     };
 
@@ -210,9 +208,9 @@ export function Orbit3DMethod({
     targetSpeedsRef.current[index] = 1.0; // Reprise vitesse nominale
   }, []);
 
-  // Boucle d'animation GPU continue haute performance (désactivée sous prefers-reduced-motion)
+  // Boucle d'animation GPU continue haute performance
   useEffect(() => {
-    if (!isInView || prefersReducedMotion) return;
+    if (!isInView) return;
 
     let animFrameId: number;
     let lastTime = performance.now();
@@ -252,7 +250,8 @@ export function Orbit3DMethod({
         const y = cfg.radius * (cfg.Ay * c + cfg.By * s);
         const z = cfg.radius * (cfg.Az * c + cfg.Bz * s);
 
-        if (idx === activeIndex) {
+        const currentActiveIdx = activeIndexRef.current;
+        if (idx === currentActiveIdx) {
           activeNodePx = x;
           activeNodePy = y;
           hasActiveNode = true;
@@ -263,7 +262,7 @@ export function Orbit3DMethod({
         const scale = 1.0 + 0.12 * normZ;
         const opacity = Math.max(0.55, 0.78 + 0.22 * normZ);
         // Le nœud actif a une priorité de plan supérieure pour rester toujours bien visible
-        const zIndex = idx === activeIndex ? 40 : (z > 0 ? 30 : 8);
+        const zIndex = idx === currentActiveIdx ? 40 : (z > 0 ? 30 : 8);
 
         nodeEl.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px) scale(${scale.toFixed(3)})`;
 
@@ -301,7 +300,7 @@ export function Orbit3DMethod({
 
     animFrameId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(animFrameId);
-  }, [isInView, activeIndex, prefersReducedMotion]);
+  }, [isInView]);
 
   // Positions statiques initiales (SSR)
   const initialPositions = COMPILED_ORBITS.map((cfg, idx) => {
@@ -377,7 +376,7 @@ export function Orbit3DMethod({
               >
                 {/* Comète lumineuse filant le long de l'orbite — Accélérée GPU sur le compositeur */}
                 <div
-                  className="absolute inset-0 rounded-full animate-spin pointer-events-none"
+                  className="absolute inset-0 rounded-full animate-spin pointer-events-none orbit-comet"
                   style={{
                     animationDuration: `${cfg.period}s`,
                     animationTimingFunction: "linear",

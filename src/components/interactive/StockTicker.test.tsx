@@ -19,23 +19,18 @@ describe("StockTicker Component", () => {
     expect(html).toContain("pointer-events-none absolute inset-y-0 left-0");
   });
 
-  it("rend le bandeau clients avec les codes boursiers et badges sectoriels", () => {
+  it("rend le bandeau personnalisé en mode custom", () => {
     const html = renderToStaticMarkup(
       <StockTicker
-        type="clients"
-        clients={[
-          { name: "NovaFinance", sector: "FINTECH" },
-          { name: "Helios Energy", sector: "ÉNERGIE" },
-        ]}
+        type="custom"
+        direction="right"
+        items={["Custom A", "Custom B"]}
+        renderItem={(item: string) => <span>{item}</span>}
       />
     );
 
-    expect(html).toContain("[NOVA]");
-    expect(html).toContain("NovaFinance");
-    expect(html).toContain("FINTECH");
-    expect(html).toContain("[HELI]");
-    expect(html).toContain("Helios Energy");
-    expect(html).toContain("PROD ACTIVE");
+    expect(html).toContain("Custom A");
+    expect(html).toContain("Custom B");
     expect(html).toContain("stock-ticker-track-right");
   });
 

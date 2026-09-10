@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { useI18n } from "@/lib/i18n/provider";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -49,6 +49,7 @@ export function FaqSection() {
               >
                 <h3>
                   <button
+                    id={`faq-trigger-${i}`}
                     type="button"
                     onClick={() => setOpen(isOpen ? null : i)}
                     aria-expanded={isOpen}
@@ -93,24 +94,22 @@ export function FaqSection() {
                   </button>
                 </h3>
 
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      key="panel"
-                      id={`faq-panel-${i}`}
-                      role="region"
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.32, ease: EASE }}
-                      className="overflow-hidden"
-                    >
-                      <p className="max-w-3xl pb-6 pl-11 md:pl-16 pr-2 text-sm md:text-base leading-relaxed text-slate-600 dark:text-slate-400">
-                        {item.a}
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                <motion.div
+                  id={`faq-panel-${i}`}
+                  role="region"
+                  aria-labelledby={`faq-trigger-${i}`}
+                  initial={false}
+                  animate={{
+                    height: isOpen ? "auto" : 0,
+                    opacity: isOpen ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.32, ease: EASE }}
+                  className="overflow-hidden"
+                >
+                  <p className="max-w-3xl pb-6 pl-11 md:pl-16 pr-2 text-sm md:text-base leading-relaxed text-slate-600 dark:text-slate-400">
+                    {item.a}
+                  </p>
+                </motion.div>
               </div>
             );
           })}

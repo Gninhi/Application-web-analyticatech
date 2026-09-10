@@ -71,8 +71,8 @@ describe("MentionsLegalesView — Conformité LCEN Article 6-III", () => {
   it("mentionne l'hébergeur du site web et la distinction expresse avec les données clients", () => {
     const html = renderWithProviders(<MentionsLegalesView onNavigate={() => {}} />);
     // Hébergeur web public
-    expect(html).toContain("Hostinger");
-    expect(html).toContain("61 Lordou Vironos Street, 6023 Larnaca");
+    expect(html).toContain("Vercel");
+    expect(html).toContain("440 N Barranca Ave #4133, Covina");
     // Distinction des données clients
     expect(html).toContain("Distinction essentielle : hébergement web vs données clients");
     expect(html).toContain("SecNumCloud");

@@ -24,7 +24,7 @@ const SECTION_SKELETONS = {
   bento: { minHeight: 640, mobileMinHeight: 1300 },
   method: { minHeight: 930, mobileMinHeight: 1520 },
   demo: { minHeight: 640, mobileMinHeight: 850 },
-  proof: { minHeight: 1150, mobileMinHeight: 2200 },
+  proof: { minHeight: 620, mobileMinHeight: 880 },
   faq: { minHeight: 640, mobileMinHeight: 850 },
 } as const;
 
@@ -146,9 +146,9 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
         </div>
       </section>
 
-      {/* ============ 09 — INSIGHTS + TÉMOIGNAGES (MARQUEES INCLUS) ============ */}
+      {/* ============ 09 — INSIGHTS (TECH TICKER INCLUS) ============ */}
       <LazySection {...SECTION_SKELETONS.proof} eager>
-        <SectionErrorBoundary sectionName="Témoignages & Preuves">
+        <SectionErrorBoundary sectionName="Insights">
           <HomeSocialProof onNavigate={onNavigate} />
         </SectionErrorBoundary>
       </LazySection>

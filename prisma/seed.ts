@@ -102,29 +102,9 @@ async function seed() {
   }
   console.log("✓ Métriques insérées");
 
-  const clientLogos = [
-    { name: "NOVA BANK", sector: "Finance", order: 1 },
-    { name: "AXIOM CORP", sector: "Conseil", order: 2 },
-    { name: "HELIOS GROUP", sector: "Énergie", order: 3 },
-    { name: "MERIDIAN", sector: "Logistique", order: 4 },
-    { name: "QUANTUM LABS", sector: "Recherche", order: 5 },
-    { name: "ORBITAL SYS", sector: "Aéro", order: 6 },
-    { name: "VERTEX FINANCE", sector: "Finance", order: 7 },
-    { name: "ZENITH RETAIL", sector: "Retail", order: 8 },
-    { name: "POLARIS AI", sector: "Tech", order: 9 },
-    { name: "NORDIC DATA", sector: "Data", order: 10 },
-    { name: "CIPHER LABS", sector: "Cybersécurité", order: 11 },
-    { name: "ATLAS SYSTEMS", sector: "Industrie", order: 12 },
-  ];
-
-  for (const l of clientLogos) {
-    await db.clientLogo.upsert({
-      where: { name: l.name },
-      update: l,
-      create: l,
-    });
-  }
-  console.log("✓ Logos clients insérés");
+  // 2. CLIENT LOGOS (Purgés — aucune fausse marque partenaire)
+  await db.clientLogo.deleteMany();
+  console.log("✓ Table logos clients purgée");
 
   // ============================================================
   // 3. SERVICES (bilingues FR & EN) — 4 piliers
@@ -706,71 +686,11 @@ async function seed() {
   console.log("✓ Capacités insérées");
 
   // ============================================================
-  // 7. TESTIMONIALS
+  // 7. TESTIMONIALS (Purgés — aucun avis fictif)
   // ============================================================
-  const testimonialsData = [
-    {
-      author: "K. Moreau",
-      order: 1,
-      fr: {
-        quote: "Analyticatech a transformé notre centre de conformité. Les agents IA traitent désormais 100% des transactions en temps réel, là où 30% passaient auparavant.",
-        role: "Directrice des Risques",
-        company: "Banque Européenne",
-      },
-      en: {
-        quote: "Analyticatech transformed our compliance center. AI agents now process 100% of transactions in real time, where only 30% were covered before.",
-        role: "Chief Risk Officer",
-        company: "European Bank",
-      },
-    },
-    {
-      author: "J. Favier",
-      order: 2,
-      fr: {
-        quote: "Le passage à une architecture agentique event-driven a divisé notre time-to-market par trois. L'équipe maîtrise autant la hauteur de vue que l'exécution.",
-        role: "CIO",
-        company: "Groupe Logistique FR",
-      },
-      en: {
-        quote: "Moving to an event-driven agentic architecture cut our time-to-market by a factor of three. The team masters both strategic vision and execution.",
-        role: "CIO",
-        company: "Logistics Group FR",
-      },
-    },
-    {
-      author: "N. Haddad",
-      order: 3,
-      fr: {
-        quote: "Une plateforme data souveraine livrée en 4 mois, hébergée sur cloud qualifié SecNumCloud. Fini les chiffres contradictoires entre directions : une seule source de vérité.",
-        role: "DSI Secteur Public",
-        company: "Collectivité Territoriale",
-      },
-      en: {
-        quote: "A sovereign data platform delivered in 4 months, hosted on a SecNumCloud-qualified cloud. No more contradictory figures across departments: a single source of truth.",
-        role: "Public Sector CIO",
-        company: "Local Authority",
-      },
-    },
-  ];
-
-  for (const t of testimonialsData) {
-    const existing = await db.testimonial.findFirst({ where: { author: t.author } });
-    const testimonial = existing
-      ? await db.testimonial.update({ where: { id: existing.id }, data: { order: t.order } })
-      : await db.testimonial.create({ data: { author: t.author, order: t.order } });
-
-    await db.testimonialTranslation.upsert({
-      where: { testimonialId_locale: { testimonialId: testimonial.id, locale: "fr" } },
-      update: t.fr,
-      create: { testimonialId: testimonial.id, locale: "fr", ...t.fr },
-    });
-    await db.testimonialTranslation.upsert({
-      where: { testimonialId_locale: { testimonialId: testimonial.id, locale: "en" } },
-      update: t.en,
-      create: { testimonialId: testimonial.id, locale: "en", ...t.en },
-    });
-  }
-  console.log("✓ Témoignages insérés");
+  await db.testimonialTranslation.deleteMany();
+  await db.testimonial.deleteMany();
+  console.log("✓ Table témoignages purgée");
 
   // ============================================================
   // 8. NAVIGATION (NavItem)
@@ -1019,11 +939,11 @@ async function seed() {
       order: 2,
       fr: {
         heading: "2. Hébergeur du site web",
-        body: "Hébergement du site internet vitrine : Hostinger (Hostinger International Ltd., 61 Lordou Vironos Street, 6023 Larnaca, Chypre — https://www.hostinger.fr/contact).\n\nDistinction essentielle avec les données clients : L'hébergement web susmentionné est dédié exclusivement à la diffusion publique du site vitrine. Il est strictement distinct et étanche des infrastructures cloud souveraines (SecNumCloud, VPC privés clients, ISO 27001) hébergeant et traitant les données clients dans le cadre de nos missions de conseil en intelligence artificielle et data, régies par des accords de traitement de données (DPA) et de confidentialité (NDA).",
+        body: "Hébergement de l'infrastructure web de diffusion : Vercel Inc. (440 N Barranca Ave #4133, Covina, CA 91723, USA — https://vercel.com).\n\nDistinction essentielle avec les données clients : L'hébergement web susmentionné est dédié exclusivement à la distribution publique du site vitrine. Il est strictement indépendant et étanche des infrastructures cloud souveraines (SecNumCloud, VPC privés clients, ISO 27001) hébergeant et traitant les données clients dans le cadre de nos missions de conseil en intelligence artificielle et data, régies par des accords de traitement de données (DPA) et de confidentialité (NDA).",
       },
       en: {
         heading: "2. Website Hosting Provider",
-        body: "Showcase website hosting provider: Hostinger (Hostinger International Ltd., 61 Lordou Vironos Street, 6023 Larnaca, Cyprus — https://www.hostinger.fr/contact).\n\nKey distinction with client mission data: Public website hosting is strictly decoupled and isolated from sovereign enterprise cloud infrastructures (SecNumCloud, client VPCs, ISO 27001) hosting and processing client data for AI consulting engagements, governed by bespoke DPAs and NDAs.",
+        body: "Showcase website cloud infrastructure: Vercel Inc. (440 N Barranca Ave #4133, Covina, CA 91723, USA — https://vercel.com).\n\nKey distinction with client mission data: Public website hosting is strictly decoupled and isolated from sovereign enterprise cloud infrastructures (SecNumCloud, client VPCs, ISO 27001) hosting and processing client data for AI consulting engagements, governed by bespoke DPAs and NDAs.",
       },
     },
     {
@@ -1041,11 +961,11 @@ async function seed() {
       order: 4,
       fr: {
         heading: "4. Contact",
-        body: "Pour toute demande légale, information ou réclamation : Email : contact@analyticatech.fr | Téléphone : +33 7 68 61 13 10 | Adresse : 60 rue François 1er, 75008 Paris, France | Formulaire en ligne accessible sur la page /contact. Réponse sous 24 à 48 heures ouvrées.",
+        body: "Pour toute demande légale, information ou réclamation : Email : contact@analyticatech.fr | Téléphone : +33 7 68 61 13 10 | Adresse : 60 rue François 1er, 75008 Paris, France | Formulaire en ligne accessible sur la page /contact. Réponse sous 24h ouvrées (accusé sous 2h).",
       },
       en: {
         heading: "4. Contact",
-        body: "For any legal inquiries, corporate information or claims: Email: contact@analyticatech.fr | Phone: +33 7 68 61 13 10 | Address: 60 rue François 1er, 75008 Paris, France | Secure online form at /contact.",
+        body: "For any legal inquiries, corporate information or claims: Email: contact@analyticatech.fr | Phone: +33 7 68 61 13 10 | Address: 60 rue François 1er, 75008 Paris, France | Secure online form at /contact. Response within 24 business hours (acknowledgment within 2h).",
       },
     },
   ];

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar, Quote } from "lucide-react";
+import { ArrowRight, Calendar } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
@@ -16,27 +16,18 @@ interface HomeSocialProofProps {
 }
 
 /**
- * HomeSocialProof — Section "09 — INSIGHTS & TÉMOIGNAGES"
+ * HomeSocialProof — Section "09 — INSIGHTS"
  *
  * Structure claire, compartimentée et hautement maintenable :
  *   1. Bloc Insights (1 article principal 7/12 + 2 articles secondaires 5/12)
- *   2. Ticker Boursier 1 : Stack Technologique & Capacités IA (Défilement infini vers la gauche)
- *   3. Bloc Témoignages Clients (grille 3 colonnes stable avec citations isolées)
- *   4. Ticker Boursier 2 : Entreprises Partenaires & Déploiements (Défilement infini vers la droite)
- *
- * Les deux bandeaux utilisent le composant unifié `StockTicker` pour garantir une taille,
- * une hauteur, une vitesse et une fluidité 100% identiques et centralisées.
+ *   2. Ticker Boursier : Stack Technologique & Capacités IA (Défilement infini vers la gauche)
  */
 export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
   const { t, locale } = useI18n();
   const {
-    clientLogos: DB_CLIENTS,
     marqueeKeywords: MARQUEE_KEYWORDS,
-    testimonials: TESTIMONIALS,
     blogPosts: BLOG_POSTS,
   } = useAppContent();
-
-  const displayClients = DB_CLIENTS.length > 0 ? DB_CLIENTS : [];
 
   // Maximum 3 contenus d'insights éditoriaux
   const homeInsights = BLOG_POSTS.slice(0, 3);
@@ -160,65 +151,12 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
         </SectionContainer>
       </section>
 
-      {/* ============ 02 — BANDEAU TICKER 1 : TECH & CAPABILITIES (STYLE BOURSE) ============ */}
+      {/* ============ 02 — BANDEAU TICKER : TECH & CAPABILITIES (STYLE BOURSE) ============ */}
       <StockTicker
         type="tech"
         keywords={MARQUEE_KEYWORDS}
         direction="left"
         speed={70}
-      />
-
-      {/* ============ 03 — TÉMOIGNAGES CLIENTS & AVIS ============ */}
-      <section className="relative">
-        <SectionContainer>
-          <div className="mb-10 text-center max-w-2xl mx-auto">
-            <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] font-bold">
-              {t("home.section.testimonials")}
-            </span>
-            <h3 className="font-display text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-50 mt-2">
-              {t("home.testimonials.title")}
-            </h3>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">
-              {t("home.testimonials.desc")}
-            </p>
-          </div>
-
-          {/* Grille responsive de cartes de témoignages */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {TESTIMONIALS.map((tItem, i) => (
-              <motion.figure
-                key={tItem.id || i}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: i * 0.08 }}
-                className="glass-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between h-full border border-black/5 dark:border-white/10 hover:border-[#F26D3D]/30 transition-all duration-300 group"
-              >
-                <div>
-                  <Quote className="h-6 w-6 text-[#F26D3D]/40 mb-4 group-hover:text-[#F26D3D] transition-colors" aria-hidden />
-                  <blockquote className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-normal mb-6">
-                    &ldquo;{tItem.quote}&rdquo;
-                  </blockquote>
-                </div>
-                <figcaption className="pt-4 border-t border-black/10 dark:border-white/10">
-                  <p className="font-display font-bold text-slate-900 dark:text-slate-100 text-sm">
-                    {tItem.author}
-                  </p>
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mt-1">
-                    {tItem.role} · {tItem.company}
-                  </p>
-                </figcaption>
-              </motion.figure>
-            ))}
-          </div>
-        </SectionContainer>
-      </section>
-
-      {/* ============ 04 — BANDEAU TICKER 2 : CLIENTS & PARTENAIRES (STYLE BOURSE) ============ */}
-      <StockTicker
-        type="clients"
-        clients={displayClients}
-        direction="right"
-        speed={80}
       />
     </div>
   );

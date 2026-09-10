@@ -1098,6 +1098,16 @@
   }
 }
 
+@keyframes laser-stream-dash {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+.animate-laser-stream {
+  animation: laser-stream-dash 0.8s linear infinite !important;
+}
+
 /* Animations dédiées Stock Ticker (Style Bourse / Bloomberg) */
 @keyframes ticker-scroll-left {
   0% {
@@ -1139,7 +1149,7 @@
 
 /* Réduction des animations pour l'accessibilité (hors bandeaux continus et micro-interactions volontaires) */
 @media (prefers-reduced-motion: reduce) {
-  *:not(.stock-ticker-track-left):not(.stock-ticker-track-right):not(.stock-ticker-track-left *):not(.stock-ticker-track-right *):not(.random-letter-swap):not(.random-letter-swap *),
+  *:not(.stock-ticker-track-left):not(.stock-ticker-track-right):not(.stock-ticker-track-left *):not(.stock-ticker-track-right *):not(.random-letter-swap):not(.random-letter-swap *):not(.orbit-comet):not(.orbit-comet *):not(.animate-laser-stream):not(.animate-laser-stream *),
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
