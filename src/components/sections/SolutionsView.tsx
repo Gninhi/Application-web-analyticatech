@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { ArrowRight, Compass, Zap, ShieldCheck, Sparkles } from "lucide-react";
 import { type ViewKey } from "@/types/content";
@@ -29,13 +29,11 @@ interface SectionGeometry {
 /**
  * SolutionsView — catalogue interactif en dérive latérale ultra-fluide (60 FPS).
  *
- * Optimisations Scroll & Compositeur GPU :
- *  1. Hauteur virtuelle de pinSectionRef strictement synchronisée en pixels avec maxDrift :
- *     -> Zéro saut ou à-coup au dépinage (point de sortie calculé à l'identique de l'animation).
- *  2. Scroll listener passif { passive: true } throttlé par requestAnimationFrame
- *     -> Une seule lecture de window.scrollY par frame, zéro re-render React au scroll.
- *  3. Dérive horizontale appliquée en transform3d direct sur le compositeur GPU
- *     -> Zéro recalcul de reflow/layout dans la boucle d'animation.
+ * Optimisations Responsive & Compositeur GPU :
+ *  1. Desktop (>= 1024px) : Pinned scroll-driven rail avec synchronisation stricte en pixels
+ *     (lead-in et lead-out < 80px pour libération immédiate sans zone morte).
+ *  2. Mobile & Tablette (< 1024px) : Désactivation complète du pin vertical et
+ *     remplacement par un carousel horizontal natif CSS scroll-snap avec indicateur X/7.
  */
 export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewProps) {
   const { t } = useI18n();
@@ -47,12 +45,13 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
   const geometryRef = useRef<SectionGeometry>({
     top: 0,
     maxDrift: 0,
-    leadIn: 100,
-    leadOut: 150,
+    leadIn: 80,
+    leadOut: 60,
     totalScrollDistance: 1,
     pinHeight: 1000,
   });
   const rafIdRef = useRef<number | null>(null);
+  const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
 
   // Motion values pour les indicateurs sans re-render React
   const scrollYProgress = useMotionValue(0);
@@ -63,9 +62,29 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
     [0.3, 1, 1, 0.3]
   );
 
-  // Mise à jour de la dérive sur le compositeur GPU (Zéro re-render React)
+  // Scroll horizontal tactile sur mobile (< 1024px)
+  const handleMobileScroll = useCallback(() => {
+    const track = trackRef.current;
+    if (!track || window.innerWidth >= 1024) return;
+    const scrollLeft = track.scrollLeft;
+    const firstChild = track.firstElementChild as HTMLElement | null;
+    const itemWidth = firstChild ? firstChild.offsetWidth + 16 : 320;
+    const index = Math.round(scrollLeft / itemWidth);
+    const totalItems = SOLUTIONS.length + 1;
+    const clampedIndex = Math.max(0, Math.min(totalItems - 1, index));
+    setMobileActiveIndex(clampedIndex);
+
+    const maxScroll = track.scrollWidth - track.clientWidth;
+    if (maxScroll > 0) {
+      scrollYProgress.set(Math.max(0, Math.min(1, scrollLeft / maxScroll)));
+    }
+  }, [SOLUTIONS.length, scrollYProgress]);
+
+  // Mise à jour de la dérive sur le compositeur GPU (Desktop uniquement, Zéro re-render React)
   const updateScrollPosition = useCallback(() => {
     rafIdRef.current = null;
+    if (typeof window !== "undefined" && window.innerWidth < 1024) return;
+
     const { top, maxDrift, leadIn, totalScrollDistance } = geometryRef.current;
     if (totalScrollDistance <= 0) return;
 
@@ -102,18 +121,22 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
   }, [updateScrollPosition]);
 
   /**
-   * CONTRAINTE ARCHITECTURALE CRITIQUE (Anti-Régression Saut de Fin de Page) :
-   * La hauteur de ce conteneur virtuel (pinSectionRef) DOIT IMPÉRATIVEMENT rester
-   * strictement synchronisée en pixels avec l'amplitude de dérive réelle :
-   *   pinHeight = vh + leadIn + maxDrift + leadOut
-   * Ne JAMAIS utiliser une hauteur en vh arbitraire décorrélée de maxDrift (ex: (SOLUTIONS.length + 1) * 100vh),
-   * car tout décalage entre la fin de l'animation horizontale et la hauteur du conteneur
-   * génère une zone morte figée et un décrochage jerk violent au dépinage (résolu le 05/09/2026).
+   * Calcul géométrique dynamique :
+   *  - Desktop (>= 1024px) : pinHeight dynamique basé sur scrollWidth réel.
+   *    leadIn / leadOut minimisés (< 80px) pour libération immédiate sans zone morte.
+   *  - Mobile (< 1024px) : réinitialisation en flux naturel auto sans blocage vertical.
    */
   const measureGeometry = useCallback(() => {
     const pinSection = pinSectionRef.current;
     const track = trackRef.current;
     if (!pinSection || !track) return;
+
+    const isDesktop = typeof window !== "undefined" && window.innerWidth >= 1024;
+    if (!isDesktop) {
+      pinSection.style.height = "auto";
+      track.style.transform = "none";
+      return;
+    }
 
     const vh = window.innerHeight;
     const vw = window.innerWidth;
@@ -124,10 +147,10 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
     const trackWidth = track.scrollWidth;
     const maxDrift = Math.max(0, trackWidth - vw);
 
-    // Lead-in : temporisation douce (~15% vh) pour appréhender la première carte
-    const leadIn = Math.round(vh * 0.15);
-    // Lead-out : temporisation de confort (~20% vh) pour lire la carte finale et interagir avec le CTA
-    const leadOut = Math.round(vh * 0.20);
+    // Lead-in : temporisation douce (< 80px)
+    const leadIn = Math.min(80, Math.round(vh * 0.10));
+    // Lead-out : temporisation de confort (< 80px pour libérer immédiatement le scroll sans zone morte)
+    const leadOut = Math.min(60, Math.round(vh * 0.06));
 
     const totalScrollDistance = leadIn + maxDrift + leadOut;
     const pinHeight = vh + totalScrollDistance;
@@ -151,6 +174,17 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", measureGeometry, { passive: true });
+    window.addEventListener("orientationchange", measureGeometry, { passive: true });
+
+    const mql = window.matchMedia("(min-width: 1024px)");
+    const onMediaChange = () => measureGeometry();
+    mql.addEventListener("change", onMediaChange);
+
+    if (typeof document !== "undefined" && document.fonts?.ready) {
+      document.fonts.ready.then(() => {
+        measureGeometry();
+      });
+    }
 
     const ro = new ResizeObserver(() => {
       measureGeometry();
@@ -165,6 +199,8 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
       }
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", measureGeometry);
+      window.removeEventListener("orientationchange", measureGeometry);
+      mql.removeEventListener("change", onMediaChange);
       ro.disconnect();
     };
   }, [measureGeometry, onScroll]);
@@ -201,20 +237,50 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
         </SectionContainer>
       </section>
 
-      {/* === Piste horizontale pinée === */}
-      <section id="solutions-pinned-showcase" ref={pinSectionRef} className="relative" style={{ minHeight: "160vh" }}>
-        <div className="sticky top-0 h-screen flex items-center overflow-hidden">
-          {/* Indicateur de phase */}
+      {/* === Piste des solutions (pin horizontal sur desktop, carousel scroll-snap sur mobile) === */}
+      <section id="solutions-pinned-showcase" ref={pinSectionRef} className="relative min-h-auto lg:min-h-[100svh]">
+        <div className="relative lg:sticky lg:top-0 lg:h-[100svh] flex flex-col justify-center overflow-visible lg:overflow-hidden">
+          {/* Indicateur de phase desktop */}
           <PhaseIndicator progress={scrollYProgress} />
+
+          {/* Indicateur de pagination mobile (< 1024px) */}
+          <div className="flex lg:hidden items-center justify-between px-4 sm:px-6 mb-3" aria-label="Progression catalogue">
+            <div className="flex items-center gap-1.5 font-mono text-xs">
+              <span className="font-semibold text-[#F26D3D]">
+                {String(mobileActiveIndex + 1).padStart(2, "0")}
+              </span>
+              <span className="text-slate-400 dark:text-slate-600">/</span>
+              <span className="text-slate-500 dark:text-slate-400">
+                {String(SOLUTIONS.length + 1).padStart(2, "0")}
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5" aria-hidden>
+              {Array.from({ length: SOLUTIONS.length + 1 }).map((_, idx) => (
+                <span
+                  key={idx}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    idx === mobileActiveIndex
+                      ? "w-6 bg-[#F26D3D]"
+                      : "w-1.5 bg-slate-300 dark:bg-slate-700"
+                  }`}
+                />
+              ))}
+            </div>
+            <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400">
+              Défiler →
+            </span>
+          </div>
 
           <div
             id="solutions-scroll-track"
             ref={trackRef}
+            onScroll={handleMobileScroll}
+            data-lenis-prevent="true"
             style={{ willChange: "transform" }}
-            className="flex gap-5 md:gap-8 pl-[6vw] md:pl-[8vw] pr-[6vw]"
+            className="flex gap-4 lg:gap-8 overflow-x-auto snap-x snap-mandatory overscroll-x-contain py-4 lg:py-0 px-4 sm:px-6 lg:pl-[8vw] lg:pr-[6vw] lg:overflow-visible lg:snap-none lg:px-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
           >
             {SOLUTIONS.map((sol, i) => (
-              <div key={sol.id} className="shrink-0">
+              <div key={sol.id} className="shrink-0 snap-center">
                 <SolutionCard
                   solution={sol}
                   index={i}
@@ -225,7 +291,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
             ))}
 
             {/* Carte finale CTA */}
-            <article className="relative shrink-0 w-[82vw] sm:w-[68vw] md:w-[54vw] lg:w-[42vw] h-[78vh] rounded-[28px] border-2 border-dashed border-[#F26D3D]/50 bg-[#F26D3D]/5 backdrop-blur-sm flex flex-col items-center justify-center text-center p-8 md:p-12 overflow-hidden">
+            <article className="relative shrink-0 snap-center w-[85vw] max-w-[420px] lg:w-[42vw] lg:max-w-none h-auto min-h-[520px] lg:h-[78svh] rounded-[28px] border-2 border-dashed border-[#F26D3D]/50 bg-[#F26D3D]/5 backdrop-blur-sm flex flex-col items-center justify-center text-center p-6 sm:p-8 lg:p-12 overflow-hidden">
               <div
                 className="absolute inset-0 opacity-30 pointer-events-none"
                 style={{
@@ -234,13 +300,13 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
                 }}
                 aria-hidden
               />
-              <span className="relative h-16 w-16 rounded-2xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 flex items-center justify-center mb-5">
-                <Sparkles className="h-8 w-8 text-[#F26D3D]" aria-hidden />
+              <span className="relative h-14 w-14 sm:h-16 sm:w-16 rounded-2xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 flex items-center justify-center mb-4 sm:mb-5">
+                <Sparkles className="h-7 w-7 sm:h-8 sm:w-8 text-[#F26D3D]" aria-hidden />
               </span>
-              <h3 className="relative font-display text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-50 mb-3">
+              <h3 className="relative font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 dark:text-slate-50 mb-2 sm:mb-3">
                 {t("solutions.final.title")}
               </h3>
-              <p className="relative text-slate-500 dark:text-slate-400 mb-8 max-w-md text-base leading-relaxed">
+              <p className="relative text-slate-500 dark:text-slate-400 mb-6 sm:mb-8 max-w-md text-sm sm:text-base leading-relaxed">
                 {t("solutions.final.desc")}
               </p>
               <Button
@@ -249,7 +315,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
                 size="lg"
                 icon={<ArrowRight className="h-4 w-4" aria-hidden />}
                 iconPosition="right"
-                className="relative neon-glow"
+                className="relative neon-glow min-h-[44px]"
               >
                 {t("solutions.final.cta")}
               </Button>

@@ -83,7 +83,7 @@ export function SolutionCard({
   return (
     <BorderRotate
       onClick={goToDetail}
-      className="group shrink-0 w-[82vw] sm:w-[68vw] md:w-[54vw] lg:w-[42vw] h-[78vh] cursor-pointer"
+      className="group shrink-0 w-[85vw] max-w-[420px] lg:w-[42vw] lg:max-w-none h-auto min-h-[520px] lg:h-[78svh] snap-center cursor-pointer flex flex-col"
       animationMode="rotate-on-hover"
       animationSpeed={9}
       borderRadius={30}
@@ -131,7 +131,7 @@ export function SolutionCard({
         />
 
         {/* Visuel de fond — en-tête image premium minimaliste */}
-        <div className="relative h-36 md:h-44 shrink-0 overflow-hidden" style={{ background: headerGradient }}>
+        <div className="relative h-32 sm:h-36 lg:h-44 shrink-0 overflow-hidden" style={{ background: headerGradient }}>
           {/* Grille technique */}
           <div
             className="absolute inset-0"
@@ -162,7 +162,7 @@ export function SolutionCard({
           )}
 
           {/* Top row : pastille secteur + numéro fantôme */}
-          <div className="absolute top-4 left-5 right-5 z-20 flex items-start justify-between">
+          <div className="absolute top-3.5 left-4 right-4 sm:top-4 sm:left-5 sm:right-5 z-20 flex items-start justify-between">
             <span
               className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] backdrop-blur-md"
               style={chipStyle}
@@ -187,7 +187,7 @@ export function SolutionCard({
           </div>
 
           {/* Bottom row : statut déployé ou nouvelle offre + hover hint */}
-          <div className="absolute bottom-4 left-5 right-5 z-20 flex items-center justify-between">
+          <div className="absolute bottom-3.5 left-4 right-4 sm:bottom-4 sm:left-5 sm:right-5 z-20 flex items-center justify-between">
             {sol.statusType === "new" ? (
               <span className="inline-flex items-center gap-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-indigo-600 dark:text-indigo-400 backdrop-blur-sm">
                 <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse" />
@@ -219,32 +219,32 @@ export function SolutionCard({
 
         {/* Contenu */}
         <div
-          className="relative z-20 flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain p-5 md:p-7 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[var(--glass-card-border)] [&::-webkit-scrollbar-track]:bg-transparent"
+          className="relative z-20 flex min-h-0 flex-1 flex-col overflow-visible lg:overflow-y-auto lg:overscroll-contain p-4 sm:p-5 lg:p-7 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[var(--glass-card-border)] [&::-webkit-scrollbar-track]:bg-transparent"
           style={{ scrollbarWidth: "thin", scrollbarColor: "var(--glass-card-border) transparent" }}
         >
-          <h2 className="font-display text-2xl md:text-3xl font-bold tracking-tight mb-3 text-foreground transition-colors duration-300 group-hover:text-[var(--sa)]">
+          <h2 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight mb-2 sm:mb-3 text-foreground transition-colors duration-300 group-hover:text-[var(--sa)]">
             {sol.title}
           </h2>
           <div
-            className="mb-4 h-px w-14"
+            className="mb-3 sm:mb-4 h-px w-14"
             style={{ background: `linear-gradient(90deg, ${accent}, transparent)` }}
             aria-hidden
           />
-          <p className="text-sm md:text-base text-muted-foreground leading-relaxed mb-4 flex-1">
+          <p className="text-sm lg:text-base text-muted-foreground leading-relaxed mb-4 flex-1">
             {sol.summary}
           </p>
 
           {/* Impact sectoriel ou Capacité & Méthode */}
-          <div className="relative rounded-xl p-3.5 md:p-4 mb-4 flex items-start gap-3.5 overflow-hidden" style={impactStyle}>
+          <div className="relative rounded-xl p-3 sm:p-3.5 lg:p-4 mb-4 flex items-start gap-3 overflow-hidden" style={impactStyle}>
             <span className="absolute inset-y-2 left-0 w-0.5 rounded-full" style={{ background: accent }} aria-hidden />
-            <span className="h-10 w-10 shrink-0 rounded-lg border flex items-center justify-center mt-0.5" style={chipStyle}>
-              <TrendingUp className="h-5 w-5" style={{ color: accent }} aria-hidden />
+            <span className="h-9 w-9 sm:h-10 sm:w-10 shrink-0 rounded-lg border flex items-center justify-center mt-0.5" style={chipStyle}>
+              <TrendingUp className="h-4.5 w-4.5 sm:h-5 sm:w-5" style={{ color: accent }} aria-hidden />
             </span>
             <div className="min-w-0 flex-1">
               <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground mb-0.5">
                 {sol.statusType === "new" ? (sol.impactLabel ?? "Capacité & Méthode") : t("common.impact")}
               </p>
-              <p className="font-display text-lg md:text-xl font-bold leading-snug" style={{ color: accent }}>
+              <p className="font-display text-base sm:text-lg lg:text-xl font-bold leading-snug" style={{ color: accent }}>
                 {sol.impact}
               </p>
               {sol.methodology && (
@@ -267,7 +267,7 @@ export function SolutionCard({
             ))}
           </div>
 
-          <div className="border-t border-border pt-4">
+          <div className="border-t border-border pt-3 sm:pt-4 mt-auto">
             <Button
               onClick={(e) => {
                 e.stopPropagation();
@@ -277,7 +277,7 @@ export function SolutionCard({
               size="md"
               icon={<ArrowRight className="h-3.5 w-3.5" aria-hidden />}
               iconPosition="right"
-              className="group/btn w-full"
+              className="group/btn w-full min-h-[44px]"
             >
               {t("solutions.card.cta")}
             </Button>

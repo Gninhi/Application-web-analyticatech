@@ -89,4 +89,47 @@ test.describe("continuité de défilement /solutions", () => {
     // Vérifie que le transform translate3d(-...px, 0, 0) ou matrix(...) est bien présent
     expect(transform).toMatch(/translate3d|matrix/);
   });
+
+  test("mobile (< 1024px) : carousel horizontal scroll-snap sans pin vertical bloquant", async ({ page }) => {
+    // Écran mobile 375px
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto(SOLUTIONS_ROUTE, { waitUntil: "load" });
+    await page.evaluate(() => document.fonts.ready);
+    await page.waitForTimeout(400);
+
+    const mobileState = await page.evaluate(() => {
+      const pinSection = document.getElementById("solutions-pinned-showcase");
+      const track = document.getElementById("solutions-scroll-track");
+      if (!pinSection || !track) return null;
+
+      const style = window.getComputedStyle(track);
+      return {
+        overflowX: style.overflowX,
+        transform: track.style.transform,
+        pinSectionHeight: pinSection.offsetHeight,
+        trackScrollWidth: track.scrollWidth,
+        trackClientWidth: track.clientWidth,
+      };
+    });
+
+    expect(mobileState).not.toBeNull();
+    if (!mobileState) return;
+
+    // Sur mobile, overflowX doit être auto ou scroll (carousel horizontal scroll-snap)
+    expect(["auto", "scroll"]).toContain(mobileState.overflowX);
+    // Pas de transform translate3d bloquant sur mobile
+    expect(mobileState.transform).toBe("none");
+    // La hauteur du conteneur ne doit pas être démesurée (pas de pinHeight artificiel > 2500px)
+    expect(mobileState.pinSectionHeight).toBeLessThan(1800);
+    // Le contenu déborde horizontalement pour permettre le swipe
+    expect(mobileState.trackScrollWidth).toBeGreaterThan(mobileState.trackClientWidth);
+
+    // Vérifie que le scroll vertical traverse la page sans blocage
+    const scrollTarget = 800;
+    await scrollToInstant(page, scrollTarget);
+    await page.waitForTimeout(100);
+    const scrollY = await page.evaluate(() => window.scrollY);
+    expect(scrollY).toBeGreaterThanOrEqual(scrollTarget - 5);
+  });
 });
+

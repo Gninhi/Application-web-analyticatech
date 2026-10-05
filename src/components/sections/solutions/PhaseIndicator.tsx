@@ -17,7 +17,7 @@ export function PhaseIndicator({ progress }: PhaseIndicatorProps) {
   const leadOut = useTransform(progress, [0.93, 1], [0.3, 1]);
 
   return (
-    <div className="absolute top-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20 pointer-events-none">
+    <div className="hidden lg:flex absolute top-6 left-1/2 -translate-x-1/2 items-center gap-2 z-20 pointer-events-none">
       <motion.span
         style={{ opacity: leadIn }}
         className="font-mono text-[9px] uppercase tracking-widest text-slate-500 dark:text-slate-400"
