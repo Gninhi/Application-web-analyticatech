@@ -5,7 +5,6 @@ import { ArrowRight, Calendar } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
-import { StockTicker } from "@/components/interactive/StockTicker";
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { SectionContainer } from "@/components/ui/SectionContainer";
@@ -24,10 +23,7 @@ interface HomeSocialProofProps {
  */
 export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
   const { t, locale } = useI18n();
-  const {
-    marqueeKeywords: MARQUEE_KEYWORDS,
-    blogPosts: BLOG_POSTS,
-  } = useAppContent();
+  const { blogPosts: BLOG_POSTS } = useAppContent();
 
   // Maximum 3 contenus d'insights éditoriaux
   const homeInsights = BLOG_POSTS.slice(0, 3);
@@ -35,9 +31,7 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
   const secondaryPosts = homeInsights.slice(1, 3);
 
   return (
-    <div className="space-y-16 md:space-y-24">
-      {/* ============ 01 — INSIGHTS : Featured (7/12) + Secondary (5/12) ============ */}
-      <section className="relative">
+    <section className="relative">
         <SectionContainer>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
             <SectionHeading
@@ -150,14 +144,5 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
           </div>
         </SectionContainer>
       </section>
-
-      {/* ============ 02 — BANDEAU TICKER : TECH & CAPABILITIES (STYLE BOURSE) ============ */}
-      <StockTicker
-        type="tech"
-        keywords={MARQUEE_KEYWORDS}
-        direction="left"
-        speed={70}
-      />
-    </div>
   );
 }

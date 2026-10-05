@@ -18,6 +18,7 @@ import { AnimatedCounter } from "@/components/interactive/AnimatedCounter";
 import { Sparkline } from "@/components/interactive/Sparkline";
 import { ActivityFeed } from "@/components/interactive/ActivityFeed";
 import { SectionSkeleton } from "@/components/ui/LazySection";
+import { StockTicker } from "@/components/interactive/StockTicker";
 import type { MetricDTO } from "@/types/content";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -221,7 +222,7 @@ function SignalCard({ icon: Icon, label, value, accent = "#F26D3D" }: {
 
 export function DataConsoleBento() {
   const { t, locale } = useI18n();
-  const { metrics, activityLogs } = useAppContent();
+  const { metrics, activityLogs, marqueeKeywords } = useAppContent();
 
   const intlLocale = toIntlLocale(locale);
 
@@ -280,6 +281,16 @@ export function DataConsoleBento() {
 
   return (
     <section className="relative" aria-labelledby="dataconsole-bento-heading">
+      {/* ── BANDEAU TICKER DÉFILANT (AU-DESSUS DE LA CARTE DATA CONSOLE) ── */}
+      <div className="mb-8 md:mb-12">
+        <StockTicker
+          type="tech"
+          keywords={marqueeKeywords}
+          direction="left"
+          speed={70}
+        />
+      </div>
+
       <div className="mx-auto max-w-7xl px-4 md:px-6">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
