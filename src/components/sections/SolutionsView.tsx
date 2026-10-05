@@ -280,7 +280,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
             className="flex gap-4 lg:gap-8 overflow-x-auto snap-x snap-mandatory overscroll-x-contain py-4 lg:py-0 px-4 sm:px-6 lg:pl-[8vw] lg:pr-[6vw] lg:overflow-visible lg:snap-none lg:px-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
           >
             {SOLUTIONS.map((sol, i) => (
-              <div key={sol.id} className="shrink-0 snap-center">
+              <div key={sol.id} className="shrink-0 snap-center h-[550px] sm:h-[570px] lg:h-[78svh] flex flex-col">
                 <SolutionCard
                   solution={sol}
                   index={i}
@@ -291,7 +291,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
             ))}
 
             {/* Carte finale CTA */}
-            <article className="relative shrink-0 snap-center w-[85vw] max-w-[420px] lg:w-[42vw] lg:max-w-none h-auto min-h-[520px] lg:h-[78svh] rounded-[28px] border-2 border-dashed border-[#F26D3D]/50 bg-[#F26D3D]/5 backdrop-blur-sm flex flex-col items-center justify-center text-center p-6 sm:p-8 lg:p-12 overflow-hidden">
+            <article className="relative shrink-0 snap-center w-[84vw] max-w-[340px] sm:w-[380px] sm:max-w-[380px] lg:w-[42vw] lg:max-w-[560px] h-[550px] sm:h-[570px] lg:h-[78svh] rounded-[28px] border-2 border-dashed border-[#F26D3D]/50 bg-[#F26D3D]/5 backdrop-blur-sm flex flex-col items-center justify-center text-center p-6 sm:p-8 lg:p-12 overflow-hidden">
               <div
                 className="absolute inset-0 opacity-30 pointer-events-none"
                 style={{

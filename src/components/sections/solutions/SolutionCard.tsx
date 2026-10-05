@@ -83,7 +83,7 @@ export function SolutionCard({
   return (
     <BorderRotate
       onClick={goToDetail}
-      className="group shrink-0 w-[85vw] max-w-[420px] lg:w-[42vw] lg:max-w-none h-auto min-h-[520px] lg:h-[78svh] snap-center cursor-pointer flex flex-col"
+      className="group shrink-0 w-[84vw] max-w-[340px] sm:w-[380px] sm:max-w-[380px] lg:w-[42vw] lg:max-w-[560px] h-[550px] sm:h-[570px] lg:h-[78svh] snap-center cursor-pointer flex flex-col"
       animationMode="rotate-on-hover"
       animationSpeed={9}
       borderRadius={30}
@@ -131,7 +131,7 @@ export function SolutionCard({
         />
 
         {/* Visuel de fond — en-tête image premium minimaliste */}
-        <div className="relative h-32 sm:h-36 lg:h-44 shrink-0 overflow-hidden" style={{ background: headerGradient }}>
+        <div className="relative h-28 sm:h-32 lg:h-40 shrink-0 overflow-hidden" style={{ background: headerGradient }}>
           {/* Grille technique */}
           <div
             className="absolute inset-0"
@@ -162,23 +162,23 @@ export function SolutionCard({
           )}
 
           {/* Top row : pastille secteur + numéro fantôme */}
-          <div className="absolute top-3.5 left-4 right-4 sm:top-4 sm:left-5 sm:right-5 z-20 flex items-start justify-between">
+          <div className="absolute top-3 left-3.5 right-3.5 sm:top-3.5 sm:left-4 sm:right-4 z-20 flex items-start justify-between">
             <span
-              className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.25em] backdrop-blur-md"
+              className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border px-2.5 sm:px-3 py-1 font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] backdrop-blur-md"
               style={chipStyle}
             >
               <span className="h-1 w-1 rotate-45" style={{ background: accent }} aria-hidden />
               <span style={{ color: accent }}>{sol.sector}</span>
             </span>
-            <div className="flex items-baseline gap-1.5">
+            <div className="flex items-baseline gap-1">
               <span
-                className="font-display text-4xl font-bold leading-none md:text-5xl"
+                className="font-display text-3xl font-bold leading-none sm:text-4xl lg:text-5xl"
                 style={{ color: `color-mix(in srgb, ${accent} 35%, transparent)` }}
               >
                 /{num}
               </span>
               <span
-                className="font-mono text-[10px]"
+                className="font-mono text-[9px] sm:text-[10px]"
                 style={{ color: `color-mix(in srgb, ${accent} 65%, transparent)` }}
               >
                 / {String(total).padStart(2, "0")}
@@ -187,20 +187,20 @@ export function SolutionCard({
           </div>
 
           {/* Bottom row : statut déployé ou nouvelle offre + hover hint */}
-          <div className="absolute bottom-3.5 left-4 right-4 sm:bottom-4 sm:left-5 sm:right-5 z-20 flex items-center justify-between">
+          <div className="absolute bottom-2.5 left-3.5 right-3.5 sm:bottom-3 sm:left-4 sm:right-4 z-20 flex items-center justify-between">
             {sol.statusType === "new" ? (
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-indigo-600 dark:text-indigo-400 backdrop-blur-sm">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2 sm:px-2.5 py-0.5 sm:py-1 font-mono text-[8.5px] sm:text-[9px] uppercase tracking-widest text-indigo-600 dark:text-indigo-400 backdrop-blur-sm">
                 <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse" />
                 {sol.statusBadge ?? "Nouvelle offre"}
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#4CAF50]/30 bg-[#4CAF50]/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-widest text-[#4CAF50] backdrop-blur-sm">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#4CAF50]/30 bg-[#4CAF50]/10 px-2 sm:px-2.5 py-0.5 sm:py-1 font-mono text-[8.5px] sm:text-[9px] uppercase tracking-widest text-[#4CAF50] backdrop-blur-sm">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#4CAF50] animate-pulse" />
                 {sol.statusBadge ?? t("common.deployed")}
               </span>
             )}
             <span
-              className="font-mono text-[10px] uppercase tracking-widest opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              className="font-mono text-[9px] sm:text-[10px] uppercase tracking-widest opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               style={{ color: accent }}
             >
               {t("solutions.card.viewDetail")} ↗
@@ -219,36 +219,36 @@ export function SolutionCard({
 
         {/* Contenu */}
         <div
-          className="relative z-20 flex min-h-0 flex-1 flex-col overflow-visible lg:overflow-y-auto lg:overscroll-contain p-4 sm:p-5 lg:p-7 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[var(--glass-card-border)] [&::-webkit-scrollbar-track]:bg-transparent"
+          className="relative z-20 flex min-h-0 flex-1 flex-col overflow-hidden lg:overflow-y-auto lg:overscroll-contain p-4 sm:p-5 lg:p-6 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[var(--glass-card-border)] [&::-webkit-scrollbar-track]:bg-transparent"
           style={{ scrollbarWidth: "thin", scrollbarColor: "var(--glass-card-border) transparent" }}
         >
-          <h2 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight mb-2 sm:mb-3 text-foreground transition-colors duration-300 group-hover:text-[var(--sa)]">
+          <h2 className="font-display text-lg sm:text-xl lg:text-2xl font-bold tracking-tight mb-2 text-foreground transition-colors duration-300 group-hover:text-[var(--sa)] line-clamp-2">
             {sol.title}
           </h2>
           <div
-            className="mb-3 sm:mb-4 h-px w-14"
+            className="mb-2.5 sm:mb-3 h-px w-12"
             style={{ background: `linear-gradient(90deg, ${accent}, transparent)` }}
             aria-hidden
           />
-          <p className="text-sm lg:text-base text-muted-foreground leading-relaxed mb-4 flex-1">
+          <p className="text-xs sm:text-sm lg:text-base text-muted-foreground leading-relaxed mb-3 sm:mb-4 flex-1 line-clamp-3 sm:line-clamp-4 lg:line-clamp-none">
             {sol.summary}
           </p>
 
           {/* Impact sectoriel ou Capacité & Méthode */}
-          <div className="relative rounded-xl p-3 sm:p-3.5 lg:p-4 mb-4 flex items-start gap-3 overflow-hidden" style={impactStyle}>
+          <div className="relative rounded-xl p-2.5 sm:p-3 lg:p-3.5 mb-3 sm:mb-4 flex items-start gap-2.5 sm:gap-3 overflow-hidden shrink-0" style={impactStyle}>
             <span className="absolute inset-y-2 left-0 w-0.5 rounded-full" style={{ background: accent }} aria-hidden />
-            <span className="h-9 w-9 sm:h-10 sm:w-10 shrink-0 rounded-lg border flex items-center justify-center mt-0.5" style={chipStyle}>
-              <TrendingUp className="h-4.5 w-4.5 sm:h-5 sm:w-5" style={{ color: accent }} aria-hidden />
+            <span className="h-8 w-8 sm:h-9 sm:w-9 shrink-0 rounded-lg border flex items-center justify-center mt-0.5" style={chipStyle}>
+              <TrendingUp className="h-4 w-4 sm:h-4.5 sm:w-4.5" style={{ color: accent }} aria-hidden />
             </span>
             <div className="min-w-0 flex-1">
               <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground mb-0.5">
                 {sol.statusType === "new" ? (sol.impactLabel ?? "Capacité & Méthode") : t("common.impact")}
               </p>
-              <p className="font-display text-base sm:text-lg lg:text-xl font-bold leading-snug" style={{ color: accent }}>
+              <p className="font-display text-xs sm:text-sm lg:text-base font-bold leading-snug line-clamp-2" style={{ color: accent }}>
                 {sol.impact}
               </p>
               {sol.methodology && (
-                <p className="mt-1 text-[11px] leading-tight text-muted-foreground/80 font-mono">
+                <p className="mt-1 text-[10px] sm:text-[11px] leading-tight text-muted-foreground/80 font-mono line-clamp-2">
                   {sol.methodology}
                 </p>
               )}
@@ -256,18 +256,18 @@ export function SolutionCard({
           </div>
 
           {/* Tags */}
-          <div className="flex flex-wrap gap-1.5 mb-4">
+          <div className="flex flex-wrap gap-1 sm:gap-1.5 mb-3 sm:mb-4 shrink-0">
             {sol.tags.map((tag: string) => (
               <span
                 key={tag}
-                className="glass rounded-md px-2 py-1 font-mono text-[10px] text-muted-foreground transition-colors duration-300 hover:border-accent/30"
+                className="glass rounded-md px-1.5 sm:px-2 py-0.5 font-mono text-[9px] sm:text-[10px] text-muted-foreground transition-colors duration-300 hover:border-accent/30"
               >
                 #{tag}
               </span>
             ))}
           </div>
 
-          <div className="border-t border-border pt-3 sm:pt-4 mt-auto">
+          <div className="border-t border-border/50 pt-2.5 sm:pt-3 mt-auto shrink-0">
             <Button
               onClick={(e) => {
                 e.stopPropagation();
@@ -277,7 +277,7 @@ export function SolutionCard({
               size="md"
               icon={<ArrowRight className="h-3.5 w-3.5" aria-hidden />}
               iconPosition="right"
-              className="group/btn w-full min-h-[44px]"
+              className="group/btn w-full min-h-[42px] sm:min-h-[44px]"
             >
               {t("solutions.card.cta")}
             </Button>
