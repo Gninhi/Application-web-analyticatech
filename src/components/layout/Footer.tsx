@@ -15,48 +15,82 @@ import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
 import { isValidSocialUrl } from "@/lib/content/site";
 
-const SOCIAL_ICONS = { Linkedin, Twitter, Github };
+export interface SocialLinkItem {
+  id: "linkedin" | "twitter" | "github";
+  label: string;
+  url: string;
+  icon: typeof Linkedin;
+}
 
-/** Horloge temps réel au format UTC HH:MM:SS.
- *  Mise à jour limitée (~1 tick/5s) et démarrée après le chargement/idle :
- *  un tick toutes les secondes pendant la fenêtre de chargement crée des
- *  tâches main-thread inutiles (pénalise TBT et LCP simulé). */
-function useUtcClock() {
-  const [time, setTime] = useState<string>("");
+export function getValidSocialLinks(config: {
+  socialLinkedin?: string | null;
+  socialTwitter?: string | null;
+  socialGithub?: string | null;
+}): SocialLinkItem[] {
+  const definitions: Array<{
+    id: SocialLinkItem["id"];
+    label: string;
+    url: string | null | undefined;
+    icon: typeof Linkedin;
+  }> = [
+    { id: "linkedin", label: "LinkedIn", url: config.socialLinkedin, icon: Linkedin },
+    { id: "twitter", label: "Twitter / X", url: config.socialTwitter, icon: Twitter },
+    { id: "github", label: "GitHub", url: config.socialGithub, icon: Github },
+  ];
+
+  return definitions.filter(
+    (item): item is SocialLinkItem =>
+      Boolean(item.url) &&
+      item.url !== "#" &&
+      item.url !== "javascript:void(0)" &&
+      isValidSocialUrl(item.url)
+  );
+}
+
+/**
+ * Horloge temps réel calée sur le fuseau horaire Europe/Paris (heure de Paris).
+ * Met à jour chaque seconde de manière SSR-safe (placeholder '--:--:--' lors du premier rendu
+ * pour prévenir toute incohérence d'hydratation).
+ */
+function useParisClock() {
+  const [time, setTime] = useState<string>("--:--:--");
+
   useEffect(() => {
+    const formatter = new Intl.DateTimeFormat("fr-FR", {
+      timeZone: "Europe/Paris",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
+
     const update = () => {
-      const d = new Date();
-      const hh = String(d.getUTCHours()).padStart(2, "0");
-      const mm = String(d.getUTCMinutes()).padStart(2, "0");
-      const ss = String(d.getUTCSeconds()).padStart(2, "0");
-      setTime(`${hh}:${mm}:${ss}`);
+      setTime(formatter.format(new Date()));
     };
-    update();
-    let id: number | null = null;
-    const startTicking = () => {
-      id = window.setInterval(update, 5000);
-    };
-    if (typeof requestIdleCallback === "function") {
-      id = requestIdleCallback(startTicking);
-    } else {
-      id = window.setTimeout(startTicking, 5000);
-    }
+
+    // Déclencher dans un timer pour respecter react-hooks/set-state-in-effect
+    const initTimer = window.setTimeout(update, 0);
+    const intervalId = window.setInterval(update, 1000);
+
     return () => {
-      if (id) clearInterval(id);
+      window.clearTimeout(initTimer);
+      window.clearInterval(intervalId);
     };
   }, []);
+
   return time;
 }
 
 export function Footer() {
   const pathname = usePathname() || "/";
   const currentLocale = getLocaleFromPath(pathname);
-  const utc = useUtcClock();
+  const parisTime = useParisClock();
   const { t } = useI18n();
   const { navItems, services, siteConfig } = useAppContent();
   const NAV_ITEMS = navItems.map((n) => ({ key: n.viewKey as ViewKey, label: n.label }));
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+  const socialLinks = getValidSocialLinks(siteConfig);
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,15 +127,15 @@ export function Footer() {
             <div className="inline-flex items-center gap-2.5 rounded-lg glass px-3 py-2">
               <span
                 className="h-2 w-2 rounded-full bg-[#4CAF50] animate-pulse"
-                aria-hidden
+                aria-hidden="true"
               />
               <span className="font-mono text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-300">
                 System Online
               </span>
 
-              <span className="mx-1 h-3 w-px bg-black/15 dark:bg-white/15" aria-hidden />
+              <span className="mx-1 h-3 w-px bg-black/15 dark:bg-white/15" aria-hidden="true" />
               <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
-                UTC {utc}
+                PARIS {parisTime}
               </span>
             </div>
           </div>
@@ -169,7 +203,7 @@ export function Footer() {
                   iconOnly
                   borderRadius="0.5rem"
                   duration={3500}
-                  icon={<Send className="h-4 w-4" aria-hidden />}
+                  icon={<Send className="h-4 w-4" aria-hidden="true" />}
                   className="h-9 w-9 shrink-0 bg-[#C9470F] text-white hover:bg-[#B63C0C]"
                 />
               </div>
@@ -180,29 +214,25 @@ export function Footer() {
               )}
             </form>
 
-            <div className="flex items-center gap-3 mt-5">
-              {[
-                { label: "LinkedIn", url: siteConfig.socialLinkedin, icon: "Linkedin" },
-                { label: "Twitter / X", url: siteConfig.socialTwitter, icon: "Twitter" },
-                { label: "GitHub", url: siteConfig.socialGithub, icon: "Github" },
-              ]
-                .filter((s): s is { label: string; url: string; icon: string } => isValidSocialUrl(s.url))
-                .map((social) => {
-                  const Icon = SOCIAL_ICONS[social.icon as keyof typeof SOCIAL_ICONS];
+            {socialLinks.length > 0 && (
+              <div className="flex items-center gap-3 mt-5">
+                {socialLinks.map((social) => {
+                  const Icon = social.icon;
                   return (
                     <a
-                      key={social.label}
+                      key={social.id}
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex h-9 w-9 items-center justify-center rounded-lg glass text-slate-500 dark:text-slate-400 hover:text-[#F26D3D] transition-colors"
                       aria-label={social.label}
                     >
-                      <Icon className="h-4 w-4" aria-hidden />
+                      <Icon className="h-4 w-4" aria-hidden="true" />
                     </a>
                   );
                 })}
-            </div>
+              </div>
+            )}
           </div>
         </div>
 

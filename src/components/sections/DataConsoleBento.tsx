@@ -53,7 +53,7 @@ function LiveClock({ locale }: { locale: string }) {
   }, []);
   return (
     <span className="tabular-nums">
-      {now != null ? now.toLocaleTimeString(locale, { timeZone: "UTC", hour12: false }) : "--:--:--"}
+      {now != null ? now.toLocaleTimeString(locale, { timeZone: "Europe/Paris", hour12: false }) : "--:--:--"}
     </span>
   );
 }
@@ -332,9 +332,9 @@ export function DataConsoleBento() {
                 </p>
               </div>
 
-              {/* Horloge UTC */}
+              {/* Horloge Paris */}
               <div className="flex items-center gap-2 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-4 py-2 shrink-0">
-                <span className="font-mono text-[10px] uppercase tracking-widest text-[#F26D3D]">UTC</span>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-[#F26D3D]">PARIS</span>
                 <span className="font-mono text-[10px] text-slate-700 dark:text-slate-300">
                   <LiveClock locale={intlLocale} />
                 </span>

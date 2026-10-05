@@ -10,7 +10,7 @@ import { DEFAULT_SITE_CONFIG } from "@/lib/content/site";
 const PAGE_COPY: Record<Locale, Record<string, { title: string; description: string }>> = {
   fr: {
     services: {
-      title: "Nos Expertises IA & Data | Analyticatech",
+      title: "Nos Expertises IA & Data",
       description:
         "Quatre expertises clés empilées : Raisonnement & RAG, Automatisation & Workflows, Orchestration Multi-Agents, Data & Décision Augmentée. Chaque service livré avec méthode, sécurité et ROI mesuré.",
     },
@@ -20,12 +20,12 @@ const PAGE_COPY: Record<Locale, Record<string, { title: string; description: str
         "Des solutions prêtes à adapter pour la banque, l'industrie, le retail, le secteur public et plus : agents IA, automatisation de workflows, BI et pilotage décisionnel.",
     },
     insights: {
-      title: "Insights — Analyses & Ressources IA | Analyticatech",
+      title: "Insights — Analyses & Ressources IA",
       description:
         "Nos architectes partagent leurs analyses : patterns de production, choix d'outillage et retours d'expérience sur les missions IA, agents et automatisation.",
     },
     contact: {
-      title: "Contact | Analyticatech",
+      title: "Contact",
       description:
         "Décrivez votre besoin. Un architecte Solution Analyticatech vous répond sous 24h ouvrées. Échanges chiffrés et confidentiels.",
     },
@@ -47,7 +47,7 @@ const PAGE_COPY: Record<Locale, Record<string, { title: string; description: str
   },
   en: {
     services: {
-      title: "Our AI & Data Capabilities | Analyticatech",
+      title: "Our AI & Data Capabilities",
       description:
         "Four stacked layers of expertise: Reasoning & RAG, Automation & Workflows, Multi-Agent Orchestration, Data & Augmented Decision. Engineered for enterprise scale, security, and measurable ROI.",
     },
@@ -57,16 +57,15 @@ const PAGE_COPY: Record<Locale, Record<string, { title: string; description: str
         "Production-ready architectures tailored for Banking & Insurance, Healthcare, Logistics, and Public Sector: autonomous agents, automated workflows, and executive BI.",
     },
     insights: {
-      title: "Insights — AI Analysis & Resources | Analyticatech",
+      title: "Insights — AI Analysis & Resources",
       description:
         "Senior architects share frontline analysis: production patterns, tooling trade-offs, and field-tested architecture lessons on AI and multi-agent systems.",
     },
     contact: {
-      title: "Contact | Analyticatech",
+      title: "Contact",
       description:
         "Describe your enterprise requirements. A Senior Solutions Architect will respond within 24 business hours. End-to-end encrypted and confidential.",
     },
-
     confidentialite: {
       title: "Privacy Policy — GDPR Compliance",
       description:
@@ -112,8 +111,13 @@ export async function buildPageMetadata({
   const frPath = path.startsWith("/en") ? path.replace(/^\/en/, "") || "/" : path;
   const enPath = path.startsWith("/en") ? path : path === "/" ? "/en" : `/en${path}`;
 
+  // Si la route est la racine ou contient déjà le nom de marque, utiliser absolute pour éviter le double template
+  const isRootOrFull = path === "/" || path === "/en" || title.includes("Analyticatech");
+  const metaTitle = isRootOrFull ? { absolute: title } : title;
+  const socialTitle = title.includes("Analyticatech") ? title : `${title} | ${site.siteName}`;
+
   return {
-    title,
+    title: metaTitle,
     description,
     alternates: {
       canonical: canonicalUrl,
@@ -126,7 +130,7 @@ export async function buildPageMetadata({
       },
     },
     openGraph: {
-      title,
+      title: socialTitle,
       description,
       url: canonicalUrl,
       siteName: site.siteName,
@@ -137,7 +141,7 @@ export async function buildPageMetadata({
     },
     twitter: {
       card: (seo.twitterCard as "summary" | "summary_large_image" | "app" | "player") || "summary_large_image",
-      title,
+      title: socialTitle,
       description,
       images: [imageUrl],
     },

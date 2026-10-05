@@ -83,38 +83,48 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
 
           {/* Titre H1 avec Rotateur de Mots Fluide (Framer Motion) */}
           <h1 className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-[1.08] flex flex-col items-center">
-            {/* Ligne 1 : Titre fixe */}
-            <span className="block">
-              {locale === "en" ? "AI Architectures &" : "DES SYSTÈMES"}
+            {/* Titre accessible complet pour les lecteurs d'écran (évite la duplication du mot rotatif et des spacers) */}
+            <span className="sr-only">
+              {locale === "en"
+                ? `AI Architectures & Intelligent Systems ${t("home.hero.title2")}`
+                : `Des systèmes intelligents ${t("home.hero.title2")}`}
             </span>
 
-            {/* Ligne 2 : Mot dynamique en rotation fluide */}
-            <span className="relative flex w-full justify-center overflow-hidden h-[1.18em] my-1 sm:my-2">
-              <span className="invisible select-none" aria-hidden="true">
-                {rotatingWords[0]}
+            {/* Rendu visuel animé masqué aux technologies d'assistance pour éviter les répétitions */}
+            <span aria-hidden="true" className="flex flex-col items-center w-full">
+              {/* Ligne 1 : Titre fixe */}
+              <span className="block">
+                {locale === "en" ? "AI Architectures &" : "DES SYSTÈMES"}
               </span>
-              <AnimatePresence mode="popLayout" initial={false}>
-                <motion.span
-                  key={wordIndex}
-                  initial={{ opacity: 0, y: 50, filter: "blur(6px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, y: -50, filter: "blur(6px)" }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 70,
-                    damping: 14,
-                    mass: 0.8,
-                  }}
-                  className="absolute font-display font-bold text-shimmer tracking-tight"
-                >
-                  {rotatingWords[wordIndex]}
-                </motion.span>
-              </AnimatePresence>
-            </span>
 
-            {/* Ligne 3 : Sous-titre d'ancrage */}
-            <span className="block font-medium text-2xl sm:text-3xl md:text-4xl text-slate-600 dark:text-slate-300 tracking-normal mt-1">
-              {t("home.hero.title2")}
+              {/* Ligne 2 : Mot dynamique en rotation fluide */}
+              <span className="relative flex w-full justify-center overflow-hidden h-[1.18em] my-1 sm:my-2">
+                <span className="invisible select-none">
+                  {rotatingWords[0]}
+                </span>
+                <AnimatePresence mode="popLayout" initial={false}>
+                  <motion.span
+                    key={wordIndex}
+                    initial={{ opacity: 0, y: 50, filter: "blur(6px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, y: -50, filter: "blur(6px)" }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 70,
+                      damping: 14,
+                      mass: 0.8,
+                    }}
+                    className="absolute font-display font-bold text-shimmer tracking-tight"
+                  >
+                    {rotatingWords[wordIndex]}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
+
+              {/* Ligne 3 : Sous-titre d'ancrage */}
+              <span className="block font-medium text-2xl sm:text-3xl md:text-4xl text-slate-600 dark:text-slate-300 tracking-normal mt-1">
+                {t("home.hero.title2")}
+              </span>
             </span>
           </h1>
 

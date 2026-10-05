@@ -136,31 +136,32 @@ export const RandomLetterSwap = forwardRef<RandomLetterSwapHandle, RandomLetterS
         {...props}
       >
         <span className="sr-only">{label}</span>
-        {letters.map((char, i) => (
-          <span
-            aria-hidden="true"
-            key={`${char}-${i}`}
-            className="relative inline-flex flex-col overflow-hidden leading-tight"
-            style={{ width: char === " " ? "0.3em" : "auto" }}
-          >
-            {/* Lettre primaire (visible au repos) */}
+        <span aria-hidden="true" className="inline-flex items-center">
+          {letters.map((char, i) => (
             <span
-              className={`rls-primary-${i} inline-block transform-gpu will-change-transform`}
-              style={{ transform: "translate3d(0, 0%, 0)" }}
+              key={`${char}-${i}`}
+              className="relative inline-flex flex-col overflow-hidden leading-tight"
+              style={{ width: char === " " ? "0.3em" : "auto" }}
             >
-              {char}
+              {/* Lettre primaire (visible au repos) */}
+              <span
+                className={`rls-primary-${i} inline-block transform-gpu will-change-transform`}
+                style={{ transform: "translate3d(0, 0%, 0)" }}
+              >
+                {char}
+              </span>
+              {/* Lettre secondaire (en attente hors champ) */}
+              <span
+                className={`rls-secondary-${i} absolute left-0 top-0 inline-block transform-gpu will-change-transform`}
+                style={{
+                  transform: `translate3d(0, ${reverse ? "-100%" : "100%"}, 0)`,
+                }}
+              >
+                {char}
+              </span>
             </span>
-            {/* Lettre secondaire (en attente hors champ) */}
-            <span
-              className={`rls-secondary-${i} absolute left-0 top-0 inline-block transform-gpu will-change-transform`}
-              style={{
-                transform: `translate3d(0, ${reverse ? "-100%" : "100%"}, 0)`,
-              }}
-            >
-              {char}
-            </span>
-          </span>
-        ))}
+          ))}
+        </span>
       </span>
     );
   }

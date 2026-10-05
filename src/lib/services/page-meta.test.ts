@@ -133,18 +133,18 @@ describe("page-meta", () => {
   describe("getStaticPageMetadata", () => {
     it("fournit la copy FR et canonical FR pour services, insights et contact", async () => {
       const servicesMeta = await getStaticPageMetadata("fr", "services");
-      expect(servicesMeta.title).toBe("Nos Expertises IA & Data | Analyticatech");
+      expect(servicesMeta.title).toBe("Nos Expertises IA & Data");
       expect(servicesMeta.openGraph?.title).toBe("Nos Expertises IA & Data | Analyticatech");
       expect(servicesMeta.twitter?.title).toBe("Nos Expertises IA & Data | Analyticatech");
       expect(servicesMeta.alternates?.canonical).toBe("https://analyticatech.fr/services");
 
       const insightsMeta = await getStaticPageMetadata("fr", "insights");
-      expect(insightsMeta.title).toBe("Insights — Analyses & Ressources IA | Analyticatech");
+      expect(insightsMeta.title).toBe("Insights — Analyses & Ressources IA");
       expect(insightsMeta.openGraph?.title).toBe("Insights — Analyses & Ressources IA | Analyticatech");
       expect(insightsMeta.twitter?.title).toBe("Insights — Analyses & Ressources IA | Analyticatech");
 
       const contactMeta = await getStaticPageMetadata("fr", "contact");
-      expect(contactMeta.title).toBe("Contact | Analyticatech");
+      expect(contactMeta.title).toBe("Contact");
       expect(contactMeta.openGraph?.title).toBe("Contact | Analyticatech");
       expect(contactMeta.twitter?.title).toBe("Contact | Analyticatech");
     });
