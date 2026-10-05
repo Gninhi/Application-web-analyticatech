@@ -192,8 +192,12 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
         </SectionContainer>
       </section>
 
-      {/* === Pile de cartes sticky === */}
-      <section ref={deckRef} className="relative" data-testid="services-deck">
+      {/* === Pile de cartes (sticky sur desktop >= 1024px, flux vertical sur mobile < 1024px) === */}
+      <section
+        ref={deckRef}
+        className="relative px-4 sm:px-6 lg:px-0 space-y-6 lg:space-y-0"
+        data-testid="services-deck"
+      >
         {services.map((service, i) => (
           <ServiceDeckCard
             key={service.index}
@@ -304,23 +308,11 @@ interface ServiceDeckCardProps {
 /* === Carte sticky — fiche technique d'un service ===
  *
  * Approche cula.tech adaptée (SUIVI.md) :
- *  - position: sticky; top: index * var(--deck-gap) → la carte se colle un
- *    cran plus bas que la précédente : son bord reste visible en liseré
- *    au-dessus de la suivante (effet jeu de cartes).
- *  - height: 100vh ; fond opaque (var(--bg) + voile + image + mesh) →
- *    recouvre la précédente ; z-index croissant.
- *  - Le progress de chaque carte est dérivé directement du scroll brut sur
- *    SA fenêtre réelle (arrive → end, une hauteur de viewport exactement),
- *    sans spring : l'assombrissement (overlay de profondeur) et le parallaxe
- *    suivent le cycle de vie exact de la carte — plus de dérive ni de lag.
- *  - Parallaxe : seule l'image de fond est transformée (composited), très
- *    subtile (±1.5%), désactivée sous prefers-reduced-motion — aucun
- *    transform sur la carte ou le panneau → empilement 60fps et carte active
- *    parfaitement stable.
- *
- * Contenu : fiche technique premium — identifiant + tagline, titre avec
- * règle d'accent, description, stack technologique, métriques chiffrées et
- * CTA vers la page de détail. Tout est issu de ServiceDTO + i18n.
+ *  - Desktop (>= 1024px) : position: sticky avec décalage plafonné adapté aux petits écrans
+ *  - Mobile & Tablette (< 1024px) : position: relative en flux vertical naturel avec gap-6
+ *  - Overlay sombre rgba(1, 28, 64, 0.72) pour contraste garanti >= 4.5:1
+ *  - Grille métriques : 1 col (<640px), 2 col (640-1023px), 2 col (>=1024px)
+ *  - CTA avec zone tactile >= 44x44 px toujours accessible
  */
 function ServiceDeckCard({
   service,
@@ -384,20 +376,15 @@ function ServiceDeckCard({
 
   return (
     <article
-      className="sticky flex h-screen w-full items-center justify-center overflow-hidden px-3 md:px-6"
+      className="relative lg:sticky top-auto lg:top-[var(--card-top)] flex h-auto lg:h-[100svh] w-full items-center justify-center overflow-hidden p-0 lg:px-6 rounded-2xl lg:rounded-none border border-border/60 lg:border-0 lg:border-t lg:border-glass-border"
       data-testid="service-card"
       style={{
+        "--card-top": `min(calc(${index} * var(--deck-gap)), calc(10vh + ${index * 16}px))`,
         zIndex: index + 1,
         backgroundColor: "var(--bg)",
-        // Écart d'empilement : chaque carte se colle un cran plus bas que la
-        // précédente → son bord reste visible en liseré au-dessus de la
-        // suivante (illusion d'un jeu de cartes).
-        top: `calc(${index} * var(--deck-gap))`,
-        // Liseré de bord entre cartes empilées (permet de lire l'empilement)
-        borderTop: "1px solid var(--glass-card-border)",
-      }}
+      } as CSSProperties}
     >
-      {/* Décor : image en parallaxe + mesh + voile adaptatif */}
+      {/* Décor : image en parallaxe + mesh + voile sombre haute lisibilité */}
       <motion.div
         className="service-card-bg absolute inset-0 overflow-hidden"
         data-testid="service-card-bg"
@@ -408,7 +395,7 @@ function ServiceDeckCard({
           src={bgImage}
           alt=""
           fill
-          sizes="100vw"
+          sizes="(max-width: 768px) 100vw, 1200px"
           priority={index < 2}
           loading={index < 2 ? "eager" : "lazy"}
           decoding="async"
@@ -417,16 +404,22 @@ function ServiceDeckCard({
         />
       </motion.div>
       <div className="absolute inset-0" style={{ background: meshOverlay }} aria-hidden />
+      {/* Overlay sombre pour assurer un contraste >= 4.5:1 sur toutes résolutions */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: "rgba(1, 28, 64, 0.72)" }}
+        aria-hidden
+      />
       <div
         className="absolute inset-0"
         style={{ background: "var(--deck-veil)" }}
         aria-hidden
       />
 
-      {/* Overlay de profondeur (assombrit les cartes précédentes, les 2 thèmes) */}
+      {/* Overlay de profondeur (desktop uniquement car les cartes ne s'empilent pas sur mobile) */}
       {!isLast && (
         <motion.div
-          className="pointer-events-none absolute inset-0 z-30 bg-black"
+          className="pointer-events-none absolute inset-0 z-30 hidden lg:block bg-black"
           data-testid="service-card-depth"
           style={{ opacity: overlayOpacity }}
           aria-hidden
@@ -441,7 +434,7 @@ function ServiceDeckCard({
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           data-testid="service-card-panel"
-          className="group relative overflow-hidden rounded-[28px] deck-card"
+          className="group relative overflow-hidden rounded-[24px] lg:rounded-[28px] deck-card w-full"
           style={{ "--sa": accent, "--mx": "-200px", "--my": "-200px" } as CSSProperties}
         >
           {/* Liseré supérieur — teinte du service */}
@@ -473,7 +466,7 @@ function ServiceDeckCard({
           />
 
           {/* Barre supérieure : identifiant du module + compteur de pile */}
-          <div className="relative z-20 flex items-center justify-between p-5 md:p-6">
+          <div className="relative z-20 flex items-center justify-between p-4 sm:p-5 lg:p-6">
             <p
               className="font-mono text-[10px] uppercase tracking-[0.3em]"
               style={{ color: accent }}
@@ -487,36 +480,36 @@ function ServiceDeckCard({
           </div>
 
           {/* Contenu : identité (gauche) + détail expert (droite) */}
-          <div className="relative z-10 grid min-h-[62vh] md:grid-cols-5 md:min-h-[66vh]">
+          <div className="relative z-10 grid min-h-auto lg:min-h-[66vh] lg:grid-cols-5">
             {/* Identité du service */}
-            <div className="flex flex-col justify-between p-8 md:col-span-2 md:p-12">
-              <div className="flex items-start justify-between">
+            <div className="flex flex-col justify-between p-5 sm:p-6 lg:p-12 lg:col-span-2 border-b border-border/40 lg:border-b-0">
+              <div className="flex items-start justify-between mb-4 lg:mb-0">
                 <span
-                  className="select-none font-display text-5xl font-bold md:text-6xl"
+                  className="select-none font-display text-4xl sm:text-5xl lg:text-6xl font-bold"
                   style={{ color: `color-mix(in srgb, ${accent} 55%, transparent)` }}
                 >
                   {service.index}
                 </span>
                 <span
-                  className="flex h-16 w-16 items-center justify-center rounded-2xl backdrop-blur-sm"
+                  className="flex h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16 items-center justify-center rounded-2xl backdrop-blur-sm"
                   style={chipStyle}
                 >
-                  <IconComponent className="h-8 w-8" aria-hidden />
+                  <IconComponent className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8" aria-hidden />
                 </span>
               </div>
               <div>
                 <p
-                  className="mb-2 font-mono text-[11px] uppercase tracking-widest"
+                  className="mb-1.5 sm:mb-2 font-mono text-[10px] sm:text-[11px] uppercase tracking-widest"
                   style={{ color: accent }}
                 >
                   {service.tagline}
                 </p>
-                <h2 className="font-display text-3xl font-bold tracking-tight text-foreground md:text-5xl">
+                <h2 className="font-display text-2xl sm:text-3xl lg:text-5xl font-bold tracking-tight text-foreground">
                   {service.title}
                 </h2>
                 {/* Règle d'accent sous le titre */}
                 <div
-                  className="mt-4 h-px w-16"
+                  className="mt-3 sm:mt-4 h-px w-16"
                   style={{ background: accent }}
                   aria-hidden
                 />
@@ -524,7 +517,7 @@ function ServiceDeckCard({
             </div>
 
             {/* Détail expert du service */}
-            <div className="flex flex-col p-8 md:col-span-3 md:border-l md:border-border md:p-12">
+            <div className="flex flex-col p-5 sm:p-6 lg:p-12 lg:col-span-3 lg:border-l lg:border-border">
               <div className="mb-2 flex items-center justify-between">
                 <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                   {t("common.presentation")}
@@ -546,29 +539,30 @@ function ServiceDeckCard({
                   </span>
                 )}
               </div>
-              <p className="mb-6 text-base leading-relaxed text-muted-foreground md:text-lg">
+              <p className="mb-5 sm:mb-6 text-sm sm:text-base lg:text-lg leading-relaxed text-muted-foreground">
                 {(activePersona && service.persona?.[activePersona as keyof typeof service.persona]) || service.description}
               </p>
 
-              <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              <p className="mb-2.5 sm:mb-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                 {t("common.techStack")}
               </p>
-              <div className="mb-6 flex flex-wrap gap-2">
+              <div className="mb-5 sm:mb-6 flex flex-wrap gap-2">
                 {service.technologies.map((tech) => (
                   <span
                     key={tech}
-                    className="glass rounded-md px-2.5 py-1 font-mono text-[11px] text-muted-foreground"
+                    className="glass rounded-md px-2 sm:px-2.5 py-1 font-mono text-[10px] sm:text-[11px] text-muted-foreground"
                   >
                     {tech}
                   </span>
                 ))}
               </div>
 
-              <div className="mb-6 grid grid-cols-2 gap-4">
+              {/* Grille des livrables / métriques : 1 col (<640px), 2 col (640-1023px), 2 col (>=1024px) */}
+              <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3 sm:gap-4">
                 {service.metrics.map((m) => (
                   <div
                     key={m.label}
-                    className="glass-card relative overflow-hidden rounded-xl p-3"
+                    className="glass-card relative overflow-hidden rounded-xl p-3 sm:p-3.5"
                   >
                     {/* Liseré supérieur d'accent — définit la métrique */}
                     <div
@@ -578,7 +572,7 @@ function ServiceDeckCard({
                       }}
                       aria-hidden
                     />
-                    <p className="font-display text-2xl font-bold" style={{ color: accent }}>
+                    <p className="font-display text-xl sm:text-2xl font-bold" style={{ color: accent }}>
                       {m.value}
                     </p>
                     <p className="mt-0.5 font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
@@ -588,13 +582,14 @@ function ServiceDeckCard({
                 ))}
               </div>
 
+              {/* Bouton CTA avec zone tactile >= 44x44 px */}
               <Button
                 onClick={() => onNavigateDetail("service-detail", service.index)}
                 variant="outline"
-                size="sm"
-                icon={<ArrowUpRight className="h-3.5 w-3.5" aria-hidden />}
+                size="md"
+                icon={<ArrowUpRight className="h-4 w-4" aria-hidden />}
                 iconPosition="right"
-                className="mt-auto self-start group"
+                className="mt-auto self-start group min-h-[44px] min-w-[44px] px-5 py-2.5"
               >
                 {t("services.card.cta")}
               </Button>

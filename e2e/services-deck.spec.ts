@@ -230,153 +230,182 @@ function collectErrors(page: Page): string[] {
   return errors;
 }
 
-for (const [label, viewport] of [
-  ["desktop", DESKTOP],
-  ["mobile", MOBILE],
-] as const) {
-  test.describe(`pile de cartes /services — ${label}`, () => {
-    // Ce test est chargé (~90 pas de scroll + screenshots + échantillons fins)
-    // et tourne en parallèle des autres specs → timeout dédié généreux.
-    test.setTimeout(180_000);
-    test.use({ viewport });
+test.describe("pile de cartes /services — desktop", () => {
+  // Ce test est chargé (~90 pas de scroll + screenshots + échantillons fins)
+  // et tourne en parallèle des autres specs → timeout dédié généreux.
+  test.setTimeout(180_000);
+  test.use({ viewport: DESKTOP });
 
-    test("empilement stable, net et déterministe au scroll", async ({ page }) => {
-      const errors = collectErrors(page);
-      await page.goto("/services", { waitUntil: "domcontentloaded" });
-      await page.evaluate(() => document.fonts.ready);
-      await expect(page.locator(CARD).first()).toBeVisible();
-      await expect(page.locator(CARD)).toHaveCount(4);
+  test("empilement stable, net et déterministe au scroll", async ({ page }) => {
+    const errors = collectErrors(page);
+    await page.goto("/services", { waitUntil: "domcontentloaded" });
+    await page.evaluate(() => document.fonts.ready);
+    await expect(page.locator(CARD).first()).toBeVisible();
+    await expect(page.locator(CARD)).toHaveCount(4);
 
-      const dir = `e2e/screenshots/services-deck/${label}`;
-      const { cardCount } = await runDeckScrollSequence(page, viewport.height, dir);
-      expect(cardCount).toBe(4);
+    const dir = "e2e/screenshots/services-deck/desktop";
+    const { cardCount } = await runDeckScrollSequence(page, DESKTOP.height, dir);
+    expect(cardCount).toBe(4);
 
-      // 1) Re-scroll lent complet pour les assertions finales.
-      await scrollToAndSettle(page, 0);
-      await settleAnimations(page);
+    // 1) Re-scroll lent complet pour les assertions finales.
+    await scrollToAndSettle(page, 0);
+    await settleAnimations(page);
 
-      const viewportH = viewport.height;
-      const deckBox = await page.locator(DECK).boundingBox();
-      expect(deckBox).toBeTruthy();
+    const viewportH = DESKTOP.height;
+    const deckBox = await page.locator(DECK).boundingBox();
+    expect(deckBox).toBeTruthy();
 
-      // 2) Assertions sur chaque position de bascule (carte i active).
-      for (let i = 0; i < cardCount; i++) {
-        const y = (deckBox?.y ?? 0) + i * viewportH;
-        await scrollToAndSettle(page, y);
-        await settleAnimations(page);
-        const metrics = await sampleCards(page);
-        const active = activeIndex(metrics, viewportH);
-
-        // La carte i est bien celle qui domine le viewport à ce point.
-        expect(active).toBe(i);
-        const a = metrics[active];
-
-        // Carte active : jamais de blur (filter), backdrop blur ≤ 0.5px.
-        expect(a.filter).toBe("none");
-        const backdropBlur = /blur\(([\d.]+)px\)/.exec(a.panelBackdropFilter)?.[1] ?? "0";
-        expect(parseFloat(backdropBlur)).toBeLessThanOrEqual(0.5);
-
-        // Aucune transform animée sur l'article sticky ni le panneau.
-        expect(a.transform).toBe("none");
-        expect(a.panelTransform).toBe("none");
-
-        // z-index croissant et déterministe.
-        const z = metrics.map((m) => parseInt(m.zIndex, 10));
-        expect(z).toEqual(z.map((v, idx) => idx + 1));
-
-        // Le panneau reste entièrement contenu dans sa carte (aucun contenu
-        // coupé par overflow-hidden), quel que soit le décalage sticky de la
-        // carte active (top = gap × i → sa carte dépasse naturellement du
-        // bas du viewport, mais le panneau ne doit pas être rogné).
-        const cardBox = await page.locator(CARD).nth(active).boundingBox();
-        expect(cardBox).toBeTruthy();
-        const panelBox = await page.locator(PANEL).nth(active).boundingBox();
-        expect(panelBox).toBeTruthy();
-        if (panelBox && cardBox) {
-          expect(panelBox.y).toBeGreaterThanOrEqual(cardBox.y - 1);
-          expect(panelBox.y + panelBox.height).toBeLessThanOrEqual(
-            cardBox.y + cardBox.height + 1,
-          );
-        }
-      }
-
-      // 3) Stabilité : parallaxe bornée (amplitude faible) sur le décor.
-      await scrollToAndSettle(page, deckBox?.y ?? 0);
-      await settleAnimations(page);
-      const m0 = await sampleCards(page);
-      const first = parseMatrix(m0[0].bgTransform);
-      await scrollToAndSettle(page, (deckBox?.y ?? 0) + viewportH);
-      await settleAnimations(page);
-      const m1 = await sampleCards(page);
-      const second = parseMatrix(m1[0].bgTransform);
-      const parallaxRange = Math.abs(second.ty - first.ty);
-      expect(parallaxRange).toBeLessThanOrEqual(32);
-
-      // 4) Ancrage : pendant que la carte 1 glisse pour recouvrir la carte 0,
-      //    la carte 0 épinglée reste immobile (±1px) et la carte 1 suit le
-      //    scroll 1:1 (delta = stepPx, aucun saut/téléport) tant qu'elle n'est
-      //    pas épinglée, puis reste immobile une fois épinglée (delta = 0).
-      //    L'étape de transition (dernier incrément vers le pin) est exclue.
-      const pinGap = Math.min(56, Math.max(16, viewportH * 0.04));
-      const pinTop = pinGap * 1; // carte 1 : top = gap × 1
-      const startY = (deckBox?.y ?? 0) + viewportH - 5 * STEP_PX;
-      const pinnedRects: number[] = [];
-      const slidingDeltas: number[] = [];
-      const pinnedDeltas: number[] = [];
-      let prevSliding = 0;
-      for (let s = 0; s < 9; s++) {
-        await scrollToAndSettle(page, startY + s * STEP_PX);
-        await settleAnimations(page);
-        const metrics = await sampleCards(page);
-        pinnedRects.push(metrics[0].rectTop);
-        if (s > 0) {
-          const d = metrics[1].rectTop - prevSliding;
-          const nowPinned = metrics[1].rectTop <= pinTop + 1;
-          const wasPinned = prevSliding <= pinTop + 1;
-          if (nowPinned && wasPinned) pinnedDeltas.push(d);
-          else if (!nowPinned) slidingDeltas.push(d);
-        }
-        prevSliding = metrics[1].rectTop;
-      }
-      for (const r of pinnedRects) {
-        expect(Math.abs(r - pinnedRects[0])).toBeLessThanOrEqual(1);
-      }
-      for (const d of slidingDeltas) {
-        // d est négatif (la carte monte avec le scroll) → comparaison en
-        // valeur absolue : la carte recouvrante doit suivre le scroll 1:1.
-        expect(Math.abs(Math.abs(d) - STEP_PX)).toBeLessThanOrEqual(2);
-      }
-      for (const d of pinnedDeltas) {
-        // Une fois épinglée, la carte recouvrante ne bouge plus (delta = 0).
-        expect(Math.abs(d)).toBeLessThanOrEqual(1);
-      }
-
-      expect(errors).toEqual([]);
-    });
-
-    test("prefers-reduced-motion : parallaxe désactivée, aucun mouvement décor", async ({
-      page,
-    }) => {
-      await page.emulateMedia({ reducedMotion: "reduce" });
-      const errors = collectErrors(page);
-      await page.goto("/services", { waitUntil: "domcontentloaded" });
-      await page.evaluate(() => document.fonts.ready);
-      await expect(page.locator(CARD)).toHaveCount(4);
-
-      const deckBox = await page.locator(DECK).boundingBox();
-      expect(deckBox).toBeTruthy();
-
-      await scrollToAndSettle(page, (deckBox?.y ?? 0) + viewport.height);
+    // 2) Assertions sur chaque position de bascule (carte i active).
+    for (let i = 0; i < cardCount; i++) {
+      const y = (deckBox?.y ?? 0) + i * viewportH;
+      await scrollToAndSettle(page, y);
       await settleAnimations(page);
       const metrics = await sampleCards(page);
+      const active = activeIndex(metrics, viewportH);
 
-      // Le décor ne doit pas bouger (translateY stable) en reduced-motion.
-      const bg0 = parseMatrix(metrics[0].bgTransform);
-      expect(Math.abs(bg0.ty)).toBeLessThanOrEqual(2);
-      const bg1 = parseMatrix(metrics[1].bgTransform);
-      expect(Math.abs(bg1.ty)).toBeLessThanOrEqual(2);
+      // La carte i est bien celle qui domine le viewport à ce point.
+      expect(active).toBe(i);
+      const a = metrics[active];
 
-      expect(errors).toEqual([]);
-    });
+      // Carte active : jamais de blur (filter), backdrop blur ≤ 0.5px.
+      expect(a.filter).toBe("none");
+      const backdropBlur = /blur\(([\d.]+)px\)/.exec(a.panelBackdropFilter)?.[1] ?? "0";
+      expect(parseFloat(backdropBlur)).toBeLessThanOrEqual(0.5);
+
+      // Aucune transform animée sur l'article sticky ni le panneau.
+      expect(a.transform).toBe("none");
+      expect(a.panelTransform).toBe("none");
+
+      // z-index croissant et déterministe.
+      const z = metrics.map((m) => parseInt(m.zIndex, 10));
+      expect(z).toEqual(z.map((v, idx) => idx + 1));
+
+      // Le panneau reste entièrement contenu dans sa carte (aucun contenu
+      // coupé par overflow-hidden).
+      const cardBox = await page.locator(CARD).nth(active).boundingBox();
+      expect(cardBox).toBeTruthy();
+      const panelBox = await page.locator(PANEL).nth(active).boundingBox();
+      expect(panelBox).toBeTruthy();
+      if (panelBox && cardBox) {
+        expect(panelBox.y).toBeGreaterThanOrEqual(cardBox.y - 1);
+        expect(panelBox.y + panelBox.height).toBeLessThanOrEqual(
+          cardBox.y + cardBox.height + 1,
+        );
+      }
+    }
+
+    // 3) Stabilité : parallaxe bornée (amplitude faible) sur le décor.
+    await scrollToAndSettle(page, deckBox?.y ?? 0);
+    await settleAnimations(page);
+    const m0 = await sampleCards(page);
+    const first = parseMatrix(m0[0].bgTransform);
+    await scrollToAndSettle(page, (deckBox?.y ?? 0) + viewportH);
+    await settleAnimations(page);
+    const m1 = await sampleCards(page);
+    const second = parseMatrix(m1[0].bgTransform);
+    const parallaxRange = Math.abs(second.ty - first.ty);
+    expect(parallaxRange).toBeLessThanOrEqual(32);
+
+    // 4) Ancrage : pendant que la carte 1 glisse pour recouvrir la carte 0,
+    //    la carte 0 épinglée reste immobile (±1px) et la carte 1 suit le scroll 1:1.
+    const pinGap = Math.min(56, Math.max(16, viewportH * 0.04));
+    const pinTop = pinGap * 1;
+    const startY = (deckBox?.y ?? 0) + viewportH - 5 * STEP_PX;
+    const pinnedRects: number[] = [];
+    const slidingDeltas: number[] = [];
+    const pinnedDeltas: number[] = [];
+    let prevSliding = 0;
+    for (let s = 0; s < 9; s++) {
+      await scrollToAndSettle(page, startY + s * STEP_PX);
+      await settleAnimations(page);
+      const metrics = await sampleCards(page);
+      pinnedRects.push(metrics[0].rectTop);
+      if (s > 0) {
+        const d = metrics[1].rectTop - prevSliding;
+        const nowPinned = metrics[1].rectTop <= pinTop + 1;
+        const wasPinned = prevSliding <= pinTop + 1;
+        if (nowPinned && wasPinned) pinnedDeltas.push(d);
+        else if (!nowPinned) slidingDeltas.push(d);
+      }
+      prevSliding = metrics[1].rectTop;
+    }
+    for (const r of pinnedRects) {
+      expect(Math.abs(r - pinnedRects[0])).toBeLessThanOrEqual(1);
+    }
+    for (const d of slidingDeltas) {
+      expect(Math.abs(Math.abs(d) - STEP_PX)).toBeLessThanOrEqual(2);
+    }
+    for (const d of pinnedDeltas) {
+      expect(Math.abs(d)).toBeLessThanOrEqual(1);
+    }
+
+    expect(errors).toEqual([]);
   });
-}
+
+  test("prefers-reduced-motion : parallaxe désactivée, aucun mouvement décor", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    const errors = collectErrors(page);
+    await page.goto("/services", { waitUntil: "domcontentloaded" });
+    await page.evaluate(() => document.fonts.ready);
+    await expect(page.locator(CARD)).toHaveCount(4);
+
+    const deckBox = await page.locator(DECK).boundingBox();
+    expect(deckBox).toBeTruthy();
+
+    await scrollToAndSettle(page, (deckBox?.y ?? 0) + DESKTOP.height);
+    await settleAnimations(page);
+    const metrics = await sampleCards(page);
+
+    const bg0 = parseMatrix(metrics[0].bgTransform);
+    expect(Math.abs(bg0.ty)).toBeLessThanOrEqual(2);
+    const bg1 = parseMatrix(metrics[1].bgTransform);
+    expect(Math.abs(bg1.ty)).toBeLessThanOrEqual(2);
+
+    expect(errors).toEqual([]);
+  });
+});
+
+test.describe("pile de cartes /services — mobile (< 1024px)", () => {
+  test.use({ viewport: MOBILE });
+
+  test("flux vertical fluide : cartes en position relative sans recouvrement ni coupure", async ({ page }) => {
+    const errors = collectErrors(page);
+    await page.goto("/services", { waitUntil: "domcontentloaded" });
+    await page.evaluate(() => document.fonts.ready);
+    await expect(page.locator(CARD).first()).toBeVisible();
+    await expect(page.locator(CARD)).toHaveCount(4);
+
+    const cards = page.locator(CARD);
+    const count = await cards.count();
+
+    for (let i = 0; i < count; i++) {
+      const card = cards.nth(i);
+      const position = await card.evaluate((el) => window.getComputedStyle(el).position);
+      // Sur mobile (< 1024px), les cartes doivent être en flux vertical relatif (pas sticky)
+      expect(position).toBe("relative");
+
+      // Chaque bouton CTA doit être visible et avoir une zone tactile >= 44x44
+      const cta = card.locator("button, a").last();
+      await expect(cta).toBeVisible();
+      const ctaBox = await cta.boundingBox();
+      expect(ctaBox).toBeTruthy();
+      if (ctaBox) {
+        expect(ctaBox.height).toBeGreaterThanOrEqual(44);
+        expect(ctaBox.width).toBeGreaterThanOrEqual(44);
+      }
+    }
+
+    // Vérifie que les cartes se succèdent verticalement sans se recouvrir
+    const box0 = await cards.nth(0).boundingBox();
+    const box1 = await cards.nth(1).boundingBox();
+    expect(box0).toBeTruthy();
+    expect(box1).toBeTruthy();
+    if (box0 && box1) {
+      expect(box1.y).toBeGreaterThanOrEqual(box0.y + box0.height - 5);
+    }
+
+    expect(errors).toEqual([]);
+  });
+});
