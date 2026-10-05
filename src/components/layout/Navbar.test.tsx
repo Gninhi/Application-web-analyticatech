@@ -84,4 +84,13 @@ describe("Navbar — Header Capsule Premium", () => {
     // Doit contenir le liseré lumineux
     expect(html).toContain("pointer-events-none absolute inset-x-6 top-0 h-px");
   });
+
+  it("rend le bouton burger mobile avec les attributs d'accessibilité requis", () => {
+    const html = renderNavbar();
+    expect(html).toContain('id="burger-menu-button"');
+    expect(html).toContain('aria-expanded="false"');
+    expect(html).toContain('aria-controls="mobile-nav-drawer"');
+    expect(html).toContain('aria-label="Ouvrir le menu"');
+  });
 });
+

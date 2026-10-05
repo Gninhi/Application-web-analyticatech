@@ -51,12 +51,21 @@ test.describe("navigation desktop", () => {
 test.describe("navigation mobile", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
-  test("permet la navigation directe via la capsule responsive", async ({ page }) => {
+  test("permet la navigation fluide via le menu burger et le tiroir mobile", async ({ page }) => {
     const errors = collectErrors(page);
     await page.goto("/", { waitUntil: "domcontentloaded" });
     await page.waitForLoadState("networkidle");
 
-    const insightsLink = page.locator("header nav a", { hasText: "Insights" }).first();
+    // Vérifier la présence du bouton burger et ouvrir le menu
+    const burgerBtn = page.locator("#burger-menu-button");
+    await expect(burgerBtn).toBeVisible();
+    await burgerBtn.click();
+
+    // Le tiroir mobile s'ouvre
+    const drawer = page.locator("#mobile-nav-drawer");
+    await expect(drawer).toBeVisible();
+
+    const insightsLink = drawer.locator("a", { hasText: "Insights" }).first();
     await expect(insightsLink).toBeVisible();
     await insightsLink.click();
     await page.waitForURL("**/insights", { timeout: 15_000 });
@@ -64,17 +73,26 @@ test.describe("navigation mobile", () => {
     expect(errors).toEqual([]);
   });
 
-  test("le bouton de langue au format compact affiche le drapeau et permet la bascule FR/EN sans overflow", async ({ page }) => {
+  test("le bouton de langue dans le tiroir mobile permet la bascule FR/EN sans overflow", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
-    const langBtn = page.locator('header button[aria-label*="Français"], header button[aria-label*="English"]').first();
+
+    // Ouvrir le tiroir burger
+    const burgerBtn = page.locator("#burger-menu-button");
+    await expect(burgerBtn).toBeVisible();
+    await burgerBtn.click();
+
+    const drawer = page.locator("#mobile-nav-drawer");
+    await expect(drawer).toBeVisible();
+
+    const langBtn = drawer.locator('button[aria-label*="Français"], button[aria-label*="English"]').first();
     await expect(langBtn).toBeVisible();
 
     // Dimensions compactes équivalentes au ThemeToggle (h-9 w-9, 36x36px)
     const box = await langBtn.boundingBox();
     expect(box).not.toBeNull();
     if (box) {
-      expect(box.width).toBeLessThanOrEqual(42);
-      expect(box.height).toBeLessThanOrEqual(42);
+      expect(box.width).toBeLessThanOrEqual(44);
+      expect(box.height).toBeLessThanOrEqual(44);
     }
 
     // Basculer en anglais
@@ -82,8 +100,10 @@ test.describe("navigation mobile", () => {
     await page.waitForURL("**/en", { timeout: 15_000 });
     expect(page.url()).toContain("/en");
 
-    // Le bouton affiche maintenant le drapeau britannique pour repasser en français
-    const enLangBtn = page.locator('header button[aria-label*="English"]').first();
+    // Rouvrir pour vérifier que le bouton affiche le drapeau britannique pour repasser en français
+    const burgerBtnEn = page.locator("#burger-menu-button");
+    await burgerBtnEn.click();
+    const enLangBtn = page.locator('#mobile-nav-drawer button[aria-label*="English"]').first();
     await expect(enLangBtn).toBeVisible();
   });
 });

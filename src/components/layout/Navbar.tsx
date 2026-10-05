@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { ArrowUpRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { ArrowUpRight, Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { type ViewKey } from "@/types/content";
 import { viewToPath, pathToView, getLocaleFromPath } from "@/lib/navigation/routes";
 import { RandomLetterSwap, type RandomLetterSwapHandle } from "@/components/ui/random-letter-swap";
@@ -83,22 +83,27 @@ function NavbarLinkItem({ itemKey, label, href, isActive }: NavbarLinkItemProps)
 /**
  * Navbar — Header capsule flottante en verre liquide inspiré du design "Cosmic Capsule".
  *
- * Structure & Identité :
- * - Gauche : Logo Analyticatech avec marque de précision
- * - Centre / Droite : Capsule unifiée en verre liquide haute précision :
- *   • Thème Sombre : fond noir obsidienne & bleu nuit avec liseré cuivre #F26D3D et pilule active lumineuse.
- *   • Thème Clair : fond blanc opalin satiné avec bordure et pilule bleu cobalt #03318C.
- *   • Au survol : effet `RandomLetterSwap` (cascade aléatoire spring des lettres sans CLS).
- *   • 100% accessible, zéro décalage de layout, transition active par layoutId Framer Motion.
+ * Responsive (< 1024px) :
+ * - Logo à gauche, bouton burger accessible à droite (cibles ≥ 44×44 px).
+ * - Tiroir plein écran (drawer) avec palette officielle (#011C40, #03318C, #5478C4, #F26D3D, #F5F7FA).
+ * - Focus piégé dans le panneau, fermeture sur clic de lien, Escape et changement de route.
+ * - Verrouillage du scroll body (avec support Lenis éventuel).
+ *
+ * Desktop (≥ 1024px) :
+ * - Rendu identique conservé (capsule flottante liquide).
  */
 export function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const activeView = pathToView(pathname);
   const { scrolled, hidden } = useScrollState();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { navItems } = useAppContent();
   const currentLocale = getLocaleFromPath(pathname);
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const burgerButtonRef = useRef<HTMLButtonElement>(null);
 
   // Repli statique (mode offline ou DB injoignable)
   const STATIC_NAV: { key: ViewKey; label: string; hint: string }[] = [
@@ -118,84 +123,299 @@ export function Navbar() {
     router.push(viewToPath("contact", undefined, currentLocale));
   }, [router, currentLocale]);
 
+  const closeMenu = useCallback(() => {
+    setIsDrawerOpen(false);
+    burgerButtonRef.current?.focus();
+  }, []);
+
+  // Fermeture automatique lors d'un changement de route
+  useEffect(() => {
+    const handle = requestAnimationFrame(() => {
+      setIsDrawerOpen(false);
+    });
+    return () => cancelAnimationFrame(handle);
+  }, [pathname]);
+
+  // Verrouillage du scroll du body et écoute de la touche Échap
+  useEffect(() => {
+    if (!isDrawerOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    // Support éventuel de Lenis si initialisé
+    const win = window as unknown as { lenis?: { stop?: () => void; start?: () => void } };
+    if (typeof win.lenis?.stop === "function") {
+      win.lenis.stop();
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeMenu();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      if (typeof win.lenis?.start === "function") {
+        win.lenis.start();
+      }
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isDrawerOpen, closeMenu]);
+
+  // Piégeage du focus dans le panneau mobile
+  useEffect(() => {
+    if (!isDrawerOpen || !drawerRef.current) return;
+
+    const drawer = drawerRef.current;
+    const focusableSelectors =
+      'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    // Focus initial sur le premier élément focusable
+    const focusables = drawer.querySelectorAll<HTMLElement>(focusableSelectors);
+    if (focusables.length > 0) {
+      focusables[0]?.focus();
+    }
+
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      const elements = drawer.querySelectorAll<HTMLElement>(focusableSelectors);
+      if (elements.length === 0) return;
+
+      const firstEl = elements[0];
+      const lastEl = elements[elements.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstEl) {
+          e.preventDefault();
+          lastEl.focus();
+        }
+      } else {
+        if (document.activeElement === lastEl) {
+          e.preventDefault();
+          firstEl.focus();
+        }
+      }
+    };
+
+    drawer.addEventListener("keydown", handleTabKey);
+    return () => {
+      drawer.removeEventListener("keydown", handleTabKey);
+    };
+  }, [isDrawerOpen]);
+
   return (
-    <header
-      className={cn(
-        "fixed top-0 inset-x-0 z-50 transition-all duration-300 ease-out",
-        scrolled ? "py-2 sm:py-2.5" : "py-3 sm:py-5",
-        hidden ? "-translate-y-full" : "translate-y-0"
-      )}
-    >
-      <div className="mx-auto max-w-7xl px-2 sm:px-6">
-        <div className="flex items-center justify-between gap-1.5 sm:gap-3">
-          {/* Logo Analyticatech */}
-          <Link
-            href={currentLocale === "en" ? "/en" : "/"}
-            className="group flex items-center gap-2 rounded-xl px-1.5 py-1 sm:px-2 sm:py-1.5 transition-transform hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-[#F26D3D] shrink-0"
-            aria-label={`${t("nav.home")} — AnalyticaTech`}
-          >
-            <Logo size={28} delay={0.2} />
-            <span className="font-display text-sm sm:text-lg font-bold tracking-tight text-slate-900 dark:text-slate-50 hidden xs:inline-block">
-              Analytica<span className="text-[#F26D3D]">tech</span>
-            </span>
-          </Link>
-
-          {/* Capsule Flottante Navigation & Actions (Design Liquid Glass Capsule Premium) */}
-          <nav
-            aria-label="Navigation principale"
-            className={cn(
-              "relative flex items-center gap-0.5 sm:gap-1.5 rounded-2xl border p-1 sm:p-1.5 transition-all duration-300 backdrop-blur-2xl shadow-xl max-w-full overflow-hidden",
-              scrolled
-                ? "border-[#03318C]/20 dark:border-[#03318C]/40 bg-white/95 dark:bg-[#06070B]/90 shadow-[0_12px_40px_rgba(3,49,140,0.12)] dark:shadow-[0_16px_48px_rgba(0,0,0,0.8),0_0_24px_rgba(3,49,140,0.22)]"
-                : "border-[#03318C]/12 dark:border-white/10 bg-white/85 dark:bg-[#06070B]/80 shadow-[0_8px_32px_rgba(3,49,140,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),0_0_16px_rgba(3,49,140,0.12)]"
-            )}
-          >
-            {/* Liseré supérieur lumineux spéculaire */}
-            <span
-              className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#03318C]/30 dark:via-[#F26D3D]/40 to-transparent"
-              aria-hidden="true"
-            />
-
-            {/* Liens de navigation avec typographie harmonisée et RandomLetterSwap */}
-            <div className="flex items-center overflow-x-auto no-scrollbar py-0.5 px-0.5 sm:px-1">
-              {NAV_ITEMS.map((item) => (
-                <NavbarLinkItem
-                  key={item.key}
-                  itemKey={item.key}
-                  label={item.label}
-                  href={viewToPath(item.key, undefined, currentLocale)}
-                  isActive={activeView === item.key}
-                />
-              ))}
-            </div>
-
-            {/* Séparateur subtil */}
-            <span className="hidden sm:inline-block h-4 w-px bg-[#03318C]/15 dark:bg-white/10 mx-1" aria-hidden="true" />
-
-            {/* Toggles : Langue & Thème */}
-            <div className="flex items-center gap-1">
-              <LanguageToggle />
-              <ThemeToggle />
-            </div>
-
-            {/* Bouton CTA haute visibilité avec bordure animée pure */}
-            <ButtonBorder
-              onClick={handleCta}
-              variant="outline"
-              size="sm"
-              borderRadius={12}
-              duration={4}
-              beamSize={24}
-              data-cta="navbar_demander_audit"
-              icon={<ArrowUpRight className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden="true" />}
-              iconPosition="right"
-              className="hidden sm:inline-flex ml-1 shrink-0 font-mono text-xs font-semibold uppercase tracking-wider text-slate-900 dark:text-white hover:text-[#F26D3D] hover:border-[#F26D3D]/40"
+    <>
+      <header
+        className={cn(
+          "fixed top-0 inset-x-0 z-50 transition-all duration-300 ease-out",
+          scrolled
+            ? "py-2 sm:py-2.5 bg-[#011C40]/90 dark:bg-[#011C40]/95 lg:bg-transparent backdrop-blur-xl lg:backdrop-blur-none border-b border-white/10 lg:border-b-0 shadow-lg lg:shadow-none"
+            : "py-3 sm:py-5 bg-transparent",
+          hidden && !isDrawerOpen ? "-translate-y-full" : "translate-y-0"
+        )}
+      >
+        <div className="mx-auto max-w-7xl px-3 sm:px-6">
+          <div className="flex items-center justify-between gap-1.5 sm:gap-3">
+            {/* Logo Analyticatech */}
+            <Link
+              href={currentLocale === "en" ? "/en" : "/"}
+              className="group flex items-center gap-2 rounded-xl px-1.5 py-1 sm:px-2 sm:py-1.5 transition-transform hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-[#F26D3D] shrink-0"
+              aria-label={`${t("nav.home")} — AnalyticaTech`}
             >
-              <span>{t("nav.cta")}</span>
-            </ButtonBorder>
-          </nav>
+              <Logo size={28} delay={0.2} />
+              <span className="font-display text-sm sm:text-lg font-bold tracking-tight text-slate-900 dark:text-slate-50 inline-block">
+                Analytica<span className="text-[#F26D3D]">tech</span>
+              </span>
+            </Link>
+
+            {/* Desktop Capsule (≥ 1024px : inchangé) */}
+            <nav
+              aria-label="Navigation principale"
+              className={cn(
+                "hidden lg:flex relative items-center gap-1.5 rounded-2xl border p-1.5 transition-all duration-300 backdrop-blur-2xl shadow-xl max-w-full overflow-hidden",
+                scrolled
+                  ? "border-[#03318C]/20 dark:border-[#03318C]/40 bg-white/95 dark:bg-[#06070B]/90 shadow-[0_12px_40px_rgba(3,49,140,0.12)] dark:shadow-[0_16px_48px_rgba(0,0,0,0.8),0_0_24px_rgba(3,49,140,0.22)]"
+                  : "border-[#03318C]/12 dark:border-white/10 bg-white/85 dark:bg-[#06070B]/80 shadow-[0_8px_32px_rgba(3,49,140,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),0_0_16px_rgba(3,49,140,0.12)]"
+              )}
+            >
+              {/* Liseré supérieur lumineux spéculaire */}
+              <span
+                className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#03318C]/30 dark:via-[#F26D3D]/40 to-transparent"
+                aria-hidden="true"
+              />
+
+              {/* Liens de navigation avec typographie harmonisée et RandomLetterSwap */}
+              <div className="flex items-center overflow-x-auto no-scrollbar py-0.5 px-1">
+                {NAV_ITEMS.map((item) => (
+                  <NavbarLinkItem
+                    key={item.key}
+                    itemKey={item.key}
+                    label={item.label}
+                    href={viewToPath(item.key, undefined, currentLocale)}
+                    isActive={activeView === item.key}
+                  />
+                ))}
+              </div>
+
+              {/* Séparateur subtil */}
+              <span className="h-4 w-px bg-[#03318C]/15 dark:bg-white/10 mx-1" aria-hidden="true" />
+
+              {/* Toggles : Langue & Thème */}
+              <div className="flex items-center gap-1">
+                <LanguageToggle />
+                <ThemeToggle />
+              </div>
+
+              {/* Bouton CTA haute visibilité avec bordure animée pure */}
+              <ButtonBorder
+                onClick={handleCta}
+                variant="outline"
+                size="sm"
+                borderRadius={12}
+                duration={4}
+                beamSize={24}
+                data-cta="navbar_demander_audit"
+                icon={<ArrowUpRight className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden="true" />}
+                iconPosition="right"
+                className="ml-1 shrink-0 font-mono text-xs font-semibold uppercase tracking-wider text-slate-900 dark:text-white hover:text-[#F26D3D] hover:border-[#F26D3D]/40"
+              >
+                <span>{t("nav.cta")}</span>
+              </ButtonBorder>
+            </nav>
+
+            {/* Bouton Burger Mobile / Tablette (< 1024px) */}
+            <button
+              ref={burgerButtonRef}
+              type="button"
+              id="burger-menu-button"
+              aria-expanded={isDrawerOpen}
+              aria-controls="mobile-nav-drawer"
+              aria-label={
+                isDrawerOpen
+                  ? locale === "en"
+                    ? "Close menu"
+                    : "Fermer le menu"
+                  : locale === "en"
+                  ? "Open menu"
+                  : "Ouvrir le menu"
+              }
+              onClick={() => setIsDrawerOpen((prev) => !prev)}
+              className="lg:hidden flex items-center justify-center min-w-[44px] min-h-[44px] h-11 w-11 rounded-xl border border-white/15 bg-white/10 dark:bg-white/5 text-slate-900 dark:text-slate-100 backdrop-blur-xl hover:border-[#F26D3D]/50 focus-visible:outline-2 focus-visible:outline-[#F26D3D] transition-colors cursor-pointer"
+            >
+              {isDrawerOpen ? (
+                <X className="h-5 w-5 text-[#F26D3D]" aria-hidden="true" />
+              ) : (
+                <Menu className="h-5 w-5" aria-hidden="true" />
+              )}
+            </button>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Panneau Mobile / Tablette Plein Écran (Drawer) */}
+      <AnimatePresence>
+        {isDrawerOpen && (
+          <motion.div
+            ref={drawerRef}
+            id="mobile-nav-drawer"
+            role="dialog"
+            aria-modal="true"
+            aria-label={locale === "en" ? "Navigation menu" : "Menu de navigation"}
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="lg:hidden fixed inset-0 z-[100] flex flex-col justify-between bg-[#011C40] text-[#F5F7FA] px-6 py-6 overflow-y-auto"
+          >
+            {/* Haut de panneau : Logo & Bouton Fermer */}
+            <div className="flex items-center justify-between pb-4 border-b border-white/10">
+              <Link
+                href={currentLocale === "en" ? "/en" : "/"}
+                onClick={closeMenu}
+                className="flex items-center gap-2"
+                aria-label={`${t("nav.home")} — AnalyticaTech`}
+              >
+                <Logo size={28} />
+                <span className="font-display text-lg font-bold tracking-tight text-[#F5F7FA]">
+                  Analytica<span className="text-[#F26D3D]">tech</span>
+                </span>
+              </Link>
+              <button
+                type="button"
+                onClick={closeMenu}
+                aria-label={locale === "en" ? "Close menu" : "Fermer le menu"}
+                className="flex items-center justify-center min-w-[44px] min-h-[44px] h-11 w-11 rounded-xl bg-white/5 border border-white/10 text-white hover:text-[#F26D3D] hover:border-[#F26D3D]/40 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-[#F26D3D]"
+              >
+                <X className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </div>
+
+            {/* Corps du panneau : Liens de navigation */}
+            <nav
+              aria-label={locale === "en" ? "Mobile navigation" : "Navigation mobile"}
+              className="flex flex-col gap-2 my-auto py-6"
+            >
+              {NAV_ITEMS.map((item) => (
+                <Link
+                  key={item.key}
+                  href={viewToPath(item.key, undefined, currentLocale)}
+                  onClick={closeMenu}
+                  className={cn(
+                    "flex items-center justify-between px-5 py-3.5 rounded-xl font-display text-lg font-semibold tracking-tight transition-all min-h-[48px]",
+                    activeView === item.key
+                      ? "bg-[#03318C]/40 text-[#F26D3D] border border-[#F26D3D]/30 shadow-md shadow-[#F26D3D]/10"
+                      : "text-[#F5F7FA] hover:text-[#F26D3D] hover:bg-white/5"
+                  )}
+                  aria-current={activeView === item.key ? "page" : undefined}
+                >
+                  <span className="flex items-center gap-3">
+                    <span className="font-mono text-xs text-[#5478C4]">{item.hint}</span>
+                    <span>{item.label}</span>
+                  </span>
+                  <ArrowUpRight
+                    className={cn(
+                      "h-4 w-4",
+                      activeView === item.key ? "text-[#F26D3D]" : "text-[#5478C4]"
+                    )}
+                    aria-hidden="true"
+                  />
+                </Link>
+              ))}
+            </nav>
+
+            {/* Bas du panneau : Bascule FR/EN & Thème + CTA Orange */}
+            <div className="space-y-4 pt-4 border-t border-white/10">
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs uppercase tracking-wider text-[#5478C4]">
+                  {locale === "en" ? "Preferences" : "Préférences"}
+                </span>
+                <div className="flex items-center gap-2">
+                  <LanguageToggle />
+                  <ThemeToggle />
+                </div>
+              </div>
+
+              {/* CTA orange #F26D3D, texte #1A2332 */}
+              <button
+                type="button"
+                onClick={() => {
+                  closeMenu();
+                  handleCta();
+                }}
+                data-cta="navbar_demander_audit_mobile"
+                className="w-full min-h-[48px] py-3.5 px-6 rounded-xl bg-[#F26D3D] text-[#1A2332] font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-[#F26D3D]/25 hover:brightness-105 active:scale-[0.98] transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26D3D]"
+              >
+                <span>{t("nav.cta")}</span>
+                <ArrowUpRight className="h-4 w-4 text-[#1A2332]" aria-hidden="true" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
