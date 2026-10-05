@@ -68,7 +68,7 @@ function SiteShellInner({ children }: { children: React.ReactNode }) {
 
 
   return (
-    <div className="relative min-h-screen flex flex-col w-full max-w-full overflow-x-hidden">
+    <div className="relative min-h-screen flex flex-col">
       {/* Fond dégradé fixe */}
       <ImmersiveBackground />
 
@@ -89,7 +89,7 @@ function SiteShellInner({ children }: { children: React.ReactNode }) {
       </span>
 
       {/* Contenu principal — transitions entre routes */}
-      <main className="flex-1 relative outline-none w-full max-w-full overflow-x-hidden" id="main-content" tabIndex={-1}>
+      <main className="flex-1 relative outline-none" id="main-content" tabIndex={-1}>
         <motion.div
 
           key={pathname}

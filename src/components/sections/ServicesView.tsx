@@ -376,10 +376,10 @@ function ServiceDeckCard({
 
   return (
     <article
-      className="relative lg:sticky top-auto lg:top-[var(--card-top)] flex h-auto lg:h-[100svh] w-full items-center justify-center overflow-hidden p-0 lg:px-6 rounded-2xl lg:rounded-none border border-border/60 lg:border-0 lg:border-t lg:border-glass-border"
+      className="relative lg:sticky top-auto lg:top-[var(--card-top)] flex h-auto lg:h-screen w-full items-center justify-center overflow-hidden p-0 lg:px-6 rounded-2xl lg:rounded-none border border-border/60 lg:border-0 lg:border-t lg:border-glass-border"
       data-testid="service-card"
       style={{
-        "--card-top": `min(calc(${index} * var(--deck-gap)), calc(10vh + ${index * 16}px))`,
+        "--card-top": `calc(${index} * var(--deck-gap))`,
         zIndex: index + 1,
         backgroundColor: "var(--bg)",
       } as CSSProperties}
