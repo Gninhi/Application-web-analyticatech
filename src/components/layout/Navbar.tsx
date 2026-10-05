@@ -39,8 +39,8 @@ function NavbarLinkItem({ itemKey, label, href, isActive }: NavbarLinkItemProps)
       className={cn(
         "relative inline-flex items-center justify-center rounded-xl px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-xs sm:text-[13px] font-medium tracking-tight transition-colors duration-200 whitespace-nowrap group select-none",
         isActive
-          ? "text-[#03318C] dark:text-white font-semibold"
-          : "text-slate-600 dark:text-slate-300/80 hover:text-[#03318C] dark:hover:text-white"
+          ? "text-[#F26D3D] dark:text-white font-semibold"
+          : "text-slate-600 dark:text-slate-300/80 hover:text-[#F26D3D] dark:hover:text-white"
       )}
       aria-current={isActive ? "page" : undefined}
     >
@@ -49,7 +49,7 @@ function NavbarLinkItem({ itemKey, label, href, isActive }: NavbarLinkItemProps)
         <motion.span
           layoutId="navbar-active-pill"
           transition={{ type: "spring", stiffness: 420, damping: 32 }}
-          className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#03318C]/12 via-[#03318C]/8 to-[#03318C]/12 dark:from-[#F26D3D]/18 dark:via-[#F26D3D]/10 dark:to-[#F26D3D]/18 border border-[#03318C]/25 dark:border-[#F26D3D]/35 shadow-[0_2px_10px_rgba(3,49,140,0.08)] dark:shadow-[0_0_14px_rgba(242,109,61,0.22)]"
+          className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#F26D3D]/12 via-[#F26D3D]/8 to-[#F26D3D]/12 dark:from-[#F26D3D]/18 dark:via-[#F26D3D]/10 dark:to-[#F26D3D]/18 border border-[#F26D3D]/30 dark:border-[#F26D3D]/35 shadow-[0_2px_10px_rgba(242,109,61,0.10)] dark:shadow-[0_0_14px_rgba(242,109,61,0.22)]"
           aria-hidden="true"
         />
       )}
@@ -57,7 +57,7 @@ function NavbarLinkItem({ itemKey, label, href, isActive }: NavbarLinkItemProps)
       {/* Fond satiné au survol sur liens inactifs */}
       {!isActive && (
         <span
-          className="absolute inset-0 rounded-xl bg-[#03318C]/[0.05] dark:bg-white/[0.05] opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          className="absolute inset-0 rounded-xl bg-slate-100/70 dark:bg-white/[0.05] opacity-0 group-hover:opacity-100 transition-opacity duration-200"
           aria-hidden="true"
         />
       )}
@@ -66,7 +66,7 @@ function NavbarLinkItem({ itemKey, label, href, isActive }: NavbarLinkItemProps)
       <span className="relative z-10 flex items-center gap-1.5">
         {isActive && (
           <span
-            className="w-1.5 h-1.5 rounded-full bg-[#03318C] dark:bg-[#F26D3D] shadow-[0_0_6px_rgba(3,49,140,0.5)] dark:shadow-[0_0_8px_#F26D3D] shrink-0"
+            className="w-1.5 h-1.5 rounded-full bg-[#F26D3D] shadow-[0_0_6px_rgba(242,109,61,0.5)] dark:shadow-[0_0_8px_#F26D3D] shrink-0"
             aria-hidden="true"
           />
         )}
@@ -85,12 +85,12 @@ function NavbarLinkItem({ itemKey, label, href, isActive }: NavbarLinkItemProps)
  *
  * Responsive (< 1024px) :
  * - Logo à gauche, bouton burger accessible à droite (cibles ≥ 44×44 px).
- * - Tiroir plein écran (drawer) avec palette officielle (#011C40, #03318C, #5478C4, #F26D3D, #F5F7FA).
+ * - Tiroir plein écran (drawer) adaptatif au thème (clair: fond satiné #F0F4F8 / sombre: #06070B).
  * - Focus piégé dans le panneau, fermeture sur clic de lien, Escape et changement de route.
  * - Verrouillage du scroll body (avec support Lenis éventuel).
  *
  * Desktop (≥ 1024px) :
- * - Rendu identique conservé (capsule flottante liquide).
+ * - Capsule flottante liquide avec intégration dynamique des thèmes clair et sombre.
  */
 export function Navbar() {
   const router = useRouter();
@@ -213,7 +213,7 @@ export function Navbar() {
         className={cn(
           "fixed top-0 inset-x-0 z-50 transition-all duration-300 ease-out",
           scrolled
-            ? "py-2 sm:py-2.5 bg-[#011C40]/90 dark:bg-[#011C40]/95 lg:bg-transparent backdrop-blur-xl lg:backdrop-blur-none border-b border-white/10 lg:border-b-0 shadow-lg lg:shadow-none"
+            ? "py-2 sm:py-2.5 bg-white/90 dark:bg-[#06070B]/90 lg:bg-transparent backdrop-blur-xl lg:backdrop-blur-none border-b border-slate-200/80 dark:border-white/10 lg:border-b-0 shadow-[0_4px_20px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.5)] lg:shadow-none"
             : "py-3 sm:py-5 bg-transparent",
           hidden && !isDrawerOpen ? "-translate-y-full" : "translate-y-0"
         )}
@@ -232,19 +232,19 @@ export function Navbar() {
               </span>
             </Link>
 
-            {/* Desktop Capsule (≥ 1024px : inchangé) */}
+            {/* Desktop Capsule (≥ 1024px) */}
             <nav
               aria-label="Navigation principale"
               className={cn(
                 "hidden lg:flex relative items-center gap-1.5 rounded-2xl border p-1.5 transition-all duration-300 backdrop-blur-2xl shadow-xl max-w-full overflow-hidden",
                 scrolled
-                  ? "border-[#03318C]/20 dark:border-[#03318C]/40 bg-white/95 dark:bg-[#06070B]/90 shadow-[0_12px_40px_rgba(3,49,140,0.12)] dark:shadow-[0_16px_48px_rgba(0,0,0,0.8),0_0_24px_rgba(3,49,140,0.22)]"
-                  : "border-[#03318C]/12 dark:border-white/10 bg-white/85 dark:bg-[#06070B]/80 shadow-[0_8px_32px_rgba(3,49,140,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),0_0_16px_rgba(3,49,140,0.12)]"
+                  ? "border-slate-200/90 dark:border-white/15 bg-white/95 dark:bg-[#06070B]/90 shadow-[0_12px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_16px_48px_rgba(0,0,0,0.8),0_0_24px_rgba(242,109,61,0.08)]"
+                  : "border-slate-200/70 dark:border-white/10 bg-white/85 dark:bg-[#06070B]/80 shadow-[0_8px_32px_rgba(0,0,0,0.05)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6),0_0_16px_rgba(242,109,61,0.05)]"
               )}
             >
               {/* Liseré supérieur lumineux spéculaire */}
               <span
-                className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#03318C]/30 dark:via-[#F26D3D]/40 to-transparent"
+                className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#F26D3D]/30 dark:via-[#F26D3D]/40 to-transparent"
                 aria-hidden="true"
               />
 
@@ -262,7 +262,7 @@ export function Navbar() {
               </div>
 
               {/* Séparateur subtil */}
-              <span className="h-4 w-px bg-[#03318C]/15 dark:bg-white/10 mx-1" aria-hidden="true" />
+              <span className="h-4 w-px bg-slate-200/80 dark:bg-white/10 mx-1" aria-hidden="true" />
 
               {/* Toggles : Langue & Thème */}
               <div className="flex items-center gap-1">
@@ -278,6 +278,7 @@ export function Navbar() {
                 borderRadius={12}
                 duration={4}
                 beamSize={24}
+                gradientClassName="from-transparent via-[#F26D3D] to-[#F26D3D] dark:via-[#F26D3D] dark:to-[#F26D3D]"
                 data-cta="navbar_demander_audit"
                 icon={<ArrowUpRight className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden="true" />}
                 iconPosition="right"
@@ -304,7 +305,7 @@ export function Navbar() {
                   : "Ouvrir le menu"
               }
               onClick={() => setIsDrawerOpen((prev) => !prev)}
-              className="lg:hidden flex items-center justify-center min-w-[44px] min-h-[44px] h-11 w-11 rounded-xl border border-white/15 bg-white/10 dark:bg-white/5 text-slate-900 dark:text-slate-100 backdrop-blur-xl hover:border-[#F26D3D]/50 focus-visible:outline-2 focus-visible:outline-[#F26D3D] transition-colors cursor-pointer"
+              className="lg:hidden flex items-center justify-center min-w-[44px] min-h-[44px] h-11 w-11 rounded-xl border border-slate-200/80 dark:border-white/15 bg-white/80 dark:bg-white/5 text-slate-800 dark:text-slate-100 backdrop-blur-xl shadow-sm dark:shadow-none hover:border-[#F26D3D]/50 focus-visible:outline-2 focus-visible:outline-[#F26D3D] transition-colors cursor-pointer"
             >
               {isDrawerOpen ? (
                 <X className="h-5 w-5 text-[#F26D3D]" aria-hidden="true" />
@@ -329,10 +330,19 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
-            className="lg:hidden fixed inset-0 z-[100] flex flex-col justify-between bg-[#011C40] text-[#F5F7FA] px-6 py-6 overflow-y-auto"
+            className="lg:hidden fixed inset-0 z-[100] flex flex-col justify-between bg-[#F0F4F8] dark:bg-[#06070B] text-slate-900 dark:text-[#F5F7FA] px-6 py-6 overflow-y-auto"
           >
+            {/* Halo lumineux de fond doux aux couleurs du thème */}
+            <div
+              className="pointer-events-none absolute inset-0 opacity-40 dark:opacity-30"
+              style={{
+                background: "radial-gradient(circle at 50% 0%, rgba(242,109,61,0.18), transparent 65%)",
+              }}
+              aria-hidden="true"
+            />
+
             {/* Haut de panneau : Logo & Bouton Fermer */}
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
+            <div className="relative z-10 flex items-center justify-between pb-4 border-b border-slate-200/80 dark:border-white/10">
               <Link
                 href={currentLocale === "en" ? "/en" : "/"}
                 onClick={closeMenu}
@@ -340,7 +350,7 @@ export function Navbar() {
                 aria-label={`${t("nav.home")} — AnalyticaTech`}
               >
                 <Logo size={28} />
-                <span className="font-display text-lg font-bold tracking-tight text-[#F5F7FA]">
+                <span className="font-display text-lg font-bold tracking-tight text-slate-900 dark:text-[#F5F7FA]">
                   Analytica<span className="text-[#F26D3D]">tech</span>
                 </span>
               </Link>
@@ -348,7 +358,7 @@ export function Navbar() {
                 type="button"
                 onClick={closeMenu}
                 aria-label={locale === "en" ? "Close menu" : "Fermer le menu"}
-                className="flex items-center justify-center min-w-[44px] min-h-[44px] h-11 w-11 rounded-xl bg-white/5 border border-white/10 text-white hover:text-[#F26D3D] hover:border-[#F26D3D]/40 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-[#F26D3D]"
+                className="flex items-center justify-center min-w-[44px] min-h-[44px] h-11 w-11 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-white hover:text-[#F26D3D] hover:border-[#F26D3D]/40 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-[#F26D3D]"
               >
                 <X className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -357,7 +367,7 @@ export function Navbar() {
             {/* Corps du panneau : Liens de navigation */}
             <nav
               aria-label={locale === "en" ? "Mobile navigation" : "Navigation mobile"}
-              className="flex flex-col gap-2 my-auto py-6"
+              className="relative z-10 flex flex-col gap-2.5 my-auto py-6"
             >
               {NAV_ITEMS.map((item) => (
                 <Link
@@ -365,21 +375,32 @@ export function Navbar() {
                   href={viewToPath(item.key, undefined, currentLocale)}
                   onClick={closeMenu}
                   className={cn(
-                    "flex items-center justify-between px-5 py-3.5 rounded-xl font-display text-lg font-semibold tracking-tight transition-all min-h-[48px]",
+                    "group flex items-center justify-between px-5 py-3.5 rounded-xl font-display text-lg font-semibold tracking-tight transition-all min-h-[48px]",
                     activeView === item.key
-                      ? "bg-[#03318C]/40 text-[#F26D3D] border border-[#F26D3D]/30 shadow-md shadow-[#F26D3D]/10"
-                      : "text-[#F5F7FA] hover:text-[#F26D3D] hover:bg-white/5"
+                      ? "bg-[#F26D3D]/10 dark:bg-[#F26D3D]/15 text-[#F26D3D] border border-[#F26D3D]/30 shadow-md shadow-[#F26D3D]/10"
+                      : "text-slate-800 dark:text-[#F5F7FA] hover:text-[#F26D3D] dark:hover:text-[#F26D3D] hover:bg-slate-200/50 dark:hover:bg-white/5"
                   )}
                   aria-current={activeView === item.key ? "page" : undefined}
                 >
                   <span className="flex items-center gap-3">
-                    <span className="font-mono text-xs text-[#5478C4]">{item.hint}</span>
+                    <span
+                      className={cn(
+                        "font-mono text-xs transition-colors",
+                        activeView === item.key
+                          ? "text-[#F26D3D]/80"
+                          : "text-slate-400 dark:text-slate-500 group-hover:text-[#F26D3D]/70"
+                      )}
+                    >
+                      {item.hint}
+                    </span>
                     <span>{item.label}</span>
                   </span>
                   <ArrowUpRight
                     className={cn(
-                      "h-4 w-4",
-                      activeView === item.key ? "text-[#F26D3D]" : "text-[#5478C4]"
+                      "h-4 w-4 transition-colors",
+                      activeView === item.key
+                        ? "text-[#F26D3D]"
+                        : "text-slate-400 dark:text-slate-500 group-hover:text-[#F26D3D]"
                     )}
                     aria-hidden="true"
                   />
@@ -388,9 +409,9 @@ export function Navbar() {
             </nav>
 
             {/* Bas du panneau : Bascule FR/EN & Thème + CTA Orange */}
-            <div className="space-y-4 pt-4 border-t border-white/10">
+            <div className="relative z-10 space-y-4 pt-4 border-t border-slate-200/80 dark:border-white/10">
               <div className="flex items-center justify-between">
-                <span className="font-mono text-xs uppercase tracking-wider text-[#5478C4]">
+                <span className="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   {locale === "en" ? "Preferences" : "Préférences"}
                 </span>
                 <div className="flex items-center gap-2">
