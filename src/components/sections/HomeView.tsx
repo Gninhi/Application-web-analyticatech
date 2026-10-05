@@ -25,7 +25,6 @@ const SECTION_SKELETONS = {
   method: { minHeight: 930, mobileMinHeight: 1520 },
   demo: { minHeight: 640, mobileMinHeight: 850 },
   proof: { minHeight: 620, mobileMinHeight: 880 },
-  faq: { minHeight: 640, mobileMinHeight: 850 },
 } as const;
 
 import { HomeServicesGrid } from "@/components/sections/HomeServicesGrid";
@@ -35,7 +34,6 @@ import { DataConsoleBento } from "@/components/sections/DataConsoleBento";
 import { AgentoryMethod } from "@/components/sections/AgentoryMethod";
 import { BeforeAfterDemo } from "@/components/sections/BeforeAfterDemo";
 import { HomeSocialProof } from "@/components/sections/HomeSocialProof";
-import { FaqSection } from "@/components/sections/FaqSection";
 import { SectionErrorBoundary } from "@/components/system/SectionErrorBoundary";
 
 import { getKeyStats } from "@/data/stats";
@@ -153,16 +151,6 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
         </SectionErrorBoundary>
       </LazySection>
 
-      {/* ============ 10 — FAQ (ACCORDÉON SERVICE) ============ */}
-      <section className="relative">
-        <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <LazySection {...SECTION_SKELETONS.faq} eager>
-            <SectionErrorBoundary sectionName="FAQ">
-              <FaqSection />
-            </SectionErrorBoundary>
-          </LazySection>
-        </div>
-      </section>
 
       {/* ============ 11 — CTA FINAL (EXIGENCE BLUEPRINT) ============ */}
       <section className="relative">

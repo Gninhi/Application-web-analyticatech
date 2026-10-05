@@ -21,7 +21,19 @@ const FAQ_COUNT = 5;
  * icône "+" qui pivote de 45° à l'ouverture, déploiement animé en hauteur.
  * Un seul panneau ouvert à la fois (comportement "service").
  */
-export function FaqSection() {
+export interface FaqSectionProps {
+  tag?: string;
+  title?: string;
+  description?: string;
+  className?: string;
+}
+
+export function FaqSection({
+  tag,
+  title,
+  description,
+  className,
+}: FaqSectionProps = {}) {
   const { t } = useI18n();
   const [open, setOpen] = useState<number | null>(0);
 
@@ -31,12 +43,12 @@ export function FaqSection() {
   }));
 
   return (
-    <section className="relative">
+    <section className={cn("relative", className)}>
       <SectionContainer>
         <SectionHeading
-          tag={t("home.faq.tag")}
-          title={t("home.faq.title")}
-          description={t("home.faq.desc")}
+          tag={tag ?? t("home.faq.tag")}
+          title={title ?? t("home.faq.title")}
+          description={description ?? t("home.faq.desc")}
         />
 
         <div className="mt-10 rounded-3xl glass-card p-4 md:p-8">

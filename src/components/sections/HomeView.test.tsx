@@ -85,9 +85,6 @@ describe("HomeView — Rendu SSR initial (crawl sans JS & robots IA)", () => {
     // Section 09 — Preuve Sociale & Cas d'usage
     expect(html).toContain("09 — INSIGHTS");
 
-    // Section 10 — FAQ Technique
-    expect(html).toContain("10 — FAQ");
-
     // Section 11 — CTA Final
     expect(html).toContain("11 — CTA FINAL");
 
@@ -121,10 +118,9 @@ describe("HomeView — Rendu SSR initial (crawl sans JS & robots IA)", () => {
       console.warn(`  [H2 #${idx + 1}] ${h}`);
     });
 
-    // Confirmation que les sections 03 à 10 et en particulier 07 Méthode sont présentes
-    expect(extractedHeadings.length).toBeGreaterThanOrEqual(8);
+    // Confirmation que les sections principales dont 07 Méthode sont présentes
+    expect(extractedHeadings.length).toBeGreaterThanOrEqual(7);
     expect(extractedHeadings.some((h) => h.includes("Quatre piliers d'expertise"))).toBe(true); // 03 - Services
     expect(extractedHeadings.some((h) => h.includes("Une démarche structurée"))).toBe(true); // 07 - Méthode
-    expect(extractedHeadings.some((h) => h.includes("Questions fréquentes"))).toBe(true); // 10 - FAQ
   });
 });

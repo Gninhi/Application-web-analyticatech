@@ -217,21 +217,6 @@ export function ContactForm() {
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-6" noValidate>
-              {/* Entête de session terminal */}
-              <div className="flex items-center justify-between pb-2 border-b border-black/5 dark:border-white/5 font-mono text-xs text-slate-500 dark:text-slate-400">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[#4CAF50]">engineer@analyticatech</span>
-                  <span className="text-slate-400">:</span>
-                  <span className="text-sky-400">~/diagnostic</span>
-                  <span className="text-slate-400">$</span>
-                  <span className="text-slate-700 dark:text-slate-300 font-medium">
-                    {t("contact.terminal.cmd")}
-                  </span>
-                </div>
-                <span className="text-[10px] text-slate-400 hidden sm:inline">
-                  SEC-LEVEL: HIGH
-                </span>
-              </div>
 
               {/* SECTION 1 : IDENTITÉ & ORGANISATION */}
               <div className="space-y-4">
@@ -512,18 +497,16 @@ export function ContactForm() {
       </div>
 
       {/* Badges de conformité et sécurité sous le formulaire */}
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 px-1">
+      <div className="mt-4 flex flex-wrap items-center justify-center sm:justify-start gap-2 px-1">
         {[
-          { icon: Lock, text: t("contact.badge.tls") },
           { icon: ShieldCheck, text: t("contact.badge.rgpd") },
           { icon: Lock, text: t("contact.badge.encrypted") },
-          { icon: ShieldCheck, text: t("contact.badge.honeypot") },
         ].map((badge, idx) => {
           const Icon = badge.icon;
           return (
             <span
               key={idx}
-              className="inline-flex items-center gap-1.5 rounded-full border border-black/5 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.04] px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400"
+              className="inline-flex items-center gap-1.5 rounded-full border border-black/5 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.04] px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-wider text-slate-600 dark:text-slate-400"
             >
               <Icon className="h-3 w-3 text-[#4CAF50]" aria-hidden="true" />
               <span>{badge.text}</span>
