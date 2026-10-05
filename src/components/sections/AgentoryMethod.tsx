@@ -50,9 +50,25 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
   const [isPausedByUser, setIsPausedByUser] = useState(false);
   const [isCardHovered, setIsCardHovered] = useState(false);
   const [isOrbitHovered, setIsOrbitHovered] = useState(false);
+  const [isTouched, setIsTouched] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isInView, setIsInView] = useState(true);
   const [isDocumentHidden, setIsDocumentHidden] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const touchStartXRef = useRef<number | null>(null);
+
+  // Détection du respect des préférences d'accessibilité (motion réduite)
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateMotion = () => setPrefersReducedMotion(mediaQuery.matches);
+    const timer = window.setTimeout(updateMotion, 0);
+    mediaQuery.addEventListener("change", updateMotion);
+    return () => {
+      window.clearTimeout(timer);
+      mediaQuery.removeEventListener("change", updateMotion);
+    };
+  }, []);
 
   const METHOD_STEPS: MethodStep[] = [1, 2, 3, 4].map((n, i) => {
     return {
@@ -103,9 +119,11 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
     !isDocumentHidden &&
     !isPausedByUser &&
     !isCardHovered &&
-    !isOrbitHovered;
+    !isOrbitHovered &&
+    !isTouched &&
+    !prefersReducedMotion;
 
-  // Rotation automatique cadencée à 9s (mise en pause automatique au survol ou par action utilisateur)
+  // Rotation automatique cadencée à 9s (suspendue au touch, hover, pause ou reduced-motion)
   useEffect(() => {
     if (!isAutoPlaying) return;
 
@@ -118,8 +136,30 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
 
   const handleSelectStep = useCallback((index: number) => {
     setActiveStepIndex(index);
-    setIsPausedByUser(false);
+    setIsPausedByUser(true);
   }, []);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsTouched(true);
+    touchStartXRef.current = e.touches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartXRef.current !== null && e.changedTouches[0]) {
+      const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
+      if (Math.abs(deltaX) > 40) {
+        if (deltaX < 0) {
+          // Swipe gauche -> étape suivante
+          setActiveStepIndex((prev) => (prev + 1) % 4);
+        } else {
+          // Swipe droite -> étape précédente
+          setActiveStepIndex((prev) => (prev - 1 + 4) % 4);
+        }
+        setIsPausedByUser(true);
+      }
+    }
+    touchStartXRef.current = null;
+  };
 
   return (
     <section ref={sectionRef} className="relative py-12">
@@ -166,6 +206,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
           aria-label={t("home.section.method")}
           onMouseEnter={() => setIsCardHovered(true)}
           onMouseLeave={() => setIsCardHovered(false)}
+          onTouchStart={() => setIsTouched(true)}
         >
           {METHOD_STEPS.map((step, idx) => {
             const isActive = idx === activeStepIndex;
@@ -178,7 +219,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                 aria-selected={isActive}
                 aria-label={`${step.number} — ${step.title}`}
                 onClick={() => handleSelectStep(idx)}
-                className={`relative flex flex-col p-4 rounded-2xl border text-left transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 overflow-hidden ${
+                className={`relative flex flex-col p-4 rounded-2xl border text-left transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 overflow-hidden cursor-pointer ${
                   isActive
                     ? "border-[#F26D3D] glass-strong shadow-lg shadow-[#F26D3D]/10"
                     : "glass hover:border-slate-400 dark:hover:border-slate-500"
@@ -228,8 +269,8 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
             style={{ perspective: 1000, transformStyle: "preserve-3d" }}
             onMouseEnter={() => setIsCardHovered(true)}
             onMouseLeave={() => setIsCardHovered(false)}
-            onTouchStart={() => setIsCardHovered(true)}
-            onTouchEnd={() => setIsCardHovered(false)}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           >
             {/* Ligne de progression temporelle de lecture (9s par phase) */}
             <div className="absolute top-0 inset-x-0 h-[3px] bg-black/5 dark:bg-white/10 overflow-hidden z-20">

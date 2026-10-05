@@ -181,7 +181,7 @@ export function StockTicker<T = unknown>(props: StockTickerProps<T>) {
   const trackClass = direction === "left" ? "stock-ticker-track-left" : "stock-ticker-track-right";
 
   return (
-    <div className={cn("w-full relative my-4", className)}>
+    <div className={cn("w-full max-w-full overflow-x-hidden relative my-4", className)}>
       {/* Cadre Ticker Boursier Universel et Uniforme */}
       <div
         className={cn(

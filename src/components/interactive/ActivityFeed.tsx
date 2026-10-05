@@ -43,7 +43,7 @@ export function ActivityFeed({ logs, limit = 6, className }: ActivityFeedProps) 
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-black/10 dark:border-white/10",
+        "relative w-full max-w-full overflow-hidden rounded-2xl border border-black/10 dark:border-white/10",
         "bg-slate-100/80 dark:bg-black/40 backdrop-blur-xl scanlines",
         className
       )}
@@ -64,14 +64,14 @@ export function ActivityFeed({ logs, limit = 6, className }: ActivityFeedProps) 
         </span>
       </div>
 
-      <div className="flex flex-col gap-2.5 px-4 py-4 font-mono text-[11px] leading-relaxed">
+      <div className="flex flex-col gap-2.5 px-4 py-4 font-mono text-[11px] leading-relaxed overflow-x-hidden">
         {items.map((entry, i) => (
           <motion.div
             key={entry.id || `${entry.time}-${i}`}
             initial={{ opacity: 0, x: -8 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.35, delay: i * 0.08 }}
-            className="flex items-baseline gap-2"
+            className="flex items-baseline gap-2 min-w-0 w-full"
           >
             <span className="shrink-0 text-slate-600 dark:text-slate-400 tabular-nums">
               {entry.time}
@@ -83,7 +83,9 @@ export function ActivityFeed({ logs, limit = 6, className }: ActivityFeedProps) 
             <span className="shrink-0 font-bold text-[9px] tracking-widest text-slate-600 dark:text-slate-400">
               [{LEVEL_LABEL[entry.level]}]
             </span>
-            <span className={cn("break-words", LEVEL_TEXT[entry.level])}>{entry.event}</span>
+            <span className={cn("min-w-0 flex-1 break-words [overflow-wrap:anywhere]", LEVEL_TEXT[entry.level])}>
+              {entry.event}
+            </span>
           </motion.div>
         ))}
 

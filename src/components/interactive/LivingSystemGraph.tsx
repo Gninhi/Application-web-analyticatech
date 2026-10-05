@@ -118,8 +118,9 @@ export function LivingSystemGraph() {
           </h2>
         </div>
         <div className="flex items-center gap-2 font-mono text-xs text-slate-400 dark:text-slate-300 bg-black/5 dark:bg-white/5 px-3 py-1.5 rounded-full self-start md:self-auto">
-          <Activity className="h-3.5 w-3.5 text-[#F26D3D] animate-pulse" aria-hidden />
-          <span>{isEn ? "Live Stream · Hover node to inspect" : "Flux actif · Survolez un nœud pour explorer"}</span>
+          <Activity className="h-3.5 w-3.5 text-[#F26D3D] animate-pulse" aria-hidden="true" />
+          <span className="hidden lg:inline">{isEn ? "Live Stream · Hover node to inspect" : "Flux actif · Survolez un nœud pour explorer"}</span>
+          <span className="lg:hidden">{isEn ? "Live Stream · Tap a node to explore" : "Flux actif · Touchez un nœud pour explorer"}</span>
         </div>
       </div>
 
@@ -157,11 +158,15 @@ export function LivingSystemGraph() {
             return (
               <motion.button
                 key={node.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
                 onClick={() => setActiveNodeId(node.id)}
+                onTouchStart={() => setActiveNodeId(node.id)}
                 onMouseEnter={() => setActiveNodeId(node.id)}
                 whileHover={{ scale: 1.02, y: -4 }}
                 whileTap={{ scale: 0.98 }}
-                className={`relative flex flex-col text-left p-5 rounded-2xl border transition-all duration-300 ${
+                className={`relative flex flex-col text-left p-5 rounded-2xl border transition-all duration-300 cursor-pointer ${
                   isActive
                     ? "border-[#F26D3D] glass-strong shadow-lg shadow-[#F26D3D]/10"
                     : "glass hover:border-slate-400 dark:hover:border-slate-500"
@@ -214,6 +219,10 @@ export function LivingSystemGraph() {
             );
           })}
         </div>
+        {/* Indication visuelle discrète réservée au mobile */}
+        <p className="text-center font-mono text-[11px] text-slate-500 dark:text-slate-400 mt-3 lg:hidden" aria-hidden="true">
+          {isEn ? "Tap a node to inspect details" : "Touchez un nœud pour explorer"}
+        </p>
       </div>
 
       {/* Fiche de détail du nœud sélectionné.

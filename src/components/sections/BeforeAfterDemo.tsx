@@ -14,6 +14,25 @@ interface BeforeAfterDemoProps {
 export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
   const { t } = useI18n();
   const [viewMode, setViewMode] = useState<"before" | "after">("after");
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0]?.clientX ?? null);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX !== null && e.changedTouches[0]) {
+      const deltaX = e.changedTouches[0].clientX - touchStartX;
+      if (deltaX > 40) {
+        // Swipe droite -> bascule vers "before"
+        setViewMode("before");
+      } else if (deltaX < -40) {
+        // Swipe gauche -> bascule vers "after"
+        setViewMode("after");
+      }
+    }
+    setTouchStartX(null);
+  };
 
   return (
     <section className="relative py-12">
@@ -41,13 +60,13 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
           role="tab"
           aria-selected={viewMode === "before"}
           onClick={() => setViewMode("before")}
-          className={`flex-1 py-2.5 px-4 rounded-full font-mono text-xs font-bold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 ${
+          className={`flex-1 min-h-[44px] py-2.5 px-4 rounded-full font-mono text-xs font-bold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 ${
             viewMode === "before"
               ? "bg-red-500/15 text-red-600 dark:text-red-400 border border-red-500/30 shadow-md shadow-red-500/10"
               : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
           }`}
         >
-          <AlertOctagon className="h-3.5 w-3.5" aria-hidden />
+          <AlertOctagon className="h-3.5 w-3.5" aria-hidden="true" />
           <span>{t("demo.before.switch")}</span>
         </button>
         <button
@@ -55,13 +74,13 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
           role="tab"
           aria-selected={viewMode === "after"}
           onClick={() => setViewMode("after")}
-          className={`flex-1 py-2.5 px-4 rounded-full font-mono text-xs font-bold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 ${
+          className={`flex-1 min-h-[44px] py-2.5 px-4 rounded-full font-mono text-xs font-bold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 ${
             viewMode === "after"
               ? "bg-[#4CAF50]/15 text-[#4CAF50] border border-[#4CAF50]/30 shadow-md shadow-[#4CAF50]/10"
               : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
           }`}
         >
-          <Sparkles className="h-3.5 w-3.5" aria-hidden />
+          <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
           <span>{t("demo.after.switch")}</span>
         </button>
       </div>
@@ -69,7 +88,11 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
       {/* Vue Comparative.
         Crossfade "grid-stack" : les vues Avant/Après sont empilées dans la
         même cellule (hauteur = max des vues → zéro saut de mise en page). */}
-      <div className="relative overflow-hidden glass-card rounded-3xl p-6 md:p-10 grid border border-black/10 dark:border-white/10 shadow-2xl">
+      <div
+        className="relative overflow-hidden glass-card rounded-3xl p-6 md:p-10 grid border border-black/10 dark:border-white/10 shadow-2xl"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         {(["before", "after"] as const).map((mode) => {
           const isActive = viewMode === mode;
           return (
