@@ -16,7 +16,6 @@ import {
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
 import { getSlaList, SLA_COMMITMENTS } from "@/data/commitments";
-import { cn } from "@/lib/utils/cn";
 
 export function ContactSidePanel() {
   const { t, locale } = useI18n();
@@ -167,7 +166,7 @@ export function ContactSidePanel() {
         </h2>
 
         <div className="space-y-4">
-          {steps.map((item, index) => {
+          {steps.map((item) => {
             const Icon = item.icon;
             return (
               <div key={item.step} className="flex items-start gap-3">
@@ -176,6 +175,7 @@ export function ContactSidePanel() {
                 </span>
                 <div className="min-w-0">
                   <p className="text-xs font-display font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+                    <Icon className="h-3.5 w-3.5 text-[#F26D3D] shrink-0" aria-hidden />
                     <span>{isEn ? item.titleEn : item.titleFr}</span>
                   </p>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed mt-0.5">

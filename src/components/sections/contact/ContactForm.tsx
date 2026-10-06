@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Terminal,
   ShieldCheck,
   Lock,
   CheckCircle2,
@@ -12,7 +11,6 @@ import {
   User,
   Mail,
   Building2,
-  Sparkles,
   Copy,
   Check,
   RotateCcw,

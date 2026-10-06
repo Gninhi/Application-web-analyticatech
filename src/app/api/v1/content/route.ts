@@ -33,10 +33,16 @@ export async function GET(request: NextRequest) {
       }
     );
   } catch (error) {
+    console.error("[api/v1/content] Erreur lors de la récupération du contenu :", error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Erreur interne",
+        error:
+          process.env.NODE_ENV === "production"
+            ? "Erreur interne du serveur."
+            : error instanceof Error
+              ? error.message
+              : "Erreur interne",
       },
       { status: 500 }
     );

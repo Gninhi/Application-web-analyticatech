@@ -91,6 +91,8 @@ screenshot-*.png
 .gemini-cache/
 .z-ai-config/
 .claude/
+.codex/
+.cursor/
 
 # === Lockfiles alternatifs (on garde package-lock.json) ===
 bun.lock

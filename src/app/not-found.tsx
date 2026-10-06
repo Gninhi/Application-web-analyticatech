@@ -9,10 +9,6 @@ import {
   BookOpen,
   Mail,
   Home,
-  AlertOctagon,
-  Radar,
-  Activity,
-  Radio,
 } from "lucide-react";
 import { SectionContainer } from "@/components/ui/SectionContainer";
 import { Button } from "@/components/ui/button";
