@@ -18,7 +18,7 @@ export const INSIGHTS_DETAIL_REGISTRY: Record<string, InsightDetailData> = {
     slug: "evaluer-systeme-rag-production",
     aliases: ["rag-evaluation"],
     readingTime: "6 min",
-    publishedDate: "15 Février 2025",
+    publishedDate: "Révisé le 2 novembre 2026",
     category: {
       key: "ia",
       label: "Intelligence Artificielle",
@@ -56,7 +56,7 @@ export const INSIGHTS_DETAIL_REGISTRY: Record<string, InsightDetailData> = {
           title: "Fragmentation des tableaux de garanties",
           description:
             "Un chunking fixe à 1 000 tokens coupe les grilles tarifaires et tableaux d'exclusion au milieu d'une ligne, privant l'embedding de son en-tête contextuel.",
-          impact: "Perte de 38% de recall sur clauses croisées",
+          impact: "Les clauses liées ne sont plus retrouvées ensemble",
         },
         {
           code: "ERR_02 // ILLUSION_ROUGE_BLEU",
@@ -76,7 +76,7 @@ export const INSIGHTS_DETAIL_REGISTRY: Record<string, InsightDetailData> = {
     },
     approach: {
       heading: "Pipeline à 2 étages, triade Ragas et garde-fous déterministes",
-      lead: "Nous structurons l'architecture autour d'un principe fondamental : ne jamais laisser le générateur deviner ce que le retriever n'a pas formellement prouvé.",
+      lead: "Je structure l'architecture autour d'un principe fondamental : ne jamais laisser le générateur deviner ce que le retriever n'a pas formellement prouvé.",
       architectureTitle: "Les 4 étapes séquentielles du pipeline de production",
       architectureStages: [
         {
@@ -92,7 +92,7 @@ export const INSIGHTS_DETAIL_REGISTRY: Record<string, InsightDetailData> = {
           description:
             "Double vectorisation : BM25 pour le vocabulaire exact (codes d'actes CCAM) et embeddings bge-m3 pour la proximité sémantique conceptuelle.",
           keyPattern: "Reciprocal Rank Fusion (RRF)",
-          badge: "Latence < 45ms",
+          badge: "Faible latence",
         },
         {
           stageNumber: "STAGE 03",
@@ -100,7 +100,7 @@ export const INSIGHTS_DETAIL_REGISTRY: Record<string, InsightDetailData> = {
           description:
             "Filtrage fin des 30 candidats initiaux vers les 5 chunks décisifs via Cohere Rerank v3.5 ou bge-reranker-large.",
           keyPattern: "Cross-Encoder Reranking",
-          badge: "Precision@5 > 93%",
+          badge: "Précision mesurée",
         },
         {
           stageNumber: "STAGE 04",
@@ -168,7 +168,7 @@ def assert_rag_quality(test_bench_dataset: Dataset, min_faithfulness: float = 0.
       heading: "Arbitrages techniques sans complaisance marketing",
       lead: "Toute décision d'architecture d'entreprise implique de renoncer à un idéal théorique. Voici les compromis délibérés de cette implémentation.",
       disclaimer:
-        "NOTE DE TRANSPARENCE : Nous refusons de présenter le RAG comme une solution magique instantanée. Chaque gain de précision s'achète en latence d'inférence ou en coût de calcul.",
+        "NOTE DE TRANSPARENCE : Je refuse de présenter le RAG comme une solution magique instantanée. Chaque gain de précision s'achète en latence d'inférence ou en coût de calcul.",
       tradeoffs: [
         {
           title: "Latence additionnelle du Reranking",
@@ -176,7 +176,7 @@ def assert_rag_quality(test_bench_dataset: Dataset, min_faithfulness: float = 0.
           arbitrage:
             "Reranker systématiquement les 30 premiers candidats avec un modèle cross-encoder lourd.",
           costOrDrawback:
-            "Ajout de 120 ms à 180 ms (à titre indicatif) sur le temps de réponse total de la requête.",
+            "Temps de réponse allongé par l'étape de réordonnancement.",
           mitigation:
             "Parallélisation du fetch et streaming progressif des premières réflexions de l'agent dans l'interface utilisateur.",
         },
@@ -235,23 +235,23 @@ def assert_rag_quality(test_bench_dataset: Dataset, min_faithfulness: float = 0.
       },
       {
         type: "solution",
-        title: "Synthèse clinique & extraction NLP",
+        title: "AVIE — veille sourcée",
         description:
-          "Extraction automatisée et structuration de données non structurées sous contraintes de conformité.",
-        badge: "Solution sectorielle",
-        href: "/solutions/healthcare-nlp",
+          "Chaque affirmation de la synthèse est reliée aux extraits qui la soutiennent.",
+        badge: "Projet en cours",
+        href: "/solutions/avie",
         targetViewKey: "solution-detail",
-        targetId: "healthcare-nlp",
+        targetId: "avie",
       },
       {
         type: "solution",
-        title: "Agents de conformité réglementaire",
+        title: "Ciblioo — sourcing M&A documenté",
         description:
-          "Surveillance et audit de 100% des flux transactionnels avec détection d'anomalies en temps réel.",
-        badge: "Solution sectorielle",
-        href: "/solutions/finance-agent",
+          "Chaque donnée affichée renvoie à sa source, sa date et l'extrait d'origine.",
+        badge: "Projet en cours",
+        href: "/solutions/ciblioo",
         targetViewKey: "solution-detail",
-        targetId: "finance-agent",
+        targetId: "ciblioo",
       },
     ],
   },
@@ -263,7 +263,7 @@ def assert_rag_quality(test_bench_dataset: Dataset, min_faithfulness: float = 0.
     slug: "n8n-vs-temporal-orchestration",
     aliases: ["n8n-vs-temporal"],
     readingTime: "8 min",
-    publishedDate: "28 Janvier 2025",
+    publishedDate: "Révisé le 2 novembre 2026",
     category: {
       key: "automation",
       label: "Automatisation",
@@ -321,7 +321,7 @@ def assert_rag_quality(test_bench_dataset: Dataset, min_faithfulness: float = 0.
     },
     approach: {
       heading: "Architecture hybride pragmatique : Synergie n8n v1.60+ et Temporal v1.25+",
-      lead: "Plutôt que d'opposer stérilement ces deux paradigmes, nous opérons une séparation nette des responsabilités : Temporal au cœur des transactions, n8n à la périphérie des intégrations.",
+      lead: "Plutôt que d'opposer stérilement ces deux paradigmes, j'opère une séparation nette des responsabilités : Temporal au cœur des transactions, n8n à la périphérie des intégrations.",
       architectureTitle: "Découpage architectural par niveau de criticité",
       architectureStages: [
         {
@@ -336,7 +336,7 @@ def assert_rag_quality(test_bench_dataset: Dataset, min_faithfulness: float = 0.
           stageNumber: "STAGE 02",
           title: "Exécution durable déterministe sous Temporal",
           description:
-            "Le Workflow Temporal (v1.25+) prend le relais avec garantie mathématique d'idempotence et persistance intégrale de l'historique d'événements.",
+            "Le Workflow Temporal (v1.25+) prend le relais : chaque étape rejouée après une panne ne produit pas deux fois son effet, et tout l'historique d'événements est conservé.",
           keyPattern: "Durable Execution & Event Sourcing",
           badge: "Core Transactionnel",
         },
@@ -417,7 +417,7 @@ export async function merchantOnboardingWorkflow(merchantId: string) {
     throw err;
   }
 }`,
-        caption: "Ce workflow garantit l'annulation propre des comptes créés en cas de refus KYC ultérieur, sans perte d'état possible.",
+        caption: "Ce workflow est conçu pour annuler proprement les comptes créés en cas de refus KYC ultérieur, sans perdre l'état du parcours.",
       },
     },
     tradeoffs: {
@@ -434,7 +434,7 @@ export async function merchantOnboardingWorkflow(merchantId: string) {
           costOrDrawback:
             "Nécessite des compétences dev/SRE solides et une surveillance de métriques Prometheus/Grafana.",
           mitigation:
-            "Cluster Temporal managé pour le cœur de métier, et instance n8n autonome pour 80% des flux marketing/internes.",
+            "Cluster Temporal managé pour le cœur de métier, et instance n8n autonome pour la majorité des flux marketing et internes.",
         },
         {
           title: "La contrainte de déterminisme strict dans le code",
@@ -501,13 +501,13 @@ export async function merchantOnboardingWorkflow(merchantId: string) {
       },
       {
         type: "solution",
-        title: "Agents de conformité réglementaire",
+        title: "ContentOps Harness",
         description:
-          "Surveillance continue et instruction de conformité bancaire sans faille d'état.",
-        badge: "Solution sectorielle",
-        href: "/solutions/finance-agent",
+          "Publication « au plus une fois » et reprise sans doublon après une panne.",
+        badge: "Projet en cours",
+        href: "/solutions/contentops",
         targetViewKey: "solution-detail",
-        targetId: "finance-agent",
+        targetId: "contentops",
       },
     ],
   },
@@ -519,7 +519,7 @@ export async function merchantOnboardingWorkflow(merchantId: string) {
     slug: "couche-semantique-dbt-bi",
     aliases: ["semantic-layer-dbt"],
     readingTime: "5 min",
-    publishedDate: "10 Janvier 2025",
+    publishedDate: "Révisé le 2 novembre 2026",
     category: {
       key: "data",
       label: "Data & Décision",
@@ -544,7 +544,7 @@ export async function merchantOnboardingWorkflow(merchantId: string) {
       constraints:
         "3 outils concurrents de restitution (Power BI pour la finance, Metabase pour le terrain, requêtes SQL manuelles pour les analystes)",
       stakes:
-        "Mettre fin aux réunions d'arbitrage où l'on débat pendant 40 minutes de la validité du chiffre plutôt que de la stratégie commerciale",
+        "Mettre fin aux réunions où l'on débat de la validité du chiffre plutôt que de la stratégie commerciale",
       narrative:
         "Dans la quasi-totalité des entreprises en forte croissance, le comité de direction mensuel commence par le même rituel stérile : la direction financière annonce 14,2 M€ de chiffre d'affaires, le marketing revendique 15,1 M€, et les responsables de filiales comptabilisent 13,8 M€. Personne n'a tort : chaque équipe a simplement calculé son chiffre dans son outil avec ses propres filtres (dates de commande contre dates de facturation, exclusion tardive des retours, gestion hétérogène des remises promotionnelles). Tenter de résoudre ce chaos en multipliant les dashboards ne fait qu'aggraver la dispersion. Seule une couche sémantique centralisée, déclarée en amont dans le data warehouse, permet de réconcilier durablement les chiffres.",
     },
@@ -557,14 +557,14 @@ export async function merchantOnboardingWorkflow(merchantId: string) {
           title: "Discordance structurelle des calculs locaux",
           description:
             "Une formule DAX complexe dans Power BI exclut les avoirs avec 15 jours de décalage, tandis que la requête SQL sous Metabase les retranche en temps réel.",
-          impact: "Écarts récurrents de 4% à 9% entre directions",
+          impact: "Écarts récurrents entre directions",
         },
         {
           code: "ERR_02 // TEXT_TO_SQL_CHAOS",
           title: "Inutilisabilité des agents Text-to-SQL sans ontologie",
           description:
             "Un LLM connecté directement à des tables brutes de base de données hallucine sur la définition de la 'marge brute' et choisit aléatoirement entre prix catalogue et prix net.",
-          impact: "Taux d'erreur de 42% sur requêtes décisionnelles IA",
+          impact: "Erreurs fréquentes sur les questions posées à l'IA",
         },
         {
           code: "ERR_03 // SILENT_MAINTENANCE_COST",
@@ -577,7 +577,7 @@ export async function merchantOnboardingWorkflow(merchantId: string) {
     },
     approach: {
       heading: "Modélisation Medallion, dbt Core 1.8+ et MetricFlow universel",
-      lead: "Nous déportons 100% de la logique métier dans le dépôt de code dbt versionné sous Git : les outils de visualisation ne font plus aucun calcul, ils consomment des métriques certifiées.",
+      lead: "Je regroupe toute la logique métier dans le dépôt dbt versionné sous Git : les outils de visualisation ne font plus de calcul, ils consomment des indicateurs validés.",
       architectureTitle: "Pipeline de la donnée brute à la consommation unifiée",
       architectureStages: [
         {
@@ -633,7 +633,7 @@ export async function merchantOnboardingWorkflow(merchantId: string) {
         {
           name: "Power BI",
           version: "DirectQuery Semantic",
-          role: "Restitution décisionnelle branchée sur l'API sémantique certifiée",
+          role: "Restitution décisionnelle branchée sur l'API sémantique validée",
           category: "data",
         },
       ],
@@ -674,15 +674,15 @@ metrics:
       heading: "Arbitrages techniques & Rigidité maîtrisée",
       lead: "Adopter une couche sémantique centrale met fin aux désaccords de chiffres, mais impose de renoncer au bricolage opportuniste des analystes.",
       disclaimer:
-        "NOTE DE GOUVERNANCE : Une couche sémantique n'accélère pas la création d'un graphique ad-hoc de 5 minutes. Elle garantit que les décisions stratégiques reposent sur des chiffres inattaquables.",
+        "NOTE DE GOUVERNANCE : Une couche sémantique n'accélère pas la création d'un graphique ad-hoc de 5 minutes. Elle sert à ce que les décisions stratégiques reposent sur des chiffres définis et vérifiés une seule fois.",
       tradeoffs: [
         {
           title: "Gouvernance formelle vs Vitesse de livraison locale",
-          tension: "Exactitude certifiée vs Réactivité terrain",
+          tension: "Exactitude vérifiée vs Réactivité terrain",
           arbitrage:
             "Toute nouvelle métrique doit faire l'objet d'une PR Git dbt avec tests d'intégrité avant d'apparaître dans les dashboards.",
           costOrDrawback:
-            "Délai de création d'un nouvel indicateur passant de 15 minutes en local à 24-48h de revue d'ingénierie.",
+            "Création d'un nouvel indicateur plus lente, car elle passe par une revue d'ingénierie.",
           mitigation:
             "Espaces bac à sable 'Sandbox Schema' temporaires pour les expérimentations d'analystes, isolés du reporting officiel.",
         },
@@ -692,7 +692,7 @@ metrics:
           arbitrage:
             "MetricFlow assemble les requêtes SQL via des sous-requêtes imbriquées pour garantir la conformité sémantique.",
           costOrDrawback:
-            "Légère surconsommation de crédits Snowflake (estimée entre 10% et 18% à titre indicatif) sans partitionnement fin.",
+            "Légère surconsommation de crédits Snowflake sans partitionnement fin.",
           mitigation:
             "Matérialisation incrémentale dbt sur les dimensions temporelles et clustering keys rigoureuses sur Snowflake.",
         },
@@ -741,20 +741,20 @@ metrics:
       },
       {
         type: "solution",
-        title: "BI prédictive omnicanal",
+        title: "Pilotage commercial (piste)",
         description:
-          "Suite décisionnelle unifiée croisant ventes, stocks et comportement client pour pricing dynamique.",
-        badge: "Solution sectorielle",
+          "Une piste à construire : ventes, marges et stocks réunis avec des indicateurs définis une fois.",
+        badge: "Piste à construire",
         href: "/solutions/retail-bi",
         targetViewKey: "solution-detail",
         targetId: "retail-bi",
       },
       {
         type: "solution",
-        title: "Optimisation logistique par l'IA",
+        title: "Prévision de la demande (piste)",
         description:
-          "Prédiction de la demande et ré-ordonnancement dynamique basé sur des données certifiées.",
-        badge: "Solution sectorielle",
+          "Une piste à construire : des propositions de commande que l'acheteur valide.",
+        badge: "Piste à construire",
         href: "/solutions/logistics-ai",
         targetViewKey: "solution-detail",
         targetId: "logistics-ai",
@@ -769,7 +769,7 @@ metrics:
     slug: "agents-production-2025",
     aliases: ["agents-ia-production"],
     readingTime: "11 min",
-    publishedDate: "14 Septembre 2025",
+    publishedDate: "Révisé le 2 novembre 2026",
     category: {
       key: "ia",
       label: "Intelligence Artificielle",
@@ -796,7 +796,7 @@ metrics:
       stakes:
         "Éliminer les risques d'actions destructives non supervisées sur les systèmes clients et maîtriser le coût d'inférence cumulatif",
       narrative:
-        "En 2024, le web a été inondé de démonstrations impressionnantes d'agents IA réservant des tables de restaurant ou codant des mini-jeux en trois prompts. Mais dans les départements d'ingénierie d'entreprise, la désillusion a été rapide : plus de 80% des POC agentiques s'effondrent dès qu'on les confronte à la réalité des opérations de production. Entre des modèles qui perdent leur objectif au bout de six étapes, des boucles infinies qui vident les crédits d'API en quelques minutes, et des outils invoqués avec des arguments mal typés, un agent non cadré est une source d'instabilité majeure. Réussir le passage à l'échelle exige de rompre avec l'illusion de l'autonomie totale pour concevoir des graphes d'états stricts, outillés et surveillés.",
+        "En 2024, le web a été inondé de démonstrations impressionnantes d'agents IA réservant des tables de restaurant ou codant des mini-jeux en trois prompts. Mais dans les départements d'ingénierie d'entreprise, la désillusion a été rapide : beaucoup de prototypes d'agents s'effondrent dès qu'on les confronte à la réalité des opérations de production. Entre des modèles qui perdent leur objectif au bout de six étapes, des boucles infinies qui vident les crédits d'API en quelques minutes, et des outils invoqués avec des arguments mal typés, un agent non cadré est une source d'instabilité majeure. Réussir le passage à l'échelle exige de rompre avec l'illusion de l'autonomie totale pour concevoir des graphes d'états stricts, outillés et surveillés.",
     },
     problem: {
       heading: "Les 4 causes de défaillance fatale des agents en production",
@@ -827,7 +827,7 @@ metrics:
     },
     approach: {
       heading: "StateGraph déterministe LangGraph v0.2+, protocole MCP et observabilité Langfuse",
-      lead: "Nous remplaçons l'autonomie non cadrée par un automate à états finis (Finite State Machine) où chaque transition est validée par du code déterministe.",
+      lead: "Je remplace l'autonomie non cadrée par un automate à états finis (Finite State Machine) où chaque transition est validée par du code déterministe.",
       architectureTitle: "Architecture d'exécution sécurisée en 4 étapes",
       architectureStages: [
         {
@@ -916,14 +916,14 @@ graph.add_node("circuit_breaker_cutoff", emergency_abort)
 
 graph.add_conditional_edges("plan_node", should_require_human_approval)
 app = graph.compile(interrupt_before=["human_approval_node"])`,
-        caption: "Ce graphe garantit mathématiquement qu'aucune action destructive n'est déclenchée sans validation humaine préalable.",
+        caption: "Ce graphe est conçu pour qu'aucune action destructive ne soit déclenchée sans validation humaine préalable.",
       },
     },
     tradeoffs: {
       heading: "Arbitrages d'ingénierie : Fiabilité vs Plasticité",
       lead: "Transformer un agent expérimental en composant d'infrastructure robuste implique des arbitrages clairs sur son autonomie.",
       disclaimer:
-        "NOTE DE CONCEPTION : Nous assumons pleinement de réduire l'imprévisibilité de nos agents. Dans le monde professionnel, la prévisibilité d'un système est toujours préférable à une créativité désordonnée.",
+        "NOTE DE CONCEPTION : J'assume pleinement de réduire l'imprévisibilité des agents. Dans le monde professionnel, la prévisibilité d'un système est toujours préférable à une créativité désordonnée.",
       tradeoffs: [
         {
           title: "Déterminisme du graphe vs Autonomie émergente",
@@ -1000,13 +1000,13 @@ app = graph.compile(interrupt_before=["human_approval_node"])`,
       },
       {
         type: "solution",
-        title: "Agents de conformité réglementaire",
+        title: "ContentOps Harness",
         description:
-          "Automatisation d'audits et d'enquêtes de conformité avec auditabilité totale.",
-        badge: "Solution sectorielle",
-        href: "/solutions/finance-agent",
+          "Des agents qui rédigent, et une validation humaine obligatoire avant toute publication.",
+        badge: "Projet en cours",
+        href: "/solutions/contentops",
         targetViewKey: "solution-detail",
-        targetId: "finance-agent",
+        targetId: "contentops",
       },
     ],
   },
@@ -1018,7 +1018,7 @@ app = graph.compile(interrupt_before=["human_approval_node"])`,
     slug: "event-driven-agents",
     aliases: ["architecture-multi-agents-evenementielle"],
     readingTime: "12 min",
-    publishedDate: "15 Juillet 2025",
+    publishedDate: "Révisé le 2 novembre 2026",
     category: {
       key: "architecture",
       label: "Architecture",
@@ -1076,7 +1076,7 @@ app = graph.compile(interrupt_before=["human_approval_node"])`,
     },
     approach: {
       heading: "Streaming d'événements distribué Apache Kafka & Standard CloudEvents 1.0",
-      lead: "Nous transformons chaque agent en un processeur d'événements autonome, découplé de ses pairs et garant de sa propre résilience locale.",
+      lead: "Je transforme chaque agent en un processeur d'événements autonome, découplé de ses pairs et garant de sa propre résilience locale.",
       architectureTitle: "Cycle de communication asynchrone événementielle",
       architectureStages: [
         {
@@ -1190,7 +1190,7 @@ app = graph.compile(interrupt_before=["human_approval_node"])`,
       lead: "Scénario type : ces indicateurs servent à juger une mise en production. Ils se mesurent sur votre propre périmètre, avec une valeur de départ relevée au cadrage.",
       metrics: [
         {
-          label: "Disponibilité lors de pannes injectées (20% des nœuds)",
+          label: "Disponibilité lors de pannes injectées",
           value: "À mesurer",
           subtext: "Valeur de départ relevée au cadrage, puis suivie à chaque jalon.",
           isIndicative: true,
@@ -1238,260 +1238,17 @@ app = graph.compile(interrupt_before=["human_approval_node"])`,
       },
       {
         type: "solution",
-        title: "Maintenance prédictive IoT",
+        title: "Ciblioo — sourcing M&A documenté",
         description:
-          "Détection d'anomalies sur flux de capteurs industriels haute fréquence.",
-        badge: "Solution sectorielle",
-        href: "/solutions/industry-maintenance",
+          "Des traitements en arrière-plan conçus pour reprendre sans perte après un incident.",
+        badge: "Projet en cours",
+        href: "/solutions/ciblioo",
         targetViewKey: "solution-detail",
-        targetId: "industry-maintenance",
+        targetId: "ciblioo",
       },
     ],
   },
 
-  // =========================================================================
-  // ARTICLE 06 — FINOPS CLOUD-NATIVE SUR KUBERNETES
-  // =========================================================================
-  "finops-cloud-native": {
-    slug: "finops-cloud-native",
-    aliases: ["finops-kubernetes-optimisation"],
-    readingTime: "6 min",
-    publishedDate: "29 Juin 2025",
-    category: {
-      key: "architecture",
-      label: "Architecture & Infra",
-    },
-    author: {
-      name: "Martial GNINHI",
-      role: "Fondateur, Analyticatech",
-      avatarInitials: "MG",
-    },
-    hero: {
-      eyebrow: "INSIGHT #06 // CLOUD INFRASTRUCTURE & FINOPS",
-      title: "FinOps cloud-native :",
-      titleAccent: "réduire sa facture sans sacrifier l'uptime",
-      subtitle:
-        "Comment diviser par deux le gaspillage de compute sur Kubernetes avec Karpenter, l'autoscaling par files de messages et une stratégie Spot étanche.",
-      tags: ["FinOps", "Kubernetes", "Karpenter", "KEDA", "Cloud", "AWS"],
-    },
-    context: {
-      sector: "Plateforme SaaS B2B en hypercroissance (AWS EKS)",
-      sectorBadge: "SaaS & Cloud Native",
-      useCase: "Optimisation de l'infrastructure compute d'un cluster de 150 nœuds hébergeant APIs web, pipelines d'ingestion et workers de batch ML",
-      constraints:
-        "SLA contractuel de 99.95% de disponibilité et temps de réponse P99 < 300 ms en heures de pointe (09h-18h)",
-      stakes:
-        "Enrayer une dérive budgétaire de +140% de coûts cloud en 12 mois sans risquer la moindre interruption de service client",
-      narrative:
-        "Dans la plupart des architectures Kubernetes en production, le gaspillage de ressources n'est pas dû à de la négligence : c'est le résultat direct d'une stratégie de défense psychologique des équipes devops. Par peur d'un crash en plein pic d'activité ou d'un appel d'astreinte en pleine nuit, les ingénieurs allouent préventivement 4 vCPU et 8 Go de mémoire à des pods dont l'usage réel ne dépasse jamais 15%. Lorsque le cluster atteint 150 nœuds, ce réflexe se traduit par des dizaines de milliers d'euros brûlés chaque mois en serveurs fantômes. Réduire la facture de manière pérenne sans compromettre l'uptime n'est pas une question de négociation commerciale avec AWS ou GCP : c'est un problème d'ingénierie d'autoscaling dynamique et d'exploitation rigoureuse des instances Spot.",
-    },
-    problem: {
-      heading: "Les 3 fuites budgétaires majeures des clusters Kubernetes",
-      lead: "L'analyse fine de clusters de production révèle systématiquement les mêmes mécanismes de surcoût invisible.",
-      failureModes: [
-        {
-          code: "ERR_01 // REQUESTS_USAGE_GAP",
-          title: "Le gouffre entre CPU Requests et consommation réelle",
-          description:
-            "L'ordonnanceur Kubernetes réserve les nœuds sur la base des Requests, et non de l'usage effectif. Les serveurs tournent à 18% de charge moyenne mais affichent 95% d'allocation théorique.",
-          impact: "Plus de 60% du budget compute payé pour rien",
-        },
-        {
-          code: "ERR_02 // STATIC_NODE_GROUPS",
-          title: "Rigidité et lenteur du Cluster Autoscaler standard",
-          description:
-            "Le Cluster Autoscaler historique met de 3 à 8 minutes pour démarrer un nœud EC2, incitant les équipes à maintenir un surprovisionnement permanent par sécurité.",
-          impact: "Incapacité à absorber les flash-crowds sans gaspillage",
-        },
-        {
-          code: "ERR_03 // UNGUARDED_SPOT",
-          title: "Peur des interruptions sur les instances Spot",
-          description:
-            "Parce qu'une coupure Spot a provoqué des erreurs 502 il y a deux ans, 100% du cluster a été rebasculé sur des instances On-Demand payées au tarif maximal.",
-          impact: "Surcoût de 60% à 75% sur les charges asynchrones",
-        },
-      ],
-    },
-    approach: {
-      heading: "Karpenter v0.37+, scaling sur files KEDA et orchestration Spot sans coupure",
-      lead: "Nous remplaçons les Node Groups statiques par un approvisionnement juste-à-temps capable de tailler les nœuds au millimètre près en moins de 45 secondes.",
-      architectureTitle: "Pipeline d'optimisation FinOps continue",
-      architectureStages: [
-        {
-          stageNumber: "STAGE 01",
-          title: "Audit d'attribution avec Kubecost v2.2+",
-          description:
-            "Cartographie exacte des coûts par namespace, par pod et détection des surallocations de Requests vs consommation réelle (P99).",
-          keyPattern: "Granular Cost Attribution",
-          badge: "Kubecost",
-        },
-        {
-          stageNumber: "STAGE 02",
-          title: "Provisionnement juste-à-temps via Karpenter",
-          description:
-            "Abandon des Node Groups rigides : Karpenter sélectionne dynamiquement l'instance EC2 la moins chère (familles diversifiées m6i, c6i, r6i) en moins de 45 secondes.",
-          keyPattern: "Just-in-Time Node Packing",
-          badge: "Karpenter v0.37+",
-        },
-        {
-          stageNumber: "STAGE 03",
-          title: "Déport des workers sur instances Spot",
-          description:
-            "Basculement de 100% des workers asynchrones sur Spot avec capture du préavis d'interruption de 2 minutes via l'AWS Node Termination Handler.",
-          keyPattern: "Graceful Spot Drainage",
-        },
-        {
-          stageNumber: "STAGE 04",
-          title: "Autoscaling événementiel via KEDA",
-          description:
-            "Dimensionnement horizontal piloté par la profondeur réelle des files SQS / RabbitMQ plutôt que par un seuil CPU moyen souvent trompeur.",
-          keyPattern: "Queue-Driven Horizontal Autoscaling",
-          badge: "KEDA v2.14+",
-        },
-      ],
-      techStack: [
-        {
-          name: "Karpenter",
-          version: "v0.37.0",
-          role: "Autoscaler de nœuds juste-à-temps haute performance pour Kubernetes",
-          category: "infra",
-        },
-        {
-          name: "KEDA",
-          version: "v2.14.2",
-          role: "Autoscaling piloté par les événements et la profondeur de files",
-          category: "infra",
-        },
-        {
-          name: "Kubecost",
-          version: "v2.2.1",
-          role: "Monitoring continu des dépenses et détection de gaspillage d'allocation",
-          category: "evaluation",
-        },
-        {
-          name: "AWS Node Termination Handler",
-          version: "v1.20.0",
-          role: "Interception des préavis d'arrêt Spot et drainage gracieux des pods",
-          category: "infra",
-        },
-      ],
-      codeSnippet: {
-        title: "karpenter_nodepool.yml — Configuration de consolidation Spot agressive",
-        language: "yaml",
-        code: `# NodePool Karpenter avec sélection Spot multi-familles et consolidation
-apiVersion: karpenter.sh/v1beta1
-kind: NodePool
-metadata:
-  name: batch-workers
-spec:
-  template:
-    spec:
-      requirements:
-        - key: karpenter.sh/capacity-type
-          operator: In
-          values: ["spot"]
-        - key: instance-family
-          operator: In
-          values: ["c6i", "c6a", "m6i", "m6a", "c5", "m5"]
-      nodeClassRef:
-        name: default-nodeclass
-  disruption:
-    consolidationPolicy: WhenUnderutilized
-    expireAfter: 720h # Rotation préventive tous les 30 jours`,
-        caption: "Karpenter rassemble automatiquement les pods sous-utilisés et détruit les nœuds excédentaires dès qu'une charge se termine.",
-      },
-    },
-    tradeoffs: {
-      heading: "Arbitrages techniques & Exigences logicielles",
-      lead: "Diviser par deux une facture de serveurs n'est pas magique : cela impose de concevoir des applications réellement résilientes à l'interruption.",
-      disclaimer:
-        "NOTE DE RIGUEUR : Adopter le marché Spot pour économiser 70% sur le compute exige que vos applications soient capables de s'arrêter proprement en 25 secondes. Les monolithes avec état en mémoire ne sont pas éligibles sans refactoring.",
-      tradeoffs: [
-        {
-          title: "Contrainte de stateless strict vs Simplicité de développement",
-          tension: "Économie budgétaire massive vs Effort de refactoring",
-          arbitrage:
-            "Imposer que tous les workers soient sans état et capables de reprendre une tâche interrompue sur file d'attente.",
-          costOrDrawback:
-            "Exclut les jobs de traitement monolithiques longs non découplés tant qu'ils n'ont pas été réarchitecturés.",
-          mitigation:
-            "Conservation temporaire d'un NodePool On-Demand restreint pour les quelques jobs patrimoniaux non résilients.",
-        },
-        {
-          title: "Temps de boot de nœud face aux pics instantanés (Flash-Crowd)",
-          tension: "Économie à l'instant T vs Réactivité face à un pic subit",
-          arbitrage:
-            "Les 40 secondes nécessaires à Karpenter pour ajouter un nœud restent trop lentes pour un pic de trafic instantané en 2 secondes.",
-          costOrDrawback:
-            "Risque de saturation passagère si le trafic décuple en quelques secondes.",
-          mitigation:
-            "Maintien permanent d'un buffer de 5% à 8% de pods fantômes à faible coût (Overprovisioning pods avec priorityClass basse), sacrifiés instantanément par Kubernetes lors d'un burst.",
-        },
-      ],
-    },
-    results: {
-      heading: "Indicateurs à mesurer et méthode",
-      lead: "Scénario type : ces indicateurs servent à juger une mise en production. Ils se mesurent sur votre propre périmètre, avec une valeur de départ relevée au cadrage.",
-      metrics: [
-        {
-          label: "Réduction brute de la facture compute",
-          value: "À mesurer",
-          subtext: "Valeur de départ relevée au cadrage, puis suivie à chaque jalon.",
-          isIndicative: true,
-        },
-        {
-          label: "Taux d'utilisation effectif du CPU alloué",
-          value: "À mesurer",
-          subtext: "Valeur de départ relevée au cadrage, puis suivie à chaque jalon.",
-          isIndicative: true,
-        },
-        {
-          label: "Interruption de service imputable au Spot",
-          value: "À mesurer",
-          subtext: "Valeur de départ relevée au cadrage, puis suivie à chaque jalon.",
-          isIndicative: true,
-        },
-      ],
-      methodologyNote: "Aucun résultat client n'est publié dans cet article. Le contexte décrit est un scénario type, construit pour illustrer la méthode ; les valeurs réelles dépendent de vos données, de vos outils et de l'adoption par vos équipes.",
-      observedBenefits: [
-        "Une décision de mise en production fondée sur des mesures, pas sur une démonstration.",
-        "Des indicateurs définis avant le projet, partagés par la direction et les équipes.",
-        "Une traçabilité de chaque résultat, vérifiable par un tiers.",
-      ],
-    },
-    relatedResources: [
-      {
-        type: "service",
-        title: "Service 02 — Automatisation & Workflows",
-        description:
-          "Gestion des pipelines asynchrones, résilience des files de messages et exécution déterministe.",
-        badge: "Service d'ingénierie",
-        href: "/services/02",
-        targetViewKey: "service-detail",
-        targetId: "02",
-      },
-      {
-        type: "solution",
-        title: "Optimisation de grille intelligente",
-        description:
-          "Équilibrage dynamique et réduction des coûts de consommation énergétique.",
-        badge: "Solution sectorielle",
-        href: "/solutions/energy-smartgrid",
-        targetViewKey: "solution-detail",
-        targetId: "energy-smartgrid",
-      },
-      {
-        type: "solution",
-        title: "Maintenance prédictive IoT",
-        description:
-          "Surveillance continue d'infrastructures et détection précoce d'anomalies opérationnelles.",
-        badge: "Solution sectorielle",
-        href: "/solutions/industry-maintenance",
-        targetViewKey: "solution-detail",
-        targetId: "industry-maintenance",
-      },
-    ],
-  },
 };
 
 /**

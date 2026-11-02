@@ -34,10 +34,10 @@ export function ContactSidePanel() {
   const steps = [
     {
       step: "01",
-      titleFr: "Réception & Accord NDA",
-      titleEn: "Reception & Mutual NDA",
-      descFr: "Signature systématique d'un accord de confidentialité avant toute divulgation technique.",
-      descEn: "Systematic NDA signature before any proprietary technical disclosure.",
+      titleFr: "Accord de confidentialité",
+      titleEn: "Confidentiality agreement",
+      descFr: "Un accord de confidentialité (NDA) est signé avant tout échange sur des informations sensibles.",
+      descEn: "A non-disclosure agreement (NDA) is signed before any exchange of sensitive information.",
       icon: FileCheck2,
     },
     {

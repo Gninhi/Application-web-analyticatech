@@ -72,7 +72,7 @@ export function Footer() {
               {currentLocale === "en" ? "AI consulting for SME and mid-market leaders: AI agents, automation, data and EU AI Act compliance." : "Conseil en intelligence artificielle pour les dirigeants de PME et d'ETI : agents IA, automatisation, données et conformité AI Act."}
             </p>
             <p className="text-sm text-slate-600 dark:text-[#B6C2D6]">
-              {currentLocale === "en" ? "Head office in Paris · Office in Strasbourg" : "Siège à Paris · Bureau à Strasbourg"}
+              {currentLocale === "en" ? "Head office in Paris · Working across France" : "Siège à Paris · Interventions partout en France"}
             </p>
           </div>
 

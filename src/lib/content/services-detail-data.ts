@@ -14,13 +14,6 @@ export interface ServiceDetailData {
   heroAccent: string;
   heroSubtitle: string;
   
-  // 3 Preuves chiffrées
-  proofMetrics: Array<{
-    value: string;
-    label: string;
-    context: string;
-    color?: string;
-  }>;
 
   // 4 Problèmes résolus
   painPoints: Array<{
@@ -59,14 +52,6 @@ export interface ServiceDetailData {
     technologies: string[];
   }>;
 
-  // Étude de cas & Témoignage
-  caseStudy: {
-    quote: string;
-    authorRole: string;
-    authorCompany: string;
-    metricValue: string;
-    metricLabel: string;
-  };
 
   // FAQ spécifique
   faqs: Array<{
@@ -89,32 +74,12 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
     iconEmoji: "🧠",
     accentColor: "var(--accent-ink)",
     accentSoft: "rgba(242, 109, 61, 0.12)",
-    badge: "PRODUCTION READY",
+    badge: "DOCUMENTS & RAG",
     eyebrow: "SERVICE 01 — LLM, RAG HAUTE PRÉCISION & GARDE-FOUS",
     heroTitle: "Intelligence Artificielle",
     heroAccent: "& Systèmes RAG",
     heroSubtitle:
       "Des architectures LLM qui passent l'épreuve de la production : retrieval hybride dense/sparse, reranking sémantique, évaluation continue et garde-fous de sécurité pour des décisions d'entreprise fiables.",
-    proofMetrics: [
-      {
-        value: "280 ms",
-        label: "LATENCE RAG P95",
-        context: "Mesurée en production sur un corpus de 48 000 documents métier (PDF, SQL, bases internes).",
-        color: "var(--accent-ink)",
-      },
-      {
-        value: "94.2 %",
-        label: "PRÉCISION DE RÉPONSE",
-        context: "Score validé sur jeu d'évaluation métier continu (benchmarks Ragas & TruLens) avec revue experte.",
-        color: "var(--accent-ink)",
-      },
-      {
-        value: "6 sem.",
-        label: "DURÉE MOYENNE DU POC",
-        context: "De la donnée brute non structurée au prototype déployé et validé par vos équipes métier.",
-        color: "#4C82FF",
-      },
-    ],
 
     painPoints: [
       {
@@ -138,7 +103,7 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
       {
         number: "01",
         title: "Audit d'architecture & Cartographie des données",
-        description: "Analyse exhaustive de vos corpus documentaires, identification des cas d'usage prioritaires et matrice d'évaluation de la valeur métier.",
+        description: "Analyse de vos documents, identification des cas d'usage prioritaires et matrice d'évaluation de la valeur métier.",
         output: "Rapport d'architecture & Matrice de ROI chiffrée",
       },
       {
@@ -156,7 +121,7 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
       {
         number: "04",
         title: "Transfert de compétences & Autonomie",
-        description: "Formation de vos équipes d'ingénierie et data, documentation technique exhaustive et plan de maintenance pour garantir votre autonomie.",
+        description: "Formation de vos équipes d'ingénierie et data, documentation technique complète et plan de maintenance, pour que vous restiez autonomes.",
         output: "Documentation complète & Ateliers de formation",
       },
     ],
@@ -164,7 +129,7 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
       {
         step: "01",
         title: "Cadrage & Audit",
-        description: "Audit des sources, définition des métriques de précision (Ragas) et choix d'architecture souveraine.",
+        description: "Audit des sources, définition des métriques de précision (Ragas) et choix de l'hébergement avec vous.",
         duration: "1–2 semaines",
         deliverable: "Spécification technique & Choix de modèles",
       },
@@ -228,25 +193,18 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
         technologies: ["Langfuse", "Ragas", "TruLens", "Docker", "Kubernetes"],
       },
     ],
-    caseStudy: {
-      quote: "« Le POC RAG était opérationnel en 5 semaines. Aujourd'hui, notre moteur interne traite plus de 480 requêtes documentaires par jour avec une précision remarquable et sans aucun incident de sécurité. »",
-      authorRole: "Directeur des Systèmes d'Information",
-      authorCompany: "Groupe Financier (60 collaborateurs)",
-      metricValue: "-65%",
-      metricLabel: "Temps moyen d'accès à l'information critique",
-    },
     faqs: [
       {
-        question: "Mes données d'entreprise restent-elles confidentielles et souveraines ?",
-        answer: "Absolument. Nous privilégions des architectures déployables en cloud souverain certifié SecNumCloud (OVHcloud, Scaleway, Outscale) ou on-premise. Vos données ne sont jamais utilisées pour entraîner des modèles publics tiers.",
+        question: "Mes données d'entreprise restent-elles confidentielles ?",
+        answer: "Oui. Je privilégie un hébergement en Union européenne ou sur vos propres serveurs ; si votre contexte l'exige, le système peut être déployé chez un hébergeur qualifié SecNumCloud. Je n'utilise pas vos données pour entraîner des modèles, et je retiens des fournisseurs d'IA qui s'y engagent contractuellement.",
       },
       {
-        question: "Comment garantissez-vous l'absence d'hallucinations dans les réponses ?",
-        answer: "Nous mettons en place un RAG strict avec citations obligatoires au niveau du paragraphe, couplé à un système de score de confiance. Si la réponse n'est pas étayée à 100% par vos documents sources, le système s'abstient et remonte une alerte.",
+        question: "Comment limitez-vous les réponses inventées (hallucinations) ?",
+        answer: "Chaque réponse doit citer les passages de vos documents sur lesquels elle s'appuie, et un score de confiance est calculé. Quand aucun passage ne soutient la réponse, l'assistant le dit au lieu d'inventer. Le risque d'erreur n'est jamais nul : il est mesuré pendant le prototype et suivi ensuite.",
       },
       {
         question: "Combien de temps faut-il pour obtenir un premier résultat mesurable ?",
-        answer: "Un prototype fonctionnel (POC) est livré et testable par vos équipes métier en 4 à 6 semaines sur vos données réelles. L'industrialisation complète suit un plan itératif de 6 à 8 semaines sans effet tunnel.",
+        answer: "Un prototype testable par vos équipes sur vos vrais documents demande en général 4 à 6 semaines. La mise en production suit, par étapes, en 6 à 8 semaines selon le périmètre.",
       },
       {
         question: "Comment le système s'intègre-t-il à notre SI existant ?",
@@ -272,31 +230,11 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
     heroAccent: "& Workflows Métiers",
     heroSubtitle:
       "Orchestrez vos processus opérationnels de bout en bout : synchronisation multi-systèmes, traitement intelligent de documents et automatisation résiliente sans dépendance aux tâches manuelles.",
-    proofMetrics: [
-      {
-        value: "45 %",
-        label: "GAIN DE TEMPS MOYEN",
-        context: "Constaté sur nos déploiements d'automatisation des flux administratifs et financiers.",
-        color: "var(--accent-ink)",
-      },
-      {
-        value: "99.8 %",
-        label: "FIABILITÉ D'EXÉCUTION",
-        context: "Taux de réussite des jobs automatisés avec gestion des reprises sur erreur et idempotence.",
-        color: "var(--accent-ink)",
-      },
-      {
-        value: "48",
-        label: "PROCESSUS EN PRODUCTION",
-        context: "Flux métiers critiques exécutés quotidiennement sans intervention humaine répétitive.",
-        color: "#4C82FF",
-      },
-    ],
 
     painPoints: [
       {
         title: "Ressaisie manuelle et erreurs humaines coûteuses",
-        description: "Vos collaborateurs perdent jusqu'à 35% de leur temps à copier-coller des données entre votre CRM, votre ERP, vos outils de facturation et Excel.",
+        description: "Vos collaborateurs passent un temps considérable à copier-coller des données entre votre CRM, votre ERP, vos outils de facturation et Excel.",
       },
       {
         title: "Goulots d'étranglement et retards de traitement",
@@ -405,29 +343,22 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
         technologies: ["Prometheus", "Grafana", "Sentry", "Better Stack"],
       },
     ],
-    caseStudy: {
-      quote: "« Grâce à l'automatisation de nos flux logistiques, nous avons absorbé une croissance de volume de +45% sans recruter de personnel administratif supplémentaire. Le ROI a été atteint en moins de 4 mois. »",
-      authorRole: "Directeur des Opérations (COO)",
-      authorCompany: "Plateforme E-commerce & Logistique (45 collaborateurs)",
-      metricValue: "-65%",
-      metricLabel: "Temps de traitement des commandes et factures",
-    },
     faqs: [
       {
         question: "Que se passe-t-il si une API externe tombe en panne ou modifie son format ?",
-        answer: "Nos architectures intègrent des files d'attente (queues) persistantes et des politiques de retry automatique avec backoff exponentiel. En cas d'erreur persistante, les requêtes sont isolées en 'Dead Letter Queue' et une alerte est émise sans bloquer les autres flux.",
+        answer: "Les traitements passent par des files d'attente persistantes et sont relancés automatiquement, à intervalles croissants. Si l'erreur persiste, la tâche est mise de côté (file d'erreurs) et une alerte est envoyée, sans bloquer les autres flux.",
       },
       {
-        question: "L'outil n8n peut-il être hébergé sur nos propres serveurs ?",
-        answer: "Oui, nous déployons n8n en version conteneurisée sur votre propre infrastructure cloud ou sur vos serveurs on-premise, garantissant une isolation totale et le respect absolu de votre souveraineté.",
+        question: "L'outil n8n peut-il être hébergé sur vos propres serveurs ?",
+        answer: "Oui. n8n peut être installé sur votre propre infrastructure cloud ou sur vos serveurs : vos données ne transitent alors pas par un service tiers.",
       },
       {
         question: "Comment gérez-vous les validations humaines obligatoires ?",
-        answer: "Nous intégrons des étapes de validation 'Human-in-the-loop' interactives. Un responsable reçoit une notification (Slack, Teams, Email) avec boutons d'approbation en 1 clic pour valider les étapes critiques.",
+        answer: "J'intègre des étapes de validation humaine : un responsable reçoit une notification (Slack, Teams ou e-mail) et approuve ou refuse l'étape critique avant qu'elle ne s'exécute.",
       },
       {
         question: "Combien de temps dure un projet d'automatisation typique ?",
-        answer: "Un premier lot de workflows prioritaires est opérationnel en 3 à 5 semaines. L'approche est modulaire : chaque processus livre de la valeur mesurable dès sa mise en production.",
+        answer: "Comptez en général quelques semaines pour un premier lot de flux prioritaires. J'avance un processus à la fois, pour que chacun soit testé et suivi avant de passer au suivant.",
       },
     ],
     nextService: {
@@ -449,26 +380,6 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
     heroAccent: "Multi-Agents",
     heroSubtitle:
       "Déployez des équipes d'agents IA autonomes capables de décomposer des problèmes complexes, de planifier leurs actions, d'utiliser des outils métiers dynamiques et de collaborer sous supervision humaine.",
-    proofMetrics: [
-      {
-        value: "72 %",
-        label: "AUTONOMIE D'EXÉCUTION",
-        context: "Taux de tâches multi-étapes résolues de bout en bout sans intervention humaine intermédiaire.",
-        color: "var(--accent-ink)",
-      },
-      {
-        value: "38",
-        label: "AGENTS EN PRODUCTION",
-        context: "Agents cognitifs spécialisés actifs sur des missions de support, d'analyse et d'ingénierie.",
-        color: "var(--accent-ink)",
-      },
-      {
-        value: "4 sem.",
-        label: "LIVRAISON DU COLLECTIF",
-        context: "Mise en service d'un collectif d'agents interconnecté à vos outils métiers et APIs.",
-        color: "var(--accent-ink)",
-      },
-    ],
 
     painPoints: [
       {
@@ -582,29 +493,22 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
         technologies: ["Langfuse", "Phoenix Arize", "OpenTelemetry", "Guardrails AI"],
       },
     ],
-    caseStudy: {
-      quote: "« Notre collectif de 4 agents spécialisés prend en charge la pré-qualification et le diagnostic de l'ensemble de nos tickets techniques. Nos ingénieurs peuvent enfin se concentrer sur l'innovation produit. »",
-      authorRole: "Vice-Président Engineering",
-      authorCompany: "Éditeur de logiciel SaaS B2B (40 collaborateurs)",
-      metricValue: "72%",
-      metricLabel: "Taux de qualification autonome au premier passage",
-    },
     faqs: [
       {
         question: "Comment s'assurer que les agents ne tombent pas dans des boucles infinies ?",
-        answer: "Nous utilisons des graphes acycliques orientés (DAG) avec LangGraph, intégrant des seuils de récursion maximaux (max_iterations) et des circuit-breakers automatiques pour garantir l'arrêt déterministe.",
+        answer: "Les agents suivent un graphe d'étapes défini à l'avance (LangGraph), avec un nombre maximal d'itérations et des coupe-circuits automatiques : au-delà d'une limite, l'exécution s'arrête et une personne est alertée.",
       },
       {
         question: "L'intervention humaine est-elle obligatoire ?",
-        answer: "Elle est entièrement configurable. Nous recommandons un modèle 'Human-in-the-loop' sur toutes les actions irréversibles (envoi d'email externe, modification de base de données, transaction financière).",
+        answer: "Elle se configure selon les étapes, mais je la rends obligatoire pour toute action irréversible : envoi d'un e-mail externe, modification d'une base de données, opération financière.",
       },
       {
         question: "Quels modèles de langage utilisez-vous pour les agents ?",
-        answer: "Nous adoptons une stratégie multi-modèles (Multi-LLM routing) : des modèles compacts et économiques pour les sous-tâches simples de classification, et des modèles de raisonnement avancé (Claude 3.5 Sonnet, GPT-4o) pour la planification stratégique.",
+        answer: "Plusieurs modèles selon la tâche : des modèles compacts et économiques pour les tâches simples, des modèles de raisonnement plus avancés pour la planification. Le choix dépend de vos contraintes de coût, de confidentialité et d'hébergement.",
       },
       {
         question: "Comment évaluez-vous la fiabilité d'un collectif d'agents ?",
-        answer: "Grâce à des suites de tests unitaires et d'intégration basées sur des cas réels (evals), mesurant le taux de succès, le respect des consignes, la latence et la consommation de tokens à chaque modification de prompt ou d'outil.",
+        answer: "Avec des jeux de tests construits à partir de vos cas réels, rejoués à chaque modification : taux de réussite, respect des consignes, temps de réponse et coût.",
       },
     ],
     nextService: {
@@ -626,26 +530,6 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
     heroAccent: "Augmentée par l'IA",
     heroSubtitle:
       "Unifiez vos silos de données pour piloter votre entreprise en temps réel : modélisation sémantique dbt, entrepôt cloud haute performance, dashboards exécutifs et requêtes en langage naturel sur vos bases métiers.",
-    proofMetrics: [
-      {
-        value: "+18.4 %",
-        label: "GAIN DE MARGE MOYEN",
-        context: "Obtenu grâce à l'identification instantanée des dérives de coûts et des opportunités d'arbitrage.",
-        color: "var(--accent-ink)",
-      },
-      {
-        value: "42",
-        label: "DASHBOARDS GOUVERNÉS",
-        context: "Tableaux de bord opérationnels et financiers déployés avec rafraîchissement temps réel.",
-        color: "var(--accent-ink)",
-      },
-      {
-        value: "28+",
-        label: "SOURCES UNIFIÉES",
-        context: "Connecteurs de données intégrés dans un modèle sémantique unique sans doublon.",
-        color: "#4C82FF",
-      },
-    ],
     painPoints: [
       {
         title: "Des silos de données et des chiffres contradictoires",
@@ -758,29 +642,22 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
         technologies: ["Text-to-SQL", "LangChain SQL Agent", "DuckDB", "Python"],
       },
     ],
-    caseStudy: {
-      quote: "« Notre comité de direction dispose enfin d'un tableau de bord financier unifié et certifié chaque matin à 8h. Nous avons supprimé 10 jours de travail manuel de consolidation par mois. »",
-      authorRole: "Directeur Administratif et Financier (DAF)",
-      authorCompany: "Groupe ETI Retail & Distribution (55 collaborateurs)",
-      metricValue: "-65%",
-      metricLabel: "Délai de production du reporting exécutif mensuel",
-    },
     faqs: [
       {
-        question: "Pouvons-nous réutiliser nos licences Power BI ou Looker existantes ?",
-        answer: "Tout à fait. Nous nous intégrons à votre outillage existant en optimisant vos modèles de données pour accélérer le rendu des rapports et réduire vos coûts de licence.",
+        question: "Pouvez-vous réutiliser nos licences Power BI ou Looker existantes ?",
+        answer: "Oui. Je travaille avec vos outils existants et j'améliore les modèles de données qui alimentent vos rapports.",
       },
       {
-        question: "Comment garantissez-vous l'exactitude des calculs et des chiffres ?",
+        question: "Comment vérifiez-vous l'exactitude des calculs et des chiffres ?",
         answer: "Grâce à dbt, toutes les règles métier et transformations sont versionnées dans Git et soumises à des tests d'intégrité automatisés à chaque rafraîchissement. Si une incohérence apparaît, les données corrompues ne sont pas publiées.",
       },
       {
         question: "Combien coûte l'hébergement d'un entrepôt de données cloud comme Snowflake ou BigQuery ?",
-        answer: "Nous configurons des politiques FinOps strictes : auto-suspension des clusters inactifs, partitionnement et clustering optimisés pour que vos coûts mensuels restent maîtrisés et proportionnels à votre usage réel.",
+        answer: "Cela dépend de vos volumes et de votre usage. Je configure la mise en veille automatique des ressources inutilisées et l'organisation des données pour que la facture suive votre usage réel, et je vous donne une estimation avant tout engagement.",
       },
       {
         question: "Les utilisateurs non techniques peuvent-ils vraiment créer leurs propres rapports ?",
-        answer: "Oui, la couche sémantique dbt simplifie la structure de données pour les rendre compréhensibles. Nous proposons également un assistant Text-to-SQL permettant de poser des questions en français courant pour générer instantanément un graphique.",
+        answer: "En partie : la couche sémantique présente les données avec des noms métier compréhensibles. Un assistant capable de répondre à des questions en français courant peut s'y ajouter, avec des réponses à vérifier sur les indicateurs sensibles.",
       },
     ],
     nextService: {
@@ -798,32 +675,12 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
     iconEmoji: "🧠",
     accentColor: "var(--accent-ink)",
     accentSoft: "rgba(242, 109, 61, 0.12)",
-    badge: "PRODUCTION READY",
+    badge: "DOCUMENTS & RAG",
     eyebrow: "SERVICE 01 — LLM, HIGH-PRECISION RAG & GUARDRAILS",
     heroTitle: "Artificial Intelligence",
     heroAccent: "& RAG Systems",
     heroSubtitle:
       "Production-grade LLM architectures built for enterprise reliability: dense/sparse hybrid retrieval, semantic reranking, continuous evaluation, and security guardrails for dependable corporate decision-making.",
-    proofMetrics: [
-      {
-        value: "280 ms",
-        label: "P95 RAG LATENCY",
-        context: "Measured in production on a corpus of 40M+ heterogeneous documents (PDFs, SQL databases, OCR scans).",
-        color: "var(--accent-ink)",
-      },
-      {
-        value: "94.2 %",
-        label: "RESPONSE ACCURACY",
-        context: "Continuous business benchmark score (Ragas & TruLens) validated through domain expert review.",
-        color: "var(--accent-ink)",
-      },
-      {
-        value: "6 wks",
-        label: "AVERAGE POC DURATION",
-        context: "From raw unstructured data to a deployed prototype validated by your business teams.",
-        color: "#4C82FF",
-      },
-    ],
 
     painPoints: [
       {
@@ -909,7 +766,7 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
       {
         sector: "HEALTHCARE & PHARMA",
         title: "Clinical Protocol & Research Query Engine",
-        description: "Semantic query engine across thousands of medical studies and clinical trial registries with zero hallucinations.",
+        description: "Semantic query engine across medical studies and clinical trial registries, with every answer citing its sources.",
         impact: "Tracked indicator: time to find information",
       },
       {
@@ -937,21 +794,14 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
         technologies: ["Ragas", "TruLens", "Langfuse", "OpenTelemetry", "Phoenix"],
       },
     ],
-    caseStudy: {
-      quote: "“Analyticatech’s RAG architecture enabled us to index 15 years of technical documentation with zero hallucination. Our support engineers save over 12 hours every week.”",
-      authorRole: "Chief Technology Officer (CTO)",
-      authorCompany: "European Fintech Leader (50+ staff)",
-      metricValue: "94.2%",
-      metricLabel: "Measured response accuracy on production queries",
-    },
     faqs: [
       {
-        question: "How do you guarantee our proprietary data is never used to train external models?",
-        answer: "We only deploy zero-data-retention enterprise APIs or sovereign self-hosted open-weights models (Mistral, Llama) within your private VPC with strict encryption at rest and in transit.",
+        question: "Is our data used to train external models?",
+        answer: "No. I choose AI providers that contractually commit not to retain or train on your data, or open models (Mistral, Llama) hosted in your own environment. Data is encrypted in transit and at rest.",
       },
       {
         question: "What is the difference between simple search and high-precision RAG?",
-        answer: "Standard keyword search returns document links. Our RAG engine extracts dense semantic meaning, compares multiple candidate chunks, cross-checks facts with citations, and generates verified syntheses.",
+        answer: "Keyword search returns links to documents. A RAG assistant finds the relevant passages, compares them and writes an answer that cites them, so anyone can check where it comes from.",
       },
       {
         question: "How does the system integrate with our existing enterprise IT?",
@@ -977,30 +827,10 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
     heroAccent: "& Business Workflows",
     heroSubtitle:
       "Orchestrate your operational processes end-to-end: multi-system synchronization, intelligent document processing, and fault-tolerant automation without manual bottlenecks.",
-    proofMetrics: [
-      {
-        value: "45 %",
-        label: "AVERAGE TIME SAVED",
-        context: "Average measured across our administrative and financial workflow deployments.",
-        color: "var(--accent-ink)",
-      },
-      {
-        value: "99.8 %",
-        label: "EXECUTION RELIABILITY",
-        context: "Success rate across automated jobs with native idempotence and automated retry handling.",
-        color: "var(--accent-ink)",
-      },
-      {
-        value: "48",
-        label: "PROCESSES IN PRODUCTION",
-        context: "Critical business workflows executing daily without repetitive human intervention.",
-        color: "#4C82FF",
-      },
-    ],
     painPoints: [
       {
         title: "Manual data re-entry and costly human errors",
-        description: "Teams spending up to 35% of their working hours copy-pasting data across CRM, ERP, invoicing software, and spreadsheets.",
+        description: "Teams spending considerable time copy-pasting data across CRM, ERP, invoicing software, and spreadsheets.",
       },
       {
         title: "Operational bottlenecks and processing delays",
@@ -1109,25 +939,18 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
         technologies: ["Prometheus", "Grafana", "Sentry", "Better Stack"],
       },
     ],
-    caseStudy: {
-      quote: "“By automating our order and logistics pipelines, we absorbed a +45% volume growth without adding headcount. We achieved full ROI in under 4 months.”",
-      authorRole: "Chief Operating Officer (COO)",
-      authorCompany: "E-Commerce & Logistics Leader (45+ employees)",
-      metricValue: "-65%",
-      metricLabel: "Order and invoice processing turnaround time",
-    },
     faqs: [
       {
         question: "What happens if a third-party API goes down or changes its format?",
-        answer: "Our architectures integrate persistent queues and exponential backoff retry policies. Persistent errors route to a Dead Letter Queue and alert operators without stalling healthy workflows.",
+        answer: "Tasks go through persistent queues and are retried automatically at growing intervals. If the error persists, the task is set aside in an error queue and an alert is sent, without blocking other workflows.",
       },
       {
         question: "Can n8n or Temporal be hosted on our private cloud or on-premise servers?",
-        answer: "Yes, we deploy containerized architectures directly within your private cloud (AWS, Azure, GCP, Scaleway) or on-premise infrastructure with full data sovereign isolation.",
+        answer: "Yes. They can be installed in your own cloud (AWS, Azure, GCP, Scaleway) or on your servers, so your data does not go through a third-party service.",
       },
       {
         question: "How do you handle required human sign-offs?",
-        answer: "We embed interactive Human-in-the-Loop checkpoints. Designated managers receive instant notifications (Slack, Teams, Email) with one-click approval buttons.",
+        answer: "I add human approval steps: a manager receives a notification (Slack, Teams or email) and approves or rejects the critical step before it runs.",
       },
     ],
     nextService: {
@@ -1149,26 +972,6 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
     heroAccent: "Orchestration",
     heroSubtitle:
       "Deploy teams of autonomous AI agents capable of planning, reasoning, calling dynamic tools, and collaborating under human supervision to solve complex multi-step workflows.",
-    proofMetrics: [
-      {
-        value: "72 %",
-        label: "AUTONOMOUS COMPLETION",
-        context: "Rate of complex multi-step tasks resolved end-to-end without intermediate manual correction.",
-        color: "var(--accent-ink)",
-      },
-      {
-        value: "38",
-        label: "AGENTS IN PRODUCTION",
-        context: "Specialized cognitive agents actively assisting in engineering, support, and business analysis.",
-        color: "var(--accent-ink)",
-      },
-      {
-        value: "4 wks",
-        label: "AGENT FLEET DELIVERY",
-        context: "From role modeling to operational agents connected to your corporate tools and APIs.",
-        color: "var(--accent-ink)",
-      },
-    ],
 
     painPoints: [
       {
@@ -1282,25 +1085,18 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
         technologies: ["Langfuse", "Phoenix Arize", "OpenTelemetry", "Guardrails AI"],
       },
     ],
-    caseStudy: {
-      quote: "“Our team of 4 specialized agents handles the pre-qualification and root-cause analysis for all incoming technical tickets. Our senior engineers can finally focus on product innovation.”",
-      authorRole: "VP of Engineering",
-      authorCompany: "B2B SaaS Software Provider (40+ employees)",
-      metricValue: "72%",
-      metricLabel: "First-pass autonomous ticket qualification rate",
-    },
     faqs: [
       {
         question: "How do you prevent agents from falling into infinite execution loops?",
-        answer: "We use directed acyclic graphs (DAGs) in LangGraph with hard recursion limits (max_iterations) and automatic circuit-breakers ensuring deterministic completion.",
+        answer: "Agents follow a predefined graph of steps (LangGraph), with a maximum number of iterations and automatic circuit-breakers: past a limit, execution stops and a person is alerted.",
       },
       {
         question: "Is human validation mandatory?",
-        answer: "It is completely configurable. We recommend a strict Human-in-the-Loop policy for irreversible actions (external emails, DB mutations, financial operations).",
+        answer: "It can be configured per step, but I make it mandatory for any irreversible action: external emails, database changes, financial operations.",
       },
       {
         question: "What language models power the agent fleet?",
-        answer: "We use dynamic multi-LLM routing: compact and cost-effective models for fast classification, paired with frontier reasoning models (Claude 3.5 Sonnet, GPT-4o) for high-level strategy.",
+        answer: "Several models depending on the task: compact, cost-effective models for simple tasks and more advanced reasoning models for planning. The choice depends on your cost, confidentiality and hosting constraints.",
       },
     ],
     nextService: {
@@ -1322,26 +1118,6 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
     heroAccent: "Decision-Making",
     heroSubtitle:
       "Unify disparate data silos to steer your organization in real time: dbt semantic modeling, cloud data warehousing, executive dashboards, and secure natural language queries over business data.",
-    proofMetrics: [
-      {
-        value: "+18.4 %",
-        label: "AVERAGE MARGIN GAIN",
-        context: "Achieved through real-time detection of cost overruns and dynamic pricing arbitrage.",
-        color: "var(--accent-ink)",
-      },
-      {
-        value: "42",
-        label: "GOVERNED DASHBOARDS",
-        context: "Operational and financial dashboards deployed with real-time automated refresh.",
-        color: "var(--accent-ink)",
-      },
-      {
-        value: "28+",
-        label: "UNIFIED SOURCES",
-        context: "Enterprise data connectors integrated into a single source of truth without duplicates.",
-        color: "#4C82FF",
-      },
-    ],
     painPoints: [
       {
         title: "Isolated data silos and conflicting numbers",
@@ -1454,25 +1230,18 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
         technologies: ["Text-to-SQL", "LangChain SQL Agent", "DuckDB", "Python"],
       },
     ],
-    caseStudy: {
-      quote: "“Our executive committee now relies on a single, certified financial dashboard every morning at 8:00 AM. We eliminated 10 days of manual spreadsheet consolidation each month.”",
-      authorRole: "Chief Financial Officer (CFO)",
-      authorCompany: "Retail & Distribution Group (55+ employees)",
-      metricValue: "-65%",
-      metricLabel: "Monthly executive financial reporting cycle time",
-    },
     faqs: [
       {
         question: "Can we keep using our existing Power BI or Looker licenses?",
-        answer: "Absolutely. We build directly upon your existing stack, optimizing underlying data models to accelerate render times and reduce licensing costs.",
+        answer: "Yes. I work with your existing tools and improve the data models behind your reports.",
       },
       {
-        question: "How do you guarantee the accuracy of calculations and numbers?",
+        question: "How do you check the accuracy of calculations and numbers?",
         answer: "Through dbt, all metric definitions and transformations are version-controlled in Git and verified by automated integrity tests before data publication.",
       },
       {
         question: "Can non-technical business users build their own reports?",
-        answer: "Yes, our dbt semantic layer standardizes dimensions and metrics into plain business language, complemented by our Text-to-SQL copilot for natural query generation.",
+        answer: "Partly: the semantic layer presents data with business names people understand. An assistant that answers plain-language questions can be added, with answers to double-check on sensitive indicators.",
       },
     ],
     nextService: {

@@ -44,15 +44,15 @@ export const KEY_FACTS: KeyFact[] = [
     key: "compliance",
     valueFr: "AI Act",
     valueEn: "AI Act",
-    labelFr: "Conformité au règlement européen sur l'IA et au RGPD dès la conception",
-    labelEn: "EU AI Act and GDPR compliance from the design stage",
+    labelFr: "Le règlement européen sur l'IA et le RGPD pris en compte dès la conception",
+    labelEn: "The EU AI Act and GDPR taken into account from the design stage",
   },
   {
     key: "locations",
-    valueFr: "Paris · Strasbourg",
-    valueEn: "Paris · Strasbourg",
-    labelFr: "Siège à Paris, bureau à Strasbourg, interventions partout en France",
-    labelEn: "Head office in Paris, office in Strasbourg, work across France",
+    valueFr: "France",
+    valueEn: "France",
+    labelFr: "Siège à Paris, interventions partout en France, à distance ou sur site",
+    labelEn: "Head office in Paris, working across France, remotely or on site",
   },
 ];
 

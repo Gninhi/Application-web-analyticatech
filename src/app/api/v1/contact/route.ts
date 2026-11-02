@@ -56,6 +56,14 @@ function json(body: ContactApiResponse, status: number, extra?: Record<string, s
 
 const HONEYPOT_FIELDS = ["companyUrl", "website", "fax", "phone2"] as const;
 
+/** Message de confirmation, aligné sur les engagements publiés (`data/commitments.ts`). */
+function successMessage(isEn: boolean): string {
+  const { reply } = SLA_COMMITMENTS;
+  return isEn
+    ? `Request received. I will reply to you personally ${reply.valueEn.toLowerCase()}.`
+    : `Demande reçue. Je vous réponds personnellement ${reply.valueFr.toLowerCase()}.`;
+}
+
 /** Build l'allowlist d'origines depuis l'env. Fallback fail-closed sur NEXT_PUBLIC_SITE_URL. */
 function getAllowedOrigins(): string[] {
   const env = getServerEnv();
@@ -80,6 +88,9 @@ function getAllowedOrigins(): string[] {
 }
 
 export async function POST(req: NextRequest) {
+  // Langue des messages renvoyés au formulaire (en-tête posé par useContactForm)
+  const isEn = req.headers.get("x-locale") === "en";
+  const msg = (fr: string, en: string) => (isEn ? en : fr);
   const ip = getClientIp(req);
   const ipHash = hashIp(ip);
   const fingerprint = getRequestFingerprint(req);
@@ -96,7 +107,7 @@ export async function POST(req: NextRequest) {
       hasHeader: Boolean(headerToken),
     });
     return json(
-      { success: false, message: "Token de sécurité invalide. Veuillez rafraîchir la page." },
+      { success: false, message: msg("Jeton de sécurité invalide. Rafraîchissez la page.", "Invalid security token. Please refresh the page.") },
       403
     );
   }
@@ -106,11 +117,11 @@ export async function POST(req: NextRequest) {
   const allowed = getAllowedOrigins();
   if (allowed.length === 0) {
     audit.warn("Contact: no allowed origins configured, rejecting", { ipHash, fingerprint });
-    return json({ success: false, message: "Origine non autorisée." }, 403);
+    return json({ success: false, message: msg("Origine non autorisée.", "Origin not allowed.") }, 403);
   }
   if (!isOriginAllowed(req, allowed)) {
     audit.warn("Contact: origin not allowed", { ipHash, fingerprint });
-    return json({ success: false, message: "Origine non autorisée." }, 403);
+    return json({ success: false, message: msg("Origine non autorisée.", "Origin not allowed.") }, 403);
   }
 
   // 3. Bot detection.
@@ -120,7 +131,7 @@ export async function POST(req: NextRequest) {
       fingerprint,
       userAgent: ua?.slice(0, 80),
     });
-    return json({ success: false, message: "Requête non autorisée." }, 403);
+    return json({ success: false, message: msg("Requête non autorisée.", "Request not allowed.") }, 403);
   }
 
   // 4. Rate limiting.
@@ -138,8 +149,10 @@ export async function POST(req: NextRequest) {
     return json(
       {
         success: false,
-        message:
-          "Trop de tentatives. Cet endpoint est limité à 5 requêtes par heure. Réessayez plus tard.",
+        message: msg(
+          "Trop de tentatives. Réessayez dans une heure.",
+          "Too many attempts. Please try again in an hour."
+        ),
       },
       429,
       { "Retry-After": String(retryAfterSec) }
@@ -152,14 +165,14 @@ export async function POST(req: NextRequest) {
   const rawText = await readBodyWithLimit(req, MAX_BODY_SIZE);
   if (rawText === null) {
     audit.warn("Contact: payload too large", { ipHash, fingerprint });
-    return json({ success: false, message: "Payload trop volumineux." }, 413);
+    return json({ success: false, message: msg("Message trop volumineux.", "Message too large.") }, 413);
   }
   let raw: unknown;
   try {
     raw = JSON.parse(rawText);
   } catch {
     audit.warn("Contact: invalid JSON payload", { ipHash, fingerprint });
-    return json({ success: false, message: "Payload JSON invalide." }, 400);
+    return json({ success: false, message: msg("Requête invalide.", "Invalid request.") }, 400);
   }
 
   // 6. Multi-honeypot — un seul champ rempli => bot.
@@ -178,7 +191,7 @@ export async function POST(req: NextRequest) {
       return json(
         {
           success: true,
-          message: `Demande reçue. Un architecte vous répondra sous ${SLA_COMMITMENTS.architect.valueFr.replace("< ", "")}.`,
+          message: successMessage(isEn),
           reference: "AT-" + Date.now().toString(36).toUpperCase(),
         },
         200
@@ -202,7 +215,7 @@ export async function POST(req: NextRequest) {
     return json(
       {
         success: false,
-        message: "Validation échouée. Vérifiez les champs renseignés.",
+        message: msg("Certains champs sont à corriger.", "Some fields need to be corrected."),
         errors,
       },
       422
@@ -220,8 +233,8 @@ export async function POST(req: NextRequest) {
         return json(
           {
             success: false,
-            message: "Veuillez utiliser un email professionnel (entreprise).",
-            errors: [{ field: "email", message: "Domaine de messagerie non autorisé" }],
+            message: msg("Merci d'utiliser une adresse e-mail professionnelle.", "Please use a business email address."),
+            errors: [{ field: "email", message: msg("Domaine de messagerie non autorisé", "Email domain not allowed") }],
           },
           422
         );
@@ -273,7 +286,7 @@ export async function POST(req: NextRequest) {
       error: err instanceof Error ? err.message : String(err),
     });
     return json(
-      { success: false, message: "Erreur serveur. Réessayez ultérieurement." },
+      { success: false, message: msg("Erreur serveur. Réessayez plus tard.", "Server error. Please try again later.") },
       500
     );
   }
@@ -316,8 +329,7 @@ export async function POST(req: NextRequest) {
   return json(
     {
       success: true,
-      message:
-        `Transmission sécurisée confirmée. Un architecte Analyticatech vous répondra sous ${SLA_COMMITMENTS.architect.valueFr.replace("< ", "")}.`,
+      message: successMessage(isEn),
       reference,
     },
     201

@@ -37,8 +37,8 @@ export function LivingSystemGraph() {
         icon: Database,
         metrics: isEn ? "Your existing tools" : "Vos outils existants",
         details: isEn
-          ? ["Native REST/gRPC connectors", "AES-256 encryption (transit & rest)", "GDPR & Sovereign Cloud Compliance"]
-          : ["Connecteurs natifs REST/gRPC", "Chiffrement AES-256 (transit & repos)", "Conformité RGPD & Cloud Souverain"],
+          ? ["Connectors to your software (APIs)", "Encryption in transit and at rest", "Hosting chosen with you (EU or your servers)"]
+          : ["Connexion à vos logiciels (API)", "Chiffrement en transit et au repos", "Hébergement choisi avec vous (UE ou vos serveurs)"],
       },
       {
         id: "intelligence",

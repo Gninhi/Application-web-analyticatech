@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { SLA_COMMITMENTS } from "@/data/commitments";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ShieldCheck,
@@ -28,26 +29,26 @@ import { cn } from "@/lib/utils/cn";
 const DOMAIN_SUGGESTIONS = [
   {
     id: "agents",
-    labelFr: "IA Agentique & Multi-Agents",
-    labelEn: "Agentic AI & Multi-Agents",
+    labelFr: "Agents IA & multi-agents",
+    labelEn: "AI agents & multi-agent",
     icon: Bot,
   },
   {
     id: "rag",
-    labelFr: "RAG & LLM Souverain",
-    labelEn: "Sovereign RAG & LLMs",
+    labelFr: "Assistant sur vos documents (RAG)",
+    labelEn: "Assistant on your documents (RAG)",
     icon: BrainCircuit,
   },
   {
     id: "data",
-    labelFr: "Modern Data Stack & BI",
-    labelEn: "Modern Data Stack & BI",
+    labelFr: "Données & tableaux de bord",
+    labelEn: "Data & dashboards",
     icon: Database,
   },
   {
     id: "audit",
-    labelFr: "Audit & Cadrage Technique",
-    labelEn: "Technical Audit & Scoping",
+    labelFr: "Audit & cadrage",
+    labelEn: "Audit & scoping",
     icon: SearchCode,
   },
 ] as const;
@@ -137,13 +138,13 @@ export function ContactForm() {
 
               <div className="max-w-md mx-auto space-y-2">
                 <span className="font-mono text-xs uppercase tracking-[0.25em] text-link font-bold">
-                  {isEn ? "TRANSMISSION CONFIRMED" : "TRANSMISSION CONFIRMÉE"}
+                  {isEn ? "REQUEST SENT" : "DEMANDE ENVOYÉE"}
                 </span>
                 <h3 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-50">
-                  {isEn ? "Request Logged & Encrypted" : "Demande enregistrée & chiffrée"}
+                  {isEn ? "Your request has been received" : "Votre demande est bien reçue"}
                 </h3>
                 <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                  {serverMsg || t("contact.success")}
+                  {t("contact.success")}
                 </p>
               </div>
 
@@ -187,15 +188,15 @@ export function ContactForm() {
                 <div className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
                   <div className="flex items-start gap-2.5">
                     <span className="font-mono text-accent-ink font-bold">01.</span>
-                    <span>{isEn ? "Automated security receipt sent to your corporate email (< 2h)" : "Accusé de réception sécurisé envoyé sur votre email d'entreprise (< 2h)"}</span>
+                    <span>{isEn ? `Personal reply from the founder ${SLA_COMMITMENTS.reply.valueEn.toLowerCase()}` : `Réponse personnelle du fondateur ${SLA_COMMITMENTS.reply.valueFr.toLowerCase()}`}</span>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <span className="font-mono text-accent-ink font-bold">02.</span>
-                    <span>{isEn ? "Review & scoping by a dedicated Solutions Architect (< 24h)" : "Analyse d'architecture par un Architecte Référent (< 24h)"}</span>
+                    <span>{isEn ? `A first call: ${SLA_COMMITMENTS.firstCall.valueEn}` : `Un premier échange : ${SLA_COMMITMENTS.firstCall.valueFr}`}</span>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <span className="font-mono text-accent-ink font-bold">03.</span>
-                    <span>{isEn ? "Confidential technical scoping workshop scheduling" : "Planification d'un atelier technique exploratoire sous NDA"}</span>
+                    <span>{isEn ? `A written proposal ${SLA_COMMITMENTS.proposal.valueEn.toLowerCase()}` : `Une proposition écrite ${SLA_COMMITMENTS.proposal.valueFr.toLowerCase()}`}</span>
                   </div>
                 </div>
               </div>
@@ -209,7 +210,7 @@ export function ContactForm() {
                   icon={<RotateCcw className="h-4 w-4" />}
                   iconPosition="left"
                 >
-                  <span>{isEn ? "Submit another inquiry" : "Initier une autre demande"}</span>
+                  <span>{isEn ? "Send another request" : "Envoyer une autre demande"}</span>
                 </Button>
               </div>
             </motion.div>
@@ -223,7 +224,7 @@ export function ContactForm() {
                     01
                   </span>
                   <span className="font-mono text-xs uppercase tracking-wider font-semibold text-slate-800 dark:text-slate-200">
-                    {isEn ? "Identity & Structure" : "Identité & Structure"}
+                    {isEn ? "About you" : "Vous et votre entreprise"}
                   </span>
                 </div>
 
@@ -298,7 +299,7 @@ export function ContactForm() {
                       02
                     </span>
                     <span className="font-mono text-xs uppercase tracking-wider font-semibold text-slate-800 dark:text-slate-200">
-                      {isEn ? "Project Domain & Scope" : "Périmètre & Domaine de Consultation"}
+                      {isEn ? "Topic" : "Sujet de votre demande"}
                     </span>
                   </div>
                   <span className="font-mono text-[10px] text-slate-400 hidden sm:inline">
@@ -335,7 +336,7 @@ export function ContactForm() {
                 <TerminalField
                   label={t("contact.fields.sujet")}
                   name="sujet"
-                  placeholder={isEn ? "e.g. Multi-agent platform deployment" : "Ex: Déploiement d'une plateforme agentique souveraine"}
+                  placeholder={isEn ? "e.g. An assistant for our customer service" : "Ex : un assistant pour notre service client"}
                   value={form.sujet}
                   onChange={(v) => update("sujet", v)}
                   error={errors.sujet}

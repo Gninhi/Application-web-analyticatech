@@ -80,19 +80,6 @@ export default function NotFoundPage() {
             aria-hidden="true"
           />
 
-          {/* Bandeau supérieur de télémesure de la session */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pb-6 mb-8 border-b border-black/10 dark:border-white/10 font-mono text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400">
-            <div className="flex items-center gap-2">
-              <span className="flex h-2 w-2 rounded-full bg-[#F26D3D] animate-ping" />
-              <span className="text-accent-ink font-bold">NODE_STATUS: DISCONNECTED</span>
-            </div>
-            <div className="hidden sm:flex items-center gap-4">
-              <span>LATENCY: 0.00ms (PACKET_DROP)</span>
-              <span>•</span>
-              <span>MESH_FAILSAFE: ACTIVE</span>
-            </div>
-          </div>
-
           {/* Radar vectoriel stylisé en arrière-plan du 404 */}
           <div className="relative my-4 flex items-center justify-center">
             {/* Anneaux de radar en filigrane */}
@@ -160,16 +147,12 @@ export default function NotFoundPage() {
             </Button>
           </div>
 
-          {/* Grille de liens de réorientation du maillage */}
+          {/* Grille de liens vers les pages principales */}
           <div className="text-left border-t border-black/10 dark:border-white/10 pt-8">
             <div className="flex items-center justify-between gap-4 mb-5">
               <p className="font-mono text-[11px] uppercase tracking-widest text-accent-ink font-bold">
                 {t("notFound.recommended")}
               </p>
-              <div className="flex items-center gap-1.5 font-mono text-[10px] text-link bg-link/10 px-2.5 py-0.5 rounded-full border border-link/20">
-                <span className="h-1.5 w-1.5 rounded-full bg-link" />
-                <span>{isEn ? "GRID ONLINE" : "MAILLAGE ACTIF"}</span>
-              </div>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4">

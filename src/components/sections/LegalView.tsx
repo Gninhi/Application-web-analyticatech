@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ContactCta } from "@/components/ui/ContactCta";
 import { SectionContainer } from "@/components/ui/SectionContainer";
+import { formatLegalDate } from "@/lib/content/legal";
 
 interface LegalViewProps {
   type: "rgpd" | "legal";
@@ -50,7 +51,7 @@ export function LegalView({ type, onNavigate }: LegalViewProps) {
         <div className="mb-10">
           <PageHeader icon={Icon} kicker={subtitle} title={title} size="md" />
           <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
-            {t("legal.lastUpdated")} {new Date().toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric" })}
+            {t("legal.lastUpdated")} {formatLegalDate(locale)}
           </p>
         </div>
 

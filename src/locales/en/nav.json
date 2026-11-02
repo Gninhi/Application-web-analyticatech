@@ -4,9 +4,7 @@
   "nav.solutions": "Solutions",
   "nav.blog": "Insights",
   "nav.contact": "Contact",
-  "nav.cta": "Request an Assessment",
+  "nav.cta": "Book a call",
   "nav.menu.open": "Open navigation menu",
-  "nav.menu.close": "Close menu",
-  "nav.menu.status": "Control Panel // ACTIVE",
-  "nav.menu.footer": "Analyticatech — Secure Connection Established"
+  "nav.menu.close": "Close menu"
 }

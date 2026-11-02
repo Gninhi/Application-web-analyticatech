@@ -21,10 +21,10 @@
   "services.persona.filterOps": "Operations Team",
   "services.persona.all": "All Expertise",
   "services.persona.ceo": "Executive View",
-  "services.persona.architect": "Architect View",
+  "services.persona.architect": "Technical view",
   "services.persona.operational": "Operational View",
   "services.persona.ceo-label": "CEO",
-  "services.persona.architect-label": "Architect",
+  "services.persona.architect-label": "Technical",
   "services.persona.operational-label": "Ops",
   "services.persona.selected": "Perspective:"
 }

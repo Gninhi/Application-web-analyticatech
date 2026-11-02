@@ -17,7 +17,7 @@ describe("NotFoundPage (404)", () => {
     expect(html).toContain("Me contacter");
     expect(html).toContain("Accueil");
     expect(html).toContain("Services &amp; Expertise");
-    expect(html).toContain("Solutions sectorielles");
+    expect(html).toContain("Les produits que je construis et les pistes à venir.");
     expect(html).toContain("Articles");
   });
 
@@ -34,7 +34,7 @@ describe("NotFoundPage (404)", () => {
     expect(html).toContain("Contact me");
     expect(html).toContain("Home");
     expect(html).toContain("Services &amp; Capabilities");
-    expect(html).toContain("Industry Solutions");
+    expect(html).toContain("The products I build and the ideas to come.");
     expect(html).toContain("Articles");
     expect(html).toContain('href="/en"');
     expect(html).toContain('href="/en/services"');

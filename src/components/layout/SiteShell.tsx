@@ -7,7 +7,6 @@ import dynamic from "next/dynamic";
 import { ImmersiveBackground } from "@/components/effects/ImmersiveBackground";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { JsonLd } from "@/components/seo/JsonLd";
 import { ContentProvider } from "@/components/providers/ContentProvider";
 import { I18nProvider, useI18n } from "@/lib/i18n/provider";
 import { pathToView } from "@/lib/navigation/routes";
@@ -127,7 +126,6 @@ export function SiteShell({ content, children }: SiteShellProps) {
     <MotionConfig reducedMotion="user">
       <I18nProvider initialLocale={content.locale}>
         <ContentProvider content={content}>
-          <JsonLd />
           <SiteShellInner>{children}</SiteShellInner>
         </ContentProvider>
       </I18nProvider>

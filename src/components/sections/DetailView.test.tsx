@@ -38,7 +38,7 @@ describe("ServiceDetailView Component", () => {
     expect(html).toContain("BANQUE & ASSURANCE");
 
     // Stack technique & Témoignage
-    expect(html).toContain("Une stack de production, pas de prototypage");
+    expect(html).toContain("Des outils éprouvés en production");
     expect(html).toContain("LangChain");
     expect(html).toContain("Mistral Large");
     expect(html).not.toContain("-65%");
@@ -46,8 +46,9 @@ describe("ServiceDetailView Component", () => {
 
     // FAQ & CTA
     expect(html).toContain("Les questions posées avant de démarrer");
-    expect(html).toContain("Mes données d'entreprise restent-elles confidentielles et souveraines ?");
-    expect(html).toContain("Demander un cadrage express");
+    expect(html).toContain("Mes données d'entreprise restent-elles confidentielles ?");
+    expect(html).not.toContain("certifié SecNumCloud");
+    expect(html).toContain("Prendre 20 minutes");
   });
 
   it("rend les données enrichies pour tous les index de services (01, 02, 03, 04)", () => {
@@ -64,7 +65,9 @@ describe("ServiceDetailView Component", () => {
 
       expect(html).toContain(data.heroTitle);
       expect(html).toContain(data.badge);
-      expect(html).not.toContain(data.caseStudy.quote);
+      // Aucun témoignage ni preuve chiffrée : ces champs n'existent plus
+      expect("caseStudy" in data).toBe(false);
+      expect("proofMetrics" in data).toBe(false);
       expect(html).toContain(data.deliverables[0].title);
       expect(html).toContain(data.timeline[0].title);
       expect(html).toContain(data.sectorCases[0].sector);

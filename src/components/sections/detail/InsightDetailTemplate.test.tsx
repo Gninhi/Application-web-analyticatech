@@ -89,7 +89,8 @@ describe("InsightDetailTemplate & Registry", () => {
     // 02. Problème
     expect(html).toContain("02 · LE PROBLÈME EN PRODUCTION");
     expect(html).toContain("ERR_01 // CHUNKING_NAÏF");
-    expect(html).toContain("Perte de 38% de recall");
+    expect(html).toContain("Les clauses liées ne sont plus retrouvées ensemble");
+    expect(html).not.toMatch(/\d+\s?% de recall/);
 
     // 03. Architecture & Stack
     expect(html).toContain("03 · APPROCHE & ARCHITECTURE");
@@ -113,7 +114,7 @@ describe("InsightDetailTemplate & Registry", () => {
     // 06. Pour aller plus loin
     expect(html).toContain("06 · POUR ALLER PLUS LOIN · SOLUTIONS & SERVICES");
     expect(html).toContain("Service 01 — Raisonnement & RAG");
-    expect(html).toContain("Synthèse clinique & extraction NLP");
+    expect(html).toContain("AVIE — veille sourcée");
   });
 
   it("BlogDetailView intègre automatiquement le template enrichi pour les articles enregistrés", () => {
@@ -126,9 +127,11 @@ describe("InsightDetailTemplate & Registry", () => {
     expect(html).toContain("05 · INDICATEURS À MESURER");
   });
 
-  it("garantit que l'intégralité des 6 articles du registre respectent la grille d'expertise technique", () => {
+  it("garantit que les 5 articles du registre respectent la grille d'expertise technique", () => {
     const allSlugs = Object.keys(INSIGHTS_DETAIL_REGISTRY);
-    expect(allSlugs.length).toBe(6);
+    expect(allSlugs.length).toBe(5);
+    // L'article FinOps, hors de l'offre, a été dépublié
+    expect(allSlugs).not.toContain("finops-cloud-native");
 
     for (const slug of allSlugs) {
       const article = INSIGHTS_DETAIL_REGISTRY[slug];
@@ -187,9 +190,9 @@ describe("InsightDetailTemplate & Registry", () => {
     }
   });
 
-  it("garantit que FALLBACK_BLOG_POSTS_FR et _EN contiennent les 6 articles complets", () => {
-    expect(FALLBACK_BLOG_POSTS_FR).toHaveLength(6);
-    expect(FALLBACK_BLOG_POSTS_EN).toHaveLength(6);
+  it("garantit que FALLBACK_BLOG_POSTS_FR et _EN contiennent les 5 articles complets", () => {
+    expect(FALLBACK_BLOG_POSTS_FR).toHaveLength(5);
+    expect(FALLBACK_BLOG_POSTS_EN).toHaveLength(5);
 
     const fallbackSlugsFr = FALLBACK_BLOG_POSTS_FR.map((p) => p.slug);
     const registrySlugs = Object.keys(INSIGHTS_DETAIL_REGISTRY);

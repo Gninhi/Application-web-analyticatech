@@ -60,10 +60,10 @@ describe("ContactView — Rendu SSR & Intégration FAQ", () => {
 
     // Vérifie que les badges de sécurité pertinents sont conservés
     expect(html).toContain("Conforme RGPD");
-    expect(html).toContain("Données conservées de façon sécurisée");
+    expect(html).toContain("Données hébergées dans l'Union européenne");
 
     // Vérifie la présence de la section FAQ intégrée
-    expect(html).toContain("FAQ // QUESTIONS FRÉQUENTES");
+    expect(html).toContain("FAQ");
     expect(html).toContain("Questions fréquentes avant de démarrer.");
     expect(html).toContain("Combien de temps faut-il pour livrer un projet");
   });
@@ -73,7 +73,7 @@ describe("ContactView — Rendu SSR & Intégration FAQ", () => {
 
     expect(html).toContain("First name");
     expect(html).toContain("Last name");
-    expect(html).toContain("FAQ // CONSULTATION PROTOCOL");
+    expect(html).not.toContain("CONSULTATION PROTOCOL");
     expect(html).toContain("Frequently Asked Questions.");
   });
 });

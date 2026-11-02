@@ -16,7 +16,7 @@ interface State {
 
 /**
  * ErrorBoundary global — capture les crashes React et affiche
- * un écran "Alerte Système" stylisé dans l'esthétique cyberpunk.
+ * un écran d'erreur sobre, sans jargon technique.
  */
 export class GlobalErrorBoundary extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -56,14 +56,14 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
             <p
               className="font-mono text-xs uppercase tracking-[0.3em] text-accent-ink mb-3"
             >
-              Alerte Système // 0xERR_FATAL
+              Erreur
             </p>
             <h1 className="font-display text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100 mb-3">
-              Défaillance système détectée
+              Une erreur est survenue
             </h1>
             <p className="text-slate-400 dark:text-slate-300 text-sm mb-2">
-              Une erreur inattendue est survenue lors du rendu de l&apos;interface.
-              L&apos;incident a été journalisé pour analyse.
+              La page n&apos;a pas pu s&apos;afficher. Rechargez-la ; si le problème persiste,
+              écrivez à contact@analyticatech.fr.
             </p>
             {process.env.NODE_ENV !== "production" && this.state.error && (
               <pre className="font-mono text-[11px] text-accent-ink/80 bg-black/30 border border-black/10 dark:border-white/10 rounded-lg p-3 mt-4 overflow-auto max-h-32 text-left">
@@ -78,7 +78,7 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
               iconPosition="left"
               className="mt-6 bg-[#E35F31] px-5 py-2.5 text-sm text-white hover:bg-[#E35F31]"
             >
-              <span>RÉINITIALISER LE SYSTÈME</span>
+              <span>Recharger la page</span>
             </Button>
           </div>
         </div>

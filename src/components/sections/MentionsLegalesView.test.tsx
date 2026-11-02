@@ -74,15 +74,18 @@ describe("MentionsLegalesView — Conformité LCEN Article 6-III", () => {
     expect(html).toContain("Vercel");
     expect(html).toContain("440 N Barranca Ave #4133, Covina");
     // Distinction des données clients
-    expect(html).toContain("Distinction essentielle : hébergement web vs données clients");
-    expect(html).toContain("SecNumCloud");
-    expect(html).toContain("Data Processing Agreement");
+    // Données du formulaire (Supabase UE) et données de mission, sans certification revendiquée
+    expect(html).toContain("Données du formulaire et données de mission");
+    expect(html).toContain("Supabase");
+    expect(html).not.toContain("SecNumCloud");
+    expect(html).not.toContain("ISO 27001");
   });
 
-  it("stipule la clause d'opposition au scraping IA (TDM opt-out) en propriété intellectuelle", () => {
+  it("autorise l'indexation et la citation, refuse l'entraînement (cohérent avec robots.txt)", () => {
     const html = renderWithProviders(<MentionsLegalesView onNavigate={() => {}} />);
     expect(html).toContain("L. 122-5-3");
-    expect(html).toContain("Text and Data Mining");
+    expect(html).toContain("peuvent indexer et citer ce site");
+    expect(html).toContain("robots.txt");
   });
 
   it("garantit que les sections ne sont pas masquées à opacity:0 au rendu SSR (lisible sans JS)", () => {

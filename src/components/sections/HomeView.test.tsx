@@ -63,7 +63,7 @@ describe("HomeView — Rendu SSR initial (crawl sans JS & robots IA)", () => {
     expect(html).toContain("02 — ENGAGEMENTS");
     expect(html).not.toContain("48+");
 
-    expect(html).toContain("03 — NOS SERVICES");
+    expect(html).toContain("03 — SERVICES");
     expect(html).toContain("04 — PROBLÈMES MÉTIERS");
     expect(html).toContain("05 — DE LA DONNÉE À LA DÉCISION");
     expect(html).toContain("06 — MÉTHODE");

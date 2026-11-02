@@ -190,7 +190,7 @@ export function SolutionCard({
           <div className="absolute bottom-2.5 left-3.5 right-3.5 sm:bottom-3 sm:left-4 sm:right-4 z-20 flex items-center justify-between">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-2 sm:px-2.5 py-0.5 sm:py-1 font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.08em] text-foreground">
               <span className="h-1.5 w-1.5 rounded-full bg-[#F26D3D]" />
-              {sol.statusBadge ?? "Cas d'usage type"}
+              {sol.statusBadge ?? t("solutions.detail.status.default")}
             </span>
             <span
               className="font-mono text-[9px] sm:text-[10px] uppercase tracking-widest opacity-0 transition-opacity duration-300 group-hover:opacity-100"
@@ -215,7 +215,7 @@ export function SolutionCard({
           className="relative z-20 flex min-h-0 flex-1 flex-col overflow-hidden lg:overflow-y-auto lg:overscroll-contain p-4 sm:p-5 lg:p-6 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[var(--glass-card-border)] [&::-webkit-scrollbar-track]:bg-transparent"
           style={{ scrollbarWidth: "thin", scrollbarColor: "var(--glass-card-border) transparent" }}
         >
-          <h2 className="font-display text-lg sm:text-xl lg:text-2xl font-bold tracking-tight mb-2 text-foreground transition-colors duration-300 group-hover:text-[var(--sa)] line-clamp-2">
+          <h2 className="shrink-0 font-display text-lg sm:text-xl lg:text-2xl font-bold tracking-tight mb-2 text-foreground transition-colors duration-300 group-hover:text-[var(--sa)] line-clamp-2">
             {sol.title}
           </h2>
           <div
@@ -235,7 +235,7 @@ export function SolutionCard({
             </span>
             <div className="min-w-0 flex-1">
               <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground mb-0.5">
-                {sol.statusType === "new" ? (sol.impactLabel ?? "Capacité & Méthode") : t("common.impact")}
+                {sol.impactLabel ?? t("common.impact")}
               </p>
               <p className="font-display text-xs sm:text-sm lg:text-base font-bold leading-snug line-clamp-2" style={{ color: accent }}>
                 {sol.impact}

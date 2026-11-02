@@ -32,7 +32,7 @@ export function ContactView() {
       icon: Lock,
       labelFr: "Confidentialité",
       labelEn: "Confidentiality",
-      valFr: "NDA Préalable",
+      valFr: "NDA préalable",
       valEn: "Mutual NDA",
       descFr: "Signature systématique",
       descEn: "Executed upfront",
@@ -121,12 +121,12 @@ export function ContactView() {
       {/* 3. Section FAQ Exécutive (déplacée depuis l'accueil pour un parcours de conversion optimal) */}
       <div className="pb-24 relative z-10">
         <FaqSection
-          tag={isEn ? "FAQ // CONSULTATION PROTOCOL" : "FAQ // QUESTIONS FRÉQUENTES"}
+          tag="FAQ"
           title={isEn ? "Frequently Asked Questions." : "Questions fréquentes avant de démarrer."}
           description={
             isEn
-              ? "Everything executives and engineering leaders ask before initiating an AI or data project with us."
-              : "Tout ce que les dirigeants et directeurs techniques nous demandent avant de lancer un projet avec nous."
+              ? "What business leaders and technical managers ask me most before starting an AI or data project."
+              : "Ce que les dirigeants et les responsables techniques me demandent le plus avant de lancer un projet."
           }
         />
       </div>

@@ -39,7 +39,7 @@ export function InsightDetailTemplate({
   onNavigate,
   onNavigateDetail,
 }: InsightDetailTemplateProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   const handleLinkClick = (resource: InsightDetailData["relatedResources"][0]) => {
     if (onNavigateDetail) {
@@ -53,19 +53,19 @@ export function InsightDetailTemplate({
     {
       id: "contexte",
       number: "01",
-      title: "Contexte Métier",
-      subtitle: "Cas d'usage réel",
+      title: "Contexte",
+      subtitle: "Scénario type",
     },
     {
       id: "probleme",
       number: "02",
-      title: "Problème en Prod",
-      subtitle: "Modes d'échec constatés",
+      title: "Le problème",
+      subtitle: "Modes d'échec typiques",
     },
     {
       id: "approche",
       number: "03",
-      title: "Approche & Stack",
+      title: "Approche & outils",
       subtitle: "Architecture cible",
     },
     {
@@ -77,14 +77,14 @@ export function InsightDetailTemplate({
     {
       id: "resultats",
       number: "05",
-      title: "Résultats & Mesures",
-      subtitle: "Données contextualisées",
+      title: "Ce qu'il faut mesurer",
+      subtitle: "Indicateurs et méthode",
     },
     {
       id: "aller-plus-loin",
       number: "06",
       title: "Pour aller plus loin",
-      subtitle: "Maillage solutions",
+      subtitle: "Projets et services liés",
     },
   ];
 
@@ -116,6 +116,13 @@ export function InsightDetailTemplate({
             </span>
           </div>
         </div>
+
+        {/* Le corps des articles n'existe qu'en français : on le dit plutôt que de le masquer */}
+        {locale === "en" && (
+          <p lang="en" className="rounded-xl border border-border px-4 py-3 text-sm text-slate-600 dark:text-slate-300">
+            This article is currently available in French only.
+          </p>
+        )}
 
         {/* ================= HERO PANEL ================= */}
         <motion.header
@@ -325,7 +332,7 @@ export function InsightDetailTemplate({
           <div className="space-y-3">
             <p className="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2">
               <Cpu className="h-3.5 w-3.5 text-accent-ink" aria-hidden />
-              Stack & Composants de production qualifiés
+              Outils et composants
             </p>
             <div className="flex flex-wrap gap-2.5">
               {data.approach.techStack.map((tech) => (
@@ -482,7 +489,7 @@ export function InsightDetailTemplate({
 
                   <div className="pt-2 border-t border-slate-200/60 dark:border-white/5">
                     <span className="font-mono text-[10px] text-link dark:text-link uppercase tracking-wider">
-                      Mitigation déployée :
+                      Atténuation prévue :
                     </span>
                     <p className="text-slate-600 dark:text-slate-300 mt-0.5">
                       {tradeoff.mitigation}
@@ -556,7 +563,7 @@ export function InsightDetailTemplate({
           {/* Gains qualitatifs observés */}
           <div className="space-y-2.5 pt-2">
             <p className="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              Bénéfices d&apos;exploitation constatés :
+              Bénéfices attendus :
             </p>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
               {data.results.observedBenefits.map((benefit, idx) => (
@@ -592,7 +599,7 @@ export function InsightDetailTemplate({
               Prolonger cette architecture sur vos projets
             </h2>
             <p className="mt-2 text-slate-600 dark:text-slate-300 leading-relaxed text-sm">
-              Découvrez les services d&apos;ingénierie et les solutions métiers directement liés à cette problématique :
+              Les services et les projets liés à cette problématique :
             </p>
           </div>
 
@@ -634,7 +641,7 @@ export function InsightDetailTemplate({
         {/* ================= CALL TO ACTION ================= */}
         <ContactCta
           question="Vous concevez ou auditez une architecture similaire ?"
-          cta="Échanger avec un architecte"
+          cta={locale === "en" ? "Let's talk" : "Échanger avec le fondateur"}
           onNavigate={onNavigate}
         />
           </div>

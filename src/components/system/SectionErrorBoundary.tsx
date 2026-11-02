@@ -68,8 +68,8 @@ export class SectionErrorBoundary extends React.Component<
             Incident de rendu // {this.props.sectionName ?? "Module"}
           </span>
           <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto">
-            Le composant interactif a rencontré une anomalie temporaire. Le reste de la page
-            demeure pleinement fonctionnel.
+            Cette partie de la page n&apos;a pas pu s&apos;afficher. Le reste de la page fonctionne
+            normalement.
           </p>
           <button
             type="button"
@@ -77,7 +77,7 @@ export class SectionErrorBoundary extends React.Component<
             className="mt-4 inline-flex items-center gap-2 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 px-4 py-2 font-mono text-xs text-slate-800 dark:text-slate-200 transition-colors hover:border-[#F26D3D] hover:text-accent-ink"
           >
             <RefreshCw className="h-3.5 w-3.5" aria-hidden />
-            <span>Réinitialiser ce module</span>
+            <span>Réessayer</span>
           </button>
         </div>
       );

@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/branding/ThemeProvider";
 import "./globals.css";
 import { GlobalErrorBoundary } from "@/components/system/GlobalErrorBoundary";
 import { SiteShell } from "@/components/layout/SiteShell";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getAppContent } from "@/lib/services/content.service";
 import type { Locale } from "@/types/content";
 
@@ -35,35 +36,18 @@ export const metadata: Metadata = {
     template: "%s | Analyticatech",
   },
   description:
-    "Analyticatech aide les dirigeants de PME et d'ETI, et leurs DSI, à passer du pilote IA à des systèmes fiables en production : agents IA, automatisation, business intelligence et conformité AI Act. Siège à Paris, bureau à Strasbourg.",
+    "Analyticatech aide les dirigeants de PME et d'ETI, et leurs DSI, à passer du pilote IA à des systèmes fiables en production : assistants sur vos documents, automatisation, agents IA sous contrôle humain et tableaux de bord. Conseil indépendant basé à Paris.",
   keywords: [
-    // Mots-clés principaux (haute intention)
-    "cabinet conseil IA",
-    "cabinet conseil intelligence artificielle",
-    "consultant IA entreprise",
-    "transformation digitale IA",
-    "automatisation IA entreprise",
-    // Mots-clés techniques (longue traîne)
-    "agents IA production",
-    "architecture LLM entreprise",
-    "système RAG",
-    "LangChain consulting",
-    "LangGraph agents",
-    "n8n automatisation",
-    "Power BI dashboard",
-    "agents cognitifs",
-    "IA souveraine compatible SecNumCloud",
-    // Mots-clés sectoriels
-    "IA finance",
-    "IA logistique",
-    "IA santé",
-    "IA secteur public",
-    // Mots-clés GEO (Generative Engine Optimization)
-    "cabinet IA France",
-    "experts IA générative Paris",
-    "industrialisation IA",
-    "data engineering IA",
-    "MLOps production",
+    "conseil IA PME",
+    "consultant intelligence artificielle",
+    "agents IA",
+    "automatisation des processus",
+    "assistant IA documents",
+    "RAG",
+    "LangGraph",
+    "n8n",
+    "Power BI",
+    "business intelligence PME",
   ],
   authors: [{ name: "Analyticatech", url: "https://analyticatech.fr" }],
   creator: "Analyticatech",
@@ -118,9 +102,6 @@ export const metadata: Metadata = {
   other: {
     "application-name": "Analyticatech",
     "theme-color": "#011C40",
-    // SEO pour LLMs / GEO — signale le contenu au crawling IA
-    "ai-content-optimized": "true",
-    "llm-friendly": "true",
     "geo.region": "FR",
     "geo.placename": "Paris",
     "geo.position": "48.8566;2.3522",
@@ -170,6 +151,7 @@ export default async function RootLayout({
       <body
         className={`${manrope.variable} ${inter.variable} antialiased`}
       >
+        <JsonLd content={content} />
         <ThemeProvider>
           <GlobalErrorBoundary>
             <SiteShell content={content}>{children}</SiteShell>

@@ -1,101 +1,12 @@
 import { cache } from "react";
-import { db } from "@/lib/db/client";
 import type { SolutionDTO, Locale } from "@/types/content";
-import { FALLBACK_SOLUTIONS_FR, FALLBACK_SOLUTIONS_EN } from "./safe";
-
-const SECTOR_TRANSLATIONS_EN: Record<string, string> = {
-  "Logistique": "Logistics",
-  "Finance": "Finance",
-  "Retail": "Retail",
-  "Santé": "Healthcare",
-  "Industrie": "Industry",
-  "Énergie": "Energy",
-  "Conseil": "Consulting",
-  "Aéro": "Aerospace",
-  "Cybersécurité": "Cybersecurity",
-  "Public": "Public Sector",
-  "M&A & Private Equity": "M&A & Private Equity",
-};
-
-const SOLUTION_METHODOLOGY_FR: Record<string, string> = {
-  "logistics-ai": "Résultats observés sur les missions de déploiement logistique, 2024–2025.",
-  "finance-agent": "Mesures constatées en production sur flux de transactions réelles, 2024–2025.",
-  "retail-bi": "Résultats mesurés sur les déploiements retail multi-sites, 2024–2025.",
-  "healthcare-nlp": "Mesures issues des bancs d'évaluation et missions pilotes hospitalières, 2024–2025.",
-  "health-rag": "Mesures issues des bancs d'évaluation et missions pilotes hospitalières, 2024–2025.",
-  "industry-maintenance": "Résultats mesurés sur lignes de production industrielle instrumentées, 2024–2025.",
-  "industry-auto": "Résultats mesurés sur lignes de production industrielle instrumentées, 2024–2025.",
-  "energy-smartgrid": "Modélisation et retours d'exploitation sur réseaux d'énergie, 2024–2025.",
-  "public-data": "Modélisation et retours d'exploitation sur infrastructures publiques, 2024–2025.",
-  "dealscoop": "Pipeline multi-sources (greffes, signaux RH, actualités régionales) calibré sur vos thèses d'investissement et critères de build-up.",
-};
-
-const SOLUTION_METHODOLOGY_EN: Record<string, string> = {
-  "logistics-ai": "Observed results across client logistics deployments, 2024–2025.",
-  "finance-agent": "Production metrics measured across real-time transaction streams, 2024–2025.",
-  "retail-bi": "Measured results across multi-site retail rollouts, 2024–2025.",
-  "healthcare-nlp": "Evaluated across clinical test benches and pilot hospital engagements, 2024–2025.",
-  "health-rag": "Evaluated across clinical test benches and pilot hospital engagements, 2024–2025.",
-  "industry-maintenance": "Measured on instrumented industrial manufacturing lines, 2024–2025.",
-  "industry-auto": "Measured on instrumented industrial manufacturing lines, 2024–2025.",
-  "energy-smartgrid": "Simulation and operational feedback across energy grid operations, 2024–2025.",
-  "public-data": "Simulation and operational feedback across public infrastructure, 2024–2025.",
-  "dealscoop": "Multi-source pipeline (company registries, talent signals, regional press) calibrated to your investment thesis and build-up criteria.",
-};
+import { FALLBACK_SOLUTIONS_FR, FALLBACK_SOLUTIONS_EN } from "@/lib/content/fallbacks";
 
 /**
- * Charte : seules des références réelles et vérifiables peuvent être publiées.
- * Les fiches sectorielles en base décrivaient des résultats clients non
- * démontrés ; tant qu'aucun cas client n'est publiable, le site sert les
- * « cas d'usage types » locaux (sans chiffres) définis dans fallbacks.ts.
- * Passer PUBLISH_DB_SOLUTIONS=true pour revenir à la base.
+ * Solutions : projets réellement construits par Analyticatech puis pistes
+ * assumées comme non construites (`fallbacks.ts`). La base n'est plus lue :
+ * ses fiches sectorielles décrivaient des résultats clients non démontrés.
  */
-export const getSolutions = cache(async (locale: Locale = "fr"): Promise<SolutionDTO[]> => {
-  if (process.env.PUBLISH_DB_SOLUTIONS !== "true") {
-    return locale === "en" ? FALLBACK_SOLUTIONS_EN : FALLBACK_SOLUTIONS_FR;
-  }
-  try {
-    const raw = await db.solution.findMany({
-      where: { active: true },
-      orderBy: { order: "asc" },
-      include: {
-        translations: { where: { locale: locale } },
-        tags: true,
-      },
-    });
-
-    if (!raw || raw.length === 0) {
-      return locale === "en" ? FALLBACK_SOLUTIONS_EN : FALLBACK_SOLUTIONS_FR;
-    }
-
-    return raw.map((sol) => {
-      const tr = sol.translations[0] || { title: "", summary: "" };
-      const sector =
-        locale === "en"
-          ? SECTOR_TRANSLATIONS_EN[sol.sector] || sol.sector
-          : sol.sector;
-      const methodology =
-        locale === "en"
-          ? SOLUTION_METHODOLOGY_EN[sol.slug]
-          : SOLUTION_METHODOLOGY_FR[sol.slug];
-
-      return {
-        id: sol.id,
-        slug: sol.slug,
-        sector,
-        title: tr.title || sol.slug,
-        summary: tr.summary,
-        impact: sol.impact,
-        methodology,
-        tags: sol.tags.map((t) => t.tag),
-        order: sol.order,
-        statusBadge: sol.slug === "dealscoop" ? (locale === "en" ? "New offering" : "Nouvelle offre") : undefined,
-        statusType: sol.slug === "dealscoop" ? "new" : "deployed",
-        impactLabel: sol.slug === "dealscoop" ? (locale === "en" ? "Capability & Methodology" : "Capacité & Méthode") : undefined,
-      };
-    });
-  } catch {
-    return locale === "en" ? FALLBACK_SOLUTIONS_EN : FALLBACK_SOLUTIONS_FR;
-  }
-});
-
+export const getSolutions = cache(async (locale: Locale = "fr"): Promise<SolutionDTO[]> =>
+  locale === "en" ? FALLBACK_SOLUTIONS_EN : FALLBACK_SOLUTIONS_FR
+);
