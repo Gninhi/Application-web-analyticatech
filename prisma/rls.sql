@@ -1,66 +1,17 @@
 -- ============================================================
--- SÉCURITÉ NIVEAU BANCAIRE (ROW LEVEL SECURITY - RLS) SUPABASE
+-- ROW LEVEL SECURITY (RLS) SUPABASE
 -- Analyticatech — Politiques d'accès et d'isolation
+-- La base ne contient plus que 3 tables : ContactRequest,
+-- BlockedEmailDomain et SuspiciousUAPattern (le contenu éditorial est
+-- versionné dans le code ; tables de contenu supprimées le 02/11/2026).
 -- ============================================================
 
--- 1. Activation de la RLS sur l'ensemble des 35 tables
-ALTER TABLE "Metric" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "ClientLogo" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "Service" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "ServiceTranslation" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "ServiceMetric" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "ServiceTechnology" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "Solution" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "SolutionTranslation" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "SolutionTag" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "BlogCategory" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "BlogCategoryTranslation" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "BlogPost" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "BlogPostTranslation" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "BlogPostTag" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "Capability" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "CapabilityTranslation" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "CapabilityFeature" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "Testimonial" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "TestimonialTranslation" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "NavItem" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "NavItemTranslation" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "MarqueeKeyword" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "ActivityLogEntry" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "ActivityLogEntryTranslation" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "CompanyValue" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "CompanyValueTranslation" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "DeliveryStep" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "DeliveryStepTranslation" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "LegalSection" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "LegalSectionTranslation" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "SiteConfig" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "AppConfig" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "SeoMetadata" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "SeoMetadataTranslation" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "SeoSchema" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "FaqEntry" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "FaqEntryTranslation" ENABLE ROW LEVEL SECURITY;
+-- 1. Activation de la RLS
 ALTER TABLE "BlockedEmailDomain" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "SuspiciousUAPattern" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "ContactRequest" ENABLE ROW LEVEL SECURITY;
 
--- 2. Politiques de lecture publique (SELECT) pour les contenus statiques & marketing
-DO $$ 
-DECLARE
-  t text;
-BEGIN
-  FOR t IN SELECT table_name FROM information_schema.tables 
-           WHERE table_schema = 'public' 
-           AND table_name NOT IN ('ContactRequest', 'BlockedEmailDomain', 'SuspiciousUAPattern')
-  LOOP
-    EXECUTE format('DROP POLICY IF EXISTS "Public Read Policy" ON %I;', t);
-    EXECUTE format('CREATE POLICY "Public Read Policy" ON %I FOR SELECT USING (true);', t);
-  END LOOP;
-END $$;
-
--- 3. Isolation stricte pour les demandes de contact et sécurité
--- Aucune lecture publique direct via l'API anon Supabase
+-- 2. Isolation stricte : aucune lecture publique via l'API anon Supabase
 DROP POLICY IF EXISTS "No Public Select ContactRequest" ON "ContactRequest";
 CREATE POLICY "No Public Select ContactRequest" ON "ContactRequest" FOR SELECT USING (false);
 
@@ -85,7 +36,7 @@ REVOKE INSERT, UPDATE, DELETE ON "BlockedEmailDomain" FROM anon, authenticated;
 REVOKE INSERT, UPDATE, DELETE ON "SuspiciousUAPattern" FROM anon, authenticated;
 
 -- Garde-fou complémentaire : révoquer TOUTE écriture aux rôles publics sur toutes
--- les tables. Seules les lectures marketing restent ouvertes (politiques section 2).
+-- les tables du schéma public.
 DO $$
 DECLARE
   t text;

@@ -155,7 +155,7 @@ Anomalies trouvées et corrigées pendant ce contrôle :
 | R2 | P2 | ~~Limitation de débit en mémoire~~ | **Corrigé et vérifié** : limite persistante en base (5 demandes par heure et par empreinte), testée |
 | R3 | P2 | ~~Corps des articles en français sur le site EN~~ | **Corrigé et vérifié** : mentions légales bilingues, 5 articles EN, libellés du gabarit, du sommaire et du bandeau cookies localisés ; tests de parité FR/EN et de rendu EN |
 | R4 | P1 | Purge des demandes à 3 ans | **Corrigé mais non activé** : `/api/cron/purge-contacts` et `vercel.json`, testés ; ajouter `CRON_SECRET` sur Vercel |
-| R5 | P3 | Tables de contenu Supabase obsolètes | Seed réduit aux listes de sécurité (**corrigé**) ; suppression des tables à décider (migration destructive) |
+| R5 | P3 | ~~Tables de contenu Supabase obsolètes~~ | **Corrigé** le 02/11/2026 : sauvegarde JSON (301 lignes), suppression des 37 tables et 4 types orphelins, schéma Prisma réduit à 3 modèles (diff vide avec la base) |
 | R6 | P3 | Un point « Content security policy » signalé par Lighthouse sur /contact, sans violation visible en console | Analyse à poursuivre |
 
 ## 21. Validations humaines requises
@@ -165,7 +165,7 @@ Anomalies trouvées et corrigées pendant ce contrôle :
 3. Refus des robots d'entraînement IA.
 4. Piste « Veille BODACC ».
 5. Accord écrit du client pour le « Cas réel » (audit multi-agents).
-6. Capital social et numéro de TVA (Kbis, VIES).
+6. ~~Capital social et numéro de TVA~~ : vérifiés (Annuaire des Entreprises, VIES).
 7. Page LinkedIn active.
 8. Libellé du bouton d'action du header.
 9. ~~`ALLOWED_ORIGINS`~~ : vérifié en production après déploiement (requête invalide acceptée jusqu'à la validation, HTTP 422, rien d'enregistré).
