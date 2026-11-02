@@ -54,11 +54,11 @@ export function PageHeader({
       {Icon ? (
         <div className="flex items-center gap-3 mb-4 text-left">
           <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 shrink-0">
-            <Icon className="h-6 w-6 text-[#F26D3D]" aria-hidden />
+            <Icon className="h-6 w-6 text-accent-ink" aria-hidden />
           </span>
           <div>
             {kicker && (
-              <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-1">
+              <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent-ink mb-1">
                 {kicker}
               </p>
             )}
@@ -75,8 +75,8 @@ export function PageHeader({
       ) : (
         <>
           {kicker && (
-            <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3">
-              {"// " + kicker}
+            <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent-ink mb-3">
+              {kicker}
             </p>
           )}
           <ParticleTypography

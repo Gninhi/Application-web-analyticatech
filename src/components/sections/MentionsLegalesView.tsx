@@ -66,7 +66,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
               })}
             </span>
             <span className="hidden md:inline">•</span>
-            <span className="inline-flex items-center gap-1.5 font-mono text-xs text-[#F26D3D]">
+            <span className="inline-flex items-center gap-1.5 font-mono text-xs text-accent-ink">
               <FileCheck className="h-3.5 w-3.5" aria-hidden />
               Article 6-III de la loi n° 2004-575 (LCEN)
             </span>
@@ -92,10 +92,10 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
           >
             <div className="flex items-center gap-3 mb-4">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 shrink-0">
-                <Building2 className="h-5 w-5 text-[#F26D3D]" aria-hidden />
+                <Building2 className="h-5 w-5 text-accent-ink" aria-hidden />
               </span>
               <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-[#F26D3D]">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-accent-ink">
                   Section 1 • Article 6-III-1 a & b
                 </span>
                 <h2 className="font-display text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-50">
@@ -200,7 +200,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                 </dt>
                 <dd className="text-slate-900 dark:text-slate-100">
                   Conseil en systèmes et logiciels informatiques —{" "}
-                  <span className="font-mono text-xs font-semibold text-[#F26D3D]">
+                  <span className="font-mono text-xs font-semibold text-accent-ink">
                     Code NAF/APE : 62.02A
                   </span>
                   <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
@@ -222,10 +222,10 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
           >
             <div className="flex items-center gap-3 mb-4">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 shrink-0">
-                <Server className="h-5 w-5 text-[#F26D3D]" aria-hidden />
+                <Server className="h-5 w-5 text-accent-ink" aria-hidden />
               </span>
               <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-[#F26D3D]">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-accent-ink">
                   Section 2 • Article 6-III-1 d
                 </span>
                 <h2 className="font-display text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-50">
@@ -272,7 +272,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                     href="https://vercel.com/contact"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-[#F26D3D] hover:underline"
+                    className="inline-flex items-center gap-1 text-accent-ink hover:underline"
                   >
                     vercel.com/contact
                     <ExternalLink className="h-3 w-3" aria-hidden />
@@ -284,7 +284,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
             {/* Encadré d'importance majeure : distinction avec les données clients */}
             <div className="rounded-2xl p-5 md:p-6 bg-gradient-to-br from-[#F26D3D]/10 via-[#F26D3D]/5 to-transparent border border-[#F26D3D]/30">
               <div className="flex items-start gap-3">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F26D3D]/20 text-[#F26D3D] shrink-0 mt-0.5">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F26D3D]/20 text-accent-ink shrink-0 mt-0.5">
                   <Lock className="h-4 w-4" aria-hidden />
                 </span>
                 <div className="space-y-2">
@@ -330,10 +330,10 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
           >
             <div className="flex items-center gap-3 mb-4">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 shrink-0">
-                <ShieldCheck className="h-5 w-5 text-[#F26D3D]" aria-hidden />
+                <ShieldCheck className="h-5 w-5 text-accent-ink" aria-hidden />
               </span>
               <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-[#F26D3D]">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-accent-ink">
                   Section 3 • Code de la Propriété Intellectuelle
                 </span>
                 <h2 className="font-display text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-50">
@@ -406,10 +406,10 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
           >
             <div className="flex items-center gap-3 mb-4">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 shrink-0">
-                <Mail className="h-5 w-5 text-[#F26D3D]" aria-hidden />
+                <Mail className="h-5 w-5 text-accent-ink" aria-hidden />
               </span>
               <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-[#F26D3D]">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-accent-ink">
                   Section 4 • Coordonnées effectives
                 </span>
                 <h2 className="font-display text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-50">
@@ -432,7 +432,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                 <dd>
                   <a
                     href={`mailto:${SLA_COMMITMENTS.email}`}
-                    className="font-mono font-medium text-slate-900 dark:text-slate-50 hover:text-[#F26D3D] transition-colors"
+                    className="font-mono font-medium text-slate-900 dark:text-slate-50 hover:text-accent-ink transition-colors"
                   >
                     {SLA_COMMITMENTS.email}
                   </a>
@@ -449,7 +449,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                 <dd>
                   <a
                     href={`tel:${SLA_COMMITMENTS.phone.replace(/\s+/g, "")}`}
-                    className="font-mono font-medium text-slate-900 dark:text-slate-50 hover:text-[#F26D3D] transition-colors"
+                    className="font-mono font-medium text-slate-900 dark:text-slate-50 hover:text-accent-ink transition-colors"
                   >
                     {SLA_COMMITMENTS.phone}
                   </a>
@@ -476,7 +476,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                   <button
                     type="button"
                     onClick={() => onNavigate("contact")}
-                    className="inline-flex items-center gap-1.5 text-[#F26D3D] hover:underline font-medium"
+                    className="inline-flex items-center gap-1.5 text-accent-ink hover:underline font-medium"
                   >
                     Accéder à la page /contact
                     <ArrowLeft className="h-3.5 w-3.5 rotate-180" aria-hidden />

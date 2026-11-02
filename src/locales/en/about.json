@@ -1,13 +1,13 @@
 {
   "about.title": "About Analyticatech",
-  "about.desc": "High-impact AI, Digital Transformation, and Automation engineering consultancy. We design and industrialize intelligent systems at scale.",
-  "about.mission.title": "Our Mission",
-  "about.mission.body": "Making artificial intelligence operational and sovereign for European enterprises. From POC to production, we turn AI into a sustainable competitive edge — with precision, security, and measurable business impact.",
-  "about.vision.title": "Our Vision",
-  "about.vision.body": "A future where every organization commands its agentic systems, where data is an operational catalyst rather than a bottleneck, and where AI empowers humans. We build this technological sovereignty, one deployment at a time.",
-  "about.values.title": "Our Core Values",
+  "about.desc": "Analyticatech is an independent firm founded by Martial Gninhi. I help leaders of small and mid-sized companies use AI and data in a concrete, measured and compliant way.",
+  "about.mission.title": "My mission",
+  "about.mission.body": "Make artificial intelligence useful and understandable for French SMEs and mid-sized companies: start from a real business problem, build a simple solution, and measure what it changes, with no unverifiable promises.",
+  "about.vision.title": "My vision",
+  "about.vision.body": "AI that serves teams rather than replacing them: every important decision stays human, every result is traceable, and data stays under the company's control.",
+  "about.values.title": "My commitments",
   "about.cta": "Let's Work Together",
   "about.page.tag": "ABOUT ANALYTICATECH",
-  "about.page.title": "Autonomous systems engineering for the modern enterprise.",
-  "about.page.desc": "Analyticatech is an independent engineering and strategy consultancy specialized in designing, deploying, and supervising production generative AI architectures and multi-agent systems."
+  "about.page.title": "AI, explained simply, for SMEs and mid-sized companies.",
+  "about.page.desc": "Background: web development, then data and BI (business intelligence), then a level 7 (RNCP) degree in artificial intelligence. Head office in Paris, office in Strasbourg, working across France."
 }

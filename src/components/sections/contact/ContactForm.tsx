@@ -104,7 +104,7 @@ export function ContactForm() {
         <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5 border-b border-black/10 dark:border-white/10 bg-slate-100/80 dark:bg-slate-900/90 backdrop-blur-md">
           <div className="flex items-center gap-2">
             <span className="h-3 w-3 rounded-full bg-[#F26D3D]/90 shadow-[0_0_8px_rgba(242,109,61,0.6)]" aria-hidden="true" />
-            <span className="h-3 w-3 rounded-full bg-[#4CAF50]/80 shadow-[0_0_8px_rgba(76,175,80,0.5)]" aria-hidden="true" />
+            <span className="h-3 w-3 rounded-full bg-link/80 shadow-[0_0_8px_rgba(76,175,80,0.5)]" aria-hidden="true" />
             <span className="h-3 w-3 rounded-full bg-slate-400/50" aria-hidden="true" />
             <span className="ml-2 font-mono text-[11px] font-semibold uppercase tracking-widest text-slate-700 dark:text-slate-300">
               {t("contact.terminal.title")}
@@ -112,9 +112,9 @@ export function ContactForm() {
           </div>
 
           <div className="flex items-center gap-2 font-mono text-[10px] text-slate-500 dark:text-slate-400 bg-black/5 dark:bg-white/5 px-2.5 py-1 rounded-full border border-black/5 dark:border-white/5">
-            <span className="h-2 w-2 rounded-full bg-[#4CAF50] animate-pulse" aria-hidden="true" />
+            <span className="h-2 w-2 rounded-full bg-link animate-pulse" aria-hidden="true" />
             <span className="uppercase tracking-wider">
-              {isEn ? "SECURE PORTAL · TLS 1.3" : "SESSION SÉCURISÉE · TLS 1.3"}
+              {isEn ? "ENCRYPTED CONNECTION" : "CONNEXION CHIFFRÉE"}
             </span>
           </div>
         </div>
@@ -131,12 +131,12 @@ export function ContactForm() {
               className="p-8 sm:p-12 text-center space-y-6"
             >
               {/* Badge animé de succès */}
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl border border-[#4CAF50]/40 bg-[#4CAF50]/10 text-[#4CAF50] shadow-[0_0_30px_rgba(76,175,80,0.25)]">
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl border border-link/40 bg-link/10 text-link shadow-[0_0_30px_rgba(76,175,80,0.25)]">
                 <CheckCircle2 className="h-10 w-10" aria-hidden="true" />
               </div>
 
               <div className="max-w-md mx-auto space-y-2">
-                <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#4CAF50] font-bold">
+                <span className="font-mono text-xs uppercase tracking-[0.25em] text-link font-bold">
                   {isEn ? "TRANSMISSION CONFIRMED" : "TRANSMISSION CONFIRMÉE"}
                 </span>
                 <h3 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-50">
@@ -154,7 +154,7 @@ export function ContactForm() {
                     <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
                       {t("contact.reference")}
                     </p>
-                    <p className="font-mono text-base font-bold text-[#F26D3D] truncate">
+                    <p className="font-mono text-base font-bold text-accent-ink truncate">
                       {reference}
                     </p>
                   </div>
@@ -166,8 +166,8 @@ export function ContactForm() {
                   >
                     {copied ? (
                       <>
-                        <Check className="h-3.5 w-3.5 text-[#4CAF50]" />
-                        <span className="text-[#4CAF50]">{isEn ? "Copied" : "Copié"}</span>
+                        <Check className="h-3.5 w-3.5 text-link" />
+                        <span className="text-link">{isEn ? "Copied" : "Copié"}</span>
                       </>
                     ) : (
                       <>
@@ -181,20 +181,20 @@ export function ContactForm() {
 
               {/* Prochaines étapes SLA */}
               <div className="max-w-md mx-auto border-t border-black/10 dark:border-white/10 pt-6 text-left space-y-3">
-                <p className="font-mono text-[11px] uppercase tracking-widest text-[#F26D3D] font-bold">
-                  {isEn ? "// PROTOCOL NEXT STEPS" : "// PROCHAINES ÉTAPES DU PROTOCOLE"}
+                <p className="font-mono text-[11px] uppercase tracking-widest text-accent-ink font-bold">
+                  {isEn ? "NEXT STEPS" : "PROCHAINES ÉTAPES"}
                 </p>
                 <div className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
                   <div className="flex items-start gap-2.5">
-                    <span className="font-mono text-[#F26D3D] font-bold">01.</span>
+                    <span className="font-mono text-accent-ink font-bold">01.</span>
                     <span>{isEn ? "Automated security receipt sent to your corporate email (< 2h)" : "Accusé de réception sécurisé envoyé sur votre email d'entreprise (< 2h)"}</span>
                   </div>
                   <div className="flex items-start gap-2.5">
-                    <span className="font-mono text-[#F26D3D] font-bold">02.</span>
+                    <span className="font-mono text-accent-ink font-bold">02.</span>
                     <span>{isEn ? "Review & scoping by a dedicated Solutions Architect (< 24h)" : "Analyse d'architecture par un Architecte Référent (< 24h)"}</span>
                   </div>
                   <div className="flex items-start gap-2.5">
-                    <span className="font-mono text-[#F26D3D] font-bold">03.</span>
+                    <span className="font-mono text-accent-ink font-bold">03.</span>
                     <span>{isEn ? "Confidential technical scoping workshop scheduling" : "Planification d'un atelier technique exploratoire sous NDA"}</span>
                   </div>
                 </div>
@@ -219,7 +219,7 @@ export function ContactForm() {
               {/* SECTION 1 : IDENTITÉ & ORGANISATION */}
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#F26D3D]/10 font-mono text-[10px] font-bold text-[#F26D3D]">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#F26D3D]/10 font-mono text-[10px] font-bold text-accent-ink">
                     01
                   </span>
                   <span className="font-mono text-xs uppercase tracking-wider font-semibold text-slate-800 dark:text-slate-200">
@@ -267,7 +267,7 @@ export function ContactForm() {
                       required
                     />
                     {isBlockedDomain && (
-                      <p className="mt-1 font-mono text-[10px] text-amber-500 dark:text-amber-400 flex items-center gap-1">
+                      <p className="mt-1 font-mono text-[10px] text-accent-ink flex items-center gap-1">
                         <AlertTriangle className="h-3 w-3 shrink-0" />
                         {isEn
                           ? "Corporate email required (public webmails excluded)."
@@ -294,7 +294,7 @@ export function ContactForm() {
               <div className="space-y-3 pt-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#F26D3D]/10 font-mono text-[10px] font-bold text-[#F26D3D]">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#F26D3D]/10 font-mono text-[10px] font-bold text-accent-ink">
                       02
                     </span>
                     <span className="font-mono text-xs uppercase tracking-wider font-semibold text-slate-800 dark:text-slate-200">
@@ -321,11 +321,11 @@ export function ContactForm() {
                         className={cn(
                           "flex items-center gap-2 p-2.5 rounded-xl border text-left font-mono text-[11px] transition-all duration-200 group select-none",
                           isSelected
-                            ? "border-[#F26D3D] bg-[#F26D3D]/10 text-[#F26D3D] shadow-[0_0_12px_rgba(242,109,61,0.15)] font-semibold"
+                            ? "border-[#F26D3D] bg-[#F26D3D]/10 text-accent-ink shadow-[0_0_12px_rgba(242,109,61,0.15)] font-semibold"
                             : "border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] text-slate-600 dark:text-slate-300 hover:border-[#F26D3D]/50 hover:bg-[#F26D3D]/5"
                         )}
                       >
-                        <Icon className={cn("h-3.5 w-3.5 shrink-0 transition-colors", isSelected ? "text-[#F26D3D]" : "text-slate-400 group-hover:text-[#F26D3D]")} />
+                        <Icon className={cn("h-3.5 w-3.5 shrink-0 transition-colors", isSelected ? "text-accent-ink" : "text-slate-400 group-hover:text-accent-ink")} />
                         <span className="truncate">{label}</span>
                       </button>
                     );
@@ -347,16 +347,16 @@ export function ContactForm() {
               <div className="space-y-3 pt-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#F26D3D]/10 font-mono text-[10px] font-bold text-[#F26D3D]">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#F26D3D]/10 font-mono text-[10px] font-bold text-accent-ink">
                       03
                     </span>
                     <span className="font-mono text-xs uppercase tracking-wider font-semibold text-slate-800 dark:text-slate-200">
-                      {t("contact.fields.message")} <span className="text-[#F26D3D]">*</span>
+                      {t("contact.fields.message")} <span className="text-accent-ink">*</span>
                     </span>
                   </div>
                   <span className={cn(
                     "font-mono text-[10px] transition-colors",
-                    isMessageValid ? "text-[#4CAF50]" : "text-slate-400"
+                    isMessageValid ? "text-link" : "text-slate-400"
                   )}>
                     {messageLength} / 2000 {messageLength < 20 && `(${isEn ? "min 20 chars" : "min 20 car."})`}
                   </span>
@@ -384,7 +384,7 @@ export function ContactForm() {
                     <div
                       className={cn(
                         "h-full transition-all duration-300",
-                        isMessageValid ? "bg-[#4CAF50]" : "bg-[#F26D3D]"
+                        isMessageValid ? "bg-link" : "bg-[#F26D3D]"
                       )}
                       style={{ width: `${Math.min(100, (messageLength / 20) * 100)}%` }}
                     />
@@ -392,7 +392,7 @@ export function ContactForm() {
                 </div>
 
                 {errors.message && (
-                  <p id="message-err" className="font-mono text-[11px] text-[#F26D3D] flex items-center gap-1.5" role="alert">
+                  <p id="message-err" className="font-mono text-[11px] text-accent-ink flex items-center gap-1.5" role="alert">
                     <AlertTriangle className="h-3 w-3 shrink-0" aria-hidden="true" />
                     <span>{errors.message}</span>
                   </p>
@@ -417,7 +417,7 @@ export function ContactForm() {
                 </label>
 
                 {errors.consent && (
-                  <p id="consent-err" className="font-mono text-[11px] text-[#F26D3D] flex items-center gap-1.5" role="alert">
+                  <p id="consent-err" className="font-mono text-[11px] text-accent-ink flex items-center gap-1.5" role="alert">
                     <AlertTriangle className="h-3 w-3 shrink-0" aria-hidden="true" />
                     <span>{errors.consent}</span>
                   </p>
@@ -482,7 +482,7 @@ export function ContactForm() {
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     role="alert"
-                    className="rounded-xl border border-[#F26D3D]/50 bg-[#F26D3D]/10 p-3.5 text-xs font-mono text-[#F26D3D] flex items-center gap-2"
+                    className="rounded-xl border border-[#F26D3D]/50 bg-[#F26D3D]/10 p-3.5 text-xs font-mono text-accent-ink flex items-center gap-2"
                   >
                     <AlertTriangle className="h-4 w-4 shrink-0" />
                     <span>{serverMsg}</span>
@@ -506,7 +506,7 @@ export function ContactForm() {
               key={idx}
               className="inline-flex items-center gap-1.5 rounded-full border border-black/5 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.04] px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-wider text-slate-600 dark:text-slate-400"
             >
-              <Icon className="h-3 w-3 text-[#4CAF50]" aria-hidden="true" />
+              <Icon className="h-3 w-3 text-link" aria-hidden="true" />
               <span>{badge.text}</span>
             </span>
           );

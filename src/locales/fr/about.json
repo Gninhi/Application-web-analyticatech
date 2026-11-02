@@ -1,13 +1,13 @@
 {
   "about.title": "À propos d'Analyticatech",
-  "about.desc": "Cabinet de conseil de haut niveau en IA, Transformation Digitale et Automatisation. Nous concevons et industrialisons des systèmes intelligents à l'échelle.",
-  "about.mission.title": "Notre Mission",
-  "about.mission.body": "Rendre l'intelligence artificielle opérationnelle et souveraine pour les organisations européennes. Du POC à la production, nous transformons l'IA en avantage concurrentiel durable — avec précision, sécurité et impact mesurable.",
-  "about.vision.title": "Notre Vision",
-  "about.vision.body": "Un futur où chaque organisation maîtrise ses systèmes agentiques, où la donnée est un levier et non une contrainte, et où l'IA sert l'humain — pas l'inverse. Nous bâtissons cette souveraineté technologique, une mission à la fois.",
-  "about.values.title": "Nos Valeurs",
+  "about.desc": "Analyticatech est un cabinet indépendant fondé par Martial Gninhi. J'aide les dirigeants de PME et d'ETI à utiliser l'IA et la donnée de façon concrète, mesurée et conforme.",
+  "about.mission.title": "Ma mission",
+  "about.mission.body": "Rendre l'intelligence artificielle utile et compréhensible pour les PME et ETI françaises : partir d'un problème métier réel, construire une solution simple, et mesurer ce qu'elle change, sans promesse non vérifiable.",
+  "about.vision.title": "Ma vision",
+  "about.vision.body": "Une IA qui sert les équipes plutôt que de les remplacer : chaque décision importante reste humaine, chaque résultat est traçable, et les données restent sous le contrôle de l'entreprise.",
+  "about.values.title": "Mes engagements",
   "about.cta": "Travaillons ensemble",
   "about.page.tag": "À PROPOS D'ANALYTICATECH",
-  "about.page.title": "L'ingénierie des systèmes autonomes pour l'entreprise moderne.",
-  "about.page.desc": "Analyticatech est un cabinet d'ingénierie et de conseil indépendant spécialisé dans la conception, le déploiement et la supervision d'architectures d'IA générative et de systèmes multi-agents en production."
+  "about.page.title": "L'IA, expliquée simplement, pour les PME et ETI.",
+  "about.page.desc": "Parcours : développement web, puis data et BI (informatique décisionnelle), puis un diplôme de niveau 7 (RNCP) en intelligence artificielle. Siège à Paris, bureau à Strasbourg, interventions partout en France."
 }

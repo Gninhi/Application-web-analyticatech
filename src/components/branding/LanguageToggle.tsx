@@ -8,57 +8,11 @@ import { NavbarActionToggle } from "@/components/branding/NavbarActionToggle";
 import type { Locale } from "@/types/content";
 
 /**
- * Drapeaux vectoriels précis (FR / UK)
- * - Rendu SVG pur, ultra-léger, sans dépendance externe ni emoji OS
- * - Bords arrondis avec liseré subtil pour contraster sur fonds clairs/sombres
- */
-function FlagFR() {
-  return (
-    <svg
-      viewBox="0 0 24 16"
-      className="h-3.5 w-5 block shrink-0"
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect x="0" y="0" width="8" height="16" fill="#002654" />
-      <rect x="8" y="0" width="8" height="16" fill="#FFFFFF" />
-      <rect x="16" y="0" width="8" height="16" fill="#CE1126" />
-    </svg>
-  );
-}
-
-function FlagEN() {
-  return (
-    <svg
-      viewBox="0 0 60 30"
-      className="h-3.5 w-5 block shrink-0"
-      preserveAspectRatio="none"
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <clipPath id="at-uk-flag-clip">
-        <path d="M0,0 L30,15 H0 Z M60,0 L30,15 V0 Z M60,30 L30,15 H60 Z M0,30 L30,15 V30 Z" />
-      </clipPath>
-      <rect width="60" height="30" fill="#012169" />
-      <path d="M0,0 L60,30 M60,0 L0,30" stroke="#FFFFFF" strokeWidth="6" />
-      <path
-        d="M0,0 L60,30 M60,0 L0,30"
-        stroke="#C8102E"
-        strokeWidth="4"
-        clipPath="url(#at-uk-flag-clip)"
-      />
-      <path d="M30,0 V30 M0,15 H60" stroke="#FFFFFF" strokeWidth="10" />
-      <path d="M30,0 V30 M0,15 H60" stroke="#C8102E" strokeWidth="6" />
-    </svg>
-  );
-}
-
-/**
  * LanguageToggle — Bouton compact de sélection de langue (format ThemeToggle).
  *
  * Conçu pour mobile et desktop :
  *  - Format carré standard 36x36px (h-9 w-9) strictement aligné sur le ThemeToggle.
- *  - Affiche le drapeau de la langue sélectionnée (FR 🇫🇷 ou EN 🇬🇧).
+ *  - Affiche le code de la langue sélectionnée (FR ou EN).
  *  - Bascule instantanée sans blocage du thread principal (startTransition).
  *  - Mémorisation dans cookie NEXT_LOCALE (1 an) et localStorage.
  */
@@ -104,8 +58,8 @@ export function LanguageToggle() {
       aria-label={ariaLabel}
       title={title}
     >
-      <span className="relative inline-flex items-center justify-center overflow-hidden rounded-[2.5px] border border-black/15 dark:border-white/20 shadow-xs transition-transform duration-200 hover:scale-105 active:scale-95">
-        {displayLocale === "fr" ? <FlagFR /> : <FlagEN />}
+      <span className="text-[12px] font-semibold tracking-[0.08em]">
+        {displayLocale === "fr" ? "FR" : "EN"}
       </span>
     </NavbarActionToggle>
   );

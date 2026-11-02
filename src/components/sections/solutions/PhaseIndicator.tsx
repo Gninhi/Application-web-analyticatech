@@ -27,7 +27,7 @@ export function PhaseIndicator({ progress }: PhaseIndicatorProps) {
       <span className="h-px w-4 bg-black/15 dark:bg-white/20" aria-hidden />
       <motion.span
         style={{ opacity: drift }}
-        className="font-mono text-[9px] uppercase tracking-widest text-[#F26D3D]"
+        className="font-mono text-[9px] uppercase tracking-widest text-accent-ink"
       >
         {t("solutions.phase.drift")}
       </motion.span>

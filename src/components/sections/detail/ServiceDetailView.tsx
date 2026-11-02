@@ -8,7 +8,6 @@ import {
   BrainCircuit,
   ChevronDown,
   Sparkles,
-  Quote,
   Building2,
   Clock,
   X,
@@ -85,7 +84,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
   const IconComp = detailData.icon || BrainCircuit;
 
   return (
-    <div className="pt-28 md:pt-36 pb-24 text-slate-900 dark:text-slate-100 selection:bg-[#F26D3D]/30 selection:text-[#F26D3D]">
+    <div className="pt-28 md:pt-36 pb-24 text-slate-900 dark:text-slate-100 selection:bg-[#F26D3D]/30 selection:text-accent-ink">
       <div className="mx-auto max-w-5xl px-4 md:px-6 space-y-16">
         {/* ================= BREADCRUMB / RETOUR ================= */}
         <div className="flex items-center justify-between">
@@ -121,15 +120,15 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
           <div className="relative z-10">
             <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
               <span className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[#F26D3D]/30 bg-[#F26D3D]/10 backdrop-blur-md shadow-lg shadow-[#F26D3D]/10">
-                <IconComp className="h-7 w-7 text-[#F26D3D]" aria-hidden />
+                <IconComp className="h-7 w-7 text-accent-ink" aria-hidden />
               </span>
 
-              <span className="font-mono text-xs font-semibold px-3 py-1 rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 text-[#F26D3D] tracking-wider uppercase">
+              <span className="font-mono text-xs font-semibold px-3 py-1 rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 text-accent-ink tracking-wider uppercase">
                 {detailData.badge}
               </span>
             </div>
 
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#F26D3D] mb-3">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink mb-3">
               {detailData.eyebrow}
             </p>
 
@@ -144,41 +143,11 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
           </div>
         </motion.div>
 
-        {/* ================= 02 — GRILLE DE PREUVES CHIFFRÉES ================= */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.08 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-4"
-        >
-          {detailData.proofMetrics.map((pm, idx) => (
-            <div
-              key={idx}
-              className="glass-card rounded-2xl p-6 border border-black/10 dark:border-white/10 hover:border-[#F26D3D]/40 transition-all duration-300 flex flex-col justify-between"
-            >
-              <div>
-                <span
-                  className="font-display font-bold text-3xl sm:text-4xl block mb-1"
-                  style={{ color: pm.color || detailData.accentColor }}
-                >
-                  {pm.value}
-                </span>
-                <span className="font-mono text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-bold block mb-3">
-                  {pm.label}
-                </span>
-              </div>
-              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed border-t border-black/5 dark:border-white/5 pt-3">
-                {pm.context}
-              </p>
-            </div>
-          ))}
-        </motion.div>
-
         {/* ================= 03 — LE PROBLÈME MÉTIER ================= */}
         <section className="pt-4">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             <div className="lg:col-span-5">
-              <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#F26D3D] font-bold block mb-2">
+              <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-bold block mb-2">
                 {t("detail.service.problem.tag")}
               </span>
               <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white leading-tight">
@@ -215,7 +184,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
         {/* ================= 04 — CE QUE NOUS LIVRONS ================= */}
         <section className="pt-8 border-t border-black/10 dark:border-white/10">
           <div className="mb-8">
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#F26D3D] font-bold block mb-2">
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-bold block mb-2">
               {t("detail.service.deliverables.tag")}
             </span>
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
@@ -230,10 +199,10 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
                 className="glass-card rounded-2xl p-6 sm:p-7 border border-black/10 dark:border-white/10 hover:border-[#F26D3D]/40 transition-all duration-300 flex flex-col justify-between group"
               >
                 <div>
-                  <span className="font-mono text-xs font-bold text-[#F26D3D] px-2.5 py-1 rounded-md bg-[#F26D3D]/10 inline-block mb-4">
+                  <span className="font-mono text-xs font-bold text-accent-ink px-2.5 py-1 rounded-md bg-[#F26D3D]/10 inline-block mb-4">
                     {t("detail.service.deliverable.badge")} {deliv.number}
                   </span>
-                  <h3 className="font-display font-bold text-lg text-slate-900 dark:text-white mb-2 group-hover:text-[#F26D3D] transition-colors">
+                  <h3 className="font-display font-bold text-lg text-slate-900 dark:text-white mb-2 group-hover:text-accent-ink transition-colors">
                     {deliv.title}
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
@@ -243,7 +212,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
 
                 <div className="pt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
                   <span className="text-slate-500 dark:text-slate-400">{t("detail.service.deliverable.output")}</span>
-                  <span className="text-[#F26D3D] font-medium text-right">{deliv.output}</span>
+                  <span className="text-accent-ink font-medium text-right">{deliv.output}</span>
                 </div>
               </div>
             ))}
@@ -253,7 +222,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
         {/* ================= 05 — MÉTHODOLOGIE & JALONS ================= */}
         <section className="pt-8 border-t border-black/10 dark:border-white/10">
           <div className="mb-10">
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#F26D3D] font-bold block mb-2">
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-bold block mb-2">
               {t("detail.service.method.tag")}
             </span>
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
@@ -269,7 +238,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 font-mono text-xs font-bold text-[#F26D3D]">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 font-mono text-xs font-bold text-accent-ink">
                       {step.step}
                     </span>
                     <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400 flex items-center gap-1">
@@ -287,7 +256,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
                 </div>
 
                 <div className="pt-3 border-t border-black/5 dark:border-white/5 text-[11px] font-mono text-slate-500 dark:text-slate-400">
-                  <span className="text-[#F26D3D] block font-semibold mb-0.5">{t("detail.service.method.milestone")}</span>
+                  <span className="text-accent-ink block font-semibold mb-0.5">{t("detail.service.method.milestone")}</span>
                   {step.deliverable}
                 </div>
               </div>
@@ -298,7 +267,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
         {/* ================= 06 — CAS D'USAGE SECTORIELS ================= */}
         <section className="pt-8 border-t border-black/10 dark:border-white/10">
           <div className="mb-8">
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#F26D3D] font-bold block mb-2">
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-bold block mb-2">
               {t("detail.service.cases.tag")}
             </span>
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
@@ -314,7 +283,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
               >
                 <div>
                   <div className="flex items-center gap-2 mb-3">
-                    <Building2 className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden />
+                    <Building2 className="h-3.5 w-3.5 text-accent-ink" aria-hidden />
                     <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-bold">
                       {sc.sector}
                     </span>
@@ -329,7 +298,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
                 </div>
 
                 <div className="pt-4 border-t border-black/5 dark:border-white/5">
-                  <span className="text-xs font-mono font-bold text-[#33D6A6] flex items-center gap-1.5">
+                  <span className="text-xs font-semibold text-link flex items-center gap-1.5">
                     <Sparkles className="h-3.5 w-3.5 shrink-0" aria-hidden />
                     {sc.impact}
                   </span>
@@ -342,7 +311,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
         {/* ================= 07 — STACK TECHNIQUE DE PRODUCTION ================= */}
         <section className="pt-8 border-t border-black/10 dark:border-white/10">
           <div className="mb-8">
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#F26D3D] font-bold block mb-2">
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-bold block mb-2">
               {t("detail.service.stack.tag")}
             </span>
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
@@ -360,7 +329,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
                   {group.technologies.map((tech) => (
                     <span
                       key={tech}
-                      className="rounded-lg border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-2.5 py-1 font-mono text-xs text-slate-700 dark:text-slate-300 hover:border-[#F26D3D]/40 hover:text-[#F26D3D] transition-colors"
+                      className="rounded-lg border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-2.5 py-1 font-mono text-xs text-slate-700 dark:text-slate-300 hover:border-[#F26D3D]/40 hover:text-accent-ink transition-colors"
                     >
                       {tech}
                     </span>
@@ -371,39 +340,11 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
           </div>
         </section>
 
-        {/* ================= 08 — ÉTUDE DE CAS & TÉMOIGNAGE ================= */}
-        <section className="pt-8 border-t border-black/10 dark:border-white/10">
-          <div className="glass-card rounded-3xl p-8 sm:p-10 border border-black/10 dark:border-white/10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-gradient-to-r from-background via-surface-2 to-background">
-            <div className="lg:col-span-8">
-              <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#F26D3D] font-bold block mb-3">
-                {t("detail.service.caseStudy.tag")}
-              </span>
-              <Quote className="h-8 w-8 text-[#F26D3D]/40 mb-3" aria-hidden />
-              <blockquote className="font-display text-lg sm:text-xl font-medium text-slate-900 dark:text-white leading-relaxed">
-                {detailData.caseStudy.quote}
-              </blockquote>
-              <div className="mt-5 font-mono text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                <span className="text-slate-900 dark:text-slate-200 font-bold block">{detailData.caseStudy.authorRole}</span>
-                {detailData.caseStudy.authorCompany}
-              </div>
-            </div>
-
-            <div className="lg:col-span-4 lg:border-l lg:border-black/10 dark:lg:border-white/10 lg:pl-8 flex flex-col justify-center text-left lg:text-center">
-              <span className="font-display text-4xl sm:text-5xl font-bold text-[#33D6A6] block mb-1">
-                {detailData.caseStudy.metricValue}
-              </span>
-              <span className="font-mono text-xs text-slate-500 dark:text-slate-400 leading-tight">
-                {detailData.caseStudy.metricLabel}
-              </span>
-            </div>
-          </div>
-        </section>
-
         {/* ================= 09 — QUESTIONS FRÉQUENTES (ACCORDÉON) ================= */}
         <section className="pt-8 border-t border-black/10 dark:border-white/10">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-8">
-              <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#F26D3D] font-bold block mb-2">
+              <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-bold block mb-2">
                 {t("detail.service.faq.tag")}
               </span>
               <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
@@ -422,13 +363,13 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
                     <button
                       type="button"
                       onClick={() => toggleFaq(idx)}
-                      className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-display font-bold text-base sm:text-lg text-slate-900 dark:text-white hover:text-[#F26D3D] transition-colors"
+                      className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-display font-bold text-base sm:text-lg text-slate-900 dark:text-white hover:text-accent-ink transition-colors"
                       aria-expanded={isOpen}
                     >
                       <span>{faq.question}</span>
                       <ChevronDown
                         className={cn(
-                          "h-5 w-5 text-[#F26D3D] shrink-0 transition-transform duration-300",
+                          "h-5 w-5 text-accent-ink shrink-0 transition-transform duration-300",
                           isOpen && "rotate-180"
                         )}
                         aria-hidden

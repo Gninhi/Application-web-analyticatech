@@ -2,7 +2,6 @@
 
 import Script from "next/script";
 import { useAppContentOptional } from "@/components/providers/ContentProvider";
-import { KEY_STATS_CONFIG } from "@/data/stats";
 import { SLA_COMMITMENTS } from "@/data/commitments";
 
 import { isValidSocialUrl } from "@/lib/content/site";
@@ -142,15 +141,15 @@ export function JsonLd() {
           name: "Quel est le délai de réponse d'Analyticatech ?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: `Premier accusé de réception sous ${SLA_COMMITMENTS.ack.valueFr.replace("< ", "")}, réponse d'un architecte sous ${SLA_COMMITMENTS.architect.valueFr.replace("< ", "")}, atelier de cadrage proposé sous ${SLA_COMMITMENTS.workshop.valueFr.replace("< ", "")}. Équipe joignable ${SLA_COMMITMENTS.schedule.fullFr}.`,
+            text: `Premier accusé de réception sous ${SLA_COMMITMENTS.ack.valueFr.replace("< ", "")}, réponse du fondateur sous ${SLA_COMMITMENTS.architect.valueFr.replace("< ", "")}, atelier de cadrage proposé sous ${SLA_COMMITMENTS.workshop.valueFr.replace("< ", "")}. Joignable ${SLA_COMMITMENTS.schedule.fullFr}.`,
           },
         },
         {
           "@type": "Question",
-          name: "Quels sont les résultats mesurables d'Analyticatech ?",
+          name: "Comment Analyticatech mesure-t-il les résultats ?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: `${KEY_STATS_CONFIG.missions.value} missions livrées, ${KEY_STATS_CONFIG.costReduction.value} de coûts réduits en moyenne, ${KEY_STATS_CONFIG.uptime.value} d'uptime plateforme, ${KEY_STATS_CONFIG.satisfaction.value} de satisfaction C-Level, 48 processus automatisés, 38 agents IA en production, 420h économisées par mois.`,
+            text: "Chaque mission commence par un état des lieux chiffré de vos processus. Les mêmes indicateurs (temps de traitement, erreurs, coûts) sont mesurés avant et après, et partagés avec vous chaque mois. Aucun résultat n'est annoncé avant d'avoir été mesuré.",
           },
         },
         {

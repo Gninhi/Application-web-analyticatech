@@ -1,21 +1,19 @@
 import type { Metadata } from "next";
 import { headers, cookies } from "next/headers";
-import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import { Manrope, Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/branding/ThemeProvider";
 import "./globals.css";
 import { GlobalErrorBoundary } from "@/components/system/GlobalErrorBoundary";
 import { SiteShell } from "@/components/layout/SiteShell";
 import { getAppContent } from "@/lib/services/content.service";
-import { KEY_STATS_CONFIG } from "@/data/stats";
 import type { Locale } from "@/types/content";
 
-/* === Typographie du Design System "Corporate Cyberpunk" ===
- * Optimisé Lighthouse : preload + display swap + adjustFontFallback
- * pour éviter FOUT et garantir un bon CLS (Cumulative Layout Shift). */
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+/* === Typographie de la charte Analyticatech ===
+ * Manrope pour les titres, Inter pour le texte. Aucune autre police. */
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
-  weight: ["600", "700"],
+  weight: ["600", "700", "800"],
   display: "swap",
   preload: true,
   adjustFontFallback: true,
@@ -30,22 +28,14 @@ const inter = Inter({
   adjustFontFallback: true,
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  display: "swap",
-  preload: false, // Mono moins critique — pas de preload pour économiser la bande passante
-});
-
 export const metadata: Metadata = {
   metadataBase: new URL("https://analyticatech.fr"),
   title: {
-    default: "Analyticatech — Architectures IA, Automatisation & Data d'Entreprise",
+    default: "Analyticatech — L'IA, expliquée simplement, pour les PME et ETI",
     template: "%s | Analyticatech",
   },
   description:
-    `Cabinet de conseil IA en France : architecture d'agents LLM, RAG, automatisation workflows et transformation digitale. ${KEY_STATS_CONFIG.missions.value} missions livrées, ${KEY_STATS_CONFIG.costReduction.value} de coûts réduits. Experts LangChain, n8n, Power BI, Clouds Souverains (SecNumCloud).`,
+    "Analyticatech aide les dirigeants de PME et d'ETI, et leurs DSI, à passer du pilote IA à des systèmes fiables en production : agents IA, automatisation, business intelligence et conformité AI Act. Siège à Paris, bureau à Strasbourg.",
   keywords: [
     // Mots-clés principaux (haute intention)
     "cabinet conseil IA",
@@ -93,7 +83,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Analyticatech — Cabinet de conseil en IA, Agents & Automatisation",
     description:
-      `Architecture d'agents LLM, RAG, automatisation et transformation digitale. ${KEY_STATS_CONFIG.missions.value} missions livrées. Experts LangChain, n8n, Clouds Souverains (SecNumCloud).`,
+      "L'IA, expliquée simplement. Agents IA, automatisation et données en production pour PME et ETI, conformes RGPD et AI Act.",
     siteName: "Analyticatech",
     type: "website",
     locale: "fr_FR",
@@ -111,7 +101,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Analyticatech — Cabinet conseil IA & Automatisation",
     description:
-      "Agents LLM, RAG, automatisation, transformation digitale. 48+ missions livrées.",
+      "L'IA, expliquée simplement. Agents IA, automatisation et données en production pour PME et ETI.",
     images: ["/og-image.jpg"],
   },
   alternates: {
@@ -127,7 +117,7 @@ export const metadata: Metadata = {
   category: "technology",
   other: {
     "application-name": "Analyticatech",
-    "theme-color": "#06070B",
+    "theme-color": "#011C40",
     // SEO pour LLMs / GEO — signale le contenu au crawling IA
     "ai-content-optimized": "true",
     "llm-friendly": "true",
@@ -178,7 +168,7 @@ export default async function RootLayout({
       </head>
 
       <body
-        className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${manrope.variable} ${inter.variable} antialiased`}
       >
         <ThemeProvider>
           <GlobalErrorBoundary>

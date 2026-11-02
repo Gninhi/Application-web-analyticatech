@@ -43,7 +43,17 @@ const SOLUTION_METHODOLOGY_EN: Record<string, string> = {
   "dealscoop": "Multi-source pipeline (company registries, talent signals, regional press) calibrated to your investment thesis and build-up criteria.",
 };
 
+/**
+ * Charte : seules des références réelles et vérifiables peuvent être publiées.
+ * Les fiches sectorielles en base décrivaient des résultats clients non
+ * démontrés ; tant qu'aucun cas client n'est publiable, le site sert les
+ * « cas d'usage types » locaux (sans chiffres) définis dans fallbacks.ts.
+ * Passer PUBLISH_DB_SOLUTIONS=true pour revenir à la base.
+ */
 export const getSolutions = cache(async (locale: Locale = "fr"): Promise<SolutionDTO[]> => {
+  if (process.env.PUBLISH_DB_SOLUTIONS !== "true") {
+    return locale === "en" ? FALLBACK_SOLUTIONS_EN : FALLBACK_SOLUTIONS_FR;
+  }
   try {
     const raw = await db.solution.findMany({
       where: { active: true },

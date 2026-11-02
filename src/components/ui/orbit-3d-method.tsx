@@ -449,9 +449,9 @@ export function Orbit3DMethod({
           />
 
           {/* Cœur central du Hub façon Cyber Core */}
-          <div className="relative z-20 flex size-16 md:size-18 items-center justify-center rounded-full border border-black/15 dark:border-white/20 bg-white/90 dark:bg-[#06070B]/90 shadow-xl backdrop-blur-md transition-transform duration-300 hover:scale-105">
+          <div className="relative z-20 flex size-16 md:size-18 items-center justify-center rounded-full border border-black/15 dark:border-white/20 bg-white/90 dark:bg-background/90 shadow-xl backdrop-blur-md transition-transform duration-300 hover:scale-105">
             <div className="flex flex-col items-center justify-center text-center">
-              <Waypoints className="h-5 w-5 text-[#F26D3D]" aria-hidden />
+              <Waypoints className="h-5 w-5 text-accent-ink" aria-hidden />
               <span className="font-mono text-[8px] font-bold text-slate-900 dark:text-slate-100 tracking-wider mt-0.5">
                 MÉTHODE
               </span>
@@ -506,8 +506,8 @@ export function Orbit3DMethod({
                     "group relative flex items-center gap-2.5 rounded-full transition-all duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2",
                     "border backdrop-blur-xl",
                     isActive
-                      ? "px-3.5 py-2 scale-110 shadow-2xl z-40 bg-white/95 dark:bg-[#06070B]/95 text-white"
-                      : "px-2.5 py-1.5 hover:scale-105 opacity-85 hover:opacity-100 shadow-md bg-white/80 dark:bg-[#06070B]/80 hover:bg-white dark:hover:bg-[#06070B]",
+                      ? "px-3.5 py-2 scale-110 shadow-2xl z-40 bg-white/95 dark:bg-background/95 text-white"
+                      : "px-2.5 py-1.5 hover:scale-105 opacity-85 hover:opacity-100 shadow-md bg-white/80 dark:bg-background/80 hover:bg-white dark:hover:bg-background",
                     isHovered && !isActive && "scale-105 opacity-100"
                   )}
                   style={{
@@ -614,7 +614,7 @@ export function Orbit3DMethod({
       <div
         role="tablist"
         aria-label="Contrôles d'accès direct aux phases"
-        className="absolute -bottom-2 sm:bottom-0 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 rounded-2xl border border-black/10 dark:border-white/15 bg-white/95 dark:bg-[#06070B]/95 p-1.5 backdrop-blur-xl shadow-xl shadow-black/5 dark:shadow-black/50"
+        className="absolute -bottom-2 sm:bottom-0 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 rounded-2xl border border-black/10 dark:border-white/15 bg-white/95 dark:bg-background/95 p-1.5 backdrop-blur-xl shadow-xl shadow-black/5 dark:shadow-black/50"
       >
         {nodes.map((node, idx) => {
           const isActive = idx === activeIndex;

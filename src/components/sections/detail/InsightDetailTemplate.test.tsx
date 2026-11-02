@@ -82,36 +82,36 @@ describe("InsightDetailTemplate & Registry", () => {
     );
 
     // 01. Contexte
-    expect(html).toContain("01 // CONTEXTE & CAS D'USAGE RÉEL");
+    expect(html).toContain("01 · Contexte : scénario type");
     expect(html).toContain("Assurance & Mutuelle de santé");
     expect(html).toContain("150 000 polices contractuelles");
 
     // 02. Problème
-    expect(html).toContain("02 // LE PROBLÈME EN PRODUCTION");
+    expect(html).toContain("02 · LE PROBLÈME EN PRODUCTION");
     expect(html).toContain("ERR_01 // CHUNKING_NAÏF");
     expect(html).toContain("Perte de 38% de recall");
 
     // 03. Architecture & Stack
-    expect(html).toContain("03 // APPROCHE & ARCHITECTURE");
+    expect(html).toContain("03 · APPROCHE & ARCHITECTURE");
     expect(html).toContain("Ragas");
     expect(html).toContain("v0.2.14");
     expect(html).toContain("Qdrant");
     expect(html).toContain("Hierarchical Chunking + Document Tree");
 
     // 04. Arbitrages & Limites
-    expect(html).toContain("04 // ARBITRAGES TECHNIQUES & LIMITES ASSUMÉES");
+    expect(html).toContain("04 · ARBITRAGES TECHNIQUES & LIMITES ASSUMÉES");
     expect(html).toContain("NOTE DE TRANSPARENCE");
     expect(html).toContain("Latence P95 vs Fidélité documentaire");
     expect(html).toContain("Arbitrage retenu :");
 
     // 05. Résultats & Métriques
-    expect(html).toContain("05 // RÉSULTATS & MESURES CONTEXTUALISÉES");
-    expect(html).toContain("0.94");
+    expect(html).toContain("05 · INDICATEURS À MESURER");
+    expect(html).toContain("À mesurer");
     expect(html).toContain("À titre indicatif");
     expect(html).toContain("Protocole de mesure //");
 
     // 06. Pour aller plus loin
-    expect(html).toContain("06 // POUR ALLER PLUS LOIN · SOLUTIONS & SERVICES");
+    expect(html).toContain("06 · POUR ALLER PLUS LOIN · SOLUTIONS & SERVICES");
     expect(html).toContain("Service 01 — Raisonnement & RAG");
     expect(html).toContain("Synthèse clinique & extraction NLP");
   });
@@ -122,8 +122,8 @@ describe("InsightDetailTemplate & Registry", () => {
     );
 
     expect(html).toContain("Évaluer un système RAG en production :");
-    expect(html).toContain("04 // ARBITRAGES TECHNIQUES & LIMITES ASSUMÉES");
-    expect(html).toContain("05 // RÉSULTATS & MESURES CONTEXTUALISÉES");
+    expect(html).toContain("04 · ARBITRAGES TECHNIQUES & LIMITES ASSUMÉES");
+    expect(html).toContain("05 · INDICATEURS À MESURER");
   });
 
   it("garantit que l'intégralité des 6 articles du registre respectent la grille d'expertise technique", () => {
@@ -178,12 +178,12 @@ describe("InsightDetailTemplate & Registry", () => {
         <InsightDetailTemplate data={article} onNavigate={() => {}} onNavigateDetail={() => {}} />
       );
       expect(html).toContain(article.hero.title);
-      expect(html).toContain("01 // CONTEXTE & CAS D'USAGE RÉEL");
-      expect(html).toContain("02 // LE PROBLÈME EN PRODUCTION");
-      expect(html).toContain("03 // APPROCHE & ARCHITECTURE");
-      expect(html).toContain("04 // ARBITRAGES TECHNIQUES & LIMITES ASSUMÉES");
-      expect(html).toContain("05 // RÉSULTATS & MESURES CONTEXTUALISÉES");
-      expect(html).toContain("06 // POUR ALLER PLUS LOIN · SOLUTIONS & SERVICES");
+      expect(html).toContain("01 · Contexte : scénario type");
+      expect(html).toContain("02 · LE PROBLÈME EN PRODUCTION");
+      expect(html).toContain("03 · APPROCHE & ARCHITECTURE");
+      expect(html).toContain("04 · ARBITRAGES TECHNIQUES & LIMITES ASSUMÉES");
+      expect(html).toContain("05 · INDICATEURS À MESURER");
+      expect(html).toContain("06 · POUR ALLER PLUS LOIN · SOLUTIONS & SERVICES");
     }
   });
 

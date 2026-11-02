@@ -26,7 +26,7 @@ export function SectionHeading({
 
   return (
     <div className={`max-w-3xl ${alignClass} ${className}`}>
-      <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-3 font-bold">
+      <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent-ink mb-3 font-bold">
         {tag}
       </p>
       <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-50 mb-3 tracking-tight">

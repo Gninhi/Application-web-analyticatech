@@ -63,20 +63,28 @@ export const getAppContent = cache(async (locale: Locale = "fr"): Promise<AppCon
     safeArray("seoSchemas", getSeoSchemas()),
   ]);
 
+  // Charte : aucun chiffre, logo client, témoignage ou flux d'activité qui ne
+  // soit réel et vérifiable. Ces contenus en base étaient illustratifs : ils
+  // ne sont plus servis. Les indicateurs des services sont également retirés.
+  void metrics;
+  void clientLogos;
+  void testimonials;
+  void activityLogs;
+
   return {
     locale,
     siteConfig,
     navItems,
-    metrics,
-    clientLogos,
-    services,
+    metrics: [],
+    clientLogos: [],
+    services: services.map((svc) => ({ ...svc, metrics: [] })),
     solutions,
     blogCategories,
     blogPosts,
     capabilities,
-    testimonials,
+    testimonials: [],
     marqueeKeywords,
-    activityLogs,
+    activityLogs: [],
     companyValues,
     deliverySteps,
     rgpdSections,

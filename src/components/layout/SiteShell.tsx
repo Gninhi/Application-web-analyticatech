@@ -75,7 +75,7 @@ function SiteShellInner({ children }: { children: React.ReactNode }) {
       {/* Skip-link accessibilité */}
       <a
         href="#main-content"
-        className="sr-only leading-7 text-slate-900 dark:text-slate-100 focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:rounded-lg focus:bg-[#C9470F] focus:px-4 focus:py-2 focus:font-mono focus:text-sm focus:text-white"
+        className="sr-only leading-7 text-slate-900 dark:text-slate-100 focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:rounded-lg focus:bg-[#E35F31] focus:px-4 focus:py-2 focus:font-mono focus:text-sm focus:text-white"
       >
         Aller au contenu principal
       </a>

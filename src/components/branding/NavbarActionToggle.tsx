@@ -18,7 +18,7 @@ export interface NavbarActionToggleProps
  *  - Format compact 36x36px (h-9 w-9) optimisé mobile & desktop
  *  - Style 'secondary' avec fond satiné / glassmorphism
  *  - Liseré lumineux serpent animé (AnimatedButtonBorder) actif par défaut
- *    (faisceau orange #F26D3D en thème clair, bleu #3B82F6 en thème sombre)
+ *    (faisceau orange #F26D3D en thème clair, bleu #8DB0FF en thème sombre)
  *  - 100% accessible (focus-visible, aria-label, title)
  */
 export const NavbarActionToggle = React.forwardRef<
@@ -32,7 +32,7 @@ export const NavbarActionToggle = React.forwardRef<
       borderRadius = 12,
       duration = 3.5,
       beamSize = 20,
-      showBorderAnimation = true,
+      showBorderAnimation = false,
       ...props
     },
     ref
@@ -40,14 +40,14 @@ export const NavbarActionToggle = React.forwardRef<
     return (
       <Button
         ref={ref}
-        variant="secondary"
+        variant="outline"
         iconOnly
         borderRadius={borderRadius}
         duration={duration}
         beamSize={beamSize}
         showBorderAnimation={showBorderAnimation}
         className={cn(
-          "h-9 w-9 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shrink-0 cursor-pointer",
+          "h-10 w-10 rounded-full text-foreground shrink-0 cursor-pointer",
           className
         )}
         {...props}

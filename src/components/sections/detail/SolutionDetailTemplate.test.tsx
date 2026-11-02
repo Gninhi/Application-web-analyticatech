@@ -89,29 +89,29 @@ describe("SolutionDetailTemplate & Registry", () => {
     );
 
     // 01. Problème
-    expect(html).toContain("01 // LE PROBLÈME MÉTIER CONCRET");
+    expect(html).toContain("01 · LE PROBLÈME MÉTIER CONCRET");
     expect(html).toContain("Incapacité à recalculer les tournées");
     expect(html).toContain("Effet coup de fouet");
 
     // 02. Approche
-    expect(html).toContain("02 // L'APPROCHE TECHNIQUE & ARCHITECTURALE");
+    expect(html).toContain("02 · L'APPROCHE TECHNIQUE & ARCHITECTURALE");
     expect(html).toContain("Vehicle Routing Problem with Time Windows");
     expect(html).toContain("Intégration non disruptive");
 
     // 03. Mesures & Méthodologie
-    expect(html).toContain("03 // CE QUI A ÉTÉ MESURÉ · PREUVES & MÉTHODOLOGIE");
-    expect(html).toContain("Jusqu'à -22%");
-    expect(html).toContain("-41%");
-    expect(html).toContain("Cadre & Conditions de mesure vérifiées");
+    expect(html).toContain("03 · Indicateurs et méthode de mesure");
+    expect(html).not.toContain("-41%");
+    expect(html).toContain("À mesurer");
+    expect(html).toContain("Cadre de mesure");
 
     // 04. Limites & Prérequis
-    expect(html).toContain("04 // LIMITES D'APPLICABILITÉ & PRÉREQUIS STRICTS");
+    expect(html).toContain("04 · LIMITES D'APPLICABILITÉ & PRÉREQUIS STRICTS");
     expect(html).toContain("Prérequis indispensables");
     expect(html).toContain("Où la solution ne s'applique PAS");
     expect(html).toContain("Réglementation Sociale Européenne");
 
     // 05. Ressources liées
-    expect(html).toContain("05 // MAILLAGE & RESSOURCES ASSOCIÉES");
+    expect(html).toContain("05 · MAILLAGE & RESSOURCES ASSOCIÉES");
     expect(html).toContain("Service 02 — Automatisation & Workflows");
     expect(html).toContain("Architecture event-driven pour systèmes temps réel");
   });
@@ -122,7 +122,7 @@ describe("SolutionDetailTemplate & Registry", () => {
     );
 
     expect(html).toContain("Optimisation logistique par l'IA :");
-    expect(html).toContain("04 // LIMITES D'APPLICABILITÉ & PRÉREQUIS STRICTS");
+    expect(html).toContain("04 · LIMITES D'APPLICABILITÉ & PRÉREQUIS STRICTS");
   });
 
   it("résout la solution Dealscoop par son slug principal et ses alias", () => {
@@ -130,7 +130,7 @@ describe("SolutionDetailTemplate & Registry", () => {
     expect(solution).toBeDefined();
     expect(solution?.slug).toBe("dealscoop");
     expect(solution?.sector).toBe("M&A & Private Equity");
-    expect(solution?.statusBadge).toBe("Nouvelle offre");
+    expect(solution?.statusBadge).toBe("Cas d’usage type");
     expect(solution?.statusType).toBe("new");
 
     const aliasSolution = getSolutionDetailData("dealscoop-ma", "fr");
@@ -206,17 +206,13 @@ describe("SolutionDetailTemplate & Registry", () => {
         />
       );
       expect(html).toContain(solution.title);
-      expect(html).toContain("01 // LE PROBLÈME MÉTIER CONCRET");
-      expect(html).toContain("02 // L'APPROCHE TECHNIQUE & ARCHITECTURALE");
-      if (solution.statusType === "new") {
-        expect(html).toContain("03 // CAPACITÉS OPÉRATIONNELLES & CADRE MÉTHODOLOGIQUE");
-        expect(html).toContain("Nouvelle offre");
-      } else {
-        expect(html).toContain("03 // CE QUI A ÉTÉ MESURÉ · PREUVES & MÉTHODOLOGIE");
-        expect(html).toContain("Déployé en production");
-      }
-      expect(html).toContain("04 // LIMITES D'APPLICABILITÉ & PRÉREQUIS STRICTS");
-      expect(html).toContain("05 // MAILLAGE & RESSOURCES ASSOCIÉES");
+      expect(html).toContain("01 · LE PROBLÈME MÉTIER CONCRET");
+      expect(html).toContain("02 · L'APPROCHE TECHNIQUE & ARCHITECTURALE");
+      expect(html).toContain("03 · Indicateurs et méthode de mesure");
+      expect(html).toContain("Cas d'usage type");
+      expect(html).not.toContain("Déployé en production");
+      expect(html).toContain("04 · LIMITES D'APPLICABILITÉ & PRÉREQUIS STRICTS");
+      expect(html).toContain("05 · MAILLAGE & RESSOURCES ASSOCIÉES");
     }
   });
 });

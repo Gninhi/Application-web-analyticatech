@@ -27,7 +27,7 @@ interface VerticalSectionNavProps {
  */
 export function VerticalSectionNav({
   items,
-  accentColor = "#F26D3D",
+  accentColor = "var(--accent-ink)",
   className,
 }: VerticalSectionNavProps) {
   const [activeId, setActiveId] = useState<string>(items[0]?.id ?? "");
@@ -253,7 +253,7 @@ export function VerticalSectionNav({
                         className={cn(
                           "font-mono text-[11px] font-bold tracking-wider transition-colors duration-200",
                           isCurrent
-                            ? "text-[#F26D3D]"
+                            ? "text-accent-ink"
                             : isCompleted || isPassed
                             ? "text-slate-700 dark:text-slate-300"
                             : "text-slate-400 dark:text-slate-600"
@@ -301,7 +301,7 @@ export function VerticalSectionNav({
         <div className="relative">
           {/* Menu déroulant compact */}
           {mobileOpen && (
-            <div className="absolute bottom-14 right-0 w-64 rounded-2xl border border-slate-200 dark:border-white/10 bg-white/95 dark:bg-[#0A0D14]/95 backdrop-blur-xl p-3 shadow-2xl space-y-1 animate-in fade-in slide-in-from-bottom-2 duration-200">
+            <div className="absolute bottom-14 right-0 w-64 rounded-2xl border border-slate-200 dark:border-white/10 bg-white/95 dark:bg-background/95 backdrop-blur-xl p-3 shadow-2xl space-y-1 animate-in fade-in slide-in-from-bottom-2 duration-200">
               <p className="font-mono text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-2 py-1">
                 SECTIONS //
               </p>
@@ -314,7 +314,7 @@ export function VerticalSectionNav({
                     className={cn(
                       "w-full text-left px-3 py-2 rounded-xl text-xs font-mono flex items-center justify-between transition-colors",
                       isCurrent
-                        ? "bg-[#F26D3D]/10 text-[#F26D3D] font-bold"
+                        ? "bg-[#F26D3D]/10 text-accent-ink font-bold"
                         : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
                     )}
                   >
@@ -336,14 +336,14 @@ export function VerticalSectionNav({
           {/* Bouton pilule flottant */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="flex items-center gap-2 rounded-full border border-slate-200 dark:border-white/15 bg-white/90 dark:bg-[#06070B]/90 backdrop-blur-md px-3.5 py-2 shadow-lg shadow-black/10 text-xs font-mono text-slate-800 dark:text-slate-200 hover:border-[#F26D3D]/50 transition-all active:scale-95"
+            className="flex items-center gap-2 rounded-full border border-slate-200 dark:border-white/15 bg-white/90 dark:bg-background/90 backdrop-blur-md px-3.5 py-2 shadow-lg shadow-black/10 text-xs font-mono text-slate-800 dark:text-slate-200 hover:border-[#F26D3D]/50 transition-all active:scale-95"
             aria-label="Ouvrir le sommaire des sections"
           >
             <span
               className="w-2 h-2 rounded-full animate-pulse"
               style={{ backgroundColor: accentColor }}
             />
-            <span className="font-bold text-[#F26D3D]">
+            <span className="font-bold text-accent-ink">
               {activeItem?.number ?? "01"}
             </span>
             <span className="truncate max-w-[120px]">

@@ -4,7 +4,6 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Database, BrainCircuit, Workflow, BarChart3, ArrowRight, Activity, CheckCircle2 } from "lucide-react";
 import { useI18n } from "@/lib/i18n/provider";
-import { useAppContent } from "@/components/providers/ContentProvider";
 import { cn } from "@/lib/utils/cn";
 
 export interface NodeItem {
@@ -20,13 +19,10 @@ export interface NodeItem {
 
 export function LivingSystemGraph() {
   const { locale } = useI18n();
-  const { metrics } = useAppContent();
   const [activeNodeId, setActiveNodeId] = useState<string>("intelligence");
 
   const isEn = locale === "en";
 
-  const agentsCount = metrics.find((m) => m.key === "agents_production")?.value ?? "38";
-  const dashboardsCount = metrics.find((m) => m.key === "dashboards_decisional")?.value ?? "42";
 
   const NODES: NodeItem[] = useMemo(
     () => [
@@ -34,12 +30,12 @@ export function LivingSystemGraph() {
         id: "data",
         step: "01",
         title: isEn ? "Data" : "Données",
-        subtitle: isEn ? "Ingestion & Centralization" : "Ingestion & Centralisation",
+        subtitle: isEn ? "Collect & centralise" : "Collecter et centraliser",
         description: isEn
-          ? "Continuous capture of raw streams (ERP, CRM, logs, SQL/NoSQL databases) with cleaning and sovereignty."
-          : "Captation continue des flux bruts (ERP, CRM, logs, bases SQL/NoSQL) avec nettoyage et souveraineté.",
+          ? "Your data is collected from the tools you already use (ERP management software, CRM customer database, spreadsheets, databases), then cleaned and kept under your control."
+          : "Vos données sont collectées depuis les outils que vous utilisez déjà (ERP de gestion, CRM de suivi client, tableurs, bases de données), puis nettoyées et gardées sous votre contrôle.",
         icon: Database,
-        metrics: isEn ? "28+ data sources" : "28+ sources data",
+        metrics: isEn ? "Your existing tools" : "Vos outils existants",
         details: isEn
           ? ["Native REST/gRPC connectors", "AES-256 encryption (transit & rest)", "GDPR & Sovereign Cloud Compliance"]
           : ["Connecteurs natifs REST/gRPC", "Chiffrement AES-256 (transit & repos)", "Conformité RGPD & Cloud Souverain"],
@@ -48,79 +44,65 @@ export function LivingSystemGraph() {
         id: "intelligence",
         step: "02",
         title: isEn ? "Intelligence" : "Intelligence",
-        subtitle: isEn ? "RAG & Cognitive Core" : "RAG & Noyau Cognitif",
+        subtitle: isEn ? "Understanding & answering" : "Comprendre et répondre",
         description: isEn
-          ? "Vector enrichment, RAG modeling and low-latency LLM reasoning with zero hallucinations."
-          : "Enrichissement vectoriel, modélisation RAG et raisonnement LLM à faible latence et zéro hallucination.",
+          ? "A language model (LLM) answers from your own documents and cites its sources (RAG technique), with checks that limit made-up answers."
+          : "Un modèle de langage (LLM) répond à partir de vos propres documents et cite ses sources (technique RAG), avec des contrôles qui limitent les réponses inventées.",
         icon: BrainCircuit,
-        metrics: isEn ? "280 ms latency" : "280 ms latence",
+        metrics: isEn ? "Sourced answers" : "Réponses sourcées",
         details: isEn
-          ? ["Hybrid models (SaaS / Sovereign)", "Distributed vector stores", "Security guardrails & auditability"]
-          : ["Modèles hybrides (SaaS / Sovereign)", "Bases vectorielles distribuées", "Garde-fous de sécurité & auditability"],
+          ? ["Models hosted in France or Europe to fit your constraints", "Search across your internal documents", "Security guardrails and traceability"]
+          : ["Modèles hébergés en France ou en Europe selon vos contraintes", "Recherche dans vos documents internes", "Garde-fous de sécurité et traçabilité"],
       },
       {
         id: "orchestration",
         step: "03",
         title: isEn ? "Orchestration" : "Orchestration",
-        subtitle: isEn ? "Workflows & Multi-Agents" : "Workflows & Multi-Agents",
+        subtitle: isEn ? "Acting under control" : "Agir sous contrôle",
         description: isEn
-          ? "Automated execution of complex tasks with state management, approval loops and error recovery."
-          : "Exécution automatisée de tâches complexes avec gestion d'état, boucle d'approbation et reprise sur erreur.",
+          ? "AI agents carry out multi-step tasks, ask for human approval at sensitive steps and recover cleanly from errors."
+          : "Des agents IA exécutent des tâches en plusieurs étapes, demandent une validation humaine aux étapes sensibles et reprennent proprement en cas d'erreur.",
         icon: Workflow,
-        metrics: isEn ? `${agentsCount} active agents` : `${agentsCount} agents actifs`,
+        metrics: isEn ? "Human approval" : "Validation humaine",
         details: isEn
-          ? ["Networked autonomous agents", "n8n / Temporal orchestration", "Configurable Human-in-the-loop"]
-          : ["Agents autonomes en réseau", "Orchestration n8n / Temporal", "Human-in-the-loop configurable"],
+          ? ["Agents with defined roles", "Automated flows (n8n)", "Configurable human approval"]
+          : ["Agents aux rôles définis", "Enchaînements automatisés (n8n)", "Validation humaine paramétrable"],
       },
       {
         id: "decision",
         step: "04",
         title: isEn ? "Decision" : "Décision",
-        subtitle: isEn ? "Steering & Business Impact" : "Pilotage & Impact Métier",
+        subtitle: isEn ? "Steering" : "Pilotage",
         description: isEn
-          ? "Real-time executive dashboards, automated action triggers and continuous ROI measurement."
-          : "Dashboards exécutifs temps réel, déclenchement d'actions automatiques et mesure continue du ROI.",
+          ? "Leadership dashboards, alerts when an indicator drifts, and regular measurement of return on investment (ROI)."
+          : "Des tableaux de bord pour la direction, des alertes quand un indicateur dérive et une mesure régulière du retour sur investissement (ROI).",
         icon: BarChart3,
-        metrics: isEn ? `${dashboardsCount} active KPIs` : `${dashboardsCount} KPIs actifs`,
+        metrics: isEn ? "Readable metrics" : "Indicateurs lisibles",
         details: isEn
-          ? ["dbt / PowerBI semantic layer", "Predictive drift alerts", "Actionable visual analytics"]
-          : ["Couche sémantique dbt / PowerBI", "Alertes prédictives sur dérive", "Restitutions visuelles décisionnelles"],
+          ? ["Indicators defined once (Power BI)", "Drift alerts", "Clear visual reporting"]
+          : ["Indicateurs définis une seule fois (Power BI)", "Alertes sur dérive", "Restitutions visuelles claires"],
       },
     ],
-    [isEn, agentsCount, dashboardsCount]
+    [isEn]
   );
 
   return (
     <div className="relative overflow-hidden glass-card rounded-3xl p-6 md:p-10 transition-all">
       {/* Halo lumineux d'arrière-plan */}
-      <div
-        className="pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full opacity-20 transition-all duration-700 blur-3xl"
-        style={{
-          background: activeNodeId === "data"
-            ? "radial-gradient(circle, #022873, transparent)"
-            : activeNodeId === "intelligence"
-            ? "radial-gradient(circle, #F26D3D, transparent)"
-            : activeNodeId === "orchestration"
-            ? "radial-gradient(circle, #022859, transparent)"
-            : "radial-gradient(circle, #4CAF50, transparent)",
-        }}
-        aria-hidden
-      />
-
       {/* En-tête de section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-8 border-b border-black/10 dark:border-white/10">
         <div>
-          <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D]">
-            {isEn ? "05 — LIVING SYSTEM" : "05 — SYSTÈME VIVANT"}
+          <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-accent-ink">
+            {isEn ? "05 — FROM DATA TO DECISION" : "05 — DE LA DONNÉE À LA DÉCISION"}
           </span>
           <h2 className="font-display text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-50 mt-1">
-            {isEn ? "From Data to Decision" : "De la donnée à la décision"}
+            {isEn ? "How an AI system works in production" : "Comment fonctionne un système d'IA en production"}
           </h2>
         </div>
         <div className="flex items-center gap-2 font-mono text-xs text-slate-400 dark:text-slate-300 bg-black/5 dark:bg-white/5 px-3 py-1.5 rounded-full self-start md:self-auto">
-          <Activity className="h-3.5 w-3.5 text-[#F26D3D] animate-pulse" aria-hidden="true" />
-          <span className="hidden lg:inline">{isEn ? "Live Stream · Hover node to inspect" : "Flux actif · Survolez un nœud pour explorer"}</span>
-          <span className="lg:hidden">{isEn ? "Live Stream · Tap a node to explore" : "Flux actif · Touchez un nœud pour explorer"}</span>
+          <Activity className="h-3.5 w-3.5 text-accent-ink" aria-hidden="true" />
+          <span className="hidden lg:inline">{isEn ? "Hover a step to read its definition" : "Survolez une étape pour lire sa définition"}</span>
+          <span className="lg:hidden">{isEn ? "Tap a step to read its definition" : "Touchez une étape pour lire sa définition"}</span>
         </div>
       </div>
 
@@ -133,17 +115,11 @@ export function LivingSystemGraph() {
           preserveAspectRatio="none"
           aria-hidden
         >
-          <defs>
-            <linearGradient id="flowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#022873" stopOpacity="0.4" />
-              <stop offset="50%" stopColor="#F26D3D" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#4CAF50" stopOpacity="0.4" />
-            </linearGradient>
-          </defs>
           <path
             d="M 125 60 L 375 60 L 625 60 L 875 60"
             fill="none"
-            stroke="url(#flowGrad)"
+            stroke="#F26D3D"
+            strokeOpacity="0.5"
             strokeWidth="3"
             strokeDasharray="6 6"
             className="animate-pulse"
@@ -177,7 +153,7 @@ export function LivingSystemGraph() {
                   <span
                     className={`font-mono text-xs font-bold px-2 py-0.5 rounded-full ${
                       isActive
-                        ? "bg-[#C9470F] text-white"
+                        ? "bg-[#E35F31] text-white"
                         : "bg-slate-200 dark:bg-white/10 text-slate-600 dark:text-slate-300"
                     }`}
                   >
@@ -193,7 +169,7 @@ export function LivingSystemGraph() {
                   <div
                     className={`p-2.5 rounded-xl transition-colors ${
                       isActive
-                        ? "bg-[#F26D3D]/20 text-[#F26D3D]"
+                        ? "bg-[#F26D3D]/20 text-accent-ink"
                         : "bg-black/5 dark:bg-white/10 text-slate-700 dark:text-slate-300"
                     }`}
                   >
@@ -211,7 +187,7 @@ export function LivingSystemGraph() {
 
                 {/* Indicateur de flux connecté */}
                 {index < NODES.length - 1 && (
-                  <div className="hidden lg:flex absolute -right-3 top-1/2 -translate-y-1/2 z-20 h-6 w-6 items-center justify-center rounded-full bg-slate-200 dark:bg-white/15 border border-black/10 dark:border-white/20 text-[#F26D3D]">
+                  <div className="hidden lg:flex absolute -right-3 top-1/2 -translate-y-1/2 z-20 h-6 w-6 items-center justify-center rounded-full bg-slate-200 dark:bg-white/15 border border-black/10 dark:border-white/20 text-accent-ink">
                     <ArrowRight className="h-3 w-3" aria-hidden />
                   </div>
                 )}
@@ -247,8 +223,8 @@ export function LivingSystemGraph() {
             >
               <div className="max-w-xl">
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="font-mono text-xs text-[#F26D3D] font-bold">
-                    {isEn ? `Node ${node.step}` : `Nœud ${node.step}`}
+                  <span className="font-mono text-xs text-accent-ink font-bold">
+                    {isEn ? `Step ${node.step}` : `Étape ${node.step}`}
                   </span>
                   <span className="text-slate-300 dark:text-slate-300">•</span>
                   <span className="font-display font-semibold text-slate-800 dark:text-slate-100 text-sm">
@@ -263,7 +239,7 @@ export function LivingSystemGraph() {
               <div className="flex flex-col gap-2 shrink-0 border-t md:border-t-0 md:border-l border-black/10 dark:border-white/10 pt-4 md:pt-0 md:pl-6">
                 {node.details.map((detail, idx) => (
                   <div key={idx} className="flex items-center gap-2 text-xs font-mono text-slate-700 dark:text-slate-300">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-[#F26D3D] shrink-0" aria-hidden />
+                    <CheckCircle2 className="h-3.5 w-3.5 text-accent-ink shrink-0" aria-hidden />
                     <span>{detail}</span>
                   </div>
                 ))}

@@ -21,10 +21,10 @@ describe("AgentoryMethod — Démarche Méthodologique & Rotation Dynamique", ()
   it("rend la section avec son titre, sa description et les 4 phases méthodologiques", () => {
     const html = renderMethod("fr");
 
-    expect(html).toContain("07 — MÉTHODE");
-    expect(html).toContain("Une démarche structurée et rassurante");
+    expect(html).toContain("06 — MÉTHODE");
+    expect(html).toContain("Une démarche structurée, étape par étape");
     expect(html).toContain("01. Découverte & Cadrage");
-    expect(html).toContain("02. POC en conditions réelles");
+    expect(html).toContain("02. Prototype en conditions réelles");
     expect(html).toContain("03. Industrialisation");
     expect(html).toContain("04. Run & amélioration continue");
   });
@@ -42,8 +42,8 @@ describe("AgentoryMethod — Démarche Méthodologique & Rotation Dynamique", ()
   it("supporte la locale anglaise avec les libellés traduits", () => {
     const html = renderMethod("en");
 
-    expect(html).toContain("07 — METHODOLOGY");
-    expect(html).toContain("A structured, risk-mitigated approach");
+    expect(html).toContain("06 — METHOD");
+    expect(html).toContain("A structured approach, step by step");
     expect(html).toContain("01. Discovery & Scoping");
     expect(html).toContain("Auto rotation");
     expect(html).toContain("Pause auto-rotation");

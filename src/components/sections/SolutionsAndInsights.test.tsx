@@ -52,8 +52,6 @@ describe("SolutionCard Component", () => {
       expect(html).toContain(solution.methodology);
 
       if (solution.slug === "dealscoop") {
-        expect(html).toContain("Nouvelle offre");
-        expect(html).toContain("Capacité & Méthode");
         expect(html).not.toContain("Déployé en production");
       }
     }
@@ -80,8 +78,6 @@ describe("SolutionCard Component", () => {
       expect(html).toContain(solution.methodology);
 
       if (solution.slug === "dealscoop") {
-        expect(html).toContain("New offering");
-        expect(html).toContain("Capability & Methodology");
         expect(html).not.toContain("Deployed in Production");
       }
     }

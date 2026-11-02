@@ -223,7 +223,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
             style={{ opacity: driftActive }}
             className="mt-10 flex items-center gap-3"
           >
-            <Compass className="h-4 w-4 text-[#F26D3D]" aria-hidden />
+            <Compass className="h-4 w-4 text-accent-ink" aria-hidden />
             <div className="relative h-px flex-1 bg-black/10 dark:bg-white/10 overflow-hidden">
               <motion.div
                 style={{ width: progressWidth }}
@@ -246,7 +246,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
           {/* Indicateur de pagination mobile (< 1024px) */}
           <div className="flex lg:hidden items-center justify-between px-4 sm:px-6 mb-3" aria-label="Progression catalogue">
             <div className="flex items-center gap-1.5 font-mono text-xs">
-              <span className="font-semibold text-[#F26D3D]">
+              <span className="font-semibold text-accent-ink">
                 {String(mobileActiveIndex + 1).padStart(2, "0")}
               </span>
               <span className="text-slate-400 dark:text-slate-600">/</span>
@@ -301,7 +301,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
                 aria-hidden
               />
               <span className="relative h-14 w-14 sm:h-16 sm:w-16 rounded-2xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 flex items-center justify-center mb-4 sm:mb-5">
-                <Sparkles className="h-7 w-7 sm:h-8 sm:w-8 text-[#F26D3D]" aria-hidden />
+                <Sparkles className="h-7 w-7 sm:h-8 sm:w-8 text-accent-ink" aria-hidden />
               </span>
               <h3 className="relative font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 dark:text-slate-50 mb-2 sm:mb-3">
                 {t("solutions.final.title")}
@@ -349,7 +349,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
                   }}
                   aria-hidden
                 />
-                <f.icon className="h-7 w-7 text-[#F26D3D] mb-3" aria-hidden />
+                <f.icon className="h-7 w-7 text-accent-ink mb-3" aria-hidden />
                 <h4 className="font-display text-lg font-bold text-slate-900 dark:text-slate-50 mb-1.5">
                   {f.t}
                 </h4>

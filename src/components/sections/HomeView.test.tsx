@@ -57,47 +57,29 @@ describe("HomeView — Rendu SSR initial (crawl sans JS & robots IA)", () => {
     );
 
     // Section 01 — Hero
-    expect(html).toContain("DES SYSTÈMES");
-    expect(html).toContain("INTELLIGENTS");
+    expect(html).toContain("IA, expliquée simplement.");
 
-    // Section 02 — Preuve Rapide
-    expect(html).toContain("02 — PREUVE RAPIDE");
-    expect(html).toContain("48+");
+    // Section 02 — Engagements vérifiables (aucun chiffre non vérifiable)
+    expect(html).toContain("02 — ENGAGEMENTS");
+    expect(html).not.toContain("48+");
 
-    // Section 03 — Les Services
     expect(html).toContain("03 — NOS SERVICES");
-
-    // Section 04 — Problèmes Métiers
     expect(html).toContain("04 — PROBLÈMES MÉTIERS");
-
-    // Section 05 — Architecture Vivante
-    expect(html).toContain("05 — SYSTÈME VIVANT");
-
-    // Section 06 — Data Console & Télémesure
-    expect(html).toContain("06 — CONSOLE DATA & TÉLÉMÉTRIE");
-
-    // Section 07 — La Méthode Agentory
-    expect(html).toContain("07 — MÉTHODE");
-
-    // Section 08 — Cas / Démonstration Avant-Après
-    expect(html).toContain("08 — CAS & DÉMONSTRATION");
-
-    // Section 09 — Preuve Sociale & Cas d'usage
-    expect(html).toContain("09 — INSIGHTS");
-
-    // Section 11 — CTA Final
-    expect(html).toContain("11 — CTA FINAL");
+    expect(html).toContain("05 — DE LA DONNÉE À LA DÉCISION");
+    expect(html).toContain("06 — MÉTHODE");
+    expect(html).toContain("07 — CAS RÉEL");
+    expect(html).toContain("08 — ANALYSES");
 
     // Aucune section ne doit être restée au statut lazy non monté
     expect(html).not.toContain('data-lazy-mounted="false"');
   });
 
-  it("garantit que la section 07 — Méthode contient bien les 4 piliers de delivery", () => {
+  it("garantit que la section 06 — Méthode contient bien les 4 piliers de delivery", () => {
     const html = renderWithProviders(
       <HomeView onNavigate={() => {}} onNavigateDetail={() => {}} />
     );
     expect(html).toContain("Découverte & Cadrage");
-    expect(html).toContain("POC en conditions réelles");
+    expect(html).toContain("Prototype en conditions réelles");
     expect(html).toContain("Industrialisation");
     expect(html).toContain("Run & amélioration continue");
   });
@@ -120,7 +102,7 @@ describe("HomeView — Rendu SSR initial (crawl sans JS & robots IA)", () => {
 
     // Confirmation que les sections principales dont 07 Méthode sont présentes
     expect(extractedHeadings.length).toBeGreaterThanOrEqual(7);
-    expect(extractedHeadings.some((h) => h.includes("Quatre piliers d'expertise"))).toBe(true); // 03 - Services
+    expect(extractedHeadings.some((h) => h.includes("Quatre services complémentaires"))).toBe(true); // 03 - Services
     expect(extractedHeadings.some((h) => h.includes("Une démarche structurée"))).toBe(true); // 07 - Méthode
   });
 });

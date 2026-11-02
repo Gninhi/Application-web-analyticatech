@@ -38,7 +38,7 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
     <section className="relative py-8 sm:py-12">
       {/* En-tête de section */}
       <div className="max-w-3xl mb-8 sm:mb-12">
-        <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] font-bold">
+        <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent-ink font-bold">
           {t("home.section.demo")}
         </span>
         <h2 className="font-display text-2xl sm:text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 mt-2 tracking-tight">
@@ -76,7 +76,7 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
           onClick={() => setViewMode("after")}
           className={`flex-1 min-h-[44px] py-2 px-2.5 sm:px-4 rounded-xl sm:rounded-full font-mono text-[10px] sm:text-xs font-bold transition-all duration-300 flex items-center justify-center gap-1.5 sm:gap-2 text-center leading-snug cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 ${
             viewMode === "after"
-              ? "bg-[#4CAF50]/15 text-[#4CAF50] border border-[#4CAF50]/30 shadow-md shadow-[#4CAF50]/10"
+              ? "bg-link/15 text-link border border-link/30"
               : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
           }`}
         >
@@ -150,7 +150,7 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
               ) : (
                 <>
                   <div className="lg:col-span-7">
-                    <div className="inline-flex items-center gap-1.5 font-mono text-[10px] sm:text-xs uppercase tracking-wider sm:tracking-widest text-[#4CAF50] bg-[#4CAF50]/10 px-2.5 sm:px-3 py-1 rounded-full border border-[#4CAF50]/20 mb-3 sm:mb-4">
+                    <div className="inline-flex items-center gap-1.5 font-mono text-[10px] sm:text-xs uppercase tracking-wider sm:tracking-widest text-link bg-link/10 px-2.5 sm:px-3 py-1 rounded-full border border-link/20 mb-3 sm:mb-4">
                       <Sparkles className="h-3.5 w-3.5 shrink-0" aria-hidden />
                       <span>{t("demo.after.label")}</span>
                     </div>
@@ -168,9 +168,9 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
                         t("demo.after.point3"),
                         t("demo.after.point4"),
                       ].map((point, idx) => (
-                        <div key={idx} className="flex items-center gap-2.5 sm:gap-3 text-xs sm:text-sm text-[#4CAF50] font-medium">
-                          <div className="p-0.5 sm:p-1 rounded-full bg-[#4CAF50]/10 shrink-0">
-                            <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#4CAF50]" aria-hidden />
+                        <div key={idx} className="flex items-center gap-2.5 sm:gap-3 text-xs sm:text-sm text-link font-medium">
+                          <div className="p-0.5 sm:p-1 rounded-full bg-link/10 shrink-0">
+                            <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-link" aria-hidden />
                           </div>
                           <span>{point}</span>
                         </div>
@@ -197,20 +197,20 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
                   {/* Metrics d'impact */}
                   <div className="lg:col-span-5 w-full flex flex-col">
                     <div className="grid grid-cols-2 gap-2.5 sm:gap-3 w-full">
-                      <div className="rounded-xl sm:rounded-2xl border border-[#4CAF50]/30 bg-[#4CAF50]/10 p-3 sm:p-4 lg:p-5 text-center transition-transform duration-300 hover:scale-[1.02] flex flex-col justify-center">
-                        <span className="font-mono text-[9px] sm:text-[10px] uppercase text-[#4CAF50] font-bold block leading-tight">{t("demo.after.m1.label")}</span>
+                      <div className="rounded-xl sm:rounded-2xl border border-link/30 bg-link/10 p-3 sm:p-4 lg:p-5 text-center transition-transform duration-300 hover:scale-[1.02] flex flex-col justify-center">
+                        <span className="font-mono text-[9px] sm:text-[10px] uppercase text-link font-bold block leading-tight">{t("demo.after.m1.label")}</span>
                         <span className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-50 mt-1 block">{t("demo.after.m1.value")}</span>
                       </div>
                       <div className="rounded-xl sm:rounded-2xl border border-[#F26D3D]/30 bg-[#F26D3D]/10 p-3 sm:p-4 lg:p-5 text-center transition-transform duration-300 hover:scale-[1.02] flex flex-col justify-center">
-                        <span className="font-mono text-[9px] sm:text-[10px] uppercase text-[#F26D3D] font-bold block leading-tight">{t("demo.after.m2.label")}</span>
+                        <span className="font-mono text-[9px] sm:text-[10px] uppercase text-accent-ink font-bold block leading-tight">{t("demo.after.m2.label")}</span>
                         <span className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-50 mt-1 block">{t("demo.after.m2.value")}</span>
                       </div>
                       <div className="col-span-2 rounded-xl sm:rounded-2xl border border-black/10 dark:border-white/20 bg-black/5 dark:bg-white/5 p-3.5 sm:p-5 text-center transition-transform duration-300 hover:scale-[1.01]">
                         <div className="inline-flex items-center gap-1.5 mb-1">
-                          <TrendingUp className="h-3.5 w-3.5 text-[#F26D3D] shrink-0" aria-hidden />
+                          <TrendingUp className="h-3.5 w-3.5 text-accent-ink shrink-0" aria-hidden />
                           <span className="font-mono text-[9px] sm:text-[10px] uppercase text-slate-500 dark:text-slate-400">{t("demo.after.m3.label")}</span>
                         </div>
-                        <span className="font-display text-3xl sm:text-4xl font-bold text-[#F26D3D] block">{t("demo.after.m3.value")}</span>
+                        <span className="font-display text-3xl sm:text-4xl font-bold text-accent-ink block">{t("demo.after.m3.value")}</span>
                         <span className="font-mono text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 sm:mt-1 block">{t("demo.after.m3.sub")}</span>
                       </div>
                     </div>

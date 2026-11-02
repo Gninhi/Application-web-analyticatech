@@ -15,6 +15,11 @@ export function normalizeServiceIndex(raw: string): string {
 }
 
 export const getServices = cache(async (locale: Locale = "fr"): Promise<ServiceDTO[]> => {
+  // Textes des services : version locale relue (sans jargon non défini, sans chiffres non vérifiables).
+  // Le contenu de la base n'est servi que si PUBLISH_DB_SERVICES=true.
+  if (process.env.PUBLISH_DB_SERVICES !== "true") {
+    return locale === "en" ? FALLBACK_SERVICES_EN : FALLBACK_SERVICES_FR;
+  }
   try {
     const raw = await db.service.findMany({
       where: { active: true },

@@ -139,9 +139,9 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
               {t("services.persona.filter") || "Vue ciblée :"}
             </span>
             {[
-              { id: "ceo" as const, label: t("services.persona.ceo-label"), color: "#F26D3D" },
+              { id: "ceo" as const, label: t("services.persona.ceo-label"), color: "var(--accent-ink)" },
               { id: "architect" as const, label: t("services.persona.architect-label"), color: "#43A047" },
-              { id: "operational" as const, label: t("services.persona.operational-label"), color: "#38BDF8" },
+              { id: "operational" as const, label: t("services.persona.operational-label"), color: "var(--accent-ink)" },
             ].map((p) => {
               const isSelected = activePersona === p.id;
               return (
@@ -224,7 +224,7 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
               transition={{ duration: 0.5 }}
             >
               <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.3em] text-accent">
-                {"// " + t("services.method.tag")}
+                {t("services.method.tag")}
               </p>
               <h2 className="mb-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
                 {t("services.method.title")}
@@ -471,7 +471,7 @@ function ServiceDeckCard({
               className="font-mono text-[10px] uppercase tracking-[0.3em]"
               style={{ color: accent }}
             >
-              {"// " + service.index}
+              {service.index}
               <span className="hidden md:inline">{" · " + service.tagline}</span>
             </p>
             <span className="glass rounded-full px-3 py-1 font-mono text-[11px] text-muted-foreground">

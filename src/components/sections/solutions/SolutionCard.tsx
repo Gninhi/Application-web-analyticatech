@@ -188,17 +188,10 @@ export function SolutionCard({
 
           {/* Bottom row : statut déployé ou nouvelle offre + hover hint */}
           <div className="absolute bottom-2.5 left-3.5 right-3.5 sm:bottom-3 sm:left-4 sm:right-4 z-20 flex items-center justify-between">
-            {sol.statusType === "new" ? (
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2 sm:px-2.5 py-0.5 sm:py-1 font-mono text-[8.5px] sm:text-[9px] uppercase tracking-widest text-indigo-600 dark:text-indigo-400 backdrop-blur-sm">
-                <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse" />
-                {sol.statusBadge ?? "Nouvelle offre"}
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#4CAF50]/30 bg-[#4CAF50]/10 px-2 sm:px-2.5 py-0.5 sm:py-1 font-mono text-[8.5px] sm:text-[9px] uppercase tracking-widest text-[#4CAF50] backdrop-blur-sm">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#4CAF50] animate-pulse" />
-                {sol.statusBadge ?? t("common.deployed")}
-              </span>
-            )}
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-2 sm:px-2.5 py-0.5 sm:py-1 font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.08em] text-foreground">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#F26D3D]" />
+              {sol.statusBadge ?? "Cas d'usage type"}
+            </span>
             <span
               className="font-mono text-[9px] sm:text-[10px] uppercase tracking-widest opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               style={{ color: accent }}

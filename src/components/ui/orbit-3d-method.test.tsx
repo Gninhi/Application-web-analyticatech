@@ -94,7 +94,6 @@ describe("Orbit3DMethod — Système Orbital 3D & Hub Central", () => {
     );
 
     expect(html).toContain("dark:border-white/10");
-    expect(html).toContain("dark:bg-[#06070B]");
     expect(html).toContain("rotateX");
     expect(html).toContain("rotateZ");
   });

@@ -46,10 +46,10 @@ export function getServiceMeshOverlay(index: string): string {
  *  chip icône, grand chiffre, valeurs metrics). Teintes alignées sur les
  *  mesh overlays pour une identité cohérente, lisibles sur les 2 thèmes. */
 const SERVICE_ACCENT: Record<string, string> = {
-  "01": "#F26D3D", // Orange marque — Raisonnement & RAG
-  "02": "#38BDF8", // Bleu azur — Automatisation & Workflows
-  "03": "#10B981", // Vert émeraude — Orchestration Multi-Agents
-  "04": "#A855F7", // Violet moderne — Data & Décision Augmentée
+  "01": "var(--accent-ink)", // Orange marque — Raisonnement & RAG
+  "02": "var(--accent-ink)", // Bleu azur — Automatisation & Workflows
+  "03": "var(--accent-ink)", // Vert émeraude — Orchestration Multi-Agents
+  "04": "var(--accent-ink)", // Violet moderne — Data & Décision Augmentée
 };
 
 /** Retourne la couleur d'accent d'un service. */

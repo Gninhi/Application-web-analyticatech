@@ -13,20 +13,10 @@ describe("colors utils", () => {
     expect(tint("invalide", 20)).toBe(BRAND_ACCENT);
   });
 
-  it("getServiceAccent renvoie 4 couleurs d'accents distinctes et valides pour 01, 02, 03, 04", () => {
-    const c1 = getServiceAccent("01");
-    const c2 = getServiceAccent("02");
-    const c3 = getServiceAccent("03");
-    const c4 = getServiceAccent("04");
-
-    expect(c1).toBe("#F26D3D"); // Orange
-    expect(c2).toBe("#38BDF8"); // Bleu
-    expect(c3).toBe("#10B981"); // Vert
-    expect(c4).toBe("#A855F7"); // Violet
-
-    // 4 couleurs toutes différentes
-    const uniqueColors = new Set([c1, c2, c3, c4]);
-    expect(uniqueColors.size).toBe(4);
+  it("getServiceAccent renvoie l'accent unique de la charte pour 01, 02, 03, 04", () => {
+    for (const idx of ["01", "02", "03", "04"]) {
+      expect(getServiceAccent(idx)).toBe(BRAND_ACCENT);
+    }
   });
 
   it("getServiceAccent renvoie l'accent par défaut pour un service inconnu", () => {
@@ -42,8 +32,8 @@ describe("colors utils", () => {
   });
 
   it("getCategoryAccent renvoie l'accent par clé ou label", () => {
-    expect(getCategoryAccent("ia")).toBe("#F26D3D");
-    expect(getCategoryAccent("unknown", "Automatisation")).toBe("#4CAF50");
+    expect(getCategoryAccent("ia")).toBe(BRAND_ACCENT);
+    expect(getCategoryAccent("unknown", "Automatisation")).toBe(BRAND_ACCENT);
     expect(getCategoryAccent("unknown", "unknown")).toBe(BRAND_ACCENT);
   });
 

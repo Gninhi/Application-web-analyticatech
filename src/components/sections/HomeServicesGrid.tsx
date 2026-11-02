@@ -19,10 +19,10 @@ const SERVICE_CONFIGS: Record<
   string,
   { id: string; badge: string; iconVariant: ServiceIconVariant; accentColor: string; variant: BentoVariant }
 > = {
-  "01": { id: "ai", badge: "PRODUCTION READY", iconVariant: "orbit", accentColor: "#F26D3D", variant: "hero" },
-  "02": { id: "automation", badge: "ORCHESTRATION", iconVariant: "wave", accentColor: "#38BDF8", variant: "counterpart" },
-  "03": { id: "agents", badge: "AUTONOMIE & MCP", iconVariant: "spark", accentColor: "#10B981", variant: "counterpart" },
-  "04": { id: "bi", badge: "DÉCISIONNEL", iconVariant: "loop", accentColor: "#A855F7", variant: "hero" },
+  "01": { id: "ai", badge: "ASSISTANT IA", iconVariant: "orbit", accentColor: "var(--accent-ink)", variant: "hero" },
+  "02": { id: "automation", badge: "AUTOMATISATION", iconVariant: "wave", accentColor: "var(--accent-ink)", variant: "counterpart" },
+  "03": { id: "agents", badge: "MULTI-AGENTS", iconVariant: "spark", accentColor: "var(--accent-ink)", variant: "counterpart" },
+  "04": { id: "bi", badge: "DATA & BI", iconVariant: "loop", accentColor: "var(--accent-ink)", variant: "hero" },
 };
 
 /**
@@ -42,7 +42,7 @@ export function HomeServicesGrid({ onNavigate: _onNavigate, onNavigateDetail }: 
         id: `service-${s.index}`,
         badge: "EXPERT",
         iconVariant: "orbit" as ServiceIconVariant,
-        accentColor: "#F26D3D",
+        accentColor: "var(--accent-ink)",
         variant: (i % 3 === 0 ? "hero" : "counterpart") as BentoVariant,
       };
 
@@ -58,8 +58,6 @@ export function HomeServicesGrid({ onNavigate: _onNavigate, onNavigateDetail }: 
           iconVariant: cfg.iconVariant,
           accentColor: cfg.accentColor,
           technologies: s.technologies,
-          metrics: s.metrics[0] ?? { label: "Performance", value: "99.9%" },
-          secondaryMetric: s.metrics[1],
         },
       };
     });
@@ -67,14 +65,14 @@ export function HomeServicesGrid({ onNavigate: _onNavigate, onNavigateDetail }: 
 
   // Filtres d'onglets dynamiques issus des services
   const FOCUS_TABS = useMemo(() => {
-    const allTab = { id: "all", label: t("home.section.services.all") || "Tous les piliers", index: "00", color: "#F26D3D" };
+    const allTab = { id: "all", label: t("home.section.services.all") || "Tous les piliers", index: "00", color: "var(--accent-ink)" };
     const serviceTabs = services.map((s) => {
       const cfg = SERVICE_CONFIGS[s.index];
       return {
         id: cfg?.id || `service-${s.index}`,
         label: `${s.index} · ${s.title}`,
         index: s.index,
-        color: cfg?.accentColor || "#F26D3D",
+        color: cfg?.accentColor || "var(--accent-ink)",
       };
     });
     return [allTab, ...serviceTabs];

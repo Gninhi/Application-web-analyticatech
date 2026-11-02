@@ -35,7 +35,8 @@ export interface MethodStep {
 /* 4 phases en orbite : icônes + couleurs d'accent alignées sur la palette
    de marque Analyticatech (Orange #F26D3D, Cyan #38BDF8, Violet #A855F7, Ambre #F59E0B) */
 const STEP_ICONS = [Search, FlaskConical, Factory, TrendingUp] as const;
-const STEP_COLORS = ["#F26D3D", "#38BDF8", "#A855F7", "#F59E0B"] as const;
+// Charte : un seul accent (orange) pour les repères graphiques
+const STEP_COLORS = ["#F26D3D", "#F26D3D", "#F26D3D", "#F26D3D"] as const;
 
 // Intervalle de lecture confortable : 9 secondes par phase
 const STEP_DURATION_MS = 9000;
@@ -165,7 +166,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
     <section ref={sectionRef} className="relative py-12">
       {/* En-tête de section style Agentory */}
       <div className="max-w-3xl mb-12">
-        <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] font-bold">
+        <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent-ink font-bold">
           {t("home.section.method")}
         </span>
         <h2 className="font-display text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 mt-2 tracking-tight leading-tight">
@@ -190,7 +191,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                 title: s.title,
                 duration: s.duration,
                 icon: s.icon,
-                color: s.color,
+                color: "var(--accent-ink)",
               }))}
               activeIndex={activeStepIndex}
               onSelect={handleSelectStep}
@@ -239,14 +240,14 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                 <div className="flex items-center justify-between mb-2">
                   <span
                     className={`font-mono text-xs font-bold ${
-                      isActive ? "text-[#F26D3D]" : "text-slate-500 dark:text-slate-400"
+                      isActive ? "text-accent-ink" : "text-slate-500 dark:text-slate-400"
                     }`}
                   >
                     {step.number}
                   </span>
                   <StepIcon
                     className={`h-4 w-4 ${
-                      isActive ? "text-[#F26D3D]" : "text-slate-500 dark:text-slate-400"
+                      isActive ? "text-accent-ink" : "text-slate-500 dark:text-slate-400"
                     }`}
                     aria-hidden
                   />
@@ -289,7 +290,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                   className="h-full w-full opacity-35 transition-colors"
                   style={{
                     backgroundColor: isPausedByUser
-                      ? "#F59E0B"
+                      ? "#F26D3D"
                       : METHOD_STEPS[activeStepIndex]?.color ?? "#F26D3D",
                   }}
                 />
@@ -334,7 +335,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                       <span
                         className="font-mono text-[10px] uppercase tracking-widest px-3 py-1 rounded-full inline-block border"
                         style={{
-                          color: step.color,
+                          color: "var(--accent-ink)",
                           background: `color-mix(in srgb, ${step.color} 10%, transparent)`,
                           borderColor: `color-mix(in srgb, ${step.color} 25%, transparent)`,
                         }}
@@ -349,7 +350,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                         className={cn(
                           "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono transition-all border cursor-pointer select-none focus-visible:outline-2 focus-visible:outline-offset-2",
                           isPausedByUser
-                            ? "border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20"
+                            ? "border-[#F26D3D]/40 bg-[#F26D3D]/10 text-accent-ink hover:bg-[#F26D3D]/20"
                             : "border-black/10 dark:border-white/15 bg-white/70 dark:bg-white/5 text-slate-600 dark:text-slate-300 hover:border-black/20 dark:hover:border-white/30"
                         )}
                         title={isPausedByUser ? t("method.auto.play") : t("method.auto.pause")}
@@ -391,10 +392,10 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                     </p>
 
                     {/* Pill de résultat explicite (Exigence Blueprint) */}
-                    <div className="p-4 rounded-2xl border border-[#4CAF50]/30 bg-[#4CAF50]/10 flex items-start gap-3 mb-6">
-                      <ShieldCheck className="h-5 w-5 text-[#4CAF50] shrink-0 mt-0.5" aria-hidden />
+                    <div className="p-4 rounded-2xl border border-link/30 bg-link/10 flex items-start gap-3 mb-6">
+                      <ShieldCheck className="h-5 w-5 text-link shrink-0 mt-0.5" aria-hidden />
                       <div>
-                        <span className="font-mono text-[10px] uppercase tracking-widest text-[#4CAF50] font-bold block">
+                        <span className="font-mono text-[10px] uppercase tracking-widest text-link font-bold block">
                           {t("method.result")}
                         </span>
                         <span className="font-display font-semibold text-slate-900 dark:text-slate-100 text-sm md:text-base">
@@ -429,7 +430,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                             className="flex h-5 w-5 items-center justify-center rounded-full shrink-0"
                             style={{
                               background: `color-mix(in srgb, ${step.color} 20%, transparent)`,
-                              color: step.color,
+                              color: "var(--accent-ink)",
                             }}
                           >
                             <Check className="h-3 w-3" aria-hidden />

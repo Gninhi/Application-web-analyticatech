@@ -1,18 +1,18 @@
 /**
  * Tokens et constantes d'accent de couleur pour l'ensemble du site.
- * Palette "Corporate Cyberpunk" bicolore & multidomaine.
+ * Charte : un seul accent, adapté au thème (orange en Nuit, bleu-600 en Clair).
  */
 
-export const BRAND_ACCENT = "#F26D3D";
+export const BRAND_ACCENT = "var(--accent-ink)";
 
 /**
  * Accents distinctifs par service (fiches 01 à 04).
  */
 export const SERVICE_ACCENTS: Record<string, string> = {
-  "01": "#F26D3D", // Orange marque — Raisonnement & RAG
-  "02": "#38BDF8", // Bleu azur — Automatisation & Workflows
-  "03": "#10B981", // Vert émeraude — Orchestration Multi-Agents
-  "04": "#A855F7", // Violet moderne — Data & Décision Augmentée
+  "01": "var(--accent-ink)", // Orange marque — Raisonnement & RAG
+  "02": "var(--accent-ink)", // Bleu azur — Automatisation & Workflows
+  "03": "var(--accent-ink)", // Vert émeraude — Orchestration Multi-Agents
+  "04": "var(--accent-ink)", // Violet moderne — Data & Décision Augmentée
 };
 
 
@@ -20,28 +20,28 @@ export const SERVICE_ACCENTS: Record<string, string> = {
  * Accents sectoriels pour les solutions (1 à 6).
  */
 export const SOLUTION_ACCENTS: Record<string, string> = {
-  "1": "#38BDF8", // Finance & Fintech
-  "2": "#4CAF50", // Industrie & Supply
-  "3": "#F26D3D", // Retail & E-commerce
-  "4": "#A855F7", // Santé & Pharma
-  "5": "#F59E0B", // Services & B2B
-  "6": "#22D3EE", // Secteur public & Énergie
-  "7": "#6366F1", // M&A & Private Equity (Indigo)
+  "1": "var(--accent-ink)", // Finance & Fintech
+  "2": "var(--accent-ink)", // Industrie & Supply
+  "3": "var(--accent-ink)", // Retail & E-commerce
+  "4": "var(--accent-ink)", // Santé & Pharma
+  "5": "var(--accent-ink)", // Services & B2B
+  "6": "var(--accent-ink)", // Secteur public & Énergie
+  "7": "var(--accent-ink)", // M&A & Private Equity (Indigo)
 };
 
 /**
  * Accents par catégorie d'insights/articles de blog.
  */
 export const CATEGORY_ACCENTS: Record<string, string> = {
-  ia: "#F26D3D",
-  ai: "#F26D3D",
-  automatisation: "#4CAF50",
-  automation: "#4CAF50",
-  bi: "#38BDF8",
-  architecture: "#A855F7",
-  rag: "#38BDF8",
-  agents: "#F26D3D",
-  strategie: "#F59E0B",
-  strategy: "#F59E0B",
+  ia: "var(--accent-ink)",
+  ai: "var(--accent-ink)",
+  automatisation: "var(--accent-ink)",
+  automation: "var(--accent-ink)",
+  bi: "var(--accent-ink)",
+  architecture: "var(--accent-ink)",
+  rag: "var(--accent-ink)",
+  agents: "var(--accent-ink)",
+  strategie: "var(--accent-ink)",
+  strategy: "var(--accent-ink)",
 };
 

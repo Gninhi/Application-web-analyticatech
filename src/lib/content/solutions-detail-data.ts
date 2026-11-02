@@ -21,7 +21,7 @@ export const SOLUTIONS_DETAIL_REGISTRY: Record<string, SolutionDetailData> = {
     title: "Optimisation logistique par l'IA :",
     titleAccent: "Ré-ordonnancement dynamique & Prédiction de la demande",
     summary:
-      "Ré-ordonnancement dynamique des tournées et prédiction de la demande via modèles ML, réduisant les coûts de transport de 22% et les ruptures de stock de 41%.",
+      "Ré-ordonnancement dynamique des tournées et prédiction de la demande via modèles ML, pour réduire les coûts de transport et les ruptures de stock.",
     tags: ["ML", "Optimisation combinatoire", "Prédiction de demande", "VRPTW"],
     problem: {
       heading: "Quand la rigidité des plans statiques heurte les aléas quotidiens du terrain",
@@ -81,28 +81,25 @@ export const SOLUTIONS_DETAIL_REGISTRY: Record<string, SolutionDetailData> = {
         "La solution se connecte via des interfaces API standards et webhooks aux principaux TMS et WMS du marché ainsi qu'aux systèmes propriétaires, évitant tout remplacement d'outil de gestion de flotte en place.",
     },
     metrics: {
-      heading: "Résultats mesurés & Rigueur méthodologique",
-      lead: "Impact quantifié constaté sur les déploiements logistiques clients.",
+      heading: "Indicateurs mesurés pendant le pilote",
+      lead: "Scénario type : aucun résultat client n'est publié ici. Ces indicateurs sont fixés ensemble au cadrage, avec un point de départ mesuré, puis suivis pendant le pilote.",
       items: [
         {
           label: "Coûts de transport consolidés",
-          value: "Jusqu'à -22%",
-          subtext: "Économie kilométrique, carburant et réduction des heures supplémentaires",
+          value: "À mesurer",
+          subtext: "Valeur de départ relevée au cadrage, puis suivie à chaque jalon.",
         },
         {
           label: "Ruptures de stock en entrepôt",
-          value: "-41%",
-          subtext: "Diminution drastique sur les références à forte rotation (classes A et B)",
+          value: "À mesurer",
+          subtext: "Valeur de départ relevée au cadrage, puis suivie à chaque jalon.",
         },
       ],
       methodology: {
-        sampleAndScope:
-          "Flottes de transport régulières et plateformes logistiques multi-sites gérant plus de 150 points d'arrêt quotidiens.",
-        period: "2024–2025",
-        measurementConditions:
-          "Mesure comparative avant/après sur périmètre d'activité comparable (volume de colis et saisonnalité identiques) évaluant le coût kilométrique et les ruptures sur références A/B.",
-        rigorDisclaimer:
-          "Résultats constatés sur les cas clients déployés, dépendant directement de la densité géographique des points de livraison et de la qualité du géocodage initial.",
+        sampleAndScope: "Votre périmètre réel, défini au cadrage (sites, équipes, flux concernés).",
+        period: "Durée du pilote, fixée au cadrage",
+        measurementConditions: "Comparaison entre la situation de départ mesurée au cadrage et la situation en fin de pilote, sur les mêmes indicateurs et la même méthode de calcul.",
+        rigorDisclaimer: "Aucun chiffre n'est promis avant le cadrage : les résultats dépendent de la qualité de vos données et de l'adoption par vos équipes.",
       },
     },
     limitsAndPrerequisites: {
@@ -171,7 +168,7 @@ export const SOLUTIONS_DETAIL_REGISTRY: Record<string, SolutionDetailData> = {
     title: "Agents de conformité réglementaire :",
     titleAccent: "Surveillance temps réel & Détection des anomalies",
     summary:
-      "Agents cognitifs surveillant 100% des transactions en temps réel, détectant les anomalies de conformité et générant les rapports régulateurs automatiquement.",
+      "Agents IA (programmes qui enchaînent des tâches de façon autonome, sous contrôle humain) qui surveillent les transactions en continu, détectant les anomalies de conformité et générant les rapports régulateurs automatiquement.",
     tags: ["Agents", "Conformité", "Temps réel", "LCB-FT", "TRACFIN"],
     problem: {
       heading: "L'explosion des volumes transactionnels face aux exigences LCB-FT et DORA",
@@ -231,28 +228,25 @@ export const SOLUTIONS_DETAIL_REGISTRY: Record<string, SolutionDetailData> = {
         "Intégration directe sur les flux de paiement au format ISO 20022 et via connecteurs webhooks avec le Core Banking System de l'établissement sans impacter le chemin critique des autorisations.",
     },
     metrics: {
-      heading: "Résultats mesurés sur flux de production bancaires",
-      lead: "Métriques constatées sur des plateformes de paiement et établissements financiers sous supervision.",
+      heading: "Indicateurs mesurés pendant le pilote",
+      lead: "Scénario type : aucun résultat client n'est publié ici. Ces indicateurs sont fixés ensemble au cadrage, avec un point de départ mesuré, puis suivis pendant le pilote.",
       items: [
         {
           label: "Couverture d'audit transactionnel",
-          value: "100%",
-          subtext: "Chaque transaction est scorée en streaming sans échantillonnage",
+          value: "À mesurer",
+          subtext: "Valeur de départ relevée au cadrage, puis suivie à chaque jalon.",
         },
         {
           label: "Latence moyenne de traitement",
-          value: "< 3s",
-          subtext: "Délai global d'analyse et de scoring par les agents cognitifs",
+          value: "À mesurer",
+          subtext: "Valeur de départ relevée au cadrage, puis suivie à chaque jalon.",
         },
       ],
       methodology: {
-        sampleAndScope:
-          "Flux transactionnels en production (virements SEPA, prélèvements, paiements par carte) d'établissements financiers régulés.",
-        period: "2024–2025",
-        measurementConditions:
-          "Mesures de performance observées sur flux réels en continu, évaluant le taux de couverture et la latence P95 de scoring.",
-        rigorDisclaimer:
-          "Le temps de latence est mesuré sur l'étape de scoring d'anomalie ; le délai d'investigation approfondie par agent reste soumis à la validation humaine finale de l'analyste.",
+        sampleAndScope: "Votre périmètre réel, défini au cadrage (sites, équipes, flux concernés).",
+        period: "Durée du pilote, fixée au cadrage",
+        measurementConditions: "Comparaison entre la situation de départ mesurée au cadrage et la situation en fin de pilote, sur les mêmes indicateurs et la même méthode de calcul.",
+        rigorDisclaimer: "Aucun chiffre n'est promis avant le cadrage : les résultats dépendent de la qualité de vos données et de l'adoption par vos équipes.",
       },
     },
     limitsAndPrerequisites: {
@@ -380,28 +374,25 @@ export const SOLUTIONS_DETAIL_REGISTRY: Record<string, SolutionDetailData> = {
         "Connecteurs directs avec les ERP retail majeurs, systèmes de caisse (POS) et plateformes e-commerce standards, assurant une synchronisation sans ressaisie de données.",
     },
     metrics: {
-      heading: "Impact chiffré mesuré en conditions d'exploitation",
-      lead: "Résultats constatés après déploiement sur des parcs de distribution multi-sites.",
+      heading: "Indicateurs mesurés pendant le pilote",
+      lead: "Scénario type : aucun résultat client n'est publié ici. Ces indicateurs sont fixés ensemble au cadrage, avec un point de départ mesuré, puis suivis pendant le pilote.",
       items: [
         {
-          label: "Gain de marge brute moyenne",
-          value: "+14%",
-          subtext: "Amélioration constatée après rationalisation des remises et optimisation du réassort",
+          label: "Marge brute",
+          value: "À mesurer",
+          subtext: "Valeur de départ relevée au cadrage, puis suivie à chaque jalon.",
         },
         {
-          label: "Tableaux de bord unifiés actifs",
-          value: "42",
-          subtext: "Outils de pilotage certifiés utilisés quotidiennement par le management",
+          label: "Usage des tableaux de bord unifiés",
+          value: "À mesurer",
+          subtext: "Valeur de départ relevée au cadrage, puis suivie à chaque jalon.",
         },
       ],
       methodology: {
-        sampleAndScope:
-          "Réseaux de distribution retail et enseignes omnicanales opérant des parcs de boutiques physiques et un canal e-commerce.",
-        period: "2024–2025",
-        measurementConditions:
-          "Résultats mesurés sur les déploiements retail multi-sites, comparant l'évolution de la marge brute et du taux de rotation des stocks sur deux exercices.",
-        rigorDisclaimer:
-          "Les gains de marge dépendent de la discipline d'application des recommandations tarifaires et de la fraîcheur des données de stock fournies.",
+        sampleAndScope: "Votre périmètre réel, défini au cadrage (sites, équipes, flux concernés).",
+        period: "Durée du pilote, fixée au cadrage",
+        measurementConditions: "Comparaison entre la situation de départ mesurée au cadrage et la situation en fin de pilote, sur les mêmes indicateurs et la même méthode de calcul.",
+        rigorDisclaimer: "Aucun chiffre n'est promis avant le cadrage : les résultats dépendent de la qualité de vos données et de l'adoption par vos équipes.",
       },
     },
     limitsAndPrerequisites: {
@@ -469,10 +460,10 @@ export const SOLUTIONS_DETAIL_REGISTRY: Record<string, SolutionDetailData> = {
     title: "Synthèse clinique & extraction NLP :",
     titleAccent: "Structuration de comptes rendus & Dossiers patients",
     summary:
-      "Extraction automatisée et structuration de données non structurées (comptes rendus, imagerie) accélérant le traitement des dossiers de 68%.",
+      "Extraction automatisée et structuration de données non structurées (comptes rendus, imagerie) pour accélérer le traitement des dossiers.",
     tags: ["NLP", "LLM", "Médical", "CIM-10", "HDS"],
     problem: {
-      heading: "80% des données cliniques sont piégées dans du texte médical non structuré",
+      heading: "L'essentiel des données cliniques reste enfermé dans du texte médical non structuré",
       contextNarrative:
         "Dans les établissements hospitaliers, cliniques et centres de recherche, la surcharge documentaire des praticiens est devenue l'un des premiers facteurs d'épuisement professionnel. Les antécédents, traitements, examens biologiques et résultats d'imagerie sont dispersés dans des comptes rendus d'hospitalisation au format PDF scanné, des courriers de confrères et des comptes rendus opératoires dictés. Reconstituer la trajectoire d'un patient complexe avant une réunion de concertation pluridisciplinaire (RCP) ou une admission exige un temps de lecture considérable, avec un risque permanent d'omission d'une contre-indication vitale.",
       coreFrictions: [
@@ -529,28 +520,25 @@ export const SOLUTIONS_DETAIL_REGISTRY: Record<string, SolutionDetailData> = {
         "Déploiement sur serveurs qualifiés Hébergeur de Données de Santé (HDS) en France, garantissant qu'aucune donnée de santé ne transite vers des tiers non certifiés.",
     },
     metrics: {
-      heading: "Résultats mesurés en environnement hospitalier",
-      lead: "Performances observées lors de bancs d'évaluation et de déploiements pilotes.",
+      heading: "Indicateurs mesurés pendant le pilote",
+      lead: "Scénario type : aucun résultat client n'est publié ici. Ces indicateurs sont fixés ensemble au cadrage, avec un point de départ mesuré, puis suivis pendant le pilote.",
       items: [
         {
-          label: "Gain de temps sur le traitement des dossiers",
-          value: "Jusqu'à 68%",
-          subtext: "Accélération de la constitution de la fiche de synthèse patient",
+          label: "Temps de traitement des dossiers",
+          value: "À mesurer",
+          subtext: "Valeur de départ relevée au cadrage, puis suivie à chaque jalon.",
         },
         {
-          label: "Erreurs critiques d'omission constatées",
-          value: "0 erreur",
-          subtext: "Vérifié par double lecture médicale sur les cohortes de test",
+          label: "Erreurs d'omission",
+          value: "À mesurer",
+          subtext: "Valeur de départ relevée au cadrage, puis suivie à chaque jalon.",
         },
       ],
       methodology: {
-        sampleAndScope:
-          "Dossiers médicaux complexes pluridisciplinaires (notamment oncologie et médecine interne).",
-        period: "2024–2025",
-        measurementConditions:
-          "Mesures issues des bancs d'évaluation et missions pilotes hospitalières, comparant le temps de préparation humaine avec et sans pré-structuration NLP.",
-        rigorDisclaimer:
-          "Le système opère en assistance exclusive : chaque synthèse générée doit être relue et validée par le praticien responsable.",
+        sampleAndScope: "Votre périmètre réel, défini au cadrage (sites, équipes, flux concernés).",
+        period: "Durée du pilote, fixée au cadrage",
+        measurementConditions: "Comparaison entre la situation de départ mesurée au cadrage et la situation en fin de pilote, sur les mêmes indicateurs et la même méthode de calcul.",
+        rigorDisclaimer: "Aucun chiffre n'est promis avant le cadrage : les résultats dépendent de la qualité de vos données et de l'adoption par vos équipes.",
       },
     },
     limitsAndPrerequisites: {
@@ -618,7 +606,7 @@ export const SOLUTIONS_DETAIL_REGISTRY: Record<string, SolutionDetailData> = {
     title: "Maintenance prédictive IoT :",
     titleAccent: "Détection précoce d'anomalies & Prolongation d'équipements",
     summary:
-      "Détection précoce d'anomalies sur lignes de production réduisant les arrêts imprévus de 34% et prolongeant la durée de vie des équipements de 18 mois.",
+      "Détection précoce d'anomalies sur lignes de production pour réduire les arrêts imprévus et prolonger la durée de vie des équipements.",
     tags: ["IoT", "Séries temporelles", "Edge AI", "MQTT", "GMAO"],
     problem: {
       heading: "L'impasse entre maintenance curative coûteuse et maintenance préventive aveugle",
@@ -678,28 +666,25 @@ export const SOLUTIONS_DETAIL_REGISTRY: Record<string, SolutionDetailData> = {
         "Compatibilité native avec les protocoles industriels d'atelier (Modbus, OPC-UA, MQTT, PROFINET) et connecteurs vers les principaux progiciels de GMAO du marché.",
     },
     metrics: {
-      heading: "Impact économique mesuré sur lignes de production",
-      lead: "Métriques constatées sur des parcs d'équipements industriels instrumentés.",
+      heading: "Indicateurs mesurés pendant le pilote",
+      lead: "Scénario type : aucun résultat client n'est publié ici. Ces indicateurs sont fixés ensemble au cadrage, avec un point de départ mesuré, puis suivis pendant le pilote.",
       items: [
         {
-          label: "Réduction des arrêts imprévus",
-          value: "Jusqu'à -34%",
-          subtext: "Diminution nette des pannes critiques immobilisant les lignes",
+          label: "Arrêts imprévus",
+          value: "À mesurer",
+          subtext: "Valeur de départ relevée au cadrage, puis suivie à chaque jalon.",
         },
         {
-          label: "Prolongation de vie des équipements",
-          value: "+18 mois",
-          subtext: "Extension de la durée de service avant révision lourde ou rebut",
+          label: "Durée de vie des équipements",
+          value: "À mesurer",
+          subtext: "Valeur de départ relevée au cadrage, puis suivie à chaque jalon.",
         },
       ],
       methodology: {
-        sampleAndScope:
-          "Machines tournantes, moteurs électriques industriels et lignes de fabrication continues instrumentées.",
-        period: "2024–2025",
-        measurementConditions:
-          "Résultats mesurés sur lignes de production industrielle instrumentées, comparant les indicateurs d'arrêt (MTBF / MTTR) sur deux années consécutives.",
-        rigorDisclaimer:
-          "L'efficacité des modèles dépend de la bonne disposition physique des capteurs et d'une période d'apprentissage initial de fonctionnement nominal.",
+        sampleAndScope: "Votre périmètre réel, défini au cadrage (sites, équipes, flux concernés).",
+        period: "Durée du pilote, fixée au cadrage",
+        measurementConditions: "Comparaison entre la situation de départ mesurée au cadrage et la situation en fin de pilote, sur les mêmes indicateurs et la même méthode de calcul.",
+        rigorDisclaimer: "Aucun chiffre n'est promis avant le cadrage : les résultats dépendent de la qualité de vos données et de l'adoption par vos équipes.",
       },
     },
     limitsAndPrerequisites: {
@@ -767,7 +752,7 @@ export const SOLUTIONS_DETAIL_REGISTRY: Record<string, SolutionDetailData> = {
     title: "Optimisation de grille intelligente :",
     titleAccent: "Équilibrage offre/demande & Arbitrage sur marchés spot",
     summary:
-      "Équilibrage offre/demande en temps réel et arbitrage sur marchés spot par RL, générant 850 k€ d'économies annuelles.",
+      "Équilibrage offre/demande en temps réel et arbitrage sur les marchés spot (achat d'énergie au prix du moment) par apprentissage par renforcement, pour réduire la facture énergétique.",
     tags: ["Reinforcement Learning", "Smart Grid", "Arbitrage", "EPEX SPOT"],
     problem: {
       heading: "La volatilité extrême des marchés de l'énergie et l'intermittence des renouvelables",
@@ -827,28 +812,25 @@ export const SOLUTIONS_DETAIL_REGISTRY: Record<string, SolutionDetailData> = {
         "Interfaçage sécurisé avec les automates de contrôle énergétique (EMS) sur site et les passerelles API des courtiers en énergie et agrégateurs de flexibilité.",
     },
     metrics: {
-      heading: "Gains économiques vérifiés en conditions réelles",
-      lead: "Économies annuelles constatées sur des sites industriels et portefeuilles d'actifs énergétiques.",
+      heading: "Indicateurs mesurés pendant le pilote",
+      lead: "Scénario type : aucun résultat client n'est publié ici. Ces indicateurs sont fixés ensemble au cadrage, avec un point de départ mesuré, puis suivis pendant le pilote.",
       items: [
         {
-          label: "Économies annuelles générées",
-          value: "Jusqu'à 850 k€/an",
-          subtext: "Gains consolidés sur l'effacement aux heures de pointe et arbitrages spot",
+          label: "Économies annuelles",
+          value: "À mesurer",
+          subtext: "Valeur de départ relevée au cadrage, puis suivie à chaque jalon.",
         },
         {
           label: "Disponibilité opérationnelle du système",
-          value: "99.9%",
-          subtext: "Maintien de la continuité d'alimentation des installations critiques",
+          value: "À mesurer",
+          subtext: "Valeur de départ relevée au cadrage, puis suivie à chaque jalon.",
         },
       ],
       methodology: {
-        sampleAndScope:
-          "Sites industriels électro-intensifs et portefeuilles d'actifs renouvelables raccordés au réseau haute tension.",
-        period: "2024–2025",
-        measurementConditions:
-          "Modélisation et retours d'exploitation sur réseaux d'énergie, comparant le coût d'approvisionnement optimisé par rapport à un contrat d'achat statique de référence.",
-        rigorDisclaimer:
-          "Les économies dépendent directement de la puissance souscrite flexible et du niveau de volatilité des cours horaires de l'électricité.",
+        sampleAndScope: "Votre périmètre réel, défini au cadrage (sites, équipes, flux concernés).",
+        period: "Durée du pilote, fixée au cadrage",
+        measurementConditions: "Comparaison entre la situation de départ mesurée au cadrage et la situation en fin de pilote, sur les mêmes indicateurs et la même méthode de calcul.",
+        rigorDisclaimer: "Aucun chiffre n'est promis avant le cadrage : les résultats dépendent de la qualité de vos données et de l'adoption par vos équipes.",
       },
     },
     limitsAndPrerequisites: {
@@ -913,7 +895,7 @@ export const SOLUTIONS_DETAIL_REGISTRY: Record<string, SolutionDetailData> = {
     slug: "dealscoop",
     sector: "M&A & Private Equity",
     sectorBadge: "NOUVELLE OFFRE // M&A & PRIVATE EQUITY",
-    statusBadge: "Nouvelle offre",
+    statusBadge: "Cas d’usage type",
     statusType: "new",
     title: "Sourcing d'opportunités M&A :",
     titleAccent: "Détection & Scoring par l'IA",
@@ -948,7 +930,7 @@ export const SOLUTIONS_DETAIL_REGISTRY: Record<string, SolutionDetailData> = {
           title: "Approche outbound générique et chronophage pour les analystes",
           description:
             "Prise de contact « à froid » impersonnelle auprès de dirigeants d'entreprise sur-sollicités, faute d'une contextualisation précise du déclencheur business et d'une qualification préalable d'alignement avec la thèse d'investissement.",
-          impact: "Taux de réponse des dirigeants inférieur à 5% et gaspillage de bande passante des équipes d'investissement.",
+          impact: "Taux de réponse des dirigeants très faible et gaspillage de bande passante des équipes d'investissement.",
         },
       ],
     },
@@ -993,31 +975,25 @@ export const SOLUTIONS_DETAIL_REGISTRY: Record<string, SolutionDetailData> = {
         "Interconnexion native avec les CRM Private Equity & M&A de place (DealFabric, Salesforce, HubSpot, Affinity) via webhooks et API REST sécurisées pour une injection directe des cibles qualifiées dans le pipeline sans ressaisie manuelle.",
     },
     metrics: {
-      heading: "Cadre de qualification & engagements méthodologiques",
-      lead: "Dealscoop étant une nouvelle offre, nous refusons formellement de publier des métriques de résultat commercial invérifiables (ex. faux taux de transformation ou fausses économies). Les indicateurs ci-dessous définissent nos engagements stricts de couverture technique, de traçabilité et d'intégrité de la veille.",
+      heading: "Indicateurs mesurés pendant le pilote",
+      lead: "Scénario type : aucun résultat client n'est publié ici. Ces indicateurs sont fixés ensemble au cadrage, avec un point de départ mesuré, puis suivis pendant le pilote.",
       items: [
         {
           label: "Couverture des sources légales",
-          value: "100%",
-          subtext:
-            "Flux BODACC, greffes INPI et annonces légales françaises indexés sans échantillonnage ni latence.",
+          value: "À mesurer",
+          subtext: "Valeur de départ relevée au cadrage, puis suivie à chaque jalon.",
         },
         {
           label: "Traçabilité & Vérifiabilité",
-          value: "100%",
-          subtext:
-            "Zéro hallucination : chaque signal détecté pointe vers un lien officiel daté et une source primaire vérifiable.",
+          value: "À mesurer",
+          subtext: "Valeur de départ relevée au cadrage, puis suivie à chaque jalon.",
         },
       ],
       methodology: {
-        sampleAndScope:
-          "Périmètre PME et ETI indépendantes françaises (chiffre d'affaires de 5 M€ à 150 M€) dans les secteurs industriels, B2B, tech et services.",
-        period:
-          "Phase de qualification pilote et calibrage d'algorithmes (2025–2026).",
-        measurementConditions:
-          "Backtesting méthodologique sur un échantillon de 500 opérations de transmission et d'ouverture de capital récentes pour étalonner la précocité de détection des signaux.",
-        rigorDisclaimer:
-          "La concrétisation d'un deal dépend souverainement de la relation bilatérale et de la négociation financière menée par l'investisseur. Dealscoop fournit l'amont stratégique et le gain de temps d'origination sans allégation de closing garantie.",
+        sampleAndScope: "Votre périmètre réel, défini au cadrage (sites, équipes, flux concernés).",
+        period: "Durée du pilote, fixée au cadrage",
+        measurementConditions: "Comparaison entre la situation de départ mesurée au cadrage et la situation en fin de pilote, sur les mêmes indicateurs et la même méthode de calcul.",
+        rigorDisclaimer: "Aucun chiffre n'est promis avant le cadrage : les résultats dépendent de la qualité de vos données et de l'adoption par vos équipes.",
       },
     },
     limitsAndPrerequisites: {

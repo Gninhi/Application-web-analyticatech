@@ -72,8 +72,8 @@ export function FaqSection({
                       className={cn(
                         "font-mono text-xs font-bold transition-colors",
                         isOpen
-                          ? "text-[#F26D3D]"
-                          : "text-slate-500 dark:text-slate-400 group-hover:text-[#F26D3D]"
+                          ? "text-accent-ink"
+                          : "text-slate-500 dark:text-slate-400 group-hover:text-accent-ink"
                       )}
                     >
                       {String(i + 1).padStart(2, "0")}
@@ -83,8 +83,8 @@ export function FaqSection({
                       className={cn(
                         "flex-1 font-display text-base md:text-lg font-bold tracking-tight transition-colors",
                         isOpen
-                          ? "text-[#F26D3D]"
-                          : "text-slate-900 dark:text-slate-50 group-hover:text-[#F26D3D]"
+                          ? "text-accent-ink"
+                          : "text-slate-900 dark:text-slate-50 group-hover:text-accent-ink"
                       )}
                     >
                       {item.q}
@@ -96,8 +96,8 @@ export function FaqSection({
                       className={cn(
                         "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-colors",
                         isOpen
-                          ? "border-[#F26D3D]/40 bg-[#F26D3D]/10 text-[#F26D3D]"
-                          : "border-black/10 dark:border-white/10 text-slate-500 dark:text-slate-400 group-hover:border-[#F26D3D]/40 group-hover:text-[#F26D3D]"
+                          ? "border-[#F26D3D]/40 bg-[#F26D3D]/10 text-accent-ink"
+                          : "border-black/10 dark:border-white/10 text-slate-500 dark:text-slate-400 group-hover:border-[#F26D3D]/40 group-hover:text-accent-ink"
                       )}
                       aria-hidden
                     >

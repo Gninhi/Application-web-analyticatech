@@ -21,7 +21,7 @@ export interface AnimatedButtonBorderProps {
 
 /**
  * AnimatedButtonBorder — Liseré lumineux dynamique serpent :
- * - Thème Sombre : Faisceau serpent Bleu (#3B82F6 / #60A5FA)
+ * - Thème Sombre : Faisceau serpent Bleu (#8DB0FF / #8DB0FF)
  * - Thème Clair  : Faisceau serpent Orange (#F26D3D)
  *
  * Utilise CSS offset-path rect() avec masque composite pour illuminer
@@ -54,7 +54,7 @@ export function AnimatedButtonBorder({
           "absolute aspect-square bg-gradient-to-r",
           !beamGradient &&
             (gradientClassName ??
-              "from-transparent via-[#F26D3D] to-[#F26D3D] dark:via-[#3B82F6] dark:to-[#3B82F6]")
+              "from-transparent via-[#F26D3D] to-[#F26D3D] dark:via-[#8DB0FF] dark:to-[#8DB0FF]")
         )}
         animate={{
           offsetDistance: ["0%", "100%"],

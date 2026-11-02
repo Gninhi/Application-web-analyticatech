@@ -62,16 +62,17 @@ describe("Navbar — Header Capsule Premium", () => {
     expect(html).toContain("tech");
   });
 
-  it("rend les liens de navigation avec le composant RandomLetterSwap et balisage accessible", () => {
+  it("rend les liens de navigation avec le composant libellés numérotés et balisage accessible", () => {
     const html = renderNavbar();
 
     expect(html).toContain('aria-label="Navigation principale"');
-    // Vérification de la présence des labels avec aria-label ou sr-only
-    expect(html).toContain('aria-label="Accueil"');
-    expect(html).toContain('aria-label="Services"');
-    expect(html).toContain('aria-label="Solutions"');
-    expect(html).toContain('aria-label="Insights"');
-    expect(html).toContain('aria-label="Contact"');
+    // Liens numérotés 01–05, libellés lisibles
+    expect(html).toContain("Accueil");
+    expect(html).toContain("Services");
+    expect(html).toContain("Solutions");
+    expect(html).toContain("Contact");
+    expect(html).toContain("01");
+    expect(html).toContain("05");
   });
 
   it("affiche le bouton CTA avec tracking data-cta", () => {
@@ -81,8 +82,9 @@ describe("Navbar — Header Capsule Premium", () => {
 
   it("affiche la capsule avec liseré spéculaire et styles de thème", () => {
     const html = renderNavbar();
-    // Doit contenir le liseré lumineux
-    expect(html).toContain("pointer-events-none absolute inset-x-6 top-0 h-px");
+    // Barre de navigation pleine largeur, sans liseré lumineux
+    expect(html).not.toContain("pointer-events-none absolute inset-x-6 top-0 h-px");
+    expect(html).toContain("/brand/");
   });
 
   it("rend le bouton burger mobile avec les attributs d'accessibilité requis", () => {

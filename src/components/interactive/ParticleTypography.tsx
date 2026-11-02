@@ -90,14 +90,14 @@ export function ParticleTypography({
           {titleAccent && (
             <>
               {" "}
-              <span className="text-[#F26D3D]">{titleAccent}</span>
+              <span className="text-accent-ink">{titleAccent}</span>
             </>
           )}
         </span>
 
         {/* Ligne d'accentuation secondaire (si fournie) */}
         {accent && (
-          <span className="block mt-1 md:mt-2 text-[#F26D3D]">
+          <span className="block mt-1 md:mt-2 text-accent-ink">
             {accent}
           </span>
         )}

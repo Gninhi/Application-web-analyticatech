@@ -120,7 +120,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
                 className="glass-card rounded-2xl p-6 text-center"
               >
                 <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 mb-4">
-                  <value.icon className="h-6 w-6 text-[#F26D3D]" aria-hidden />
+                  <value.icon className="h-6 w-6 text-accent-ink" aria-hidden />
                 </span>
                 <h3 className="font-display text-lg font-bold text-slate-900 dark:text-slate-50 mb-2">
                   {value.title}
@@ -144,7 +144,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {STATS.map((stat) => (
               <div key={stat.l}>
-                <p className="font-display text-3xl md:text-4xl font-bold text-[#F26D3D]">
+                <p className="font-display text-3xl md:text-4xl font-bold text-accent-ink">
                   {stat.v}
                 </p>
                 <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mt-2">

@@ -56,9 +56,9 @@ describe("ServicesView Component", () => {
 
     // Filtres ciblés
     expect(html).toContain("Vue ciblée :");
-    expect(html).toContain("CEO");
-    expect(html).toContain("Architect");
-    expect(html).toContain("Ops");
+    expect(html).toContain("Dirigeant");
+    expect(html).toContain("Technique");
+    expect(html).toContain("Opérations");
 
     // Ne doit PAS contenir de mention brute "(Perspective :" ou "(Perspective: "
     expect(html).not.toContain("(Perspective :");

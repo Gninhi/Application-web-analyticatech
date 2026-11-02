@@ -51,10 +51,10 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
         <div className="min-h-screen flex flex-col items-center justify-center px-6 grid-military bg-background">
           <div className="glass-card rounded-2xl p-8 md:p-12 max-w-lg w-full text-center">
             <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10">
-              <AlertTriangle className="h-8 w-8 text-[#F26D3D]" aria-hidden />
+              <AlertTriangle className="h-8 w-8 text-accent-ink" aria-hidden />
             </div>
             <p
-              className="font-mono text-xs uppercase tracking-[0.3em] text-[#F26D3D] mb-3"
+              className="font-mono text-xs uppercase tracking-[0.3em] text-accent-ink mb-3"
             >
               Alerte Système // 0xERR_FATAL
             </p>
@@ -66,7 +66,7 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
               L&apos;incident a été journalisé pour analyse.
             </p>
             {process.env.NODE_ENV !== "production" && this.state.error && (
-              <pre className="font-mono text-[11px] text-[#F26D3D]/80 bg-black/30 border border-black/10 dark:border-white/10 rounded-lg p-3 mt-4 overflow-auto max-h-32 text-left">
+              <pre className="font-mono text-[11px] text-accent-ink/80 bg-black/30 border border-black/10 dark:border-white/10 rounded-lg p-3 mt-4 overflow-auto max-h-32 text-left">
                 {this.state.error.message}
               </pre>
             )}
@@ -76,7 +76,7 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
               duration={3000}
               icon={<RefreshCw className="h-4 w-4" aria-hidden />}
               iconPosition="left"
-              className="mt-6 bg-[#C9470F] px-5 py-2.5 text-sm text-white hover:bg-[#B63C0C]"
+              className="mt-6 bg-[#E35F31] px-5 py-2.5 text-sm text-white hover:bg-[#E35F31]"
             >
               <span>RÉINITIALISER LE SYSTÈME</span>
             </Button>
