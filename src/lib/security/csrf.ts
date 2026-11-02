@@ -12,7 +12,7 @@ import { timingSafeEqual as tsEqual } from "crypto";
  */
 
 /** Comparaison temps-constant (cryptographique) — protection timing attack. */
-function constantTimeEqual(a: string, b: string): boolean {
+export function constantTimeEqual(a: string, b: string): boolean {
   if (a.length !== b.length) return false;
   try {
     return tsEqual(Buffer.from(a, "utf8"), Buffer.from(b, "utf8"));

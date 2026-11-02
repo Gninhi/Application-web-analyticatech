@@ -21,7 +21,8 @@ import { captureServerEvent } from "@/lib/posthog-server";
  *  1. CSRF double-submit (vérifié à nouveau ici, pas seulement dans le middleware)
  *  2. Vérification d'origine (allowlist via ALLOWED_ORIGINS)
  *  3. Bot detection (UA suspect → 403)
- *  4. Rate limiting par fingerprint (IP + UA + lang hashé) — 5 req/h
+ *  4. Rate limiting par fingerprint (IP + UA + lang hashé) — 5 req/h, en mémoire
+ *     et en base (partagé entre instances serverless)
  *  5. Anti-DoS : taille max du payload (content-length > 16 KB → 413)
  *  6. Multi-honeypot (companyUrl + website + fax — tous doivent être vides)
  *  7. Validation Zod stricte (email pro, longueurs, format)
@@ -55,6 +56,9 @@ function json(body: ContactApiResponse, status: number, extra?: Record<string, s
 }
 
 const HONEYPOT_FIELDS = ["companyUrl", "website", "fax", "phone2"] as const;
+
+/** Demandes acceptées par empreinte (IP + navigateur hachés) et par heure. */
+const CONTACT_HOURLY_LIMIT = 5;
 
 /** Message de confirmation, aligné sur les engagements publiés (`data/commitments.ts`). */
 function successMessage(isEn: boolean): string {
@@ -136,7 +140,7 @@ export async function POST(req: NextRequest) {
 
   // 4. Rate limiting.
   const rl = checkRateLimit(`contact:${fingerprint}`, {
-    limit: 5,
+    limit: CONTACT_HOURLY_LIMIT,
     windowMs: 60 * 60 * 1000,
   });
   if (!rl.allowed) {
@@ -242,6 +246,32 @@ export async function POST(req: NextRequest) {
     } catch {
       // Poursuite si la vérification BDD échoue
     }
+  }
+
+  // 7c. Limite persistante, partagée entre instances serverless (la limite en
+  //     mémoire ci-dessus ne voit que l'instance courante) : au plus
+  //     CONTACT_HOURLY_LIMIT demandes enregistrées par empreinte et par heure.
+  try {
+    const recent = await db.contactRequest.count({
+      where: { fingerprint, createdAt: { gte: new Date(Date.now() - 60 * 60 * 1000) } },
+    });
+    if (recent >= CONTACT_HOURLY_LIMIT) {
+      audit.warn("Contact: persistent rate limit exceeded", { ipHash, fingerprint });
+      return json(
+        {
+          success: false,
+          message: msg(
+            "Trop de tentatives. Réessayez dans une heure.",
+            "Too many attempts. Please try again in an hour."
+          ),
+        },
+        429,
+        { "Retry-After": "3600" }
+      );
+    }
+  } catch {
+    // Base indisponible : la limite en mémoire reste active, l'écriture
+    // ci-dessous échouera proprement (500) si la base est réellement en panne.
   }
 
   // 8. Sanitization XSS.
