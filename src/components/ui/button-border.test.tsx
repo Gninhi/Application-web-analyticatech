@@ -17,5 +17,8 @@ describe("button-border component", () => {
       </ButtonBorder>
     );
     expect(html).toContain("Bouton Test");
+    expect(html).toContain("#F26D3D");
+    expect(html).toContain("#3B82F6");
+    expect(html).toContain("pointer-events-none");
   });
 });

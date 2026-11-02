@@ -10,41 +10,39 @@ import { AnimatedButtonBorder } from "@/components/ui/button-border";
 
 /**
  * Variantes officielles des boutons Analyticatech :
- * - Thème Sombre : Fond Orange de l'entreprise (#F26D3D) + Bordure serpent Bleu (#8DB0FF / #03318C)
+ * - Thème Sombre : Fond Orange de l'entreprise (#F26D3D) + Bordure serpent Bleu (#3B82F6 / #03318C)
  * - Thème Clair  : Fond Bleu de l'entreprise (#03318C) + Bordure serpent Orange (#F26D3D)
  * - Transitions fluides et support conditionnel exhaustif
  */
 const buttonVariants = cva(
-  "relative isolate inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-[15px] font-semibold font-sans normal-case tracking-normal select-none transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 cursor-pointer",
+  "relative isolate inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium font-mono uppercase tracking-wider select-none overflow-hidden transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F26D3D] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 cursor-pointer",
   {
     variants: {
       variant: {
-        // Bouton d'accent : fond orange, texte navy-900 (jamais blanc)
         default:
-          "bg-[#F26D3D] text-[#011C40] border border-[#F26D3D] hover:bg-[#E35F31] hover:border-[#E35F31]",
+          "bg-[#03318C] text-white border border-[#03318C]/50 hover:bg-[#022873] shadow-sm hover:shadow-[0_0_24px_rgba(3,49,140,0.35)] dark:bg-[#F26D3D] dark:text-slate-950 dark:font-semibold dark:border-[#F26D3D]/50 dark:hover:bg-[#ff7b4b] dark:hover:shadow-[0_0_24px_rgba(242,109,61,0.35)] active:scale-[0.98]",
         primary:
-          "bg-[#F26D3D] text-[#011C40] border border-[#F26D3D] hover:bg-[#E35F31] hover:border-[#E35F31]",
-        // Bouton secondaire : contour, texte de la couleur du thème
+          "bg-[#03318C] text-white border border-[#03318C]/50 hover:bg-[#022873] shadow-sm hover:shadow-[0_0_24px_rgba(3,49,140,0.35)] dark:bg-[#F26D3D] dark:text-slate-950 dark:font-semibold dark:border-[#F26D3D]/50 dark:hover:bg-[#ff7b4b] dark:hover:shadow-[0_0_24px_rgba(242,109,61,0.35)] active:scale-[0.98]",
         outline:
-          "border border-border bg-transparent text-foreground hover:border-foreground",
+          "border border-[#03318C]/40 bg-background/80 backdrop-blur-xs text-[#03318C] hover:text-[#03318C] hover:border-[#03318C] hover:bg-[#03318C]/10 dark:border-white/15 dark:bg-white/5 dark:text-white dark:hover:text-[#60A5FA] dark:hover:border-[#3B82F6]/50 dark:hover:bg-white/10 active:scale-[0.98]",
         secondary:
-          "bg-foreground text-background border border-foreground hover:opacity-90",
+          "bg-[#03318C]/10 border border-[#03318C]/20 text-slate-900 hover:bg-[#03318C]/20 hover:text-[#03318C] dark:bg-white/10 dark:border-white/15 dark:text-slate-100 dark:hover:bg-white/15 dark:hover:text-white active:scale-[0.98]",
         ghost:
-          "bg-transparent text-foreground hover:bg-muted",
-        link: "text-link underline-offset-4 hover:underline",
+          "hover:bg-[#03318C]/10 hover:text-[#03318C] dark:hover:bg-white/10 dark:hover:text-[#60A5FA] active:scale-[0.98]",
+        link: "text-[#03318C] dark:text-[#60A5FA] underline-offset-4 hover:underline normal-case tracking-normal font-sans",
         terminal:
-          "border border-border bg-transparent text-foreground hover:border-foreground",
+          "font-mono border border-[#03318C]/40 bg-[#06070B] text-slate-100 hover:border-[#F26D3D] hover:text-[#F26D3D] dark:border-[#F26D3D]/40 dark:hover:border-[#3B82F6] dark:hover:text-[#3B82F6] active:scale-[0.98]",
         subtle:
-          "bg-muted border border-border text-foreground hover:border-foreground",
+          "bg-white/5 border border-[#03318C]/20 text-slate-200 hover:bg-white/10 dark:border-white/10 active:scale-[0.98]",
         destructive:
-          "bg-destructive text-white hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90 active:scale-[0.98]",
       },
       size: {
-        default: "h-11 px-5 py-3",
-        sm: "h-9 px-3.5 text-sm",
-        md: "h-11 px-5 py-3",
-        lg: "h-12 px-6 text-base",
-        icon: "h-10 w-10 p-0",
+        default: "h-10 px-5 py-2.5 text-sm",
+        sm: "h-9 rounded-lg px-3.5 text-xs",
+        md: "h-10 px-5 py-2.5 text-sm",
+        lg: "h-11 rounded-xl px-7 text-sm md:text-base",
+        icon: "h-10 w-10 p-0 text-sm",
       },
     },
     defaultVariants: {
@@ -107,8 +105,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     // Animation serpent activée par défaut sur les variantes avec bordure visible
     const shouldAnimateBorder =
-      // Charte : pas de faisceau dégradé animé sur les boutons
-      showBorderAnimation ?? false;
+      showBorderAnimation ??
+      (variant === "default" ||
+        variant === "primary" ||
+        variant === "outline" ||
+        variant === "terminal");
 
     const resolvedRadius =
       borderRadius ??

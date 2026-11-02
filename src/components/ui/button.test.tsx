@@ -4,16 +4,16 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { Button } from "@/components/ui/button";
 
 describe("Unified Button component (src/components/ui/button.tsx)", () => {
-  it("rend un bouton primary orange avec texte navy (charte), sans bordure animée", () => {
+  it("rend correctement un bouton primary avec la bordure animée", () => {
     const html = renderToStaticMarkup(
       <Button variant="primary" size="lg">
         Lancer mon projet
       </Button>
     );
-    expect(html).toContain("bg-[#F26D3D]");
-    expect(html).toContain("text-[#011C40]");
+    expect(html).toContain("bg-[#03318C]");
     expect(html).toContain("Lancer mon projet");
-    expect(html).not.toContain("aspect-square");
+    expect(html).toContain("pointer-events-none");
+    expect(html).toContain("aspect-square");
   });
 
   it("rend les variantes secondary, outline, ghost et subtle avec leurs styles respectifs", () => {
@@ -26,6 +26,7 @@ describe("Unified Button component (src/components/ui/button.tsx)", () => {
       <Button variant="outline">Découvrir</Button>
     );
     expect(outlineHtml).toContain("Découvrir");
+    expect(outlineHtml).toContain("pointer-events-none");
 
     const ghostHtml = renderToStaticMarkup(
       <Button variant="ghost">Retour</Button>
@@ -65,6 +66,7 @@ describe("Unified Button component (src/components/ui/button.tsx)", () => {
         EXÉCUTER
       </Button>
     );
+    expect(html).toContain("font-mono");
     expect(html).toContain("EXÉCUTER");
   });
 
