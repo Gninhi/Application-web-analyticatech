@@ -2,7 +2,6 @@
 
 import { useViewNavigation } from "@/lib/navigation/useViewNavigation";
 import { LegalView } from "@/components/sections/LegalView";
-import { MentionsLegalesView } from "@/components/sections/MentionsLegalesView";
 import { SectionErrorBoundary } from "@/components/system/SectionErrorBoundary";
 
 /** Route "/confidentialite" — Politique de confidentialité (RGPD). */
@@ -15,12 +14,16 @@ export function LegalRgpdRoute() {
   );
 }
 
-/** Route "/mentions-legales" — Mentions légales conformes article 6-III LCEN. */
+/**
+ * Route "/mentions-legales" — Mentions légales (article 6-III LCEN).
+ * Même source que la confidentialité (`legalSections`, FR et EN) : une seule
+ * version du texte à tenir à jour, traduite sur /en/mentions-legales.
+ */
 export function LegalMentionsRoute() {
   const { handleNavigate } = useViewNavigation();
   return (
     <SectionErrorBoundary sectionName="Mentions Légales">
-      <MentionsLegalesView onNavigate={handleNavigate} />
+      <LegalView type="legal" onNavigate={handleNavigate} />
     </SectionErrorBoundary>
   );
 }

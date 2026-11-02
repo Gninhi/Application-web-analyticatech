@@ -24,6 +24,8 @@ const ServerEnvSchema = z.object({
   MAIL_FROM: z.string().optional(),
   MAIL_TO: z.string().optional(),
   ALLOWED_ORIGINS: z.string().optional(),
+  /** Secret partagé avec Vercel Cron (route /api/cron/purge-contacts). */
+  CRON_SECRET: z.string().min(16).optional(),
   NEXT_PUBLIC_SITE_URL: z.string().url().optional(),
 });
 

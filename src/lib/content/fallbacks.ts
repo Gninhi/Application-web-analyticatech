@@ -870,6 +870,13 @@ export const FALLBACK_LEGAL_SECTIONS_FR: LegalSectionDTO[] = [
     order: 4,
   },
   {
+    id: "leg-5",
+    type: "legal",
+    heading: "5. Droit applicable",
+    body: "Les présentes mentions légales sont régies par le droit français. À défaut de résolution amiable, tout litige relatif au site relève des tribunaux du ressort de la cour d'appel de Paris.",
+    order: 5,
+  },
+  {
     id: "rgpd-1",
     type: "rgpd",
     heading: "1. Responsable du traitement",
@@ -949,6 +956,13 @@ export const FALLBACK_LEGAL_SECTIONS_EN: LegalSectionDTO[] = [
     heading: "4. Contact",
     body: "Email: contact@analyticatech.fr — Phone: +33 7 68 61 13 10 — Address: 60 rue François 1er, 75008 Paris, France.\nAvailable Monday to Friday, 9:30 AM to 5:30 PM (Paris time).",
     order: 4,
+  },
+  {
+    id: "leg-5",
+    type: "legal",
+    heading: "5. Governing law",
+    body: "This legal notice is governed by French law. Failing an amicable settlement, any dispute relating to the site falls under the jurisdiction of the courts of the Paris Court of Appeal.",
+    order: 5,
   },
   {
     id: "rgpd-1",

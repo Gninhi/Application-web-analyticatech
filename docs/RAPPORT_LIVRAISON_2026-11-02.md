@@ -152,10 +152,10 @@ Anomalies trouvées et corrigées pendant ce contrôle :
 | ID | Gravité | Risque | Recommandation |
 |---|---|---|---|
 | R1 | P2 | Toutes les pages sont dynamiques (`no-store`) à cause du nonce CSP : LCP de laboratoire autour de 4 s, pas de bfcache | Pages statiques ou ISR avec une CSP par hash |
-| R2 | P2 | Limitation de débit en mémoire | Upstash ou Vercel KV, ou règle du pare-feu Vercel |
-| R3 | P2 | Mentions légales et corps des articles en français sur le site EN (signalé aux visiteurs pour les articles) | Traduction |
-| R4 | P1 | Aucune purge automatique des demandes à 3 ans | Tâche planifiée (cron Vercel) protégée par un secret |
-| R5 | P3 | Tables de contenu Supabase obsolètes, encore écrites par `prisma/seed.ts` | Nettoyer seed et tables |
+| R2 | P2 | ~~Limitation de débit en mémoire~~ | **Corrigé et vérifié** : limite persistante en base (5 demandes par heure et par empreinte), testée |
+| R3 | P2 | Corps des articles en français sur le site EN (signalé aux visiteurs) | Mentions légales : **corrigé et vérifié** (source bilingue unique). Articles : traduction à faire |
+| R4 | P1 | Purge des demandes à 3 ans | **Corrigé mais non activé** : `/api/cron/purge-contacts` et `vercel.json`, testés ; ajouter `CRON_SECRET` sur Vercel |
+| R5 | P3 | Tables de contenu Supabase obsolètes | Seed réduit aux listes de sécurité (**corrigé**) ; suppression des tables à décider (migration destructive) |
 | R6 | P3 | Un point « Content security policy » signalé par Lighthouse sur /contact, sans violation visible en console | Analyse à poursuivre |
 
 ## 21. Validations humaines requises
@@ -168,9 +168,13 @@ Anomalies trouvées et corrigées pendant ce contrôle :
 6. Capital social et numéro de TVA (Kbis, VIES).
 7. Page LinkedIn active.
 8. Libellé du bouton d'action du header.
-9. `ALLOWED_ORIGINS` en production doit inclure `https://www.analyticatech.fr` (valeur chiffrée, non lue).
-10. Ajouter le secret `DATABASE_URL` en CI pour que les e2e y tournent réellement.
+9. ~~`ALLOWED_ORIGINS`~~ : vérifié en production après déploiement (requête invalide acceptée jusqu'à la validation, HTTP 422, rien d'enregistré).
+10. ~~Secret `DATABASE_URL` en CI~~ : plus nécessaire, les e2e tournent désormais sans base.
+11. Ajouter `CRON_SECRET` sur Vercel (au moins 16 caractères) pour activer la purge.
 
 ## 22. État final
+
+**Déployé en production le 2 novembre 2026** (`main` @ `be43a71`), vérifié sur www.analyticatech.fr : pages en 200, redirections 308, canonical `www`, base de données joignable, formulaire acceptant l'origine `www`.
+
 
 Prêt pour revue et fusion : PR #1, puis PR #2. Aucune anomalie P0 ouverte. La mise en production dépend des validations de la section 21 et d'une décision sur R4.

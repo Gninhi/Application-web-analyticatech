@@ -6,8 +6,9 @@ import { NextRequest } from "next/server";
  * simulées (base, e-mail, télémétrie). Aucune demande n'est envoyée.
  */
 
-const { createRequest, sendMail, captureEvent, afterTasks } = vi.hoisted(() => ({
+const { createRequest, countRequests, sendMail, captureEvent, afterTasks } = vi.hoisted(() => ({
   createRequest: vi.fn(),
+  countRequests: vi.fn(),
   sendMail: vi.fn(),
   captureEvent: vi.fn(),
   afterTasks: [] as Array<() => unknown>,
@@ -20,7 +21,7 @@ vi.mock("next/server", async (importOriginal) => {
 });
 vi.mock("@/lib/db/client", () => ({
   db: {
-    contactRequest: { create: createRequest },
+    contactRequest: { create: createRequest, count: countRequests },
     blockedEmailDomain: { findUnique: vi.fn().mockResolvedValue(null) },
     suspiciousUAPattern: { findMany: vi.fn().mockResolvedValue([]) },
   },
@@ -62,6 +63,7 @@ describe("POST /api/v1/contact", () => {
     afterTasks.length = 0;
     _resetRateLimitBucketsForTest();
     createRequest.mockResolvedValue({ id: "cr_1" });
+    countRequests.mockResolvedValue(0);
   });
 
   it("confirme la demande seulement après l'avoir enregistrée, puis envoie l'e-mail", async () => {
@@ -117,6 +119,14 @@ describe("POST /api/v1/contact", () => {
   it("renvoie les erreurs de validation sans rien enregistrer", async () => {
     const res = await POST(makeRequest({ ...VALID_BODY, email: "pas-un-email" }));
     expect(res.status).toBe(422);
+    expect(createRequest).not.toHaveBeenCalled();
+  }, 10_000);
+
+  it("applique la limite persistante partagée entre instances (5 demandes par heure)", async () => {
+    countRequests.mockResolvedValue(5);
+    const res = await POST(makeRequest(VALID_BODY));
+    expect(res.status).toBe(429);
+    expect(res.headers.get("Retry-After")).toBe("3600");
     expect(createRequest).not.toHaveBeenCalled();
   }, 10_000);
 });

@@ -40,7 +40,6 @@ const CONTENT_FILES = [
   "src/data/stats.ts",
   "src/app/layout.tsx",
   "src/app/api/v1/contact/route.ts",
-  "src/components/sections/MentionsLegalesView.tsx",
   "src/components/sections/contact/ContactForm.tsx",
   "src/components/sections/contact/ContactSidePanel.tsx",
   "src/components/layout/Footer.tsx",
@@ -93,16 +92,16 @@ describe("Charte de contenu", () => {
 
   it("robots.txt et les mentions légales disent la même chose sur l'IA", () => {
     const robots = read("src/app/robots.ts");
-    const legal = read("src/components/sections/MentionsLegalesView.tsx");
+    const legal = read("src/lib/content/fallbacks.ts");
     // Entraînement refusé dans les deux, indexation autorisée dans les deux
     expect(robots).toMatch(/GPTBot/);
     expect(robots).toMatch(/disallow: "\/"/);
     expect(legal).toMatch(/peuvent indexer et citer ce site/);
-    expect(legal).not.toMatch(/s&apos;oppose expressément à toute extraction/);
+    expect(legal).toMatch(/may index and cite this site/);
   });
 
   it("les dates légales ne sont jamais calculées à l'affichage", () => {
-    for (const file of ["src/components/sections/MentionsLegalesView.tsx", "src/components/sections/LegalView.tsx"]) {
+    for (const file of ["src/components/sections/LegalView.tsx"]) {
       expect(read(file)).not.toMatch(/new Date\(\)\.toLocaleDateString/);
     }
   });
