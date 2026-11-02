@@ -33,7 +33,7 @@ Tous les contrôles automatisés passent : lint, typecheck, 549 tests unitaires,
 | Build et e2e après refonte | Non vérifié | Corrigé et vérifié |
 | Hôte canonique (apex ou www) | Non implémenté | Corrigé et vérifié (www) |
 | E-mail de lead perdu possible (« fire-and-forget ») | Non implémenté | Corrigé et vérifié |
-| Mentions légales et articles en français sur le site EN | Non implémenté | Non corrigé (risque résiduel R3) |
+| Mentions légales et articles en français sur le site EN | Non implémenté | **Corrigé** : mentions bilingues, 5 articles traduits (`insights-detail-data.en.ts`), gabarit et sommaire localisés |
 | Purge des demandes à 3 ans | Non implémenté | En attente de validation humaine (R4) |
 | Limitation de débit partagée | Non implémenté | Non corrigé (R2) |
 | Pages statiques (CSP sans nonce) | Non implémenté | Non corrigé (R1) |
@@ -151,9 +151,9 @@ Anomalies trouvées et corrigées pendant ce contrôle :
 
 | ID | Gravité | Risque | Recommandation |
 |---|---|---|---|
-| R1 | P2 | Toutes les pages sont dynamiques (`no-store`) à cause du nonce CSP : LCP de laboratoire autour de 4 s, pas de bfcache | Pages statiques ou ISR avec une CSP par hash |
+| R1 | P2 | Toutes les pages sont dynamiques (`no-store`) à cause du nonce CSP : LCP de laboratoire autour de 4 s, pas de bfcache | Décision d'arbitrage : la CSP par nonce est conservée (sécurité). Passer à une CSP par hash avec pages statiques/ISR demande un chantier dédié, à mesurer sur données réelles (Vercel Speed Insights) avant d'engager |
 | R2 | P2 | ~~Limitation de débit en mémoire~~ | **Corrigé et vérifié** : limite persistante en base (5 demandes par heure et par empreinte), testée |
-| R3 | P2 | Corps des articles en français sur le site EN (signalé aux visiteurs) | Mentions légales : **corrigé et vérifié** (source bilingue unique). Articles : traduction à faire |
+| R3 | P2 | ~~Corps des articles en français sur le site EN~~ | **Corrigé et vérifié** : mentions légales bilingues, 5 articles EN, libellés du gabarit, du sommaire et du bandeau cookies localisés ; tests de parité FR/EN et de rendu EN |
 | R4 | P1 | Purge des demandes à 3 ans | **Corrigé mais non activé** : `/api/cron/purge-contacts` et `vercel.json`, testés ; ajouter `CRON_SECRET` sur Vercel |
 | R5 | P3 | Tables de contenu Supabase obsolètes | Seed réduit aux listes de sécurité (**corrigé**) ; suppression des tables à décider (migration destructive) |
 | R6 | P3 | Un point « Content security policy » signalé par Lighthouse sur /contact, sans violation visible en console | Analyse à poursuivre |

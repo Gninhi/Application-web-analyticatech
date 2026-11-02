@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { cn } from "@/lib/utils/cn";
 import { ChevronDown } from "lucide-react";
+import { useI18n } from "@/lib/i18n/provider";
 
 export interface VerticalNavItem {
   id: string;
@@ -30,6 +31,8 @@ export function VerticalSectionNav({
   accentColor = "var(--accent-ink)",
   className,
 }: VerticalSectionNavProps) {
+  const { locale } = useI18n();
+  const tocLabel = locale === "en" ? "Contents" : "Sommaire";
   const [activeId, setActiveId] = useState<string>(items[0]?.id ?? "");
   const [segmentProgress, setSegmentProgress] = useState<Record<string, number>>({});
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -175,7 +178,7 @@ export function VerticalSectionNav({
     <>
       {/* ================= VERSION DESKTOP : RAIL VERTICAL STICKY ================= */}
       <nav
-        aria-label="Sommaire vertical interactif"
+        aria-label={tocLabel}
         className={cn(
           "w-full select-none",
           className
@@ -183,7 +186,7 @@ export function VerticalSectionNav({
       >
         <div className="flex flex-col space-y-1">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500 mb-4 px-2">
-            SOMMAIRE //
+            {`${tocLabel.toUpperCase()} //`}
           </p>
 
           {items.map((item, index) => {
@@ -347,7 +350,7 @@ export function VerticalSectionNav({
               {activeItem?.number ?? "01"}
             </span>
             <span className="truncate max-w-[120px]">
-              {activeItem?.title ?? "Sommaire"}
+              {activeItem?.title ?? tocLabel}
             </span>
             <ChevronDown
               className={cn(

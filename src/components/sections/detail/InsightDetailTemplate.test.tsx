@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { InsightDetailTemplate } from "@/components/sections/detail/InsightDetailTemplate";
 import { BlogDetailView } from "@/components/sections/detail/BlogDetailView";
 import { INSIGHTS_DETAIL_REGISTRY, getInsightDetailData } from "@/lib/content/insights-detail-data";
+import { INSIGHTS_DETAIL_REGISTRY_EN } from "@/lib/content/insights-detail-data.en";
 import { I18nProvider } from "@/lib/i18n/provider";
 import { ContentProvider } from "@/components/providers/ContentProvider";
 import type { AppContentDTO } from "@/types/content";
@@ -199,6 +200,47 @@ describe("InsightDetailTemplate & Registry", () => {
 
     for (const regSlug of registrySlugs) {
       expect(fallbackSlugsFr).toContain(regSlug);
+    }
+  });
+
+  it("propose les 5 articles en anglais, avec la même structure et des liens /en", () => {
+    expect(Object.keys(INSIGHTS_DETAIL_REGISTRY_EN).sort()).toEqual(Object.keys(INSIGHTS_DETAIL_REGISTRY).sort());
+
+    for (const [slug, fr] of Object.entries(INSIGHTS_DETAIL_REGISTRY)) {
+      const en = INSIGHTS_DETAIL_REGISTRY_EN[slug];
+      expect(en.aliases).toEqual(fr.aliases);
+      expect(en.problem.failureModes).toHaveLength(fr.problem.failureModes.length);
+      expect(en.approach.architectureStages).toHaveLength(fr.approach.architectureStages.length);
+      expect(en.approach.techStack.map((t) => t.version)).toEqual(fr.approach.techStack.map((t) => t.version));
+      expect(en.tradeoffs.tradeoffs).toHaveLength(fr.tradeoffs.tradeoffs.length);
+      expect(en.relatedResources.map((r) => r.targetId)).toEqual(fr.relatedResources.map((r) => r.targetId));
+      for (const res of en.relatedResources) {
+        expect(res.href).toMatch(/^\/en\/(services|solutions)\//);
+      }
+      expect(getInsightDetailData(fr.aliases?.[0] ?? slug, "en")).toBe(en);
+    }
+  });
+
+  it("rend l'article anglais sans libellé français ni avis « French only »", () => {
+    const html = renderToStaticMarkup(
+      <I18nProvider initialLocale="en">
+        <ContentProvider content={{ ...mockAppContent, locale: "en", blogPosts: FALLBACK_BLOG_POSTS_EN }}>
+          <InsightDetailTemplate
+            data={INSIGHTS_DETAIL_REGISTRY_EN["evaluer-systeme-rag-production"]}
+            onNavigate={() => {}}
+            onNavigateDetail={() => {}}
+          />
+        </ContentProvider>
+      </I18nProvider>
+    ).replace(/&amp;/g, "&").replace(/&#x27;/g, "'");
+
+    expect(html).toContain("Evaluating a RAG system in production:");
+    expect(html).toContain("01 · Context: typical scenario");
+    expect(html).toContain("04 · TECHNICAL TRADE-OFFS & ACCEPTED LIMITS");
+    expect(html).toContain("Let's talk");
+    expect(html).not.toContain("French only");
+    for (const fr of ["Scénario type", "Arbitrage retenu", "Protocole de mesure", "À mesurer", "Échanger avec le fondateur"]) {
+      expect(html).not.toContain(fr);
     }
   });
 });

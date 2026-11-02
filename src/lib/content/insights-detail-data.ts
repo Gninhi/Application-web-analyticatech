@@ -1,9 +1,11 @@
 import type { InsightDetailData } from "@/types/insight-detail";
+import { INSIGHTS_DETAIL_REGISTRY_EN } from "./insights-detail-data.en";
 
 /**
- * Registre des données enrichies pour les articles techniques /insights d'Analyticatech.
- * Chaque article est conçu avec une rigueur technique maximale :
- * - Contexte métier réel (secteur, contraintes, enjeux).
+ * Registre FR des articles /insights (version EN : `insights-detail-data.en.ts`).
+ * Guides de méthode illustrés par des scénarios types, jamais présentés comme
+ * des missions clients :
+ * - Contexte : scénario type (secteur, contraintes, enjeux).
  * - Progression Problème → Approche → Arbitrages/Limites → Résultats.
  * - Références d'outils et versions exactes vérifiables.
  * - Arbitrages et compromis d'ingénierie assumés (anti-discours marketing).
@@ -132,7 +134,7 @@ export const INSIGHTS_DETAIL_REGISTRY: Record<string, InsightDetailData> = {
         {
           name: "NeMo Guardrails",
           version: "v0.9.1",
-          role: "Garde-fous anti-hallucination & sécurité",
+          role: "Garde-fous contre les réponses non étayées & sécurité",
           category: "guardrails",
         },
         {
@@ -161,7 +163,7 @@ def assert_rag_quality(test_bench_dataset: Dataset, min_faithfulness: float = 0.
         f"Régression critique détectée : Faithfulness {score:.3f} < seuil {min_faithfulness}"
     )
     return results`,
-        caption: "Ce test unitaire tourne sur 500 questions de référence avant tout merge sur la branche principale.",
+        caption: "Dans ce scénario, ce test est exécuté sur un jeu de questions de référence avant chaque fusion sur la branche principale.",
       },
     },
     tradeoffs: {
@@ -188,7 +190,7 @@ def assert_rag_quality(test_bench_dataset: Dataset, min_faithfulness: float = 0.
           costOrDrawback:
             "Détection des dérives statistiques sur plusieurs heures plutôt qu'en temps réel immédiat.",
           mitigation:
-            "Banc de 500 questions fixes exécuté en CI/CD avant chaque mise en production logicielle.",
+            "Jeu de questions de référence fixe, exécuté en CI/CD avant chaque mise en production.",
         },
       ],
     },
@@ -546,7 +548,7 @@ export async function merchantOnboardingWorkflow(merchantId: string) {
       stakes:
         "Mettre fin aux réunions où l'on débat de la validité du chiffre plutôt que de la stratégie commerciale",
       narrative:
-        "Dans la quasi-totalité des entreprises en forte croissance, le comité de direction mensuel commence par le même rituel stérile : la direction financière annonce 14,2 M€ de chiffre d'affaires, le marketing revendique 15,1 M€, et les responsables de filiales comptabilisent 13,8 M€. Personne n'a tort : chaque équipe a simplement calculé son chiffre dans son outil avec ses propres filtres (dates de commande contre dates de facturation, exclusion tardive des retours, gestion hétérogène des remises promotionnelles). Tenter de résoudre ce chaos en multipliant les dashboards ne fait qu'aggraver la dispersion. Seule une couche sémantique centralisée, déclarée en amont dans le data warehouse, permet de réconcilier durablement les chiffres.",
+        "Dans beaucoup d'entreprises en forte croissance, le comité de direction mensuel commence par le même rituel stérile : la direction financière annonce 14,2 M€ de chiffre d'affaires, le marketing revendique 15,1 M€, et les responsables de filiales comptabilisent 13,8 M€. Personne n'a tort : chaque équipe a simplement calculé son chiffre dans son outil avec ses propres filtres (dates de commande contre dates de facturation, exclusion tardive des retours, gestion hétérogène des remises promotionnelles). Tenter de résoudre ce chaos en multipliant les dashboards ne fait qu'aggraver la dispersion. Seule une couche sémantique centralisée, déclarée en amont dans le data warehouse, permet de réconcilier durablement les chiffres.",
     },
     problem: {
       heading: "La dispersion de la logique métier dans les outils de visualisation",
@@ -570,8 +572,8 @@ export async function merchantOnboardingWorkflow(merchantId: string) {
           code: "ERR_03 // SILENT_MAINTENANCE_COST",
           title: "Multiplication du coût de maintenance des règles",
           description:
-            "Toute évolution comptable ou fiscale exige de retoucher manuellement 35 rapports distincts dans différents outils, avec un risque critique d'oubli.",
-          impact: "Des centaines d'heures d'ingénierie gaspillées",
+            "Toute évolution comptable ou fiscale exige de retoucher manuellement des dizaines de rapports distincts dans différents outils, avec un risque critique d'oubli.",
+          impact: "Du temps d'ingénierie gaspillé à chaque évolution",
         },
       ],
     },
@@ -813,7 +815,7 @@ metrics:
           code: "ERR_02 // CONTEXT_SATURATION",
           title: "Saturation du contexte par les sorties d'outils brutes",
           description:
-            "L'injection d'un dump de logs de 8 000 lignes dans le prompt pollue la fenêtre d'attention et multiplie par 10 le coût de chaque étape ultérieure.",
+            "L'injection d'un dump de logs de 8 000 lignes dans le prompt pollue la fenêtre d'attention et alourdit fortement le coût de chaque étape ultérieure.",
           impact: "Explosion des coûts d'API et dégradation du raisonnement",
         },
         {
@@ -1043,7 +1045,7 @@ app = graph.compile(interrupt_before=["human_approval_node"])`,
       constraints:
         "Connectivité réseau instable sur les terminaux extérieurs et temps de calcul hétérogènes (de 50 ms pour un capteur à 35 s pour un solveur mathématique d'allocation)",
       stakes:
-        "Résilience totale : interdiction absolue qu'un ralentissement de l'agent météo ne bloque la chaîne de manutention des navires",
+        "Résilience : un ralentissement de l'agent météo ne doit pas bloquer la chaîne de manutention des navires",
       narrative:
         "Dans la littérature académique sur les systèmes multi-agents, les architectures sont presque toujours schématisées sous forme d'appels directs : l'Agent A interroge l'Agent B, qui sollicite l'Agent C. Transposé dans un environnement industriel réel, ce modèle de communication synchrone (HTTP REST ou gRPC bloquant) est une aberration opérationnelle. Dès qu'un agent d'optimisation lourde met 30 secondes à calculer un plan de charge de quai, les sockets réseau restent ouverts, les timeouts se propagent en amont et paralysent l'ensemble de la flotte. La seule approche viable à grande échelle consiste à découpler temporellement les agents via un bus d'événements persistant où les entités publient des faits immuables et réagissent de manière asynchrone.",
     },
@@ -1100,7 +1102,7 @@ app = graph.compile(interrupt_before=["human_approval_node"])`,
           description:
             "Chaque mise à jour d'état local de l'agent est enregistrée atomiquement avec l'événement à émettre en base PostgreSQL, évitant tout double message.",
           keyPattern: "Transactional Outbox Pattern",
-          badge: "Zero-Data-Loss",
+          badge: "Sans double émission",
         },
         {
           stageNumber: "STAGE 04",
@@ -1143,7 +1145,7 @@ app = graph.compile(interrupt_before=["human_approval_node"])`,
   "specversion": "1.0",
   "id": "evt-77a8-42f1-b68e",
   "source": "agents://port-logistics/crane-supervisor-04",
-  "type": "ai.analyticatech.logistics.container_routed",
+  "type": "com.example.logistics.container_routed",
   "datacontenttype": "application/json",
   "time": "2025-07-15T14:22:18.412Z",
   "traceparent": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01",
@@ -1159,7 +1161,7 @@ app = graph.compile(interrupt_before=["human_approval_node"])`,
     },
     tradeoffs: {
       heading: "Arbitrages d'ingénierie : Cohérence à terme vs Synchronicité",
-      lead: "L'architecture événementielle offre une résilience invulnérable aux pannes, mais impose de penser les processus avec une cohérence à terme.",
+      lead: "L'architecture événementielle résiste bien mieux aux pannes, mais impose de penser les processus avec une cohérence à terme.",
       disclaimer:
         "NOTE D'INGÉNIERIE : En architecture event-driven, deux agents ne partagent jamais un état instantané à la milliseconde près. Les flux métiers doivent être résilients aux états transitoires.",
       tradeoffs: [
@@ -1181,7 +1183,7 @@ app = graph.compile(interrupt_before=["human_approval_node"])`,
           costOrDrawback:
             "Effort de développement plus rigoureux pour chaque nouveau worker agent intégré dans l'écosystème.",
           mitigation:
-            "SDK d'agent interne Analyticatech injectant automatiquement les métadonnées CloudEvents et spans OTel.",
+            "Un SDK d'agent commun qui injecte automatiquement les métadonnées CloudEvents et les spans OpenTelemetry.",
         },
       ],
     },
@@ -1256,18 +1258,19 @@ app = graph.compile(interrupt_before=["human_approval_node"])`,
  */
 export function getInsightDetailData(
   slug: string,
-  _locale: string = "fr"
+  locale: string = "fr"
 ): InsightDetailData | null {
   if (!slug) return null;
   const normalizedSlug = slug.trim().toLowerCase();
+  const registry = locale === "en" ? INSIGHTS_DETAIL_REGISTRY_EN : INSIGHTS_DETAIL_REGISTRY;
 
   // 1. Recherche directe par clé de registre
-  if (INSIGHTS_DETAIL_REGISTRY[normalizedSlug]) {
-    return INSIGHTS_DETAIL_REGISTRY[normalizedSlug];
+  if (registry[normalizedSlug]) {
+    return registry[normalizedSlug];
   }
 
   // 2. Recherche par alias déclaré
-  for (const post of Object.values(INSIGHTS_DETAIL_REGISTRY)) {
+  for (const post of Object.values(registry)) {
     if (post.aliases?.includes(normalizedSlug)) {
       return post;
     }
