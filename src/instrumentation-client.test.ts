@@ -87,9 +87,9 @@ describe("instrumentation-client", () => {
     expect(mockInit).not.toHaveBeenCalled();
   });
 
-  it("initialise PostHog avec opt_out_capturing_by_default: true et le reverse proxy quand consenti", () => {
+  it("initialise PostHog avec opt_out_capturing_by_default: true et le reverse proxy quand consenti", async () => {
     mockIsAnalyticsAllowed.mockReturnValue(true);
-    initTelemetryClient();
+    await initTelemetryClient();
 
     expect(mockInit).toHaveBeenCalledWith(
       "phc_test_key",
@@ -108,8 +108,8 @@ describe("instrumentation-client", () => {
     );
   });
 
-  it("ne capture aucun événement si l'utilisateur n'a pas consenti (opt-out actif)", () => {
-    initTelemetryClient();
+  it("ne capture aucun événement si l'utilisateur n'a pas consenti (opt-out actif)", async () => {
+    await initTelemetryClient();
     state.hasOptedIn = false;
 
     trackPageView("/services");
@@ -119,8 +119,8 @@ describe("instrumentation-client", () => {
     expect(mockCapture).not.toHaveBeenCalled();
   });
 
-  it("capture les événements lorsque l'utilisateur a consenti (opt-in actif)", () => {
-    initTelemetryClient();
+  it("capture les événements lorsque l'utilisateur a consenti (opt-in actif)", async () => {
+    await initTelemetryClient();
     state.hasOptedIn = true;
 
     trackPageView("/solutions", "Solutions IA");
@@ -146,8 +146,8 @@ describe("instrumentation-client", () => {
     });
   });
 
-  it("capture la soumission du formulaire de contact sans aucun contenu de message", () => {
-    initTelemetryClient();
+  it("capture la soumission du formulaire de contact sans aucun contenu de message", async () => {
+    await initTelemetryClient();
     state.hasOptedIn = true;
 
     trackContactFormSubmitted({
@@ -166,8 +166,8 @@ describe("instrumentation-client", () => {
     });
   });
 
-  it("capture les exceptions JavaScript avec le contexte sans données privées", () => {
-    initTelemetryClient();
+  it("capture les exceptions JavaScript avec le contexte sans données privées", async () => {
+    await initTelemetryClient();
     state.hasOptedIn = true;
 
     const testError = new Error("Network timeout simulation");
@@ -183,8 +183,8 @@ describe("instrumentation-client", () => {
     );
   });
 
-  it("refuse catégoriquement d'utiliser une adresse email comme distinct_id", () => {
-    initTelemetryClient();
+  it("refuse catégoriquement d'utiliser une adresse email comme distinct_id", async () => {
+    await initTelemetryClient();
     state.hasOptedIn = true;
 
     identifyTelemetryUser("john.doe@example.com", { role: "admin" });
@@ -194,8 +194,30 @@ describe("instrumentation-client", () => {
     expect(mockIdentify).toHaveBeenCalledWith("usr_hash_98a72b", { role: "admin" });
   });
 
-  it("réinitialise l'utilisateur à la déconnexion", () => {
-    initTelemetryClient();
+  it("ne charge pas le SDK sans clé PostHog configurée", async () => {
+    delete process.env.NEXT_PUBLIC_POSTHOG_KEY;
+    const result = initTelemetryClient();
+
+    expect(result).toBeNull();
+    expect(mockInit).not.toHaveBeenCalled();
+  });
+
+  it("rejoue les événements émis pendant le chargement différé du SDK", async () => {
+    state.hasOptedIn = true;
+    const loading = initTelemetryClient();
+
+    trackPageView("/contact", "Contact");
+    expect(mockCapture).not.toHaveBeenCalled();
+
+    await loading;
+    expect(mockCapture).toHaveBeenCalledWith(
+      "$pageview",
+      expect.objectContaining({ pathname: "/contact", title: "Contact" })
+    );
+  });
+
+  it("réinitialise l'utilisateur à la déconnexion", async () => {
+    await initTelemetryClient();
     resetTelemetryUser();
     expect(mockReset).toHaveBeenCalledTimes(1);
   });
