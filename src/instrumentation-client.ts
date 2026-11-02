@@ -1,4 +1,4 @@
-import posthog from "posthog-js";
+import type { PostHog } from "posthog-js";
 import {
   isAnalyticsAllowed,
   type ConsentProof,
@@ -14,15 +14,21 @@ import {
  * - Autocapture désactivée : télémétrie 100% maîtrisée, typée et intentionnelle.
  * - Masquage complet du Session Replay : champs de saisie, emails et textes sensibles masqués.
  * - Élimination systématique des PII (données personnelles) dans les propriétés d'événements.
+ * - Chargement différé : le SDK (`posthog-js`) n'est importé qu'après consentement
+ *   et si une clé est configurée. Ce fichier étant embarqué dans le chunk `main`
+ *   de Next, un import statique alourdirait chaque page de tout le SDK.
  */
 
-let isClientInitialized = false;
+let client: PostHog | null = null;
+let loading: Promise<PostHog | null> | null = null;
+// Événements émis pendant le chargement du SDK, rejoués une fois initialisé.
+const pending: Array<(ph: PostHog) => void> = [];
 
 /**
  * Initialise le client PostHog si et seulement si l'utilisateur a accordé son consentement
  * pour la mesure d'audience ou si l'initialisation est expressément demandée (forceInit).
  */
-export function initTelemetryClient(forceInit = false): typeof posthog | null {
+export function initTelemetryClient(forceInit = false): Promise<PostHog | null> | null {
   if (typeof window === "undefined") return null;
 
   // Règle CNIL bloquante : aucun chargement avant clic explicite
@@ -30,7 +36,7 @@ export function initTelemetryClient(forceInit = false): typeof posthog | null {
     return null;
   }
 
-  if (isClientInitialized) return posthog;
+  if (loading) return loading;
 
   const apiKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
   if (!apiKey) {
@@ -43,6 +49,25 @@ export function initTelemetryClient(forceInit = false): typeof posthog | null {
   // Utilisation par défaut du reverse proxy local pour contourner les bloqueurs de trackers
   const apiHost = process.env.NEXT_PUBLIC_POSTHOG_HOST || "/_edge-relay";
 
+  loading = import("posthog-js")
+    .then(({ default: posthog }) => {
+      initPosthog(posthog, apiKey, apiHost);
+      // Consentement donné à l'instant via le bandeau (pas encore persisté).
+      if (forceInit) posthog.opt_in_capturing();
+      client = posthog;
+      for (const run of pending.splice(0)) run(posthog);
+      return posthog;
+    })
+    .catch(() => {
+      // SDK bloqué (bloqueur, réseau) : la télémétrie reste en sommeil.
+      loading = null;
+      pending.length = 0;
+      return null;
+    });
+  return loading;
+}
+
+function initPosthog(posthog: PostHog, apiKey: string, apiHost: string): void {
   posthog.init(apiKey, {
     api_host: apiHost,
     ui_host: "https://eu.i.posthog.com",
@@ -80,9 +105,23 @@ export function initTelemetryClient(forceInit = false): typeof posthog | null {
       }
     },
   });
+}
 
-  isClientInitialized = true;
-  return posthog;
+/**
+ * Exécute `fn` sur le client si la capture est autorisée. Pendant le chargement
+ * du SDK, l'appel est mis en file et rejoué après initialisation.
+ */
+function withClient(fn: (ph: PostHog) => void): void {
+  if (typeof window === "undefined") return;
+  if (client) {
+    if (client.has_opted_in_capturing()) fn(client);
+    return;
+  }
+  if (loading) {
+    pending.push((ph) => {
+      if (ph.has_opted_in_capturing()) fn(ph);
+    });
+  }
 }
 
 // Écoute dynamique globale des décisions utilisateur sur le bandeau de consentement
@@ -94,11 +133,11 @@ if (typeof window !== "undefined") {
         : e.detail?.choices?.analytics === true;
 
     if (isAllowed) {
-      const ph = initTelemetryClient(true);
-      ph?.opt_in_capturing();
-    } else if (isClientInitialized) {
-      posthog.opt_out_capturing();
-      posthog.reset();
+      void initTelemetryClient(true)?.then((ph) => ph?.opt_in_capturing());
+    } else {
+      pending.length = 0;
+      client?.opt_out_capturing();
+      client?.reset();
     }
   }) as EventListener);
 }
@@ -107,40 +146,42 @@ if (typeof window !== "undefined") {
  * Vérifie si la capture d'événements est autorisée par l'utilisateur.
  */
 export function isTelemetryActive(): boolean {
-  if (typeof window === "undefined" || !isClientInitialized) return false;
-  return posthog.has_opted_in_capturing();
+  if (typeof window === "undefined" || !client) return false;
+  return client.has_opted_in_capturing();
 }
 
 /**
  * Récupère le distinct_id PostHog actuel (généré aléatoirement côté client).
  */
 export function getTelemetryDistinctId(): string | null {
-  if (typeof window === "undefined" || !isClientInitialized) return null;
-  return posthog.get_distinct_id() || null;
+  if (typeof window === "undefined" || !client) return null;
+  return client.get_distinct_id() || null;
 }
 
 /**
  * 1. Vue de page ($pageview)
  */
 export function trackPageView(pathname: string, title?: string): void {
-  if (!isTelemetryActive()) return;
-  posthog.capture("$pageview", {
-    $current_url: window.location.href,
-    pathname,
-    title: title || document.title,
-  });
+  withClient((ph) =>
+    ph.capture("$pageview", {
+      $current_url: window.location.href,
+      pathname,
+      title: title || document.title,
+    })
+  );
 }
 
 /**
  * 2. Clic sur un bouton d'action principal (CTA)
  */
 export function trackCtaClick(ctaName: string, location: string, destination?: string): void {
-  if (!isTelemetryActive()) return;
-  posthog.capture("cta_clicked", {
-    cta_name: ctaName,
-    location,
-    destination: destination || null,
-  });
+  withClient((ph) =>
+    ph.capture("cta_clicked", {
+      cta_name: ctaName,
+      location,
+      destination: destination || null,
+    })
+  );
 }
 
 /**
@@ -154,25 +195,27 @@ export interface ContactSubmissionMeta {
 }
 
 export function trackContactFormSubmitted(meta: ContactSubmissionMeta): void {
-  if (!isTelemetryActive()) return;
-  posthog.capture("contact_form_submitted", {
-    subject_length: meta.subject_length,
-    has_company: meta.has_company,
-    locale: meta.locale || "fr",
-    reference: meta.reference || null,
-    status: "success",
-  });
+  withClient((ph) =>
+    ph.capture("contact_form_submitted", {
+      subject_length: meta.subject_length,
+      has_company: meta.has_company,
+      locale: meta.locale || "fr",
+      reference: meta.reference || null,
+      status: "success",
+    })
+  );
 }
 
 /**
  * 4. Profondeur de défilement (Scroll depth)
  */
 export function trackScrollDepth(depthPercent: number, pathname: string): void {
-  if (!isTelemetryActive()) return;
-  posthog.capture("scroll_depth_reached", {
-    depth_percent: depthPercent,
-    pathname,
-  });
+  withClient((ph) =>
+    ph.capture("scroll_depth_reached", {
+      depth_percent: depthPercent,
+      pathname,
+    })
+  );
 }
 
 /**
@@ -182,17 +225,18 @@ export function trackClientException(
   error: Error | string,
   context?: { componentStack?: string; route?: string }
 ): void {
-  if (!isTelemetryActive()) return;
   const message = typeof error === "string" ? error : error.message;
   const stack = error instanceof Error ? error.stack : undefined;
 
-  posthog.capture("$exception", {
-    $exception_message: message,
-    $exception_type: error instanceof Error ? error.name : "ClientError",
-    $exception_stack_trace_raw: stack,
-    route: context?.route || window.location.pathname,
-    component_stack: context?.componentStack,
-  });
+  withClient((ph) =>
+    ph.capture("$exception", {
+      $exception_message: message,
+      $exception_type: error instanceof Error ? error.name : "ClientError",
+      $exception_stack_trace_raw: stack,
+      route: context?.route || window.location.pathname,
+      component_stack: context?.componentStack,
+    })
+  );
 }
 
 /**
@@ -203,27 +247,26 @@ export function identifyTelemetryUser(
   userHashOrId: string,
   safeProperties?: Record<string, unknown>
 ): void {
-  if (!isTelemetryActive()) return;
   if (!userHashOrId || userHashOrId.includes("@")) {
     console.warn("[PostHog] Rejet d'identification : distinct_id ne doit pas contenir d'adresse email.");
     return;
   }
-  posthog.identify(userHashOrId, safeProperties);
+  withClient((ph) => ph.identify(userHashOrId, safeProperties));
 }
 
 /**
  * 7. Réinitialisation à la déconnexion
  */
 export function resetTelemetryUser(): void {
-  if (typeof window === "undefined" || !isClientInitialized) return;
-  posthog.reset();
+  if (typeof window === "undefined") return;
+  client?.reset();
 }
 
 /**
  * Helper réservé aux tests unitaires pour réinitialiser le singleton client
  */
 export function _resetClientForTesting(): void {
-  isClientInitialized = false;
+  client = null;
+  loading = null;
+  pending.length = 0;
 }
-
-export { posthog };
