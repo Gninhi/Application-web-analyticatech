@@ -1,25 +1,24 @@
 /**
  * ==============================================================================
- * ⏱️ ANALYTICATECH — SOURCE UNIQUE DE VÉRITÉ DES ENGAGEMENTS ET DÉLAIS (SLA)
+ * ANALYTICATECH — SOURCE UNIQUE DE VÉRITÉ DES ENGAGEMENTS ET DÉLAIS
  * ==============================================================================
- * Ce fichier centralise l'ensemble des engagements de réactivité et plages horaires :
- * 1. Premier accusé de réception (< 2h ouvrées)
- * 2. Réponse détaillée d'un architecte (< 24h ouvrées)
- * 3. Proposition d'atelier de cadrage (< 5 jours ouvrés)
- * 4. Plage d'ouverture et de support téléphonique (9h30 - 17h30 CET, lun-ven)
+ * Engagements tenables par un cabinet dirigé par son fondateur, qui répond
+ * personnellement à chaque demande :
+ * 1. Réponse personnelle (sous 2 jours ouvrés)
+ * 2. Premier échange (20 minutes, gratuit)
+ * 3. Proposition écrite (sous 5 jours ouvrés après l'échange)
+ * 4. Disponibilité (9h30 – 17h30, du lundi au vendredi, heure de Paris)
  *
- * Ces valeurs alimentent directement et de manière synchronisée :
- * - La page /contact (Volet latéral « Engagements de réponse » & texte descriptif)
- * - La page /mentions-legales (Section 4 « Contact » — email et téléphone)
- * - Les schémas structurés JSON-LD (FAQPage, Organization)
+ * Ces valeurs alimentent la page /contact, les mentions légales, la réponse de
+ * l'API de contact et le JSON-LD. Ne jamais écrire un délai ailleurs en dur.
  * ==============================================================================
  */
 
 import type { Locale } from "@/lib/i18n/provider";
 
-export interface SlaItem {
+export interface CommitmentItem {
   id: string;
-  key: "ack" | "architect" | "workshop" | "availability";
+  key: "reply" | "firstCall" | "proposal" | "availability";
   labelFr: string;
   labelEn: string;
   valueFr: string;
@@ -27,27 +26,28 @@ export interface SlaItem {
 }
 
 export interface SupportSchedule {
-  hoursFr: string; // "9h30 - 17h30"
-  hoursEn: string; // "9:30 AM - 5:30 PM"
-  daysFr: string; // "Du lundi au vendredi"
-  daysEn: string; // "Monday to Friday"
-  timezone: string; // "CET"
-  fullFr: string; // "Du lundi au vendredi, 9h30 - 17h30 (CET)"
-  fullEn: string; // "Monday to Friday, 9:30 AM - 5:30 PM (CET)"
+  hoursFr: string;
+  hoursEn: string;
+  daysFr: string;
+  daysEn: string;
+  timezoneFr: string;
+  timezoneEn: string;
+  fullFr: string;
+  fullEn: string;
 }
 
-export interface SlaCommitmentsConfig {
-  /** 1. Accusé de réception initial */
-  ack: SlaItem;
-  /** 2. Réponse technique par un architecte solution */
-  architect: SlaItem;
-  /** 3. Proposition d'un atelier de cadrage */
-  workshop: SlaItem;
-  /** 4. Plage de disponibilité standard */
-  availability: SlaItem;
-  /** Horaires d'ouverture / support téléphonique */
+export interface CommitmentsConfig {
+  /** 1. Réponse personnelle à une demande */
+  reply: CommitmentItem;
+  /** 2. Premier échange de cadrage */
+  firstCall: CommitmentItem;
+  /** 3. Proposition écrite après l'échange */
+  proposal: CommitmentItem;
+  /** 4. Plage de disponibilité */
+  availability: CommitmentItem;
+  /** Horaires d'ouverture / téléphone */
   schedule: SupportSchedule;
-  /** Engagement de réponse synthétique pour les mentions légales et le formulaire */
+  /** Phrase d'engagement de réponse (mentions légales, formulaire) */
   responseNoticeFr: string;
   responseNoticeEn: string;
   /** Coordonnées directes */
@@ -55,92 +55,74 @@ export interface SlaCommitmentsConfig {
   email: string;
 }
 
-export const SLA_COMMITMENTS: SlaCommitmentsConfig = {
-  ack: {
-    id: "sla-ack",
-    key: "ack",
-    labelFr: "Premier accusé de réception",
-    labelEn: "First Acknowledgment",
-    valueFr: "< 2h ouvrées",
-    valueEn: "< 2 business hours",
+export const SLA_COMMITMENTS: CommitmentsConfig = {
+  reply: {
+    id: "commit-reply",
+    key: "reply",
+    labelFr: "Réponse personnelle",
+    labelEn: "Personal reply",
+    valueFr: "Sous 2 jours ouvrés",
+    valueEn: "Within 2 business days",
   },
-  architect: {
-    id: "sla-architect",
-    key: "architect",
-    labelFr: "Réponse d'un architecte",
-    labelEn: "Senior Architect Response",
-    valueFr: "< 24h ouvrées",
-    valueEn: "< 24 business hours",
+  firstCall: {
+    id: "commit-first-call",
+    key: "firstCall",
+    labelFr: "Premier échange",
+    labelEn: "First call",
+    valueFr: "20 minutes, gratuit",
+    valueEn: "20 minutes, free",
   },
-  workshop: {
-    id: "sla-workshop",
-    key: "workshop",
-    labelFr: "Atelier de cadrage proposé",
-    labelEn: "Scoping Workshop Proposed",
-    valueFr: "< 5 jours",
-    valueEn: "< 5 business days",
+  proposal: {
+    id: "commit-proposal",
+    key: "proposal",
+    labelFr: "Proposition écrite",
+    labelEn: "Written proposal",
+    valueFr: "Sous 5 jours ouvrés après l'échange",
+    valueEn: "Within 5 business days of the call",
   },
   availability: {
-    id: "sla-availability",
+    id: "commit-availability",
     key: "availability",
-    labelFr: "Plage de disponibilité",
-    labelEn: "Operating Hours & Support",
-    valueFr: "9h30 - 17h30 (lun-ven)",
-    valueEn: "9:30 AM - 5:30 PM (Mon-Fri)",
+    labelFr: "Disponibilité",
+    labelEn: "Availability",
+    valueFr: "9h30 – 17h30, du lundi au vendredi",
+    valueEn: "9:30 AM – 5:30 PM, Monday to Friday",
   },
   schedule: {
-    hoursFr: "9h30 - 17h30",
-    hoursEn: "9:30 AM - 5:30 PM",
+    hoursFr: "9h30 – 17h30",
+    hoursEn: "9:30 AM – 5:30 PM",
     daysFr: "Du lundi au vendredi",
     daysEn: "Monday to Friday",
-    timezone: "CET",
-    fullFr: "Du lundi au vendredi, 9h30 - 17h30 (CET)",
-    fullEn: "Monday to Friday, 9:30 AM - 5:30 PM (CET)",
+    timezoneFr: "heure de Paris",
+    timezoneEn: "Paris time",
+    fullFr: "Du lundi au vendredi, 9h30 – 17h30 (heure de Paris)",
+    fullEn: "Monday to Friday, 9:30 AM – 5:30 PM (Paris time)",
   },
-  responseNoticeFr: "Réponse sous 24h ouvrées (accusé sous 2h)",
-  responseNoticeEn: "Response within 24 business hours (acknowledgment within 2h)",
+  responseNoticeFr: "Réponse personnelle du fondateur sous 2 jours ouvrés",
+  responseNoticeEn: "Personal reply from the founder within 2 business days",
   phone: "+33 7 68 61 13 10",
   email: "contact@analyticatech.fr",
 };
 
-export interface DisplaySlaItem {
+export interface DisplayCommitmentItem {
   id: string;
   label: string;
   value: string;
-  key: SlaItem["key"];
+  key: CommitmentItem["key"];
 }
 
 /**
- * Retourne la liste ordonnée des engagements de réponse pour la vue Contact.
+ * Retourne la liste ordonnée des engagements pour la vue Contact.
  */
-export function getSlaList(locale: Locale = "fr"): DisplaySlaItem[] {
+export function getSlaList(locale: Locale = "fr"): DisplayCommitmentItem[] {
   const isEn = locale === "en";
-  return [
-    {
-      id: SLA_COMMITMENTS.ack.id,
-      label: isEn ? SLA_COMMITMENTS.ack.labelEn : SLA_COMMITMENTS.ack.labelFr,
-      value: isEn ? SLA_COMMITMENTS.ack.valueEn : SLA_COMMITMENTS.ack.valueFr,
-      key: SLA_COMMITMENTS.ack.key,
-    },
-    {
-      id: SLA_COMMITMENTS.architect.id,
-      label: isEn ? SLA_COMMITMENTS.architect.labelEn : SLA_COMMITMENTS.architect.labelFr,
-      value: isEn ? SLA_COMMITMENTS.architect.valueEn : SLA_COMMITMENTS.architect.valueFr,
-      key: SLA_COMMITMENTS.architect.key,
-    },
-    {
-      id: SLA_COMMITMENTS.workshop.id,
-      label: isEn ? SLA_COMMITMENTS.workshop.labelEn : SLA_COMMITMENTS.workshop.labelFr,
-      value: isEn ? SLA_COMMITMENTS.workshop.valueEn : SLA_COMMITMENTS.workshop.valueFr,
-      key: SLA_COMMITMENTS.workshop.key,
-    },
-    {
-      id: SLA_COMMITMENTS.availability.id,
-      label: isEn ? SLA_COMMITMENTS.availability.labelEn : SLA_COMMITMENTS.availability.labelFr,
-      value: isEn ? SLA_COMMITMENTS.availability.valueEn : SLA_COMMITMENTS.availability.valueFr,
-      key: SLA_COMMITMENTS.availability.key,
-    },
-  ];
+  const { reply, firstCall, proposal, availability } = SLA_COMMITMENTS;
+  return [reply, firstCall, proposal, availability].map((item) => ({
+    id: item.id,
+    label: isEn ? item.labelEn : item.labelFr,
+    value: isEn ? item.valueEn : item.valueFr,
+    key: item.key,
+  }));
 }
 
 /**

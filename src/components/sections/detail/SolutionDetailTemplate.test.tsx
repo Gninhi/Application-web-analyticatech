@@ -16,7 +16,7 @@ const mockAppContent: AppContentDTO = {
   solutions: FALLBACK_SOLUTIONS_FR,
   siteConfig: {
     siteName: "Analyticatech",
-    url: "https://analyticatech.fr",
+    url: "https://www.analyticatech.fr",
     email: "contact@analyticatech.fr",
     phone: "+33 1 00 00 00 00",
     phoneHref: "tel:+33100000000",
@@ -47,12 +47,12 @@ const mockAppContent: AppContentDTO = {
   legalSections: [],
   seoMetadata: {
     title: "Analyticatech",
-    description: "Solutions sectorielles",
+    description: "Projets et solutions",
     keywords: [],
     ogTitle: null,
     ogDescription: null,
     ogImageUrl: null,
-    canonicalUrl: "https://analyticatech.fr",
+    canonicalUrl: "https://www.analyticatech.fr",
     twitterCard: "summary_large_image",
   },
   seoSchemas: [],
@@ -71,152 +71,80 @@ function renderWithProviders(ui: React.ReactElement) {
 }
 
 describe("SolutionDetailTemplate & Registry", () => {
-  it("résout la solution logistique par son slug", () => {
-    const solution = getSolutionDetailData("logistics-ai", "fr");
-    expect(solution).toBeDefined();
-    expect(solution?.slug).toBe("logistics-ai");
-    expect(solution?.sector).toBe("Logistique");
+  const PROJECTS = ["ciblioo", "contentops", "avie"];
+  const IDEAS = ["retail-bi", "logistics-ai", "veille-registres"];
+
+  it("résout le projet Ciblioo par son slug, en FR et en EN", () => {
+    const fr = getSolutionDetailData("ciblioo", "fr");
+    expect(fr?.slug).toBe("ciblioo");
+    expect(fr?.statusBadge).toBe("En développement");
+    const en = getSolutionDetailData("ciblioo", "en");
+    expect(en?.statusBadge).toBe("In development");
+    expect(en?.summary).not.toBe(fr?.summary);
   });
 
-  it("rend le template enrichi de la solution logistique avec toutes ses sections d'expertise", () => {
-    const data = SOLUTIONS_DETAIL_REGISTRY["logistics-ai"];
+  it("redirige l'ancien sourcing M&A (Dealscoop et alias) vers Ciblioo", () => {
+    for (const alias of ["dealscoop", "dealscoop-ma", "sourcing-ma", "dealscope"]) {
+      expect(getSolutionDetailData(alias, "fr")?.slug).toBe("ciblioo");
+    }
+  });
+
+  it("ne connaît plus les anciennes fiches de démonstration", () => {
+    for (const slug of ["finance-agent", "healthcare-nlp", "industry-maintenance", "energy-smartgrid"]) {
+      expect(getSolutionDetailData(slug, "fr")).toBeNull();
+    }
+  });
+
+  it("rend le template d'un projet avec ses sections, sans libellé de mesure fictive", () => {
+    const data = SOLUTIONS_DETAIL_REGISTRY.ciblioo;
     const html = renderWithProviders(
-      <SolutionDetailTemplate
-        data={data}
-        onNavigate={() => {}}
-        onNavigateDetail={() => {}}
-      />
+      <SolutionDetailTemplate data={data} onNavigate={() => {}} />
     );
-
-    // 01. Problème
-    expect(html).toContain("01 // LE PROBLÈME MÉTIER CONCRET");
-    expect(html).toContain("Incapacité à recalculer les tournées");
-    expect(html).toContain("Effet coup de fouet");
-
-    // 02. Approche
-    expect(html).toContain("02 // L'APPROCHE TECHNIQUE & ARCHITECTURALE");
-    expect(html).toContain("Vehicle Routing Problem with Time Windows");
-    expect(html).toContain("Intégration non disruptive");
-
-    // 03. Mesures & Méthodologie
-    expect(html).toContain("03 // CE QUI A ÉTÉ MESURÉ · PREUVES & MÉTHODOLOGIE");
-    expect(html).toContain("Jusqu'à -22%");
-    expect(html).toContain("-41%");
-    expect(html).toContain("Cadre & Conditions de mesure vérifiées");
-
-    // 04. Limites & Prérequis
-    expect(html).toContain("04 // LIMITES D'APPLICABILITÉ & PRÉREQUIS STRICTS");
-    expect(html).toContain("Prérequis indispensables");
-    expect(html).toContain("Où la solution ne s'applique PAS");
-    expect(html).toContain("Réglementation Sociale Européenne");
-
-    // 05. Ressources liées
-    expect(html).toContain("05 // MAILLAGE & RESSOURCES ASSOCIÉES");
-    expect(html).toContain("Service 02 — Automatisation & Workflows");
-    expect(html).toContain("Architecture event-driven pour systèmes temps réel");
+    expect(html).toContain("01 · LE PROBLÈME");
+    expect(html).toContain("02 · COMMENT ÇA MARCHE");
+    expect(html).toContain("03 · OÙ EN EST LE PROJET");
+    expect(html).toContain("Ce qu'il reste à prouver");
+    expect(html).toContain("04 · LIMITES ET PRÉREQUIS");
+    expect(html).toContain("05 · SERVICES LIÉS");
+    expect(html).toContain("En développement");
+    expect(html).not.toContain("Cas d'usage type");
+    expect(html).not.toContain("Indicateurs mesurés");
   });
 
-  it("SolutionDetailView intègre automatiquement le template enrichi pour une solution enregistrée", () => {
+  it("SolutionDetailView rend la fiche d'une piste avec son statut", () => {
     const html = renderWithProviders(
       <SolutionDetailView solutionSlug="logistics-ai" onNavigate={() => {}} />
     );
-
-    expect(html).toContain("Optimisation logistique par l'IA :");
-    expect(html).toContain("04 // LIMITES D'APPLICABILITÉ & PRÉREQUIS STRICTS");
+    expect(html).toContain("Prévision de la demande :");
+    expect(html).toContain("Piste à construire");
+    expect(html).toContain("Rien n'est encore construit.");
   });
 
-  it("résout la solution Dealscoop par son slug principal et ses alias", () => {
-    const solution = getSolutionDetailData("dealscoop", "fr");
-    expect(solution).toBeDefined();
-    expect(solution?.slug).toBe("dealscoop");
-    expect(solution?.sector).toBe("M&A & Private Equity");
-    expect(solution?.statusBadge).toBe("Nouvelle offre");
-    expect(solution?.statusType).toBe("new");
-
-    const aliasSolution = getSolutionDetailData("dealscoop-ma", "fr");
-    expect(aliasSolution).toBeDefined();
-    expect(aliasSolution?.slug).toBe("dealscoop");
-  });
-
-  it("garantit que l'intégralité des 7 solutions sectorielles respectent la grille d'exigence technique", () => {
+  it("chaque fiche respecte la grille : problème, approche, statut, limites, liens", () => {
     const allSlugs = Object.keys(SOLUTIONS_DETAIL_REGISTRY);
-    expect(allSlugs.length).toBe(7);
+    expect(allSlugs).toEqual([...PROJECTS, ...IDEAS]);
 
-    const expectedSlugs = [
-      "logistics-ai",
-      "finance-agent",
-      "retail-bi",
-      "healthcare-nlp",
-      "industry-maintenance",
-      "energy-smartgrid",
-      "dealscoop",
-    ];
-
-    for (const expected of expectedSlugs) {
-      expect(allSlugs).toContain(expected);
+    for (const locale of ["fr", "en"]) {
+      for (const slug of allSlugs) {
+        const solution = getSolutionDetailData(slug, locale);
+        expect(solution, `${slug} (${locale})`).not.toBeNull();
+        if (!solution) continue;
+        expect(solution.problem.coreFrictions.length).toBeGreaterThanOrEqual(2);
+        expect(solution.approach.stages.length).toBeGreaterThanOrEqual(3);
+        expect(solution.metrics.items.length).toBeGreaterThanOrEqual(2);
+        expect(solution.limitsAndPrerequisites.applicabilityLimits.length).toBeGreaterThanOrEqual(2);
+        expect(solution.relatedResources.length).toBeGreaterThanOrEqual(2);
+        // Aucun chiffre de résultat : ni pourcentage ni gain annoncé
+        expect(JSON.stringify(solution)).not.toMatch(/\d+\s?%/);
+      }
     }
+  });
 
-    for (const slug of allSlugs) {
-      const solution = SOLUTIONS_DETAIL_REGISTRY[slug];
-
-      // Problème métier
-      expect(solution.problem.heading.length).toBeGreaterThan(10);
-      expect(solution.problem.contextNarrative.length).toBeGreaterThan(40);
-      expect(solution.problem.coreFrictions.length).toBeGreaterThanOrEqual(2);
-      for (const friction of solution.problem.coreFrictions) {
-        expect(friction.title.length).toBeGreaterThan(5);
-        expect(friction.description.length).toBeGreaterThan(15);
-        expect(friction.impact.length).toBeGreaterThan(5);
-      }
-
-      // Approche & Architecture
-      expect(solution.approach.stages.length).toBeGreaterThanOrEqual(3);
-      expect(solution.approach.integrationDetails.length).toBeGreaterThan(20);
-
-      // Métriques / Capacités
-      expect(solution.metrics.items.length).toBeGreaterThanOrEqual(2);
-      expect(solution.metrics.methodology.sampleAndScope.length).toBeGreaterThan(10);
-      expect(solution.metrics.methodology.period.length).toBeGreaterThan(4);
-      expect(solution.metrics.methodology.measurementConditions.length).toBeGreaterThan(20);
-      expect(solution.metrics.methodology.rigorDisclaimer.length).toBeGreaterThan(20);
-
-      // Limites et prérequis
-      expect(solution.limitsAndPrerequisites.prerequisites.length).toBeGreaterThanOrEqual(2);
-      expect(solution.limitsAndPrerequisites.applicabilityLimits.length).toBeGreaterThanOrEqual(2);
-      expect(solution.limitsAndPrerequisites.operationalConstraints.length).toBeGreaterThanOrEqual(2);
-
-      // Maillage interne (2-3 liens vers services ou insights)
-      expect(solution.relatedResources.length).toBeGreaterThanOrEqual(2);
-      expect(solution.relatedResources.length).toBeLessThanOrEqual(3);
-      for (const res of solution.relatedResources) {
-        expect(["service", "insight", "solution"]).toContain(res.type);
-        expect(res.href).toMatch(/^\/(services|solutions|insights)\//);
-      }
-
-      // CTA
-      expect(solution.cta.question.length).toBeGreaterThan(10);
-      expect(solution.cta.buttonLabel.length).toBeGreaterThan(5);
-
-      // Rendu HTML complet sans exception
-      const html = renderWithProviders(
-        <SolutionDetailTemplate
-          data={solution}
-          onNavigate={() => {}}
-          onNavigateDetail={() => {}}
-        />
-      );
-      expect(html).toContain(solution.title);
-      expect(html).toContain("01 // LE PROBLÈME MÉTIER CONCRET");
-      expect(html).toContain("02 // L'APPROCHE TECHNIQUE & ARCHITECTURALE");
-      if (solution.statusType === "new") {
-        expect(html).toContain("03 // CAPACITÉS OPÉRATIONNELLES & CADRE MÉTHODOLOGIQUE");
-        expect(html).toContain("Nouvelle offre");
-      } else {
-        expect(html).toContain("03 // CE QUI A ÉTÉ MESURÉ · PREUVES & MÉTHODOLOGIE");
-        expect(html).toContain("Déployé en production");
-      }
-      expect(html).toContain("04 // LIMITES D'APPLICABILITÉ & PRÉREQUIS STRICTS");
-      expect(html).toContain("05 // MAILLAGE & RESSOURCES ASSOCIÉES");
+  it("présente les pistes comme non construites", () => {
+    for (const slug of IDEAS) {
+      const data = SOLUTIONS_DETAIL_REGISTRY[slug];
+      expect(data.statusBadge).toBe("Piste à construire");
+      expect(data.metrics.methodology.rigorDisclaimer).toContain("n'existe pas encore");
     }
   });
 });

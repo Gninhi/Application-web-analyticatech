@@ -40,8 +40,10 @@ Finish work with `lint → typecheck → test:unit`; run e2e (or at least the to
 
 ## Data & architecture
 
-- i18n via `useI18n()` (`src/lib/i18n/`); site content (nav, metrics, posts…) via `ContentProvider` (`src/components/providers/ContentProvider.tsx`). `MetricDTO` drives the home "Data Console" bento.
-- DB is Supabase Postgres through the Prisma pooler URL (`DATABASE_URL` / `DIRECT_URL`; `DATABASE_SSL`). Prisma 7 uses the new `prisma-client` generator emitting into **`src/generated/prisma`** — generated, never hand-edit. `postinstall` and `vercel-build` run `prisma generate`; `npm run seed` (`tsx prisma/seed.ts`) seeds content.
+- i18n via `useI18n()` (`src/lib/i18n/`); site content (nav, services, solutions, posts, legal…) via `ContentProvider` (`src/components/providers/ContentProvider.tsx`).
+- **Editorial content lives in code only** (`src/lib/content/*`, `src/locales/*`, `src/data/*`, `public/llms.txt`); the `*.service.ts` getters return these constants and never read the DB. The DB is used only for `ContactRequest` and security lists (`BlockedEmailDomain`). Its old content tables (metrics, testimonials, posts, solutions…) are stale and unread — `prisma/seed.ts` still writes them; don't revive them.
+- **Content charter** (enforced by `src/lib/content/content-charter.test.ts`): Analyticatech is a one-person SAS founded in 2024. No unmeasured result figures or percentages, no fictitious team ("nos architectes"), no certification it doesn't hold (SecNumCloud/ISO/SOC 2), no Strasbourg office, no "< 2h / 24h ouvrées" promises, no testimonials. Delays come only from `src/data/commitments.ts`; legal revision date from `src/lib/content/legal.ts`. Solutions = real projects (Ciblioo, ContentOps Harness, AVIE) then "pistes à construire" clearly labelled.
+- DB is Supabase Postgres through the Prisma pooler URL (`DATABASE_URL` / `DIRECT_URL`; `DATABASE_SSL`). Prisma 7 uses the new `prisma-client` generator emitting into **`src/generated/prisma`** — generated, never hand-edit. `postinstall` and `vercel-build` run `prisma generate`.
 - Env keys (`.env.example`): `DATABASE_URL`, `DIRECT_URL`, `DATABASE_SSL`, `RESEND_API_KEY` (email), `MAIL_FROM`/`MAIL_TO`, `IP_SALT`, `ALLOWED_ORIGINS`, `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_APP_VERSION`. `NEXT_PUBLIC_*` are public — never put secrets there.
 - Vercel: `next.config.ts` sets `output: "standalone"` only off-Vercel, and reads `NEXT_DIST_DIR` for the output dir.
 

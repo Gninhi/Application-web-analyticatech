@@ -39,8 +39,8 @@ export default function ErrorPage({ error, reset }: ErrorProps) {
 
           {/* Badge alerte */}
           <div className="inline-flex items-center gap-2 rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 px-3.5 py-1.5 mb-6">
-            <AlertTriangle className="h-4 w-4 text-[#F26D3D]" aria-hidden />
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#F26D3D]">
+            <AlertTriangle className="h-4 w-4 text-accent-ink" aria-hidden />
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink">
               {t("error.badge")}
             </span>
           </div>
@@ -59,7 +59,7 @@ export default function ErrorPage({ error, reset }: ErrorProps) {
               <p className="font-mono text-[10px] uppercase tracking-widest text-slate-400 mb-1">
                 Diagnostic debug :
               </p>
-              <p className="font-mono text-xs text-[#F26D3D] break-all">
+              <p className="font-mono text-xs text-accent-ink break-all">
                 {error.message || "Runtime exception without description"}
               </p>
               {error.digest && (

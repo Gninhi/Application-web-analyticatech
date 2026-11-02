@@ -140,7 +140,7 @@ export function HeroCard({
             className="absolute top-5 left-5 z-20 font-mono text-[10px] uppercase tracking-widest"
             style={{ color: `color-mix(in srgb, ${accent} 65%, transparent)` }}
           >
-            REPORT_{post.id.slice(0, 4).toUpperCase()}
+            {t("blog.badge")} {String(index + 1).padStart(2, "0")}
           </span>
           <Newspaper
             className="absolute top-5 right-5 z-20 h-4 w-4"

@@ -7,11 +7,11 @@ import dynamic from "next/dynamic";
 import { ImmersiveBackground } from "@/components/effects/ImmersiveBackground";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { JsonLd } from "@/components/seo/JsonLd";
 import { ContentProvider } from "@/components/providers/ContentProvider";
 import { I18nProvider, useI18n } from "@/lib/i18n/provider";
 import { pathToView } from "@/lib/navigation/routes";
 import type { AppContentDTO } from "@/types/content";
+import { isAnalyticsConfigured } from "@/instrumentation-client";
 
 const BackToTop = dynamic(
   () => import("@/components/layout/BackToTop").then((m) => m.BackToTop),
@@ -75,7 +75,7 @@ function SiteShellInner({ children }: { children: React.ReactNode }) {
       {/* Skip-link accessibilité */}
       <a
         href="#main-content"
-        className="sr-only leading-7 text-slate-900 dark:text-slate-100 focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:rounded-lg focus:bg-[#C9470F] focus:px-4 focus:py-2 focus:font-mono focus:text-sm focus:text-white"
+        className="sr-only leading-7 text-slate-900 dark:text-slate-100 focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:rounded-lg focus:bg-[#E35F31] focus:px-4 focus:py-2 focus:font-mono focus:text-sm focus:text-white"
       >
         Aller au contenu principal
       </a>
@@ -107,8 +107,8 @@ function SiteShellInner({ children }: { children: React.ReactNode }) {
       {/* Bouton retour-haut flottant */}
       <BackToTop />
 
-      {/* Bandeau consentement cookies RGPD */}
-      <CookieConsent />
+      {/* Bandeau consentement cookies RGPD — seulement si une mesure d'audience existe */}
+      {isAnalyticsConfigured && <CookieConsent />}
 
       {/* Télémétrie PostHog RGPD (chargement conditionné au consentement) */}
       <PostHogTelemetry />
@@ -127,7 +127,6 @@ export function SiteShell({ content, children }: SiteShellProps) {
     <MotionConfig reducedMotion="user">
       <I18nProvider initialLocale={content.locale}>
         <ContentProvider content={content}>
-          <JsonLd />
           <SiteShellInner>{children}</SiteShellInner>
         </ContentProvider>
       </I18nProvider>

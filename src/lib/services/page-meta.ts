@@ -6,33 +6,33 @@ import { safe, FALLBACK_SEO_METADATA } from "./safe";
 import { DEFAULT_SITE_CONFIG } from "@/lib/content/site";
 
 /** Copy par route (fr/en) pour les pages statiques. Les pages de détail
- *  utilisent le titre/description du contenu DB (voir les pages `[slug]`). */
+ *  utilisent le titre/description de leur fiche (voir les pages `[slug]`). */
 const PAGE_COPY: Record<Locale, Record<string, { title: string; description: string }>> = {
   fr: {
     services: {
-      title: "Nos Expertises IA & Data",
+      title: "Services — IA, automatisation et données",
       description:
-        "Quatre expertises clés empilées : Raisonnement & RAG, Automatisation & Workflows, Orchestration Multi-Agents, Data & Décision Augmentée. Chaque service livré avec méthode, sécurité et ROI mesuré.",
+        "Quatre services expliqués sans jargon : assistants qui répondent à partir de vos documents, automatisation des processus, agents IA sous contrôle humain, données et tableaux de bord.",
     },
     solutions: {
-      title: "Solutions sectorielles — IA & Automatisation par métier",
+      title: "Solutions — Projets en cours et pistes à construire",
       description:
-        "Des solutions prêtes à adapter pour la banque, l'industrie, le retail, le secteur public et plus : agents IA, automatisation de workflows, BI et pilotage décisionnel.",
+        "Les produits que construit Analyticatech (Ciblioo, ContentOps Harness, AVIE), avec leur état d'avancement réel, et les pistes de solutions présentées comme telles.",
     },
     insights: {
-      title: "Insights — Analyses & Ressources IA",
+      title: "Insights — Articles et guides pratiques",
       description:
-        "Nos architectes partagent leurs analyses : patterns de production, choix d'outillage et retours d'expérience sur les missions IA, agents et automatisation.",
+        "Des articles de méthode écrits par le fondateur d'Analyticatech pour comprendre l'IA, les agents et l'automatisation, et décider en connaissance de cause.",
     },
     contact: {
       title: "Contact",
       description:
-        "Décrivez votre besoin. Un architecte Solution Analyticatech vous répond sous 24h ouvrées. Échanges chiffrés et confidentiels.",
+        "Décrivez votre besoin : le fondateur vous répond personnellement sous 2 jours ouvrés et vous propose un premier échange gratuit de 20 minutes.",
     },
     confidentialite: {
       title: "Politique de confidentialité — RGPD",
       description:
-        "Politique de confidentialité d'Analyticatech : données personnelles, RGPD, conservation sous 90 jours, aucune revente ni entraînement sur vos données.",
+        "Données collectées, finalités, sous-traitants, durées de conservation et droits : comment Analyticatech traite vos données personnelles.",
     },
     "mentions-legales": {
       title: "Mentions légales",
@@ -42,44 +42,44 @@ const PAGE_COPY: Record<Locale, Record<string, { title: string; description: str
     "a-propos": {
       title: "À propos d'Analyticatech",
       description:
-        "Cabinet de conseil en IA, Agents & Automatisation : mission, vision et valeurs. Du POC à la production, avec précision, sécurité et impact mesuré.",
+        "Analyticatech, cabinet de conseil en IA fondé par Martial Gninhi : parcours, mission et engagements pour des projets d'IA mesurés et conformes.",
     },
   },
   en: {
     services: {
-      title: "Our AI & Data Capabilities",
+      title: "Services — AI, automation and data",
       description:
-        "Four stacked layers of expertise: Reasoning & RAG, Automation & Workflows, Multi-Agent Orchestration, Data & Augmented Decision. Engineered for enterprise scale, security, and measurable ROI.",
+        "Four services explained without jargon: assistants that answer from your documents, process automation, AI agents under human control, data and dashboards.",
     },
     solutions: {
-      title: "Industry Solutions — Enterprise AI & Workflow Automation",
+      title: "Solutions — Ongoing projects and ideas to build",
       description:
-        "Production-ready architectures tailored for Banking & Insurance, Healthcare, Logistics, and Public Sector: autonomous agents, automated workflows, and executive BI.",
+        "The products Analyticatech is building (Ciblioo, ContentOps Harness, AVIE), with their real status, and solution ideas presented as such.",
     },
     insights: {
-      title: "Insights — AI Analysis & Resources",
+      title: "Insights — Articles and practical guides",
       description:
-        "Senior architects share frontline analysis: production patterns, tooling trade-offs, and field-tested architecture lessons on AI and multi-agent systems.",
+        "Method articles written by Analyticatech's founder to understand AI, agents and automation, and make informed decisions.",
     },
     contact: {
       title: "Contact",
       description:
-        "Describe your enterprise requirements. A Senior Solutions Architect will respond within 24 business hours. End-to-end encrypted and confidential.",
+        "Describe your need: the founder replies personally within 2 business days and offers a free 20-minute first call.",
     },
     confidentialite: {
-      title: "Privacy Policy — GDPR Compliance",
+      title: "Privacy policy — GDPR",
       description:
-        "Analyticatech's privacy policy: personal data protection, GDPR compliance, 90-day data retention, zero data resale or model training.",
+        "Data collected, purposes, processors, retention periods and rights: how Analyticatech handles your personal data.",
     },
     "mentions-legales": {
-      title: "Legal Notice & Corporate Information",
+      title: "Legal notice",
       description:
-        "Analyticatech regulatory information: site publisher, web hosting, intellectual property, and registered company details.",
+        "Analyticatech legal notice: site publisher, hosting, intellectual property and contact details.",
     },
     "a-propos": {
-      title: "About Analyticatech — Autonomous Systems Engineering",
+      title: "About Analyticatech",
       description:
-        "Independent AI, Multi-Agent, and Digital Transformation engineering consultancy: mission, vision, and core values. From POC to production with verifiable business impact.",
+        "Analyticatech, an AI consulting firm founded by Martial Gninhi: background, mission and commitments for measured, compliant AI projects.",
     },
   },
 };

@@ -12,13 +12,13 @@ describe("NotFoundPage (404)", () => {
     );
 
     expect(html).toContain("404");
-    expect(html).toContain("Nœud système introuvable");
-    expect(html).toContain("RETOURNER AU TERMINAL PRINCIPAL");
-    expect(html).toContain("CONTACTER L&#x27;ÉQUIPE");
-    expect(html).toContain("Terminal d&#x27;accueil");
+    expect(html).toContain("Page introuvable");
+    expect(html).toContain("Retour à l&#x27;accueil");
+    expect(html).toContain("Me contacter");
+    expect(html).toContain("Accueil");
     expect(html).toContain("Services &amp; Expertise");
-    expect(html).toContain("Solutions sectorielles");
-    expect(html).toContain("Rapports &amp; Insights");
+    expect(html).toContain("Les produits que je construis et les pistes à venir.");
+    expect(html).toContain("Articles");
   });
 
   it("rend la page 404 en anglais quand la locale est 'en'", () => {
@@ -29,13 +29,13 @@ describe("NotFoundPage (404)", () => {
     );
 
     expect(html).toContain("404");
-    expect(html).toContain("System Node Not Found");
-    expect(html).toContain("RETURN TO MAIN TERMINAL");
-    expect(html).toContain("CONTACT THE TEAM");
-    expect(html).toContain("Main Terminal");
+    expect(html).toContain("Page not found");
+    expect(html).toContain("Back to home");
+    expect(html).toContain("Contact me");
+    expect(html).toContain("Home");
     expect(html).toContain("Services &amp; Capabilities");
-    expect(html).toContain("Industry Solutions");
-    expect(html).toContain("Reports &amp; Insights");
+    expect(html).toContain("The products I build and the ideas to come.");
+    expect(html).toContain("Articles");
     expect(html).toContain('href="/en"');
     expect(html).toContain('href="/en/services"');
   });

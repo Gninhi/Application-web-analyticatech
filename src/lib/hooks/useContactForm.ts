@@ -54,7 +54,7 @@ function focusFirstInvalid(errors: Partial<Record<keyof ContactFormState, string
 }
 
 export function useContactForm() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [form, setForm] = useState<ContactFormState>(EMPTY_CONTACT_FORM);
   const [errors, setErrors] = useState<Partial<Record<keyof ContactFormState, string>>>({});
   const [status, setStatus] = useState<FormStatus>("idle");
@@ -108,6 +108,7 @@ export function useContactForm() {
         retries: 1,
         headers: {
           "x-csrf-token": csrfToken,
+          "x-locale": locale,
           ...(posthogId ? { "x-posthog-id": posthogId } : {}),
         },
       });

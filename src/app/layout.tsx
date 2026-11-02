@@ -5,13 +5,13 @@ import { ThemeProvider } from "@/components/branding/ThemeProvider";
 import "./globals.css";
 import { GlobalErrorBoundary } from "@/components/system/GlobalErrorBoundary";
 import { SiteShell } from "@/components/layout/SiteShell";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getAppContent } from "@/lib/services/content.service";
-import { KEY_STATS_CONFIG } from "@/data/stats";
 import type { Locale } from "@/types/content";
 
-/* === Typographie du Design System "Corporate Cyberpunk" ===
- * Optimisé Lighthouse : preload + display swap + adjustFontFallback
- * pour éviter FOUT et garantir un bon CLS (Cumulative Layout Shift). */
+/* === Typographie (identique à la production) ===
+ * Space Grotesk pour les titres, Inter pour le texte, JetBrains Mono pour
+ * les étiquettes. preload + display swap + adjustFontFallback : pas de CLS. */
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   subsets: ["latin"],
@@ -35,47 +35,30 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "700"],
   display: "swap",
-  preload: false, // Mono moins critique — pas de preload pour économiser la bande passante
+  preload: false, // Étiquettes uniquement : pas de preload
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://analyticatech.fr"),
+  metadataBase: new URL("https://www.analyticatech.fr"),
   title: {
-    default: "Analyticatech — Architectures IA, Automatisation & Data d'Entreprise",
+    default: "Analyticatech — L'IA, expliquée simplement, pour les PME et ETI",
     template: "%s | Analyticatech",
   },
   description:
-    `Cabinet de conseil IA en France : architecture d'agents LLM, RAG, automatisation workflows et transformation digitale. ${KEY_STATS_CONFIG.missions.value} missions livrées, ${KEY_STATS_CONFIG.costReduction.value} de coûts réduits. Experts LangChain, n8n, Power BI, Clouds Souverains (SecNumCloud).`,
+    "Analyticatech aide les dirigeants de PME et d'ETI, et leurs DSI, à passer du pilote IA à des systèmes fiables en production : assistants sur vos documents, automatisation, agents IA sous contrôle humain et tableaux de bord. Conseil indépendant basé à Paris.",
   keywords: [
-    // Mots-clés principaux (haute intention)
-    "cabinet conseil IA",
-    "cabinet conseil intelligence artificielle",
-    "consultant IA entreprise",
-    "transformation digitale IA",
-    "automatisation IA entreprise",
-    // Mots-clés techniques (longue traîne)
-    "agents IA production",
-    "architecture LLM entreprise",
-    "système RAG",
-    "LangChain consulting",
-    "LangGraph agents",
-    "n8n automatisation",
-    "Power BI dashboard",
-    "agents cognitifs",
-    "IA souveraine compatible SecNumCloud",
-    // Mots-clés sectoriels
-    "IA finance",
-    "IA logistique",
-    "IA santé",
-    "IA secteur public",
-    // Mots-clés GEO (Generative Engine Optimization)
-    "cabinet IA France",
-    "experts IA générative Paris",
-    "industrialisation IA",
-    "data engineering IA",
-    "MLOps production",
+    "conseil IA PME",
+    "consultant intelligence artificielle",
+    "agents IA",
+    "automatisation des processus",
+    "assistant IA documents",
+    "RAG",
+    "LangGraph",
+    "n8n",
+    "Power BI",
+    "business intelligence PME",
   ],
-  authors: [{ name: "Analyticatech", url: "https://analyticatech.fr" }],
+  authors: [{ name: "Analyticatech", url: "https://www.analyticatech.fr" }],
   creator: "Analyticatech",
   publisher: "Analyticatech",
   icons: { icon: "/logo.svg" },
@@ -93,11 +76,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Analyticatech — Cabinet de conseil en IA, Agents & Automatisation",
     description:
-      `Architecture d'agents LLM, RAG, automatisation et transformation digitale. ${KEY_STATS_CONFIG.missions.value} missions livrées. Experts LangChain, n8n, Clouds Souverains (SecNumCloud).`,
+      "L'IA, expliquée simplement. Agents IA, automatisation et données en production pour PME et ETI, conformes RGPD et AI Act.",
     siteName: "Analyticatech",
     type: "website",
     locale: "fr_FR",
-    url: "https://analyticatech.fr",
+    url: "https://www.analyticatech.fr",
     images: [
       {
         url: "/og-image.jpg",
@@ -111,26 +94,23 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Analyticatech — Cabinet conseil IA & Automatisation",
     description:
-      "Agents LLM, RAG, automatisation, transformation digitale. 48+ missions livrées.",
+      "L'IA, expliquée simplement. Agents IA, automatisation et données en production pour PME et ETI.",
     images: ["/og-image.jpg"],
   },
   alternates: {
-    canonical: "https://analyticatech.fr",
+    canonical: "https://www.analyticatech.fr",
     languages: {
-      "fr-FR": "https://analyticatech.fr",
-      "en-US": "https://analyticatech.fr/en",
-      fr: "https://analyticatech.fr",
-      en: "https://analyticatech.fr/en",
-      "x-default": "https://analyticatech.fr",
+      "fr-FR": "https://www.analyticatech.fr",
+      "en-US": "https://www.analyticatech.fr/en",
+      fr: "https://www.analyticatech.fr",
+      en: "https://www.analyticatech.fr/en",
+      "x-default": "https://www.analyticatech.fr",
     },
   },
   category: "technology",
   other: {
     "application-name": "Analyticatech",
     "theme-color": "#06070B",
-    // SEO pour LLMs / GEO — signale le contenu au crawling IA
-    "ai-content-optimized": "true",
-    "llm-friendly": "true",
     "geo.region": "FR",
     "geo.placename": "Paris",
     "geo.position": "48.8566;2.3522",
@@ -180,6 +160,7 @@ export default async function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
+        <JsonLd content={content} />
         <ThemeProvider>
           <GlobalErrorBoundary>
             <SiteShell content={content}>{children}</SiteShell>

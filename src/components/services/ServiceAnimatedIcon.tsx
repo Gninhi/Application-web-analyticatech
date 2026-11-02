@@ -18,7 +18,7 @@ interface ServiceAnimatedIconProps {
  */
 export function ServiceAnimatedIcon({
   variant,
-  accentColor = "#F26D3D",
+  accentColor = "var(--accent-ink)",
 }: ServiceAnimatedIconProps) {
   return (
     <span

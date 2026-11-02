@@ -27,9 +27,9 @@ export interface SolutionDetailTemplateProps {
 }
 
 /**
- * Template de vue de détail enrichie pour les solutions sectorielles.
- * Bithématisme intégral (clair/sombre), structure d'ingénierie sans complaisance :
- * Contexte réel → Architecture DSI → Métriques & Méthodologie → Limites & Prérequis → Maillage.
+ * Template de vue de détail des solutions (projets en cours et pistes).
+ * Bithématisme intégral (clair/sombre), libellés traduits (FR/EN) :
+ * Problème → Fonctionnement → État du projet → Limites & Prérequis → Services liés.
  */
 export function SolutionDetailTemplate({
   data,
@@ -50,37 +50,37 @@ export function SolutionDetailTemplate({
     {
       id: "probleme",
       number: "01",
-      title: "Problème Métier",
-      subtitle: "Frictions opérationnelles",
+      title: t("solutions.detail.nav.problem"),
+      subtitle: t("solutions.detail.nav.problem.sub"),
     },
     {
       id: "approche",
       number: "02",
-      title: "Approche & Architecture",
-      subtitle: "Pipeline & SI existant",
+      title: t("solutions.detail.nav.approach"),
+      subtitle: t("solutions.detail.nav.approach.sub"),
     },
     {
       id: "mesures",
       number: "03",
-      title: data.statusType === "new" ? "Capacités & Méthode" : "Ce qui a été mesuré",
-      subtitle: data.statusType === "new" ? "Cadre de qualification" : "Preuves & Méthodologie",
+      title: t("solutions.detail.nav.status"),
+      subtitle: t("solutions.detail.nav.status.sub"),
     },
     {
       id: "limites",
       number: "04",
-      title: "Limites & Prérequis",
-      subtitle: "Cadre d'application",
+      title: t("solutions.detail.nav.limits"),
+      subtitle: t("solutions.detail.nav.limits.sub"),
     },
     {
       id: "ressources",
       number: "05",
-      title: "Services associés",
-      subtitle: "Maillage interne",
+      title: t("solutions.detail.nav.links"),
+      subtitle: t("solutions.detail.nav.links.sub"),
     },
   ];
 
   return (
-    <div className="pt-28 md:pt-36 pb-24 text-slate-900 dark:text-slate-100 selection:bg-[#F26D3D]/30 selection:text-[#F26D3D]">
+    <div className="pt-28 md:pt-36 pb-24 text-slate-900 dark:text-slate-100 selection:bg-[#F26D3D]/30 selection:text-accent-ink">
       <div className="mx-auto max-w-6xl xl:max-w-7xl px-4 md:px-6 space-y-12">
         {/* ================= BREADCRUMB & RETOUR ================= */}
         <div className="flex flex-wrap items-center justify-between gap-4">
@@ -97,18 +97,11 @@ export function SolutionDetailTemplate({
           </Button>
 
           <div className="flex flex-wrap items-center gap-2">
-            {data.statusType === "new" ? (
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 font-mono text-[11px] font-semibold tracking-wider text-indigo-600 dark:text-indigo-400 uppercase">
-                <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse" />
-                {data.statusBadge ?? "Nouvelle offre"}
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#4CAF50]/30 bg-[#4CAF50]/10 px-3 py-1 font-mono text-[11px] font-semibold tracking-wider text-[#4CAF50] uppercase">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#4CAF50] animate-pulse" />
-                {data.statusBadge ?? "Déployé en production"}
-              </span>
-            )}
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#F26D3D]/30 bg-[#F26D3D]/10 px-3.5 py-1 font-mono text-[11px] font-semibold tracking-wider text-[#F26D3D] uppercase">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 font-mono text-[11px] font-semibold tracking-wider text-foreground uppercase">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#F26D3D]" />
+              {data.statusBadge ?? t("solutions.detail.status.default")}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#F26D3D]/30 bg-[#F26D3D]/10 px-3.5 py-1 font-mono text-[11px] font-semibold tracking-wider text-accent-ink uppercase">
               <Building2 className="h-3 w-3" aria-hidden />
               {data.sectorBadge}
             </span>
@@ -129,14 +122,14 @@ export function SolutionDetailTemplate({
           />
 
           <div className="relative z-10 space-y-6">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#F26D3D]">
-              SOLUTION SECTORIELLE // {data.sector}
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+              {t("solutions.detail.eyebrow")}{" // "}{data.sector}
             </p>
 
             <h1 className="font-display font-bold text-3xl sm:text-5xl md:text-6xl tracking-tight leading-[1.12] text-slate-900 dark:text-white max-w-4xl">
               {data.title}{" "}
               {data.titleAccent && (
-                <span className="text-[#F26D3D] dark:text-[#F26D3D] drop-shadow-sm">
+                <span className="text-accent-ink dark:text-accent-ink drop-shadow-sm">
                   {data.titleAccent}
                 </span>
               )}
@@ -149,7 +142,7 @@ export function SolutionDetailTemplate({
             {/* Tags sectoriels */}
             <div className="pt-4 border-t border-slate-200/70 dark:border-white/10 flex flex-wrap items-center gap-2">
               <span className="font-mono text-xs text-slate-400 dark:text-slate-500 uppercase tracking-widest mr-2">
-                Périmètre :
+                {t("solutions.detail.scope")}
               </span>
               {data.tags.map((tag) => (
                 <span
@@ -183,8 +176,8 @@ export function SolutionDetailTemplate({
               aria-labelledby="heading-probleme"
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-6"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#F26D3D]">
-            01 // LE PROBLÈME MÉTIER CONCRET
+          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+            {t("solutions.detail.section.problem")}
           </span>
 
           <div>
@@ -218,8 +211,8 @@ export function SolutionDetailTemplate({
                 </div>
 
                 <div className="pt-3 border-t border-slate-200/60 dark:border-white/5">
-                  <span className="inline-block rounded-md bg-[#F26D3D]/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-[#F26D3D]">
-                    Impact terrain : {friction.impact}
+                  <span className="inline-block rounded-md bg-[#F26D3D]/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-accent-ink">
+                    {t("solutions.detail.impact")} {friction.impact}
                   </span>
                 </div>
               </div>
@@ -233,8 +226,8 @@ export function SolutionDetailTemplate({
           aria-labelledby="heading-approche"
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-8"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#F26D3D]">
-            02 // L&apos;APPROCHE TECHNIQUE & ARCHITECTURALE
+          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+            {t("solutions.detail.section.approach")}
           </span>
 
           <div>
@@ -256,7 +249,7 @@ export function SolutionDetailTemplate({
                 className="rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.01] p-5 space-y-3"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-[11px] font-bold text-[#F26D3D] tracking-wider">
+                  <span className="font-mono text-[11px] font-bold text-accent-ink tracking-wider">
                     {stage.stageNumber}
                   </span>
                   {stage.badge && (
@@ -276,7 +269,7 @@ export function SolutionDetailTemplate({
                 {stage.keyPattern && (
                   <div className="pt-2 border-t border-slate-200/50 dark:border-white/5">
                     <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400">
-                      Pattern : <code className="text-slate-800 dark:text-slate-200 font-semibold">{stage.keyPattern}</code>
+                      {t("solutions.detail.pattern")} <code className="text-slate-800 dark:text-slate-200 font-semibold">{stage.keyPattern}</code>
                     </span>
                   </div>
                 )}
@@ -288,7 +281,7 @@ export function SolutionDetailTemplate({
           <div className="rounded-2xl border border-[#03318C]/20 dark:border-blue-500/20 bg-[#03318C]/5 dark:bg-blue-500/[0.03] p-5 space-y-2">
             <div className="flex items-center gap-2 font-mono text-xs font-bold text-[#03318C] dark:text-blue-400 uppercase tracking-wider">
               <Workflow className="h-4 w-4" aria-hidden />
-              Intégration non disruptive avec votre SI existant
+              {t("solutions.detail.integration")}
             </div>
             <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
               {data.approach.integrationDetails}
@@ -296,16 +289,14 @@ export function SolutionDetailTemplate({
           </div>
         </section>
 
-        {/* ================= 03 — CE QUI A ÉTÉ MESURÉ OU CAPACITÉS ================= */}
+        {/* ================= 03 — OÙ EN EST LE PROJET ================= */}
         <section
           id="mesures"
           aria-labelledby="heading-mesures"
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-6"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#F26D3D]">
-            {data.statusType === "new"
-              ? "03 // CAPACITÉS OPÉRATIONNELLES & CADRE MÉTHODOLOGIQUE"
-              : "03 // CE QUI A ÉTÉ MESURÉ · PREUVES & MÉTHODOLOGIE"}
+          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+            {t("solutions.detail.section.status")}
           </span>
 
           <div>
@@ -320,7 +311,7 @@ export function SolutionDetailTemplate({
             </p>
           </div>
 
-          {/* Métriques officielles du site */}
+          {/* Statut et jalons du projet (aucune métrique de résultat non mesurée) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             {data.metrics.items.map((metric, idx) => (
               <div
@@ -331,7 +322,7 @@ export function SolutionDetailTemplate({
                   <span className="font-mono text-[11px] text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                     {metric.label}
                   </span>
-                  <p className="font-display text-4xl sm:text-5xl font-bold text-[#F26D3D] my-2">
+                  <p className="font-display text-xl font-bold text-foreground my-2">
                     {metric.value}
                   </p>
                 </div>
@@ -342,38 +333,36 @@ export function SolutionDetailTemplate({
             ))}
           </div>
 
-          {/* Encadré méthodologique transparent */}
+          {/* Ce qu'il reste à prouver, et comment ce sera mesuré */}
           <div className="rounded-2xl border border-slate-200/70 dark:border-white/10 bg-slate-100/60 dark:bg-white/[0.02] p-5 space-y-3">
             <div className="flex items-center gap-2 font-mono text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-              <FileCheck2 className="h-4 w-4 text-[#F26D3D]" aria-hidden />
-              {data.statusType === "new"
-                ? "Cadre & Conditions de qualification"
-                : "Cadre & Conditions de mesure vérifiées"}
+              <FileCheck2 className="h-4 w-4 text-accent-ink" aria-hidden />
+              {t("solutions.detail.frame")}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-mono text-slate-600 dark:text-slate-400 pt-1">
               <div>
                 <span className="text-slate-900 dark:text-slate-200 font-semibold block mb-0.5">
-                  Périmètre & Échantillon :
+                  {t("solutions.detail.frame.scope")}
                 </span>
                 {data.metrics.methodology.sampleAndScope}
               </div>
               <div>
                 <span className="text-slate-900 dark:text-slate-200 font-semibold block mb-0.5">
-                  Période d&apos;observation :
+                  {t("solutions.detail.frame.period")}
                 </span>
                 {data.metrics.methodology.period}
               </div>
               <div>
                 <span className="text-slate-900 dark:text-slate-200 font-semibold block mb-0.5">
-                  Conditions de calcul :
+                  {t("solutions.detail.frame.measure")}
                 </span>
                 {data.metrics.methodology.measurementConditions}
               </div>
             </div>
 
             <p className="pt-2 border-t border-slate-200/50 dark:border-white/5 text-[11px] font-mono text-slate-500 dark:text-slate-400">
-              Note de rigueur : {data.metrics.methodology.rigorDisclaimer}
+              {t("solutions.detail.frame.transparency")} {data.metrics.methodology.rigorDisclaimer}
             </p>
           </div>
         </section>
@@ -382,12 +371,12 @@ export function SolutionDetailTemplate({
         <section
           id="limites"
           aria-labelledby="heading-limites"
-          className="rounded-3xl border border-amber-500/30 bg-amber-500/[0.02] dark:bg-amber-500/[0.03] p-6 sm:p-10 shadow-sm space-y-6"
+          className="rounded-3xl border border-[#F26D3D]/40 bg-transparent p-6 sm:p-10 shadow-sm space-y-6"
         >
           <div className="flex items-center gap-2">
-            <AlertOctagon className="h-5 w-5 text-amber-600 dark:text-amber-400" aria-hidden />
-            <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-amber-600 dark:text-amber-400">
-              04 // LIMITES D&apos;APPLICABILITÉ & PRÉREQUIS STRICTS
+            <AlertOctagon className="h-5 w-5 text-accent-ink" aria-hidden />
+            <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+              {t("solutions.detail.section.limits")}
             </span>
           </div>
 
@@ -407,8 +396,8 @@ export function SolutionDetailTemplate({
             {/* Prérequis */}
             <div className="rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/80 dark:bg-white/[0.02] p-5 space-y-3">
               <span className="font-mono text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" aria-hidden />
-                Prérequis indispensables
+                <CheckCircle2 className="h-4 w-4 text-link dark:text-link" aria-hidden />
+                {t("solutions.detail.prerequisites")}
               </span>
               <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
                 {data.limitsAndPrerequisites.prerequisites.map((req, i) => (
@@ -424,7 +413,7 @@ export function SolutionDetailTemplate({
             <div className="rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/80 dark:bg-white/[0.02] p-5 space-y-3">
               <span className="font-mono text-xs font-bold text-red-600 dark:text-red-400 flex items-center gap-1.5">
                 <XCircle className="h-4 w-4 text-red-600 dark:text-red-400" aria-hidden />
-                Où la solution ne s&apos;applique PAS
+                {t("solutions.detail.notApplicable")}
               </span>
               <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
                 {data.limitsAndPrerequisites.applicabilityLimits.map((limit, i) => (
@@ -438,14 +427,14 @@ export function SolutionDetailTemplate({
 
             {/* Contraintes opérationnelles */}
             <div className="rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/80 dark:bg-white/[0.02] p-5 space-y-3">
-              <span className="font-mono text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
-                <ShieldCheck className="h-4 w-4 text-amber-600 dark:text-amber-400" aria-hidden />
-                Contraintes & Réglementation
+              <span className="font-mono text-xs font-bold text-accent-ink flex items-center gap-1.5">
+                <ShieldCheck className="h-4 w-4 text-accent-ink" aria-hidden />
+                {t("solutions.detail.constraints")}
               </span>
               <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
                 {data.limitsAndPrerequisites.operationalConstraints.map((c, i) => (
                   <li key={i} className="flex items-start gap-1.5">
-                    <span className="text-amber-400">•</span>
+                    <span className="text-accent-ink">•</span>
                     <span>{c}</span>
                   </li>
                 ))}
@@ -460,8 +449,8 @@ export function SolutionDetailTemplate({
           aria-labelledby="heading-ressources"
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-6"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#F26D3D]">
-            05 // MAILLAGE & RESSOURCES ASSOCIÉES
+          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+            {t("solutions.detail.section.links")}
           </span>
 
           <div>
@@ -469,10 +458,10 @@ export function SolutionDetailTemplate({
               id="heading-ressources"
               className="font-display font-bold text-2xl sm:text-3xl text-slate-900 dark:text-white tracking-tight"
             >
-              Services d&apos;ingénierie et retours d&apos;expérience liés
+              {t("solutions.detail.links.title")}
             </h2>
             <p className="mt-2 text-slate-600 dark:text-slate-300 leading-relaxed text-sm">
-              Découvrez les briques d&apos;architecture et analyses R&D associées à ce domaine sectoriel :
+              {t("solutions.detail.links.desc")}
             </p>
           </div>
 
@@ -492,9 +481,9 @@ export function SolutionDetailTemplate({
                     <span className="font-mono text-[10px] font-bold text-[#03318C] dark:text-blue-400 uppercase tracking-wider">
                       {res.badge}
                     </span>
-                    <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-[#F26D3D] group-hover:translate-x-1 transition-all" aria-hidden />
+                    <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-accent-ink group-hover:translate-x-1 transition-all" aria-hidden />
                   </div>
-                  <h3 className="font-display font-bold text-base text-slate-900 dark:text-white group-hover:text-[#F26D3D] transition-colors">
+                  <h3 className="font-display font-bold text-base text-slate-900 dark:text-white group-hover:text-accent-ink transition-colors">
                     {res.title}
                   </h3>
                   <p className="mt-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -502,8 +491,8 @@ export function SolutionDetailTemplate({
                   </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-200/60 dark:border-white/5 flex items-center gap-1 font-mono text-[11px] font-semibold text-[#F26D3D]">
-                  <span>Explorer</span>
+                <div className="mt-4 pt-3 border-t border-slate-200/60 dark:border-white/5 flex items-center gap-1 font-mono text-[11px] font-semibold text-accent-ink">
+                  <span>{t("solutions.detail.explore")}</span>
                   <ArrowRight className="h-3 w-3" aria-hidden />
                 </div>
               </Link>

@@ -1,37 +1,14 @@
 import { cache } from "react";
-import { db } from "@/lib/db/client";
 import type { SeoMetadataDTO, SeoSchemaDTO, Locale } from "@/types/content";
+import { FALLBACK_SEO_METADATA, FALLBACK_SEO_METADATA_EN } from "@/lib/content/fallbacks";
 
-export const getSeoMetadata = cache(async (locale: Locale = "fr"): Promise<SeoMetadataDTO> => {
-  const meta = await db.seoMetadata.findUnique({
-    where: { id: "singleton" },
-    include: {
-      translations: { where: { locale: locale } },
-    },
-  });
+/** Métadonnées SEO : définies dans le code ; la base n'est plus lue. */
+export const getSeoMetadata = cache(async (locale: Locale = "fr"): Promise<SeoMetadataDTO> =>
+  locale === "en" ? FALLBACK_SEO_METADATA_EN : FALLBACK_SEO_METADATA
+);
 
-  const tr = meta?.translations[0];
-
-  return {
-    title: tr?.title || "Analyticatech",
-    description: tr?.description || "",
-    keywords: tr?.keywords || [],
-    ogTitle: tr?.ogTitle || tr?.title || null,
-    ogDescription: tr?.ogDescription || tr?.description || null,
-    ogImageUrl: meta?.ogImageUrl || null,
-    canonicalUrl: meta?.canonicalUrl || "https://analyticatech.fr",
-    twitterCard: meta?.twitterCard || "summary_large_image",
-  };
-});
-
-export const getSeoSchemas = cache(async (): Promise<SeoSchemaDTO[]> => {
-  const schemas = await db.seoSchema.findMany({
-    where: { active: true },
-  });
-
-  return schemas.map((s) => ({
-    id: s.id,
-    type: s.type,
-    payload: s.payload as Record<string, unknown>,
-  }));
-});
+/**
+ * Schémas JSON-LD additionnels. Aucun : l'Organization est construite par
+ * `JsonLd` à partir de `SITE_CONFIG` (évite le doublon base + code).
+ */
+export const getSeoSchemas = cache(async (): Promise<SeoSchemaDTO[]> => []);

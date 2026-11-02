@@ -1,1098 +1,1270 @@
 import type { SolutionDetailData } from "@/types/solution-detail";
 
 /**
- * Registre des données enrichies pour les 6 solutions sectorielles d'Analyticatech.
- * Chaque fiche respecte scrupuleusement les exigences de crédibilité technique :
- * - Problème métier concret (frictions réelles, pas de généralités marketing).
- * - Approche architecturale solide (niveau DSI/CTO).
- * - Métriques officielles du site avec cadre méthodologique transparent.
- * - Limites d'applicabilité et prérequis rigoureux.
- * - Formulations neutres, professionnelles et fermées.
- * - Maillage interne précis vers les services et les insights R&D.
+ * Registre des fiches détaillées de la page Solutions.
+ *
+ * Charte de contenu (voir AGENTS.md) :
+ * - « Projets en cours » : produits réellement construits par Analyticatech,
+ *   décrits d'après leur dépôt de code. Statut exact, aucune métrique de
+ *   résultat tant qu'elle n'a pas été mesurée sur un usage réel.
+ * - « Pistes à construire » : idées assumées comme telles, jamais présentées
+ *   comme des réalisations.
+ * - Aucun nom de client, aucun chiffre d'impact, aucune certification.
  */
-export const SOLUTIONS_DETAIL_REGISTRY: Record<string, SolutionDetailData> = {
-  // =========================================================================
-  // SOLUTION 01 — LOGISTIQUE & SUPPLY CHAIN
-  // =========================================================================
-  "logistics-ai": {
-    slug: "logistics-ai",
-    sector: "Logistique",
-    sectorBadge: "Logistique & Supply Chain",
-    title: "Optimisation logistique par l'IA :",
-    titleAccent: "Ré-ordonnancement dynamique & Prédiction de la demande",
-    summary:
-      "Ré-ordonnancement dynamique des tournées et prédiction de la demande via modèles ML, réduisant les coûts de transport de 22% et les ruptures de stock de 41%.",
-    tags: ["ML", "Optimisation combinatoire", "Prédiction de demande", "VRPTW"],
-    problem: {
-      heading: "Quand la rigidité des plans statiques heurte les aléas quotidiens du terrain",
-      contextNarrative:
-        "Dans la majorité des réseaux de distribution, la planification des tournées reste figée la veille pour le lendemain (J-1), tandis que le dimensionnement des stocks repose sur des moyennes historiques glissantes dans le WMS. Dès que la journée d'exploitation démarre, ce modèle théorique s'effondre face aux imprévus réels : créneaux clients décalés, congestions routières soudaines, colis refusés ou avaries véhicules. Tenter de corriger ces écarts manuellement mobilise des dispatcheurs en permanence et produit des trajets sous-optimaux, pendant que les entrepôts oscillent entre surstockage coûteux et ruptures critiques.",
-      coreFrictions: [
-        {
-          title: "Incapacité à recalculer les tournées en cours de journée",
-          description:
-            "Les TMS traditionnels gèrent des plannings rigides mais ne savent pas réajuster dynamiquement l'ordre des étapes lors d'un retard sans perturber l'ensemble des livraisons suivantes.",
-          impact: "Surcoûts kilométriques et retards de livraison en chaîne",
-        },
-        {
-          title: "Effet coup de fouet (Bullwhip effect) sur les stocks tampons",
-          description:
-            "Des prévisions déconnectées des signaux de vente immédiats provoquent des variations de commandes artificiellement amplifiées le long de la chaîne d'approvisionnement.",
-          impact: "BFR immobilisé sur des références dormantes et ruptures sur les tops ventes",
-        },
-      ],
-    },
-    approach: {
-      heading: "Double moteur d'optimisation combinatoire et d'inférence prédictive",
-      lead: "Nous articulons la solution autour d'une architecture à deux étages couplée à un bus d'événements, interfaçable avec vos outils existants sans refonte lourde de votre SI.",
-      stages: [
-        {
-          stageNumber: "STAGE 01",
-          title: "Prédiction de la demande supervisée (Gradient Boosted ML)",
-          description:
-            "Modèles de séries temporelles entraînés sur l'historique de commandes, la saisonnalité, les opérations promotionnelles et les variables exogènes (calendrier, météo).",
-          keyPattern: "Supervised Time-Series Forecasting",
-          badge: "Prédiction SKU",
-        },
-        {
-          stageNumber: "STAGE 02",
-          title: "Optimisation de tournées avec fenêtres de temps (VRPTW)",
-          description:
-            "Formulation mathématique du problème de tournées avec contraintes strictes : créneaux horaires clients, capacités de charge volumétriques et compartiments de température.",
-          keyPattern: "Vehicle Routing Problem with Time Windows (VRPTW)",
-        },
-        {
-          stageNumber: "STAGE 03",
-          title: "Ré-ordonnancement dynamique événementiel",
-          description:
-            "Recalcul automatique et continu des étapes restantes dès qu'un aléa avéré (retard > 20 min, annulation client) est remonté par la télématique ou l'application chauffeur.",
-          keyPattern: "Event-Driven Dynamic Replanning",
-          badge: "Temps Réel",
-        },
-        {
-          stageNumber: "STAGE 04",
-          title: "Intégration bidirectionnelle non disruptive",
-          description:
-            "Connecteurs API REST et webhooks synchronisant les ordres directement dans le TMS et le WMS existant de l'entreprise.",
-          keyPattern: "Bi-directional SI Middleware",
-        },
-      ],
-      integrationDetails:
-        "La solution se connecte via des interfaces API standards et webhooks aux principaux TMS et WMS du marché ainsi qu'aux systèmes propriétaires, évitant tout remplacement d'outil de gestion de flotte en place.",
-    },
-    metrics: {
-      heading: "Résultats mesurés & Rigueur méthodologique",
-      lead: "Impact quantifié constaté sur les déploiements logistiques clients.",
-      items: [
-        {
-          label: "Coûts de transport consolidés",
-          value: "Jusqu'à -22%",
-          subtext: "Économie kilométrique, carburant et réduction des heures supplémentaires",
-        },
-        {
-          label: "Ruptures de stock en entrepôt",
-          value: "-41%",
-          subtext: "Diminution drastique sur les références à forte rotation (classes A et B)",
-        },
-      ],
-      methodology: {
-        sampleAndScope:
-          "Flottes de transport régulières et plateformes logistiques multi-sites gérant plus de 150 points d'arrêt quotidiens.",
-        period: "2024–2025",
-        measurementConditions:
-          "Mesure comparative avant/après sur périmètre d'activité comparable (volume de colis et saisonnalité identiques) évaluant le coût kilométrique et les ruptures sur références A/B.",
-        rigorDisclaimer:
-          "Résultats constatés sur les cas clients déployés, dépendant directement de la densité géographique des points de livraison et de la qualité du géocodage initial.",
-      },
-    },
-    limitsAndPrerequisites: {
-      heading: "Limites d'applicabilité & Prérequis stricts",
-      lead: "Pour garantir la réussite du déploiement, nous validons systématiquement ces critères avant tout engagement.",
-      prerequisites: [
-        "Disposer d'au moins 12 mois d'historique de commandes horodatées au niveau SKU pour calibrer les modèles prédictifs.",
-        "Avoir un référentiel d'adresses clients géocodées avec un taux de fiabilité supérieur à 98%.",
-        "Disposer d'une remontée de télématique embarquée ou d'une application mobile conducteur pour les signaux d'étape.",
-      ],
-      applicabilityLimits: [
-        "Inadapté aux flottes artisanales de moins de 10 véhicules réguliers, où des solutions de routage grand public suffisent amplement.",
-        "Non applicable aux activités de transport sans récurrence ni prédictibilité minimale (courses urgentes imprévisibles à 100%).",
-      ],
-      operationalConstraints: [
-        "Respect obligatoire de la Réglementation Sociale Européenne (RSE) sur les temps de conduite et de repos des chauffeurs.",
-        "Nécessite l'adhésion des équipes conducteurs via une ergonomie mobile évitant tout sentiment de surveillance intrusive.",
-        "En cas de force majeure (coupure d'axe autoroutier complet, intempérie extrême), l'arbitrage humain du dispatcheur reste indispensable.",
-      ],
-    },
-    relatedResources: [
-      {
-        type: "service",
-        title: "Service 02 — Automatisation & Workflows",
-        description:
-          "Gestion des pipelines d'événements temps réel et intégration des webhooks télématiques.",
-        badge: "Service d'ingénierie",
-        href: "/services/02",
-        targetViewKey: "service-detail",
-        targetId: "02",
-      },
-      {
-        type: "service",
-        title: "Service 04 — Data & Décision Augmentée",
-        description:
-          "Modélisation analytique, consolidation des KPIs de transport et tableaux de bord de marge.",
-        badge: "Service d'ingénierie",
-        href: "/services/04",
-        targetViewKey: "service-detail",
-        targetId: "04",
-      },
-      {
-        type: "insight",
-        title: "Architecture event-driven pour systèmes temps réel",
-        description:
-          "Découplage asynchrone des flux critiques d'ingénierie sur bus de messages distribué.",
-        badge: "Insight R&D",
-        href: "/insights/event-driven-agents",
-        targetViewKey: "blog-detail",
-        targetId: "event-driven-agents",
-      },
-    ],
-    cta: {
-      question: "Vous souhaitez évaluer le gisement d'optimisation de vos tournées ou de vos stocks ?",
-      buttonLabel: "Demander un cadrage logistique",
-    },
-  },
 
-  // =========================================================================
-  // SOLUTION 02 — FINANCE & CONFORMITÉ
-  // =========================================================================
-  "finance-agent": {
-    slug: "finance-agent",
-    sector: "Finance",
-    sectorBadge: "Banque & FinTech",
-    title: "Agents de conformité réglementaire :",
-    titleAccent: "Surveillance temps réel & Détection des anomalies",
-    summary:
-      "Agents cognitifs surveillant 100% des transactions en temps réel, détectant les anomalies de conformité et générant les rapports régulateurs automatiquement.",
-    tags: ["Agents", "Conformité", "Temps réel", "LCB-FT", "TRACFIN"],
-    problem: {
-      heading: "L'explosion des volumes transactionnels face aux exigences LCB-FT et DORA",
-      contextNarrative:
-        "Dans le secteur financier et les plateformes de paiement, le passage au virement instantané (SEPA Instant) et le durcissement réglementaire continu (directives LCB-FT, DORA, MIFID II) confrontent les directions de la conformité à un défi insurmontable. Les moteurs de règles traditionnels génèrent un taux de faux positifs astronomique (dépassant fréquemment 90%), obligeant des dizaines d'analystes à éplucher manuellement des alertes bénignes pendant que les schémas de fraude complexe et de blanchiment fractionné passent sous les radars.",
-      coreFrictions: [
-        {
-          title: "Saturation des équipes par les faux positifs",
-          description:
-            "Les règles statiques par seuils génèrent des milliers d'alertes non pertinentes sur des clients légitimes, noyant les vrais signaux de blanchiment sous le bruit opérationnel.",
-          impact: "Temps d'analyse moyen de 45 minutes par dossier et retards de traitement",
-        },
-        {
-          title: "Délai incompressible entre détection et déclaration",
-          description:
-            "Reconstituer manuellement l'historique KYC, les liens capitalistiques et les flux financiers d'un compte suspect pour étayer une déclaration de soupçon prend plusieurs jours.",
-          impact: "Risque d'amende réglementaire ACPR en cas de dépassement des délais légaux",
-        },
-      ],
-    },
-    approach: {
-      heading: "Pipeline d'analyse cognitive à 2 niveaux et génération de dossiers d'audit",
-      lead: "Nous combinons un moteur déterministe à basse latence pour le filtrage immédiat et des agents d'investigation autonomes orchestrés pour l'analyse approfondie.",
-      stages: [
-        {
-          stageNumber: "STAGE 01",
-          title: "Filtrage déterministe haute vitesse (< 100 ms)",
-          description:
-            "Contrôle immédiat des flux entrants contre les listes officielles de sanctions (OFAC, UE, gels des avoirs) et détection des dépassements stricts de seuils.",
-          keyPattern: "Low-Latency Sanctions Screening",
-          badge: "Latence < 100ms",
-        },
-        {
-          stageNumber: "STAGE 02",
-          title: "Investigation cognitive multi-agents (LangGraph & RAG)",
-          description:
-            "En cas d'anomalie suspecte, un agent autonome extrait l'historique KYC, analyse le comportement transactionnel sur 12 mois et consulte les registres légaux.",
-          keyPattern: "Autonomous Compliance Investigation Agent",
-        },
-        {
-          stageNumber: "STAGE 03",
-          title: "Pré-rédaction assistée de déclarations de soupçon",
-          description:
-            "Génération d'un rapport de synthèse structuré prêt pour transmission TRACFIN / ACPR, documentant les faits, les preuves et les typologies d'infraction identifiées.",
-          keyPattern: "Automated Regulatory Reporting",
-          badge: "Audit Ready",
-        },
-        {
-          stageNumber: "STAGE 04",
-          title: "Supervision Human-in-the-loop déterministe",
-          description:
-            "Point de contrôle obligatoire : aucune déclaration externe n'est émise sans validation formelle et signature du Responsable de la Conformité (RCD).",
-          keyPattern: "Human-in-the-Loop Gatekeeper",
-        },
-      ],
-      integrationDetails:
-        "Intégration directe sur les flux de paiement au format ISO 20022 et via connecteurs webhooks avec le Core Banking System de l'établissement sans impacter le chemin critique des autorisations.",
-    },
-    metrics: {
-      heading: "Résultats mesurés sur flux de production bancaires",
-      lead: "Métriques constatées sur des plateformes de paiement et établissements financiers sous supervision.",
-      items: [
-        {
-          label: "Couverture d'audit transactionnel",
-          value: "100%",
-          subtext: "Chaque transaction est scorée en streaming sans échantillonnage",
-        },
-        {
-          label: "Latence moyenne de traitement",
-          value: "< 3s",
-          subtext: "Délai global d'analyse et de scoring par les agents cognitifs",
-        },
-      ],
-      methodology: {
-        sampleAndScope:
-          "Flux transactionnels en production (virements SEPA, prélèvements, paiements par carte) d'établissements financiers régulés.",
-        period: "2024–2025",
-        measurementConditions:
-          "Mesures de performance observées sur flux réels en continu, évaluant le taux de couverture et la latence P95 de scoring.",
-        rigorDisclaimer:
-          "Le temps de latence est mesuré sur l'étape de scoring d'anomalie ; le délai d'investigation approfondie par agent reste soumis à la validation humaine finale de l'analyste.",
-      },
-    },
-    limitsAndPrerequisites: {
-      heading: "Limites d'applicabilité & Prérequis stricts",
-      lead: "La conformité financière n'admettant aucune approximation, les conditions d'exploitation suivantes sont obligatoires.",
-      prerequisites: [
-        "Disposer de flux d'événements transactionnels normalisés (format ISO 20022 ou schémas JSON stricts).",
-        "Avoir une base de données de profils KYC clients à jour et accessible par API interne.",
-        "Mettre en place un environnement sécurisé garantissant la non-exfiltration des données financières.",
-      ],
-      applicabilityLimits: [
-        "Inopérant sur les systèmes purement batch nocturnes ne disposant d'aucune infrastructure d'ingestion temps réel.",
-        "Ne se substitue pas à la responsabilité légale du Responsable Conformité (la décision finale de déclaration reste 100% humaine).",
-      ],
-      operationalConstraints: [
-        "Respect strict des contraintes RGPD et d'explicabilité : chaque décision ou préconisation de l'agent doit être justifiée de façon déterministe.",
-        "Obligation de maintenir à jour les listes de sanctions et règles typologiques en phase avec les publications officielles du régulateur.",
-      ],
-    },
-    relatedResources: [
-      {
-        type: "service",
-        title: "Service 01 — Raisonnement & RAG",
-        description:
-          "Indexation haute fidélité des corpus réglementaires et politiques de conformité internes.",
-        badge: "Service d'ingénierie",
-        href: "/services/01",
-        targetViewKey: "service-detail",
-        targetId: "01",
-      },
-      {
-        type: "service",
-        title: "Service 03 — Systèmes Multi-Agents",
-        description:
-          "Supervision, traçabilité pas à pas et contrôle des flottes d'agents d'investigation.",
-        badge: "Service d'ingénierie",
-        href: "/services/03",
-        targetViewKey: "service-detail",
-        targetId: "03",
-      },
-      {
-        type: "insight",
-        title: "Évaluer un système RAG en production",
-        description:
-          "Bancs d'évaluation, réduction des hallucinations et garde-fous pour secteurs régulés.",
-        badge: "Insight R&D",
-        href: "/insights/evaluer-systeme-rag-production",
-        targetViewKey: "blog-detail",
-        targetId: "evaluer-systeme-rag-production",
-      },
-    ],
-    cta: {
-      question: "Vous souhaitez moderniser votre dispositif de filtrage et d'audit LCB-FT ?",
-      buttonLabel: "Consulter nos experts conformité",
-    },
+const SERVICE_LINKS_FR = {
+  rag: {
+    type: "service" as const,
+    title: "Raisonnement & RAG",
+    description: "Des assistants qui répondent à partir de vos documents, en citant leurs sources.",
+    badge: "Service 01",
+    href: "/services/01",
+    targetViewKey: "service-detail" as const,
+    targetId: "01",
   },
-
-  // =========================================================================
-  // SOLUTION 03 — RETAIL & BI PRÉDICTIVE
-  // =========================================================================
-  "retail-bi": {
-    slug: "retail-bi",
-    sector: "Retail",
-    sectorBadge: "Retail & E-Commerce",
-    title: "BI prédictive omnicanal :",
-    titleAccent: "Tarification dynamique & Pilotage unifié de la marge",
-    summary:
-      "Suite décisionnelle unifiée croisant ventes, stocks et signaux comportementaux pour piloter le pricing dynamique et le réassort multi-boutiques.",
-    tags: ["BI", "Pricing", "Omnicanal", "dbt", "Snowflake"],
-    problem: {
-      heading: "La dispersion des données entre magasins physiques et plateformes e-commerce",
-      contextNarrative:
-        "Pour les enseignes de distribution opérant à la fois des réseaux de boutiques et des sites de vente en ligne, le pilotage de la rentabilité est devenu un casse-tête quotidien. Les données de caisse magasin (POS), les métriques d'acquisition web et les niveaux de stocks d'entrepôts sont cantonnés dans des silos technologiques distincts. Cette fragmentation empêche de mesurer l'élasticité-prix réelle des produits et conduit à des arbitrages paniqués en fin de saison, où des démarques massives détruisent la marge brute pour écouler des stocks mal positionnés.",
-      coreFrictions: [
-        {
-          title: "Guerre des prix et marges érodées par les démarques",
-          description:
-            "Faute de détection précoce du ralentissement des ventes sur un produit, le prix n'est ajusté qu'en période de soldes avec des rabais destructeurs de valeur.",
-          impact: "Érosion continue de 3 à 6 points de marge brute annuelle",
-        },
-        {
-          title: "Chiffres discordants entre départements commerciaux",
-          description:
-            "Le contrôle de gestion calcule la marge nette avec les retours déduits, tandis que les responsables régionaux pilotent sur le chiffre d'affaires brut de caisse.",
-          impact: "Arbitrages budgétaires retardés et litiges internes récurrents",
-        },
-      ],
-    },
-    approach: {
-      heading: "Architecture Medallion unifiée et modèles d'élasticité-prix",
-      lead: "Nous centralisons l'ensemble des flux transactionnels dans un entrepôt de données moderne gouverné par dbt, alimentant à la fois des dashboards certifiés et un moteur de pricing dynamique.",
-      stages: [
-        {
-          stageNumber: "STAGE 01",
-          title: "Ingestion omnicanal unifiée sur Snowflake",
-          description:
-            "Rapprochement en temps quasi-réel des flux de caisse physiques, des transactions e-commerce et des réceptions entrepôt en couche Bronze/Silver.",
-          keyPattern: "Omnichannel Medallion Architecture",
-        },
-        {
-          stageNumber: "STAGE 02",
-          title: "Couche sémantique certifiée dbt Core",
-          description:
-            "Modélisation en étoile (Star Schema) et définition centralisée de la marge nette, du stock disponible et du taux d'écoulement.",
-          keyPattern: "Single Source of Truth Metrics",
-          badge: "dbt Core",
-        },
-        {
-          stageNumber: "STAGE 03",
-          title: "Modélisation de l'élasticité-prix par segment",
-          description:
-            "Algorithmes d'apprentissage statistique évaluant la sensibilité au prix selon le canal de vente, la zone géographique et la profondeur de stock restante.",
-          keyPattern: "Price Elasticity Modeling",
-        },
-        {
-          stageNumber: "STAGE 04",
-          title: "Restitution décisionnelle & Pilotage d'actions",
-          description:
-            "Déploiement de tableaux de bord de gouvernance Power BI et émission automatique de recommandations de réassort pour les gestionnaires.",
-          keyPattern: "Executive & Operational BI",
-          badge: "Power BI DirectQuery",
-        },
-      ],
-      integrationDetails:
-        "Connecteurs directs avec les ERP retail majeurs, systèmes de caisse (POS) et plateformes e-commerce standards, assurant une synchronisation sans ressaisie de données.",
-    },
-    metrics: {
-      heading: "Impact chiffré mesuré en conditions d'exploitation",
-      lead: "Résultats constatés après déploiement sur des parcs de distribution multi-sites.",
-      items: [
-        {
-          label: "Gain de marge brute moyenne",
-          value: "+14%",
-          subtext: "Amélioration constatée après rationalisation des remises et optimisation du réassort",
-        },
-        {
-          label: "Tableaux de bord unifiés actifs",
-          value: "42",
-          subtext: "Outils de pilotage certifiés utilisés quotidiennement par le management",
-        },
-      ],
-      methodology: {
-        sampleAndScope:
-          "Réseaux de distribution retail et enseignes omnicanales opérant des parcs de boutiques physiques et un canal e-commerce.",
-        period: "2024–2025",
-        measurementConditions:
-          "Résultats mesurés sur les déploiements retail multi-sites, comparant l'évolution de la marge brute et du taux de rotation des stocks sur deux exercices.",
-        rigorDisclaimer:
-          "Les gains de marge dépendent de la discipline d'application des recommandations tarifaires et de la fraîcheur des données de stock fournies.",
-      },
-    },
-    limitsAndPrerequisites: {
-      heading: "Limites d'applicabilité & Prérequis stricts",
-      lead: "Une solution décisionnelle n'a de valeur que si les fondations de données sous-jacentes sont saines.",
-      prerequisites: [
-        "Disposer d'un référentiel article unifié (Master Data Management) partagé entre magasins et site web.",
-        "Avoir un flux de remontée des stocks au moins quotidien pour chaque point de vente.",
-        "Historique transactionnel d'au moins deux saisons complètes pour capter les cycles de vente.",
-      ],
-      applicabilityLimits: [
-        "Non adapté aux commerces indépendants mono-boutique avec moins de 500 références actives.",
-        "Inopérant dans les secteurs où les prix sont imposés par la loi (ex. librairie en France) ou régulés par conventions strictes.",
-      ],
-      operationalConstraints: [
-        "Nécessite de définir des bornes de prix plancher impératives pour protéger le positionnement de marque.",
-        "Implication requise des équipes d'acheteurs et chefs de rayon dans la phase de recette des métriques.",
-      ],
-    },
-    relatedResources: [
-      {
-        type: "service",
-        title: "Service 04 — Data & Décision Augmentée",
-        description:
-          "Modélisation Medallion sur Snowflake, BI décisionnelle et requêtes en langage naturel.",
-        badge: "Service d'ingénierie",
-        href: "/services/04",
-        targetViewKey: "service-detail",
-        targetId: "04",
-      },
-      {
-        type: "solution",
-        title: "Optimisation logistique par l'IA",
-        description:
-          "Ré-ordonnancement dynamique des tournées et prédiction de la demande.",
-        badge: "Solution sectorielle",
-        href: "/solutions/logistics-ai",
-        targetViewKey: "solution-detail",
-        targetId: "logistics-ai",
-      },
-      {
-        type: "insight",
-        title: "La couche sémantique dbt",
-        description:
-          "Mettre fin aux chiffres contradictoires entre dashboards et fiabiliser la BI.",
-        badge: "Insight R&D",
-        href: "/insights/couche-semantique-dbt-bi",
-        targetViewKey: "blog-detail",
-        targetId: "couche-semantique-dbt-bi",
-      },
-    ],
-    cta: {
-      question: "Vous souhaitez unifier vos données de vente et piloter votre marge au centime près ?",
-      buttonLabel: "Échanger avec notre pôle Retail BI",
-    },
+  automation: {
+    type: "service" as const,
+    title: "Automatisation & Workflows",
+    description: "Relier vos outils et supprimer les ressaisies, avec des étapes de validation.",
+    badge: "Service 02",
+    href: "/services/02",
+    targetViewKey: "service-detail" as const,
+    targetId: "02",
   },
-
-  // =========================================================================
-  // SOLUTION 04 — SANTÉ & EXTRACTION NLP
-  // =========================================================================
-  "healthcare-nlp": {
-    slug: "healthcare-nlp",
-    sector: "Santé",
-    sectorBadge: "Santé & Médical",
-    title: "Synthèse clinique & extraction NLP :",
-    titleAccent: "Structuration de comptes rendus & Dossiers patients",
-    summary:
-      "Extraction automatisée et structuration de données non structurées (comptes rendus, imagerie) accélérant le traitement des dossiers de 68%.",
-    tags: ["NLP", "LLM", "Médical", "CIM-10", "HDS"],
-    problem: {
-      heading: "80% des données cliniques sont piégées dans du texte médical non structuré",
-      contextNarrative:
-        "Dans les établissements hospitaliers, cliniques et centres de recherche, la surcharge documentaire des praticiens est devenue l'un des premiers facteurs d'épuisement professionnel. Les antécédents, traitements, examens biologiques et résultats d'imagerie sont dispersés dans des comptes rendus d'hospitalisation au format PDF scanné, des courriers de confrères et des comptes rendus opératoires dictés. Reconstituer la trajectoire d'un patient complexe avant une réunion de concertation pluridisciplinaire (RCP) ou une admission exige un temps de lecture considérable, avec un risque permanent d'omission d'une contre-indication vitale.",
-      coreFrictions: [
-        {
-          title: "Temps médical confisqué par la recherche documentaire",
-          description:
-            "Les médecins et secrétariats médicaux passent plusieurs heures par jour à chercher des informations critiques dans des liasses de documents disparates.",
-          impact: "Allongement des délais de prise en charge et fatigue cognitive des soignants",
-        },
-        {
-          title: "Risque d'oubli d'antécédents thérapeutiques majeurs",
-          description:
-            "Une allergie médicamenteuse ou une comorbidité mentionnée incidemment dans un courrier vieux de trois ans peut échapper à la lecture rapide d'un urgentiste.",
-          impact: "Risque iatrogène et complications médicales évitables",
-        },
-      ],
-    },
-    approach: {
-      heading: "Pipeline NLP biomédical souverain et alignement ontologique CIM-10",
-      lead: "Nous déployons une suite de traitement automatique du langage naturel hébergée en environnement certifié HDS, assurant l'extraction exacte des entités cliniques sans jamais compromettre le secret médical.",
-      stages: [
-        {
-          stageNumber: "STAGE 01",
-          title: "Dé-identification et anonymisation conforme RGPD",
-          description:
-            "Suppression et pseudonymisation automatique des identifiants patients (nom, prénom, NIR, adresse) avant tout traitement algorithmique.",
-          keyPattern: "Medical De-identification Pipeline",
-          badge: "Conformité HDS",
-        },
-        {
-          stageNumber: "STAGE 02",
-          title: "Reconnaissance d'entités biomédicales (NER clinique)",
-          description:
-            "Extraction ciblée des diagnostics, posologies, symptômes, molécules et interventions avec résolution sur les référentiels officiels (CIM-10, SNOMED-CT).",
-          keyPattern: "Biomedical Entity Recognition & Normalization",
-        },
-        {
-          stageNumber: "STAGE 03",
-          title: "Synthèse clinique & RAG haute fidélité",
-          description:
-            "Génération d'une fiche de synthèse chronologique du patient avec citation cliquable du document et du paragraphe source garantissant l'auditabilité.",
-          keyPattern: "Grounded Clinical Summarization",
-          badge: "Traçabilité 100%",
-        },
-        {
-          stageNumber: "STAGE 04",
-          title: "Interfaçage Dossier Patient Informatisé (DPI)",
-          description:
-            "Alimentation structurée du DPI de l'établissement via les standards d'interopérabilité en santé (HL7 / FHIR).",
-          keyPattern: "HL7 / FHIR Interoperability",
-        },
-      ],
-      integrationDetails:
-        "Déploiement sur serveurs qualifiés Hébergeur de Données de Santé (HDS) en France, garantissant qu'aucune donnée de santé ne transite vers des tiers non certifiés.",
-    },
-    metrics: {
-      heading: "Résultats mesurés en environnement hospitalier",
-      lead: "Performances observées lors de bancs d'évaluation et de déploiements pilotes.",
-      items: [
-        {
-          label: "Gain de temps sur le traitement des dossiers",
-          value: "Jusqu'à 68%",
-          subtext: "Accélération de la constitution de la fiche de synthèse patient",
-        },
-        {
-          label: "Erreurs critiques d'omission constatées",
-          value: "0 erreur",
-          subtext: "Vérifié par double lecture médicale sur les cohortes de test",
-        },
-      ],
-      methodology: {
-        sampleAndScope:
-          "Dossiers médicaux complexes pluridisciplinaires (notamment oncologie et médecine interne).",
-        period: "2024–2025",
-        measurementConditions:
-          "Mesures issues des bancs d'évaluation et missions pilotes hospitalières, comparant le temps de préparation humaine avec et sans pré-structuration NLP.",
-        rigorDisclaimer:
-          "Le système opère en assistance exclusive : chaque synthèse générée doit être relue et validée par le praticien responsable.",
-      },
-    },
-    limitsAndPrerequisites: {
-      heading: "Limites d'applicabilité & Prérequis stricts",
-      lead: "Le secteur médical impose des garde-fous éthiques et techniques stricts que nous respectons intégralement.",
-      prerequisites: [
-        "Infrastructure d'hébergement impérativement certifiée HDS (Hébergeur de Données de Santé).",
-        "Documents sources au format numérique natif ou scannés avec une résolution minimale (300 DPI pour OCR propre).",
-        "Validation préalable par le Délégué à la Protection des Données (DPO) de l'établissement.",
-      ],
-      applicabilityLimits: [
-        "Inopérant sur les manuscrits médicaux anciens illisibles sans retranscription manuelle préalable.",
-        "Ne constitue en aucun cas un dispositif de diagnostic médical autonome sans supervision humaine.",
-      ],
-      operationalConstraints: [
-        "La signature et la décision clinique finale restent de la responsabilité légale exclusive du médecin.",
-        "Interdiction formelle d'utiliser des APIs d'inférence grand public non souveraines pour le traitement des dossiers.",
-      ],
-    },
-    relatedResources: [
-      {
-        type: "service",
-        title: "Service 01 — Raisonnement & RAG",
-        description:
-          "Pipelines de recherche vectorielle hybride et garde-fous anti-hallucination.",
-        badge: "Service d'ingénierie",
-        href: "/services/01",
-        targetViewKey: "service-detail",
-        targetId: "01",
-      },
-      {
-        type: "insight",
-        title: "Évaluer un système RAG en production",
-        description:
-          "Métriques de fidélité documentaire (Faithfulness) et protocoles d'évaluation continue.",
-        badge: "Insight R&D",
-        href: "/insights/evaluer-systeme-rag-production",
-        targetViewKey: "blog-detail",
-        targetId: "evaluer-systeme-rag-production",
-      },
-      {
-        type: "solution",
-        title: "Agents de conformité réglementaire",
-        description:
-          "Surveillance continue et traçabilité rigoureuse des données sensibles.",
-        badge: "Solution sectorielle",
-        href: "/solutions/finance-agent",
-        targetViewKey: "solution-detail",
-        targetId: "finance-agent",
-      },
-    ],
-    cta: {
-      question: "Vous souhaitez fluidifier l'accès à vos dossiers cliniques tout en respectant la souveraineté HDS ?",
-      buttonLabel: "Échanger avec nos ingénieurs santé",
-    },
+  agents: {
+    type: "service" as const,
+    title: "Orchestration Multi-Agents",
+    description: "Plusieurs programmes d'IA qui se répartissent le travail, sous contrôle humain.",
+    badge: "Service 03",
+    href: "/services/03",
+    targetViewKey: "service-detail" as const,
+    targetId: "03",
   },
-
-  // =========================================================================
-  // SOLUTION 05 — INDUSTRIE & MAINTENANCE PRÉDICTIVE
-  // =========================================================================
-  "industry-maintenance": {
-    slug: "industry-maintenance",
-    sector: "Industrie",
-    sectorBadge: "Industrie 4.0 & IoT",
-    title: "Maintenance prédictive IoT :",
-    titleAccent: "Détection précoce d'anomalies & Prolongation d'équipements",
-    summary:
-      "Détection précoce d'anomalies sur lignes de production réduisant les arrêts imprévus de 34% et prolongeant la durée de vie des équipements de 18 mois.",
-    tags: ["IoT", "Séries temporelles", "Edge AI", "MQTT", "GMAO"],
-    problem: {
-      heading: "L'impasse entre maintenance curative coûteuse et maintenance préventive aveugle",
-      contextNarrative:
-        "Dans l'industrie manufacturière, lourde ou de transformation, les directeurs d'usine sont pris en étau entre deux maux. D'un côté, la maintenance curative subit des casses d'équipements imprévues (roulements de broche, moteurs de compresseurs, pompes haute pression) qui arrêtent des lignes entières à des coûts horaires vertigineux. De l'autre, la maintenance préventive calendaire remplace systématiquement des composants encore parfaitement sains selon des échéances théoriques, gaspillant du budget pièces et du temps d'arrêt planifié. Traiter les signaux faibles physiques en amont est la seule réponse viable.",
-      coreFrictions: [
-        {
-          title: "Coût astronomique des arrêts non planifiés",
-          description:
-            "Une casse mécanique soudaine en pleine production entraîne des rebuts de matière première et bloque les équipes en aval pendant plusieurs heures.",
-          impact: "Pertes directes de productivité et retards de livraison clients",
-        },
-        {
-          title: "Surconsommation de pièces d'usure en maintenance aveugle",
-          description:
-            "Remplacer des composants par précaution à date fixe sans vérifier leur dégradation réelle alourdit inutilement le budget de maintenance annuel.",
-          impact: "Hausse injustifiée du budget de pièces détachées et de maintenance",
-        },
-      ],
-    },
-    approach: {
-      heading: "Traitement Edge-to-Cloud de télémétrie vibratoire et détection spectrale",
-      lead: "Nous instrumentons vos machines critiques avec des capteurs IoT non invasifs et appliquons des algorithmes de détection d'anomalies sur séries temporelles haute fréquence.",
-      stages: [
-        {
-          stageNumber: "STAGE 01",
-          title: "Acquisition Edge haute fréquence (MQTT / OPC-UA)",
-          description:
-            "Collecte locale sur passerelles industrielles des signaux de vibration (accélérométrie), température de paliers et intensité électrique moteur.",
-          keyPattern: "Edge IoT Ingestion",
-          badge: "Haute Fréquence",
-        },
-        {
-          stageNumber: "STAGE 02",
-          title: "Analyse fréquentielle & Traitement du signal (FFT)",
-          description:
-            "Transformée de Fourier rapide (FFT) pour isoler les signatures harmoniques caractéristiques des défauts de roulements, désalignements et balourds.",
-          keyPattern: "Fast Fourier Transform & Spectral Analysis",
-        },
-        {
-          stageNumber: "STAGE 03",
-          title: "Détection d'anomalies non supervisée & RUL",
-          description:
-            "Modèles d'auto-encodeurs détectant les écarts de comportement par rapport à la signature nominale et estimation de la durée de vie résiduelle (RUL).",
-          keyPattern: "Unsupervised Anomaly Detection & RUL",
-          badge: "Machine Learning",
-        },
-        {
-          stageNumber: "STAGE 04",
-          title: "Génération automatique d'ordres de travail GMAO",
-          description:
-            "Déclenchement anticipé d'une alerte contextualisée dans la GMAO de l'usine plusieurs semaines avant la rupture mécanique fatale.",
-          keyPattern: "Automated CMMS Work Order Dispatch",
-        },
-      ],
-      integrationDetails:
-        "Compatibilité native avec les protocoles industriels d'atelier (Modbus, OPC-UA, MQTT, PROFINET) et connecteurs vers les principaux progiciels de GMAO du marché.",
-    },
-    metrics: {
-      heading: "Impact économique mesuré sur lignes de production",
-      lead: "Métriques constatées sur des parcs d'équipements industriels instrumentés.",
-      items: [
-        {
-          label: "Réduction des arrêts imprévus",
-          value: "Jusqu'à -34%",
-          subtext: "Diminution nette des pannes critiques immobilisant les lignes",
-        },
-        {
-          label: "Prolongation de vie des équipements",
-          value: "+18 mois",
-          subtext: "Extension de la durée de service avant révision lourde ou rebut",
-        },
-      ],
-      methodology: {
-        sampleAndScope:
-          "Machines tournantes, moteurs électriques industriels et lignes de fabrication continues instrumentées.",
-        period: "2024–2025",
-        measurementConditions:
-          "Résultats mesurés sur lignes de production industrielle instrumentées, comparant les indicateurs d'arrêt (MTBF / MTTR) sur deux années consécutives.",
-        rigorDisclaimer:
-          "L'efficacité des modèles dépend de la bonne disposition physique des capteurs et d'une période d'apprentissage initial de fonctionnement nominal.",
-      },
-    },
-    limitsAndPrerequisites: {
-      heading: "Limites d'applicabilité & Prérequis stricts",
-      lead: "Une solution de maintenance prédictive requiert une instrumentation rigoureuse et ne s'improvise pas.",
-      prerequisites: [
-        "Présence ou installation de capteurs physiques adaptés (ex. accéléromètres 10 kHz pour l'analyse vibratoire fine).",
-        "Réseau local d'atelier stable permettant la transmission des données de passerelle vers le système d'analyse.",
-        "Période d'apprentissage initial de 4 à 8 semaines en régime nominal pour calibrer la signature spectrale de référence.",
-      ],
-      applicabilityLimits: [
-        "Inopérant sur les pannes purement aléatoires d'origine externe (choc accidentel cariste, micro-coupure réseau électrique).",
-        "Non rentable sur les machines auxiliaires à faible coût de remplacement sans impact sur la chaîne de production.",
-      ],
-      operationalConstraints: [
-        "Nécessite la collaboration des techniciens de maintenance d'atelier pour qualifier les premières alertes émises.",
-        "Environnements industriels extrêmes (très haute température, poussières explosives ATEX) nécessitant des capteurs certifiés spécifiques.",
-      ],
-    },
-    relatedResources: [
-      {
-        type: "service",
-        title: "Service 02 — Automatisation & Workflows",
-        description:
-          "Pipelines d'orchestration résilients pour la circulation des événements industriels.",
-        badge: "Service d'ingénierie",
-        href: "/services/02",
-        targetViewKey: "service-detail",
-        targetId: "02",
-      },
-      {
-        type: "service",
-        title: "Service 03 — Systèmes Multi-Agents",
-        description:
-          "Coordination autonome entre agents de diagnostic d'atelier et systèmes de commande.",
-        badge: "Service d'ingénierie",
-        href: "/services/03",
-        targetViewKey: "service-detail",
-        targetId: "03",
-      },
-      {
-        type: "insight",
-        title: "Architecture event-driven pour systèmes temps réel",
-        description:
-          "Bus d'événements Kafka et résistance aux coupures réseau dans l'industrie.",
-        badge: "Insight R&D",
-        href: "/insights/event-driven-agents",
-        targetViewKey: "blog-detail",
-        targetId: "event-driven-agents",
-      },
-    ],
-    cta: {
-      question: "Vous souhaitez éliminer les arrêts de production imprévus sur votre parc machine ?",
-      buttonLabel: "Cadrer un audit IoT industriel",
-    },
+  data: {
+    type: "service" as const,
+    title: "Data & Décision Augmentée",
+    description: "Des indicateurs définis une fois et des tableaux de bord pour la direction.",
+    badge: "Service 04",
+    href: "/services/04",
+    targetViewKey: "service-detail" as const,
+    targetId: "04",
   },
+};
 
-  // =========================================================================
-  // SOLUTION 06 — ÉNERGIE & SMART GRID
-  // =========================================================================
-  "energy-smartgrid": {
-    slug: "energy-smartgrid",
-    sector: "Énergie",
-    sectorBadge: "Smart Grid & Énergie",
-    title: "Optimisation de grille intelligente :",
-    titleAccent: "Équilibrage offre/demande & Arbitrage sur marchés spot",
-    summary:
-      "Équilibrage offre/demande en temps réel et arbitrage sur marchés spot par RL, générant 850 k€ d'économies annuelles.",
-    tags: ["Reinforcement Learning", "Smart Grid", "Arbitrage", "EPEX SPOT"],
-    problem: {
-      heading: "La volatilité extrême des marchés de l'énergie et l'intermittence des renouvelables",
-      contextNarrative:
-        "L'intégration massive des sources d'énergie renouvelable (solaire photovoltaïque, éolien) a profondément déstabilisé le modèle économique des gestionnaires de réseaux et des gros consommateurs industriels. La production est devenue intermittente et météo-dépendante, tandis que les prix de l'électricité sur les marchés horaires (EPEX SPOT) oscillent brutalement, atteignant des pics tarifaires punitifs lors des tensions de réseau ou s'effondrant en prix négatifs. Les industriels et producteurs incapables d'ajuster dynamiquement leur consommation ou leur stockage subissent des factures d'approvisionnement démesurées.",
-      coreFrictions: [
-        {
-          title: "Pénalités d'effacement et surcoûts lors des heures de pointe",
-          description:
-            "Consommer au prix fort lors des pointes de demande sans capacité d'effacement rapide pèse lourdement sur les marges d'exploitation.",
-          impact: "Factures énergétiques volatiles et imprévisibles pour les sites industriels",
-        },
-        {
-          title: "Sous-valorisation des actifs de flexibilité (batteries, effacement)",
-          description:
-            "Les parcs de stockage batterie ou les charges modulables sont souvent gérés par des règles fixes qui manquent les opportunités d'arbitrage horaire les plus lucratives.",
-          impact: "Retour sur investissement des installations de stockage ralenti de plusieurs années",
-        },
-      ],
-    },
-    approach: {
-      heading: "Optimisation combinatoire en temps réel et apprentissage par renforcement (RL)",
-      lead: "Notre moteur d'arbitrage croise prévisions de production locale, cours de bourse de l'électricité et contraintes physiques des sites pour piloter automatiquement les transferts de charge.",
-      stages: [
-        {
-          stageNumber: "STAGE 01",
-          title: "Prévision météorologique & Profil de consommation",
-          description:
-            "Modélisation continue de la production solaire/éolienne attendue et de la demande incompressible du site à horizon 15 minutes, 24h et 72h.",
-          keyPattern: "Multi-Horizon Energy Forecasting",
-        },
-        {
-          stageNumber: "STAGE 02",
-          title: "Ingestion des cours de marché spot (EPEX / Day-Ahead)",
-          description:
-            "Récupération en temps réel des signaux de prix, ordres de réserve primaire/secondaire et prévisions d'écart du gestionnaire de réseau (RTE).",
-          keyPattern: "Spot Market Telemetry Ingestion",
-          badge: "EPEX SPOT",
-        },
-        {
-          stageNumber: "STAGE 03",
-          title: "Arbitrage algorithmique par Apprentissage par Renforcement",
-          description:
-            "Optimisation continue déterminant le mix idéal : charge ou décharge batterie, effacement de processus industriels ou réinjection sur le réseau.",
-          keyPattern: "Reinforcement Learning & Mixed-Integer Linear Programming",
-          badge: "Optimisation RL",
-        },
-        {
-          stageNumber: "STAGE 04",
-          title: "Télécommande et pilotage automatique des équipements",
-          description:
-            "Envoi d'ordres automatisés vers les automates de gestion d'énergie (EMS) sur site avec temps de réponse inférieur à 15 minutes.",
-          keyPattern: "Automated Energy Management System (EMS) Dispatch",
-        },
-      ],
-      integrationDetails:
-        "Interfaçage sécurisé avec les automates de contrôle énergétique (EMS) sur site et les passerelles API des courtiers en énergie et agrégateurs de flexibilité.",
-    },
-    metrics: {
-      heading: "Gains économiques vérifiés en conditions réelles",
-      lead: "Économies annuelles constatées sur des sites industriels et portefeuilles d'actifs énergétiques.",
-      items: [
-        {
-          label: "Économies annuelles générées",
-          value: "Jusqu'à 850 k€/an",
-          subtext: "Gains consolidés sur l'effacement aux heures de pointe et arbitrages spot",
-        },
-        {
-          label: "Disponibilité opérationnelle du système",
-          value: "99.9%",
-          subtext: "Maintien de la continuité d'alimentation des installations critiques",
-        },
-      ],
-      methodology: {
-        sampleAndScope:
-          "Sites industriels électro-intensifs et portefeuilles d'actifs renouvelables raccordés au réseau haute tension.",
-        period: "2024–2025",
-        measurementConditions:
-          "Modélisation et retours d'exploitation sur réseaux d'énergie, comparant le coût d'approvisionnement optimisé par rapport à un contrat d'achat statique de référence.",
-        rigorDisclaimer:
-          "Les économies dépendent directement de la puissance souscrite flexible et du niveau de volatilité des cours horaires de l'électricité.",
-      },
-    },
-    limitsAndPrerequisites: {
-      heading: "Limites d'applicabilité & Prérequis stricts",
-      lead: "L'arbitrage énergétique exige des caractéristiques d'installation précises pour être rentable.",
-      prerequisites: [
-        "Disposer d'une puissance modulable (capacité d'effacement ou de stockage batterie) d'au moins 500 kW.",
-        "Avoir un contrat d'approvisionnement avec indexation horaire ou être adossé à un agrégateur de flexibilité de marché.",
-        "Automates sur site capables de recevoir et d'exécuter des consignes télécommandées en moins de 15 minutes.",
-      ],
-      applicabilityLimits: [
-        "Inadapté aux bâtiments tertiaires standards ou aux petites PME sans flexibilité de consommation.",
-        "Non applicable aux sites industriels fonctionnant à charge continue 100% incompressible sans aucune tolérance de modulation.",
-      ],
-      operationalConstraints: [
-        "Respect absolu des contraintes techniques des équipements (limitation des cycles de décharge pour préserver la durée de vie des batteries).",
-        "Priorité absolue à la sécurité industrielle : aucun ordre d'effacement ne doit impacter les processus de sécurité de l'usine.",
-      ],
-    },
-    relatedResources: [
-      {
-        type: "service",
-        title: "Service 02 — Automatisation & Workflows",
-        description:
-          "Exécution résiliente des flux de commandes vers les automates de gestion d'énergie.",
-        badge: "Service d'ingénierie",
-        href: "/services/02",
-        targetViewKey: "service-detail",
-        targetId: "02",
-      },
-      {
-        type: "solution",
-        title: "Maintenance prédictive IoT",
-        description:
-          "Surveillance continue d'équipements et détection précoce d'anomalies opérationnelles.",
-        badge: "Solution sectorielle",
-        href: "/solutions/industry-maintenance",
-        targetViewKey: "solution-detail",
-        targetId: "industry-maintenance",
-      },
-      {
-        type: "insight",
-        title: "FinOps cloud-native",
-        description:
-          "Principes d'optimisation dynamique des coûts de compute et d'infrastructure.",
-        badge: "Insight R&D",
-        href: "/insights/finops-cloud-native",
-        targetViewKey: "blog-detail",
-        targetId: "finops-cloud-native",
-      },
-    ],
-    cta: {
-      question: "Vous souhaitez valoriser votre flexibilité énergétique et réduire vos factures d'électricité ?",
-      buttonLabel: "Étudier votre potentiel d'arbitrage",
-    },
+const SERVICE_LINKS_EN = {
+  rag: {
+    ...SERVICE_LINKS_FR.rag,
+    title: "Reasoning & RAG",
+    description: "Assistants that answer from your documents and cite their sources.",
+    href: "/en/services/01",
   },
+  automation: {
+    ...SERVICE_LINKS_FR.automation,
+    title: "Automation & Workflows",
+    description: "Connect your tools and remove re-keying, with approval steps.",
+    href: "/en/services/02",
+  },
+  agents: {
+    ...SERVICE_LINKS_FR.agents,
+    title: "Multi-Agent Orchestration",
+    description: "Several AI programs sharing the work, under human control.",
+    href: "/en/services/03",
+  },
+  data: {
+    ...SERVICE_LINKS_FR.data,
+    title: "Data & Augmented Decision",
+    description: "Indicators defined once and dashboards for management.",
+    href: "/en/services/04",
+  },
+};
 
-  /* -------------------------------------------------------------------------- */
-  /* 07 — DEALSCOOP (M&A & PRIVATE EQUITY)                                      */
-  /* -------------------------------------------------------------------------- */
-  "dealscoop": {
-    slug: "dealscoop",
-    sector: "M&A & Private Equity",
-    sectorBadge: "NOUVELLE OFFRE // M&A & PRIVATE EQUITY",
-    statusBadge: "Nouvelle offre",
+const SOLUTIONS_DETAIL_FR: Record<string, SolutionDetailData> = {
+  // =========================================================================
+  // PROJET — CIBLIOO (sourcing M&A, dépôt privé Gninhi/Ciblioo)
+  // =========================================================================
+  ciblioo: {
+    slug: "ciblioo",
+    sector: "M&A · Transmission d'entreprises",
+    sectorBadge: "Projet en cours",
+    statusBadge: "En développement",
     statusType: "new",
-    title: "Sourcing d'opportunités M&A :",
-    titleAccent: "Détection & Scoring par l'IA",
+    title: "Ciblioo :",
+    titleAccent: "du brief de mandat à une liste de cibles documentée",
     summary:
-      "Moteur d'origination propriétaire transformant le flux continu de signaux d'affaires faibles et forts (gouvernance, recrutements clés, expansion, transmission) en cibles qualifiées et scorées selon votre thèse d'investissement, pour fonds de Private Equity, banques d'affaires et directions M&A.",
-    tags: [
-      "Origination",
-      "Signaux d'affaires",
-      "Scoring M&A",
-      "Deal Flow",
-      "Off-Market",
-      "Private Equity",
-    ],
+      "Une plateforme pour les cabinets de conseil en transmission et en M&A : à partir d'un mandat d'achat ou de vente, elle constitue une liste d'entreprises cibles, rapproche les données des registres publics et rattache chaque information à sa source. Le chargé d'affaires garde la décision finale sur chaque entreprise retenue.",
+    tags: ["M&A", "Registres publics", "Traçabilité des sources", "Revue humaine"],
     problem: {
-      heading: "Le paradoxe du sourcing M&A : saturation des enchères vs opacité du marché caché",
+      heading: "Vérifier une liste de cibles prend plus de temps que de la constituer",
       contextNarrative:
-        "Dans un environnement d'investissement où les processus d'enchères intermédiés (banques d'affaires, mandats sell-side) subissent une inflation structurelle des multiples d'EBITDA et réduisent les marges de manœuvre, la génération de « deal flow propriétaire » (deals bilatéraux hors marché) est devenue le premier levier de création de valeur des fonds de Private Equity et des directions M&A. Cependant, identifier des PME/ETI matures et rentables avant qu'elles ne soient officiellement mises sur le marché exige un effort humain colossal : les équipes d'origination consacrent jusqu'à 70% de leur temps à croiser manuellement des annuaires statiques et des registres légaux tardifs, découvrant souvent les opportunités une fois le processus compétitif déjà engagé.",
+        "Un cabinet qui travaille sur un mandat doit remettre à son client une liste d'entreprises justifiée. La difficulté n'est pas de trouver des noms : c'est de vérifier l'identité de chaque société, de rassembler les informations utiles depuis plusieurs sources et de pouvoir montrer d'où vient chaque donnée. Fait à la main dans des tableurs, ce travail prend plusieurs jours et laisse passer des erreurs gênantes devant le client.",
       coreFrictions: [
         {
-          title: "Dépendance au flux entrant intermédié (Inbound) & surenchère des multiples",
+          title: "Identités incertaines",
           description:
-            "Participer exclusivement à des processus d'enchères organisés où 15 à 30 fonds surenchérissent sur l'EBITDA, comprimant le TRI cible et interdisant les discussions stratégiques bilatérales approfondies avec les fondateurs.",
-          impact: "Valorisations d'entrée sous tension, rareté des opportunités exclusives et prime d'enchère systématique.",
+            "Une même entreprise apparaît sous plusieurs noms ou plusieurs établissements ; les doublons et les confusions de société se glissent dans la liste.",
+          impact: "Risque de présenter au client une mauvaise entreprise.",
         },
         {
-          title: "Dispersion et latence des signaux faibles de transmission",
+          title: "Sources dispersées",
           description:
-            "Les catalyseurs réels de cession (âge du dirigeant-fondateur sans relève familiale, recomposition actionnariale, transition managériale avec recrutement d'un DAF de transition, fin de cycle de détention LBO à 4-5 ans) sont disséminés entre les annonces légales (BODACC/INPI), la presse économique régionale et les réseaux professionnels.",
-          impact: "Perte du temps d'avance stratégique : la cible est contactée trop tard, une fois le mandat de vente déjà signé.",
+            "Les informations utiles sont réparties entre l'annuaire des entreprises, les annonces légales (BODACC) et d'autres bases, chacune avec son format.",
+          impact: "Collecte longue et difficile à reproduire.",
         },
         {
-          title: "Approche outbound générique et chronophage pour les analystes",
+          title: "Preuves introuvables",
           description:
-            "Prise de contact « à froid » impersonnelle auprès de dirigeants d'entreprise sur-sollicités, faute d'une contextualisation précise du déclencheur business et d'une qualification préalable d'alignement avec la thèse d'investissement.",
-          impact: "Taux de réponse des dirigeants inférieur à 5% et gaspillage de bande passante des équipes d'investissement.",
+            "Quand le client demande pourquoi une entreprise a été retenue, il faut retrouver la source de chaque chiffre après coup.",
+          impact: "Justification fragile de la sélection.",
+        },
+        {
+          title: "Automatisations maison fragiles",
+          description:
+            "Les enchaînements construits avec des outils d'automatisation génériques produisent des doublons et des données sans source rattachée.",
+          impact: "Temps passé à corriger plutôt qu'à analyser.",
         },
       ],
     },
     approach: {
-      heading: "Architecture Dealscoop : Ingestion multi-sources, extraction d'événements & scoring de thèse",
-      lead: "Dealscoop implémente une chaîne d'origination automatisée qui capture, consolide et qualifie les signaux d'affaires en continu pour délivrer aux investisseurs des dossiers d'opportunités actionnables avec angle d'approche personnalisé.",
+      heading: "Chaque valeur affichée ouvre sa preuve, ou est marquée inconnue",
+      lead:
+        "Ciblioo organise le travail par dossier de mandat et par lot d'entreprises. Le principe de conception : aucune donnée n'est affichée sans sa source, sa date et l'extrait d'où elle provient.",
       stages: [
         {
           stageNumber: "01",
-          title: "Ingestion multi-registres & capture d'événements légaux",
+          title: "Dossier de mandat",
           description:
-            "Indexation continue des flux légaux et administratifs (BODACC, greffes INPI, modifications statutaires, dépôts de comptes), complétée par la veille de la presse quotidienne régionale (PQR) et des plateformes de recrutement de profils stratégiques (C-level, directeurs de développement).",
-          keyPattern: "Event-Driven ETL & Scraping résilient",
-          badge: "Ingestion multi-sources",
+            "Le brief du client (secteur, taille, zone géographique, critères) est enregistré et versionné : on sait à tout moment sur quels critères la liste a été construite.",
+          badge: "Cadrage",
         },
         {
           stageNumber: "02",
-          title: "Normalisation & détection de signaux faibles pré-transactionnels",
+          title: "Import et rapprochement d'identité",
           description:
-            "Extraction d'entités nommées (NER) et chronologie d'événements : détection des variations d'actionnariat, dissociation des mandats président / DG, franchissement de seuils d'effectifs, ou projets d'extension d'usines / levée d'actifs industriels.",
-          keyPattern: "Knowledge Graph d'entreprises & NLP",
-          badge: "Signal Detection",
+            "Les entreprises importées sont normalisées et rattachées à leur numéro SIREN ; les cas ambigus sont mis de côté pour vérification au lieu d'être devinés.",
+          badge: "Identité",
         },
         {
           stageNumber: "03",
-          title: "Scoring d'alignement à double étage (Fit Thèse x Propension)",
+          title: "Collecte depuis les registres publics",
           description:
-            "Évaluation algorithmique pondérée : d'une part le Fit Thèse (secteurs NAF/métier cibles, seuils de CA/EBITDA, intensité capitalistique, géographie, potentiel de build-up), d'autre part la Propension Transactionnelle (conjonction de signaux indiquant une ouverture imminente du capital ou une transmission).",
-          keyPattern: "Multi-Factor Scoring Matrix",
-          badge: "Algorithme de scoring",
+            "Les connecteurs vers l'API Recherche d'entreprises (DINUM) et les annonces légales du BODACC sont branchés ; d'autres sources seront ajoutées selon les besoins constatés.",
+          badge: "Sources",
         },
         {
           stageNumber: "04",
-          title: "Fiches d'origination & dossiers d'approche contextualisés",
+          title: "Revue humaine et export",
           description:
-            "Génération automatique de fiches de synthèse pour les analystes : cartographie de gouvernance, historique des événements déclencheurs, points d'accroche sur-mesure pour amorcer une prise de contact bilatérale de haute valeur avec le dirigeant.",
-          keyPattern: "Automated Teaser & CRM Sync",
-          badge: "Actionnabilité Deal Flow",
+            "Le chargé d'affaires valide ou écarte chaque entreprise ; la liste exportée conserve, pour chaque donnée, la source et la date de consultation.",
+          badge: "Décision",
         },
       ],
       integrationDetails:
-        "Interconnexion native avec les CRM Private Equity & M&A de place (DealFabric, Salesforce, HubSpot, Affinity) via webhooks et API REST sécurisées pour une injection directe des cibles qualifiées dans le pipeline sans ressaisie manuelle.",
+        "Application web multi-espaces : les données de chaque cabinet sont isolées de celles des autres. La liste finale s'exporte pour être reprise dans les outils habituels du cabinet.",
     },
     metrics: {
-      heading: "Cadre de qualification & engagements méthodologiques",
-      lead: "Dealscoop étant une nouvelle offre, nous refusons formellement de publier des métriques de résultat commercial invérifiables (ex. faux taux de transformation ou fausses économies). Les indicateurs ci-dessous définissent nos engagements stricts de couverture technique, de traçabilité et d'intégrité de la veille.",
+      heading: "Où en est le projet",
+      lead:
+        "Ciblioo est en développement. Les fondations (isolation des données, connecteurs, navigation) sont en place ; le parcours complet « du brief à la liste exportée » est en cours de construction.",
       items: [
         {
-          label: "Couverture des sources légales",
-          value: "100%",
-          subtext:
-            "Flux BODACC, greffes INPI et annonces légales françaises indexés sans échantillonnage ni latence.",
+          label: "Statut",
+          value: "En développement",
+          subtext: "Non commercialisé à ce jour.",
         },
         {
-          label: "Traçabilité & Vérifiabilité",
-          value: "100%",
-          subtext:
-            "Zéro hallucination : chaque signal détecté pointe vers un lien officiel daté et une source primaire vérifiable.",
+          label: "Déjà en place",
+          value: "Fondations techniques",
+          subtext: "Isolation des données par cabinet, connecteurs DINUM et BODACC, sécurité de base.",
+        },
+        {
+          label: "Prochaine étape",
+          value: "Parcours complet par lot",
+          subtext: "Import, rapprochement, collecte, revue et export avec preuves.",
+        },
+        {
+          label: "Ensuite",
+          value: "Pilote avec un cabinet",
+          subtext: "Un premier pilote est prévu avec un cabinet de conseil en transmission.",
         },
       ],
       methodology: {
         sampleAndScope:
-          "Périmètre PME et ETI indépendantes françaises (chiffre d'affaires de 5 M€ à 150 M€) dans les secteurs industriels, B2B, tech et services.",
-        period:
-          "Phase de qualification pilote et calibrage d'algorithmes (2025–2026).",
+          "Cabinets de conseil en transmission et M&A sur le segment des PME et ETI françaises.",
+        period: "Pilote après la livraison du parcours complet ; aucune date annoncée.",
         measurementConditions:
-          "Backtesting méthodologique sur un échantillon de 500 opérations de transmission et d'ouverture de capital récentes pour étalonner la précocité de détection des signaux.",
+          "Pendant le pilote : temps nécessaire pour constituer et vérifier un lot, et nombre d'erreurs d'identité, mesurés avant et avec l'outil.",
         rigorDisclaimer:
-          "La concrétisation d'un deal dépend souverainement de la relation bilatérale et de la négociation financière menée par l'investisseur. Dealscoop fournit l'amont stratégique et le gain de temps d'origination sans allégation de closing garantie.",
+          "Aucun gain de temps n'est annoncé tant qu'il n'a pas été mesuré pendant le pilote.",
       },
     },
     limitsAndPrerequisites: {
-      heading: "Limites d'applicabilité & Prérequis de calibrage",
-      lead: "Dealscoop est un outil d'origination ciblée pour thèses de Private Equity et M&A : il nécessite un cadre stratégique rigoureux et ne convient pas à tous les contextes d'affaires.",
+      heading: "Ce que Ciblioo fait, et ce qu'il ne promet pas",
+      lead: "Le périmètre est volontairement étroit pour rester vérifiable.",
       prerequisites: [
-        "Thèse d'investissement formalisée : définition explicite des critères d'adéquation (chiffre d'affaires minimum, seuils de rentabilité, sous-secteurs d'intérêt, critères d'exclusion stricts, thèses de build-up).",
-        "Ressources d'outbound dédiées : présence d'une équipe (chargés d'affaires, directeurs d'investissement, associés) en mesure de conduire les échanges directs avec les fondateurs ciblés.",
-        "Outil de pipeline (CRM) opérationnel : pour historiser les interactions, qualifier les refus et éviter de démarcher des entreprises déjà sous mandat ou en portefeuille.",
+        "Un mandat avec des critères de sélection explicites.",
+        "Des entreprises immatriculées en France, identifiables par leur SIREN.",
+        "Un chargé d'affaires disponible pour la revue des cas ambigus.",
       ],
       applicabilityLimits: [
-        "TPE et micro-entreprises (< 3 M€ de CA) : informations légales parcellaires, comptes souvent confidentiels et faible empreinte publique limitant la détection algorithmique.",
-        "Opérations « Distressed » / Restructuration judiciaire lourde : les procédures collectives requièrent une veille de tribunaux de commerce spécifique avec analyse de passif non couverte par Dealscoop.",
-        "Sociétés cotées : l'approche bilatérale off-market n'est pas applicable aux marchés boursiers réglementés (obligations AMF, déclarations de franchissement de seuils obligatoires).",
+        "Ne prédit pas quelles entreprises « vont se vendre » : aucune donnée fiable ne permet de le promettre honnêtement.",
+        "N'envoie aucun message de prospection automatiquement.",
+        "Ne couvre pas, à ce stade, les entreprises étrangères.",
       ],
       operationalConstraints: [
-        "Délai légal de publication des comptes : les dépôts au greffe peuvent intervenir jusqu'à 7 mois après la clôture de l'exercice fiscal (compensé par les signaux faibles RH et de presse).",
-        "Cloisonnement strict des thèses : isolation totale des configurations de recherche entre clients (les critères de thèse et cibles prioritaires d'un fonds ne sont jamais partagés avec un autre).",
+        "Respect des conditions d'utilisation de chaque source publique.",
+        "Traitement des données des dirigeants conforme au RGPD.",
+        "Données d'un cabinet jamais visibles par un autre.",
       ],
     },
-    relatedResources: [
-      {
-        type: "service",
-        title: "Service 01 — Raisonnement & Agents Cognitifs",
-        description:
-          "Pipelines RAG et modèles cognitifs pour l'extraction d'informations dans des documents financiers complexes.",
-        badge: "Service d'ingénierie",
-        href: "/services/01",
-        targetViewKey: "service-detail",
-        targetId: "01",
-      },
-      {
-        type: "service",
-        title: "Service 04 — Data & Décision Augmentée",
-        description:
-          "Entrepôts analytiques unifiés et modélisation sémantique pour le pilotage d'indicateurs de performance.",
-        badge: "Service d'ingénierie",
-        href: "/services/04",
-        targetViewKey: "service-detail",
-        targetId: "04",
-      },
-      {
-        type: "insight",
-        title: "Évaluer un système RAG en production",
-        description:
-          "Méthodes d'évaluation et garde-fous pour extraire des signaux fiables depuis des documents non structurés.",
-        badge: "Insight R&D",
-        href: "/insights/evaluer-systeme-rag-production",
-        targetViewKey: "blog-detail",
-        targetId: "evaluer-systeme-rag-production",
-      },
-    ],
+    relatedResources: [SERVICE_LINKS_FR.data, SERVICE_LINKS_FR.automation, SERVICE_LINKS_FR.agents],
     cta: {
-      question: "Vous souhaitez structurer un moteur d'origination propriétaire aligné sur votre thèse d'investissement ?",
-      buttonLabel: "Échanger sur votre thèse d'origination",
+      question: "Vous travaillez en transmission ou en M&A et ce problème vous parle ?",
+      buttonLabel: "Échanger sur Ciblioo",
+    },
+  },
+
+  // =========================================================================
+  // PROJET — CONTENTOPS HARNESS (dépôt public Gninhi/Content-builder)
+  // =========================================================================
+  contentops: {
+    slug: "contentops",
+    sector: "Marketing · Contenu B2B",
+    sectorBadge: "Projet en cours",
+    statusBadge: "Prototype fonctionnel",
+    statusType: "new",
+    title: "ContentOps Harness :",
+    titleAccent: "produire du contenu avec l'IA, sans rien publier sans validation",
+    summary:
+      "Un système éditorial pour les entreprises qui publient sur LinkedIn et X : il transforme une veille, des notes et des retours d'expérience en brouillons, les fait passer par un contrôle qualité, puis attend la validation explicite d'un responsable avant toute publication. Ce n'est pas un outil de publication automatique.",
+    tags: ["Agents IA", "Validation humaine", "LinkedIn", "Traçabilité"],
+    problem: {
+      heading: "L'IA écrit vite, mais une publication ratée engage l'entreprise",
+      contextNarrative:
+        "Générer des posts avec l'IA est devenu facile. Ce qui reste difficile, c'est de garder la maîtrise : respecter la ligne éditoriale de l'entreprise, éviter les erreurs factuelles, savoir qui a validé quoi et ne jamais publier deux fois le même contenu par accident.",
+      coreFrictions: [
+        {
+          title: "Publication sans relecture",
+          description:
+            "Les outils de publication automatique laissent partir des contenus que personne n'a relus.",
+          impact: "Risque d'image et d'erreur publique.",
+        },
+        {
+          title: "Ligne éditoriale diluée",
+          description:
+            "Chaque brouillon généré s'éloigne un peu du ton et des règles de la marque.",
+          impact: "Contenus génériques, peu crédibles.",
+        },
+        {
+          title: "Aucune trace des décisions",
+          description:
+            "Impossible de retrouver qui a approuvé un contenu, ni dans quelle version.",
+          impact: "Responsabilités floues.",
+        },
+        {
+          title: "Doublons de publication",
+          description:
+            "Une erreur réseau pendant l'envoi peut conduire à republier le même post.",
+          impact: "Publication en double, gênante.",
+        },
+      ],
+    },
+    approach: {
+      heading: "Une chaîne éditoriale avec un point d'arrêt humain obligatoire",
+      lead:
+        "Chaque contenu suit un parcours défini, de l'idée à la publication. L'IA prépare ; une personne habilitée décide.",
+      stages: [
+        {
+          stageNumber: "01",
+          title: "Veille et idées",
+          description:
+            "Des sources choisies (flux RSS, notes internes) alimentent une liste d'idées classées, que l'équipe trie.",
+          badge: "Veille",
+        },
+        {
+          stageNumber: "02",
+          title: "Brouillons par plateforme",
+          description:
+            "Des agents IA rédigent des brouillons adaptés à LinkedIn et à X, en suivant le profil de marque défini par l'entreprise.",
+          badge: "Rédaction",
+        },
+        {
+          stageNumber: "03",
+          title: "Contrôle qualité puis validation",
+          description:
+            "Un contrôle automatique vérifie le brouillon ; il est ensuite bloqué jusqu'à l'approbation explicite d'un responsable, qui peut aussi demander une réécriture ou rejeter.",
+          badge: "Validation humaine",
+        },
+        {
+          stageNumber: "04",
+          title: "Publication tracée",
+          description:
+            "Le contenu approuvé est figé et horodaté ; il est publié au plus une fois, et chaque étape est inscrite dans un journal d'audit.",
+          badge: "Traçabilité",
+        },
+      ],
+      integrationDetails:
+        "Rôles distincts (propriétaire, éditeur, lecteur), espaces séparés par entreprise et accès aux réseaux sociaux conservés chiffrés. Construit avec LangGraph, FastAPI, PostgreSQL et React.",
+    },
+    metrics: {
+      heading: "Où en est le projet",
+      lead:
+        "ContentOps Harness fonctionne de bout en bout dans un environnement de test : les connexions à LinkedIn et X ont été testées sans publier sur de vrais comptes.",
+      items: [
+        {
+          label: "Statut",
+          value: "Prototype fonctionnel",
+          subtext: "Parcours complet opérationnel en environnement de test.",
+        },
+        {
+          label: "Code",
+          value: "Dépôt public",
+          subtext: "Code consultable sur GitHub (Gninhi/Content-builder).",
+        },
+        {
+          label: "Tests",
+          value: "Suite automatisée",
+          subtext: "Tests unitaires, d'intégration et de sécurité exécutés à chaque modification.",
+        },
+        {
+          label: "Prochaine étape",
+          value: "Premier usage réel",
+          subtext: "Utilisation pour les publications d'Analyticatech avant toute offre à des clients.",
+        },
+      ],
+      methodology: {
+        sampleAndScope: "Entreprises B2B qui publient régulièrement sur LinkedIn et X.",
+        period: "Usage interne d'abord ; aucune date de commercialisation annoncée.",
+        measurementConditions:
+          "En usage réel : temps de préparation d'un post, part des brouillons acceptés sans réécriture, incidents de publication.",
+        rigorDisclaimer:
+          "Aucun résultat d'usage n'est publié tant que l'outil n'a pas servi sur de vrais comptes.",
+      },
+    },
+    limitsAndPrerequisites: {
+      heading: "Ce que l'outil fait, et ce qu'il refuse de faire",
+      lead: "La validation humaine n'est pas une option désactivable.",
+      prerequisites: [
+        "Un responsable éditorial disponible pour valider les contenus.",
+        "Un profil de marque écrit : ton, sujets, règles à respecter.",
+        "Des comptes LinkedIn ou X de l'entreprise.",
+      ],
+      applicabilityLimits: [
+        "Ne publie jamais sans approbation explicite.",
+        "Ne modifie pas seul les règles de la marque : l'IA propose, l'équipe décide.",
+        "Ne remplace pas l'expertise du rédacteur sur le fond.",
+      ],
+      operationalConstraints: [
+        "Respect des conditions d'utilisation de LinkedIn et de X.",
+        "Accès aux comptes sociaux conservés chiffrés.",
+        "Journal d'audit conservé pour chaque décision.",
+      ],
+    },
+    relatedResources: [SERVICE_LINKS_FR.agents, SERVICE_LINKS_FR.automation, SERVICE_LINKS_FR.rag],
+    cta: {
+      question: "Vous voulez produire plus de contenu sans perdre la maîtrise de ce qui est publié ?",
+      buttonLabel: "Échanger sur ContentOps",
+    },
+  },
+
+  // =========================================================================
+  // PROJET — AVIE (dépôt public Gninhi/viiper-v4)
+  // =========================================================================
+  avie: {
+    slug: "avie",
+    sector: "Veille · Stratégie produit",
+    sectorBadge: "Projet en cours",
+    statusBadge: "Outil interne",
+    statusType: "new",
+    title: "AVIE :",
+    titleAccent: "une veille qui distingue les faits des suppositions",
+    summary:
+      "Un moteur de veille et d'analyse d'opportunités : il collecte des sources ouvertes, relie chaque affirmation aux éléments qui la soutiennent, signale les contradictions entre sources et prépare un dossier de synthèse. La décision de poursuivre ou non reste humaine.",
+    tags: ["Veille", "Sources ouvertes", "Agents IA", "Décision humaine"],
+    problem: {
+      heading: "Une synthèse d'IA paraît toujours sûre d'elle, même quand elle se trompe",
+      contextNarrative:
+        "Pour évaluer une idée de produit ou un marché, on compile des articles, des études et des avis. Les assistants d'IA généralistes en tirent des synthèses fluides, mais sans dire ce qui est établi, ce qui est estimé et ce qui est contredit par une autre source.",
+      coreFrictions: [
+        {
+          title: "Faits et opinions mélangés",
+          description: "Une estimation reprise par plusieurs articles finit par passer pour un fait.",
+          impact: "Décisions prises sur des bases fragiles.",
+        },
+        {
+          title: "Effet chambre d'écho",
+          description: "Dix articles qui reprennent la même dépêche ne valent pas dix sources indépendantes.",
+          impact: "Consensus apparent, mais artificiel.",
+        },
+        {
+          title: "Contradictions ignorées",
+          description: "Les désaccords entre sources disparaissent dans le résumé final.",
+          impact: "Risques non vus au moment de décider.",
+        },
+        {
+          title: "Coût de la recherche",
+          description: "Les bases de données payantes rendent la veille coûteuse pour une petite structure.",
+          impact: "Veille rare ou superficielle.",
+        },
+      ],
+    },
+    approach: {
+      heading: "Une chaîne qui va de la source à la décision, étape par étape",
+      lead:
+        "AVIE enchaîne des étapes explicites, orchestrées avec LangGraph, et s'arrête avant la décision pour laisser la main à une personne.",
+      stages: [
+        {
+          stageNumber: "01",
+          title: "Collecte de sources ouvertes",
+          description:
+            "Publications scientifiques (arXiv), données publiques (data.gouv.fr), discussions publiques (Reddit, données personnelles retirées) et flux RSS.",
+          badge: "Sources",
+        },
+        {
+          stageNumber: "02",
+          title: "Affirmations typées",
+          description:
+            "Chaque affirmation est classée (fait, observation, estimation, hypothèse) et rattachée aux extraits qui la soutiennent.",
+          badge: "Preuves",
+        },
+        {
+          stageNumber: "03",
+          title: "Indépendance et contradictions",
+          description:
+            "Les sources qui se recopient sont regroupées, et les désaccords sont classés (contradiction directe, écart de date, écart géographique…).",
+          badge: "Contrôle",
+        },
+        {
+          stageNumber: "04",
+          title: "Dossier et décision humaine",
+          description:
+            "Un dossier de synthèse est produit ; l'analyse s'arrête sur une décision humaine : poursuivre, attendre ou abandonner.",
+          badge: "Décision",
+        },
+      ],
+      integrationDetails:
+        "Utilisable en ligne de commande ou via une API ; les dossiers s'exportent en Markdown ou en JSON. Les connecteurs actuels n'utilisent que des sources gratuites.",
+    },
+    metrics: {
+      heading: "Où en est le projet",
+      lead: "AVIE est un outil que j'utilise pour mes propres analyses ; il n'est pas proposé comme produit.",
+      items: [
+        {
+          label: "Statut",
+          value: "Outil interne",
+          subtext: "Utilisé pour la veille et l'évaluation d'idées d'Analyticatech.",
+        },
+        {
+          label: "Code",
+          value: "Dépôt public",
+          subtext: "Code consultable sur GitHub (Gninhi/viiper-v4).",
+        },
+        {
+          label: "Sources",
+          value: "Ouvertes et gratuites",
+          subtext: "arXiv, data.gouv.fr, Reddit, flux RSS.",
+        },
+        {
+          label: "Usage client",
+          value: "Sur demande",
+          subtext: "La méthode peut être adaptée à une veille sectorielle dans le cadre d'une mission.",
+        },
+      ],
+      methodology: {
+        sampleAndScope: "Veille technologique, évaluation d'idées de produits et d'opportunités de marché.",
+        period: "Outil maintenu au fil des besoins ; pas de feuille de route commerciale.",
+        measurementConditions:
+          "Qualité jugée sur la traçabilité : chaque conclusion doit pouvoir être reliée à ses sources.",
+        rigorDisclaimer: "Un dossier AVIE aide à décider ; il ne remplace pas une étude de marché.",
+      },
+    },
+    limitsAndPrerequisites: {
+      heading: "Ce qu'AVIE apporte, et ses limites",
+      lead: "La qualité du dossier dépend directement des sources disponibles.",
+      prerequisites: [
+        "Une question précise (un marché, une idée, une technologie).",
+        "Des sources publiques suffisantes sur le sujet.",
+        "Une personne pour relire le dossier et décider.",
+      ],
+      applicabilityLimits: [
+        "Ne couvre pas les bases de données payantes ou les informations confidentielles.",
+        "Ne remplace pas des entretiens avec de vrais clients.",
+        "Signale un manque de sources plutôt que de conclure quand même.",
+      ],
+      operationalConstraints: [
+        "Respect des conditions d'utilisation des sources consultées.",
+        "Données personnelles retirées des contenus collectés.",
+      ],
+    },
+    relatedResources: [SERVICE_LINKS_FR.agents, SERVICE_LINKS_FR.rag, SERVICE_LINKS_FR.data],
+    cta: {
+      question: "Vous avez besoin d'une veille sectorielle dont chaque conclusion est sourcée ?",
+      buttonLabel: "En parler",
+    },
+  },
+
+  // =========================================================================
+  // PISTE — PILOTAGE COMMERCIAL (slug historique conservé : retail-bi)
+  // =========================================================================
+  "retail-bi": {
+    slug: "retail-bi",
+    sector: "Commerce · Pilotage",
+    sectorBadge: "Piste à construire",
+    statusBadge: "Piste à construire",
+    statusType: "methodology",
+    title: "Pilotage commercial :",
+    titleAccent: "ventes, marges et stocks dans un même tableau de bord",
+    summary:
+      "Une idée que je souhaite construire pour les PME de commerce et de distribution : un tableau de bord qui réunit ventes, marges et stocks par canal et par point de vente, avec des indicateurs définis une seule fois. Rien n'est encore construit.",
+    tags: ["Business intelligence", "PME", "Marges", "Stocks"],
+    problem: {
+      heading: "Les chiffres existent, mais chacun a les siens",
+      contextNarrative:
+        "Dans beaucoup de PME de commerce, les ventes sont dans la caisse ou le site marchand, les stocks dans un autre logiciel et les marges dans un tableur. Chaque réunion commence par réconcilier des chiffres qui ne concordent pas.",
+      coreFrictions: [
+        {
+          title: "Chiffres contradictoires",
+          description: "Chaque service calcule la marge ou le stock à sa façon.",
+          impact: "Temps perdu à réconcilier au lieu de décider.",
+        },
+        {
+          title: "Information en retard",
+          description: "Les tableaux sont mis à jour à la main, souvent une fois par mois.",
+          impact: "Réassort et prix décidés trop tard.",
+        },
+      ],
+    },
+    approach: {
+      heading: "Ce que je prévois de construire",
+      lead: "Une démarche classique de business intelligence, adaptée à la taille d'une PME.",
+      stages: [
+        {
+          stageNumber: "01",
+          title: "Définir les indicateurs",
+          description: "Fixer avec la direction la définition unique de la marge, du stock et des ventes.",
+          badge: "Cadrage",
+        },
+        {
+          stageNumber: "02",
+          title: "Relier les sources",
+          description: "Connecter la caisse, le site marchand et l'outil de stock à une base commune.",
+          badge: "Données",
+        },
+        {
+          stageNumber: "03",
+          title: "Tableaux de bord",
+          description: "Une vue par canal et par point de vente, mise à jour automatiquement.",
+          badge: "Restitution",
+        },
+      ],
+      integrationDetails:
+        "Les outils seront choisis selon votre existant (par exemple Power BI et une base SQL).",
+    },
+    metrics: {
+      heading: "Où en est cette piste",
+      lead: "Il s'agit d'une idée de solution, pas d'une réalisation.",
+      items: [
+        { label: "Statut", value: "Piste à construire", subtext: "Aucun développement engagé." },
+        {
+          label: "Pourquoi cette piste",
+          value: "Mon parcours en data et BI",
+          subtext: "Elle prolonge directement le service Data & Décision Augmentée.",
+        },
+      ],
+      methodology: {
+        sampleAndScope: "PME de commerce et de distribution, plusieurs canaux ou points de vente.",
+        period: "Construite avec une première entreprise partenaire, si le besoin se confirme.",
+        measurementConditions: "Indicateurs de départ mesurés avant le projet, puis suivis après.",
+        rigorDisclaimer: "Aucun résultat n'est annoncé : cette solution n'existe pas encore.",
+      },
+    },
+    limitsAndPrerequisites: {
+      heading: "Conditions pour que cette piste ait du sens",
+      lead: "Un tableau de bord ne vaut que par la qualité des données qui l'alimentent.",
+      prerequisites: [
+        "Des données de vente et de stock accessibles par export ou API.",
+        "Une direction prête à arbitrer les définitions des indicateurs.",
+      ],
+      applicabilityLimits: [
+        "Pas adapté à une activité sans historique de ventes.",
+        "Ne remplace pas un logiciel de gestion des stocks.",
+      ],
+      operationalConstraints: ["Accès aux données limité aux personnes autorisées."],
+    },
+    relatedResources: [SERVICE_LINKS_FR.data, SERVICE_LINKS_FR.automation],
+    cta: {
+      question: "Ce besoin correspond à votre entreprise ?",
+      buttonLabel: "En discuter",
+    },
+  },
+
+  // =========================================================================
+  // PISTE — PRÉVISION DE LA DEMANDE (slug historique conservé : logistics-ai)
+  // =========================================================================
+  "logistics-ai": {
+    slug: "logistics-ai",
+    sector: "Distribution · Approvisionnement",
+    sectorBadge: "Piste à construire",
+    statusBadge: "Piste à construire",
+    statusType: "methodology",
+    title: "Prévision de la demande :",
+    titleAccent: "commander au bon moment, sans surstock",
+    summary:
+      "Une idée que je souhaite construire pour les PME de négoce et de distribution : prévoir les ventes à partir de l'historique pour proposer des quantités de réapprovisionnement, que l'acheteur valide ou corrige. Rien n'est encore construit.",
+    tags: ["Prévision", "Approvisionnement", "PME", "Validation humaine"],
+    problem: {
+      heading: "Commander à l'intuition coûte cher dans les deux sens",
+      contextNarrative:
+        "Sans prévision, les commandes reposent sur l'expérience de l'acheteur et des moyennes passées. Le résultat oscille entre surstock, qui immobilise de la trésorerie, et ruptures, qui font perdre des ventes.",
+      coreFrictions: [
+        {
+          title: "Saisonnalité mal anticipée",
+          description: "Les pics et les creux de ventes sont repérés trop tard.",
+          impact: "Ruptures ou surstock selon la période.",
+        },
+        {
+          title: "Commandes manuelles",
+          description: "Les quantités sont recalculées à la main pour chaque référence.",
+          impact: "Temps d'acheteur absorbé par le calcul.",
+        },
+      ],
+    },
+    approach: {
+      heading: "Ce que je prévois de construire",
+      lead: "Une prévision simple et explicable, plutôt qu'un modèle opaque.",
+      stages: [
+        {
+          stageNumber: "01",
+          title: "Analyse de l'historique",
+          description: "Vérifier que les données de ventes passées permettent une prévision utile.",
+          badge: "Données",
+        },
+        {
+          stageNumber: "02",
+          title: "Prévision par référence",
+          description: "Des modèles qui apprennent de l'historique, avec une explication lisible de chaque prévision.",
+          badge: "Prévision",
+        },
+        {
+          stageNumber: "03",
+          title: "Proposition de commande",
+          description: "Une quantité proposée pour chaque référence, que l'acheteur accepte ou modifie.",
+          badge: "Décision humaine",
+        },
+      ],
+      integrationDetails: "Connexion à l'outil de gestion commerciale ou au logiciel de stock existant.",
+    },
+    metrics: {
+      heading: "Où en est cette piste",
+      lead: "Il s'agit d'une idée de solution, pas d'une réalisation.",
+      items: [
+        { label: "Statut", value: "Piste à construire", subtext: "Aucun développement engagé." },
+        {
+          label: "Pourquoi cette piste",
+          value: "Données et IA au service des achats",
+          subtext: "Elle combine les services Data & Décision et Automatisation.",
+        },
+      ],
+      methodology: {
+        sampleAndScope: "PME de négoce et de distribution avec au moins deux ans d'historique de ventes.",
+        period: "Construite avec une première entreprise partenaire, si le besoin se confirme.",
+        measurementConditions: "Comparaison des ruptures et du stock moyen avant et après, sur une même période.",
+        rigorDisclaimer: "Aucun résultat n'est annoncé : cette solution n'existe pas encore.",
+      },
+    },
+    limitsAndPrerequisites: {
+      heading: "Conditions pour que cette piste ait du sens",
+      lead: "Une prévision n'est fiable que sur un historique suffisant.",
+      prerequisites: [
+        "Un historique de ventes par référence, idéalement sur plusieurs années.",
+        "Un acheteur qui garde la décision finale.",
+      ],
+      applicabilityLimits: [
+        "Peu utile pour des produits sans historique ou vendus à l'unité sur commande.",
+        "Ne pilote pas les tournées de livraison.",
+      ],
+      operationalConstraints: ["Prévisions présentées comme des propositions, jamais appliquées seules."],
+    },
+    relatedResources: [SERVICE_LINKS_FR.data, SERVICE_LINKS_FR.automation],
+    cta: {
+      question: "Vos achats reposent encore sur des calculs manuels ?",
+      buttonLabel: "En discuter",
+    },
+  },
+
+  // =========================================================================
+  // PISTE — VEILLE CLIENTS & FOURNISSEURS (réutilise les connecteurs de Ciblioo)
+  // =========================================================================
+  "veille-registres": {
+    slug: "veille-registres",
+    sector: "Gestion des risques · PME",
+    sectorBadge: "Piste à construire",
+    statusBadge: "Piste à construire",
+    statusType: "methodology",
+    title: "Veille clients et fournisseurs :",
+    titleAccent: "être prévenu des annonces légales qui vous concernent",
+    summary:
+      "Une idée issue de Ciblioo : surveiller les annonces légales (BODACC) de vos clients et fournisseurs pour être alerté d'une procédure collective, d'une cession ou d'un changement de dirigeant. Rien n'est encore construit, mais les connecteurs nécessaires existent déjà dans Ciblioo.",
+    tags: ["BODACC", "Alertes", "Gestion des risques", "PME"],
+    problem: {
+      heading: "On apprend souvent trop tard qu'un client est en difficulté",
+      contextNarrative:
+        "Une procédure collective chez un client ou un fournisseur clé est publiée au BODACC, mais rares sont les PME qui surveillent ces annonces. L'information arrive souvent avec un impayé.",
+      coreFrictions: [
+        {
+          title: "Information publique mais non suivie",
+          description: "Personne n'a le temps de consulter les annonces légales pour chaque partenaire.",
+          impact: "Risque d'impayé découvert trop tard.",
+        },
+        {
+          title: "Changements non repérés",
+          description: "Cessions et changements de dirigeant passent inaperçus.",
+          impact: "Relation commerciale mal ajustée.",
+        },
+      ],
+    },
+    approach: {
+      heading: "Ce que je prévois de construire",
+      lead: "Réutiliser les connecteurs de Ciblioo pour une veille simple, centrée sur vos partenaires.",
+      stages: [
+        {
+          stageNumber: "01",
+          title: "Liste de partenaires",
+          description: "Import de vos clients et fournisseurs, rattachés à leur SIREN.",
+          badge: "Identité",
+        },
+        {
+          stageNumber: "02",
+          title: "Surveillance des annonces",
+          description: "Lecture régulière des annonces BODACC concernant ces entreprises.",
+          badge: "Sources",
+        },
+        {
+          stageNumber: "03",
+          title: "Alertes",
+          description: "Un message clair quand une annonce importante paraît, avec le lien vers l'annonce officielle.",
+          badge: "Alerte",
+        },
+      ],
+      integrationDetails: "Import depuis un export de votre logiciel de facturation ou de votre CRM.",
+    },
+    metrics: {
+      heading: "Où en est cette piste",
+      lead: "Il s'agit d'une idée de solution, pas d'une réalisation.",
+      items: [
+        { label: "Statut", value: "Piste à construire", subtext: "Aucun développement engagé." },
+        {
+          label: "Briques existantes",
+          value: "Connecteurs de Ciblioo",
+          subtext: "Rapprochement par SIREN et lecture du BODACC déjà développés.",
+        },
+      ],
+      methodology: {
+        sampleAndScope: "PME qui travaillent avec un nombre important de clients ou de fournisseurs professionnels.",
+        period: "Après le pilote de Ciblioo.",
+        measurementConditions: "Délai entre la publication d'une annonce et l'alerte reçue.",
+        rigorDisclaimer: "Aucun résultat n'est annoncé : cette solution n'existe pas encore.",
+      },
+    },
+    limitsAndPrerequisites: {
+      heading: "Conditions pour que cette piste ait du sens",
+      lead: "La veille ne porte que sur les informations publiées officiellement.",
+      prerequisites: ["Une liste de partenaires identifiables par leur SIREN."],
+      applicabilityLimits: [
+        "Ne prédit pas les difficultés d'une entreprise : elle signale ce qui est publié.",
+        "Ne couvre pas les entreprises étrangères.",
+      ],
+      operationalConstraints: ["Respect des conditions de réutilisation des données du BODACC."],
+    },
+    relatedResources: [SERVICE_LINKS_FR.automation, SERVICE_LINKS_FR.data],
+    cta: {
+      question: "Ce type d'alerte vous serait utile ?",
+      buttonLabel: "En discuter",
     },
   },
 };
 
+const SOLUTIONS_DETAIL_EN: Record<string, SolutionDetailData> = {
+  ciblioo: {
+    ...SOLUTIONS_DETAIL_FR.ciblioo,
+    sector: "M&A · Business transfers",
+    sectorBadge: "Ongoing project",
+    statusBadge: "In development",
+    title: "Ciblioo:",
+    titleAccent: "from mandate brief to a documented target list",
+    summary:
+      "A platform for business-transfer and M&A advisory firms: starting from a buy-side or sell-side mandate, it builds a list of target companies, matches data from public registries and links every piece of information to its source. The deal team keeps the final decision on every company.",
+    tags: ["M&A", "Public registries", "Source traceability", "Human review"],
+    problem: {
+      heading: "Checking a target list takes longer than building it",
+      contextNarrative:
+        "A firm working on a mandate must hand its client a justified list of companies. Finding names is not the hard part: checking each company's identity, gathering useful information from several sources and showing where each figure comes from is. Done by hand in spreadsheets, this takes days and lets embarrassing mistakes through.",
+      coreFrictions: [
+        {
+          title: "Uncertain identities",
+          description: "The same company appears under several names or establishments; duplicates and mix-ups creep in.",
+          impact: "Risk of presenting the wrong company to the client.",
+        },
+        {
+          title: "Scattered sources",
+          description: "Useful information is spread across the company directory, legal notices (BODACC) and other databases.",
+          impact: "Slow collection that is hard to reproduce.",
+        },
+        {
+          title: "Missing evidence",
+          description: "When the client asks why a company was selected, the source of each figure has to be found again.",
+          impact: "Weak justification of the selection.",
+        },
+        {
+          title: "Fragile home-made automations",
+          description: "Generic automation chains produce duplicates and data with no source attached.",
+          impact: "Time spent fixing rather than analysing.",
+        },
+      ],
+    },
+    approach: {
+      heading: "Every displayed value opens its evidence, or is marked unknown",
+      lead:
+        "Ciblioo organises work by mandate file and by batch of companies. Design principle: no data is shown without its source, date and the extract it comes from.",
+      stages: [
+        {
+          stageNumber: "01",
+          title: "Mandate file",
+          description: "The client brief (sector, size, region, criteria) is recorded and versioned.",
+          badge: "Scoping",
+        },
+        {
+          stageNumber: "02",
+          title: "Import and identity matching",
+          description: "Imported companies are normalised and linked to their SIREN number; ambiguous cases are set aside for review rather than guessed.",
+          badge: "Identity",
+        },
+        {
+          stageNumber: "03",
+          title: "Collection from public registries",
+          description: "Connectors to the French company search API (DINUM) and BODACC legal notices are live; more sources will be added as needs are confirmed.",
+          badge: "Sources",
+        },
+        {
+          stageNumber: "04",
+          title: "Human review and export",
+          description: "The deal team approves or rejects each company; the exported list keeps, for every value, its source and consultation date.",
+          badge: "Decision",
+        },
+      ],
+      integrationDetails:
+        "Multi-workspace web application: each firm's data is isolated from the others. The final list can be exported into the firm's usual tools.",
+    },
+    metrics: {
+      heading: "Project status",
+      lead:
+        "Ciblioo is in development. The foundations (data isolation, connectors, navigation) are in place; the full journey from brief to exported list is being built.",
+      items: [
+        { label: "Status", value: "In development", subtext: "Not commercially available yet." },
+        {
+          label: "Already in place",
+          value: "Technical foundations",
+          subtext: "Per-firm data isolation, DINUM and BODACC connectors, baseline security.",
+        },
+        {
+          label: "Next step",
+          value: "Full batch journey",
+          subtext: "Import, matching, collection, review and export with evidence.",
+        },
+        {
+          label: "Then",
+          value: "Pilot with a firm",
+          subtext: "A first pilot is planned with a business-transfer advisory firm.",
+        },
+      ],
+      methodology: {
+        sampleAndScope: "Business-transfer and M&A advisory firms working with French SMEs and mid-sized companies.",
+        period: "Pilot after the full journey is delivered; no date announced.",
+        measurementConditions:
+          "During the pilot: time needed to build and check a batch, and number of identity errors, measured before and with the tool.",
+        rigorDisclaimer: "No time saving is claimed until it has been measured during the pilot.",
+      },
+    },
+    limitsAndPrerequisites: {
+      heading: "What Ciblioo does, and what it does not promise",
+      lead: "The scope is deliberately narrow so that it stays verifiable.",
+      prerequisites: [
+        "A mandate with explicit selection criteria.",
+        "Companies registered in France, identifiable by their SIREN.",
+        "A deal team member available to review ambiguous cases.",
+      ],
+      applicabilityLimits: [
+        "Does not predict which companies “will sell”: no reliable data allows that promise to be made honestly.",
+        "Sends no outreach messages automatically.",
+        "Does not cover foreign companies at this stage.",
+      ],
+      operationalConstraints: [
+        "Compliance with each public source's terms of use.",
+        "Processing of directors' data in line with the GDPR.",
+        "One firm's data is never visible to another.",
+      ],
+    },
+    relatedResources: [SERVICE_LINKS_EN.data, SERVICE_LINKS_EN.automation, SERVICE_LINKS_EN.agents],
+    cta: {
+      question: "Do you work in business transfers or M&A and recognise this problem?",
+      buttonLabel: "Talk about Ciblioo",
+    },
+  },
+
+  contentops: {
+    ...SOLUTIONS_DETAIL_FR.contentops,
+    sector: "Marketing · B2B content",
+    sectorBadge: "Ongoing project",
+    statusBadge: "Working prototype",
+    title: "ContentOps Harness:",
+    titleAccent: "producing content with AI, publishing nothing without approval",
+    summary:
+      "An editorial system for companies that publish on LinkedIn and X: it turns monitoring, notes and lessons learned into drafts, runs a quality check, then waits for explicit approval from a manager before anything is published. It is not an auto-posting tool.",
+    tags: ["AI agents", "Human approval", "LinkedIn", "Traceability"],
+    problem: {
+      heading: "AI writes fast, but a bad post commits the company",
+      contextNarrative:
+        "Generating posts with AI has become easy. Staying in control is still hard: keeping to the company's editorial line, avoiding factual errors, knowing who approved what, and never publishing the same content twice by accident.",
+      coreFrictions: [
+        { title: "Publishing without review", description: "Auto-posting tools send out content nobody has read.", impact: "Reputational risk and public mistakes." },
+        { title: "Diluted editorial line", description: "Each generated draft drifts a little from the brand's tone and rules.", impact: "Generic, less credible content." },
+        { title: "No record of decisions", description: "There is no way to find who approved a piece of content, or which version.", impact: "Unclear accountability." },
+        { title: "Duplicate posts", description: "A network error during sending can lead to the same post being published again.", impact: "Embarrassing double posts." },
+      ],
+    },
+    approach: {
+      heading: "An editorial chain with a mandatory human checkpoint",
+      lead: "Each piece of content follows a defined path from idea to publication. AI prepares; an authorised person decides.",
+      stages: [
+        { stageNumber: "01", title: "Monitoring and ideas", description: "Chosen sources (RSS feeds, internal notes) feed a ranked list of ideas that the team sorts.", badge: "Monitoring" },
+        { stageNumber: "02", title: "Drafts per platform", description: "AI agents write drafts suited to LinkedIn and X, following the brand profile defined by the company.", badge: "Writing" },
+        { stageNumber: "03", title: "Quality check, then approval", description: "An automatic check reviews the draft; it is then blocked until a manager explicitly approves it, asks for a rewrite or rejects it.", badge: "Human approval" },
+        { stageNumber: "04", title: "Traced publication", description: "Approved content is frozen and time-stamped; it is published at most once, and every step is written to an audit log.", badge: "Traceability" },
+      ],
+      integrationDetails:
+        "Separate roles (owner, editor, viewer), separate workspaces per company and encrypted storage of social network access. Built with LangGraph, FastAPI, PostgreSQL and React.",
+    },
+    metrics: {
+      heading: "Project status",
+      lead: "ContentOps Harness works end to end in a test environment: LinkedIn and X connections have been tested without posting to real accounts.",
+      items: [
+        { label: "Status", value: "Working prototype", subtext: "Full journey running in a test environment." },
+        { label: "Code", value: "Public repository", subtext: "Code available on GitHub (Gninhi/Content-builder)." },
+        { label: "Tests", value: "Automated suite", subtext: "Unit, integration and security tests run on every change." },
+        { label: "Next step", value: "First real use", subtext: "Used for Analyticatech's own posts before any client offer." },
+      ],
+      methodology: {
+        sampleAndScope: "B2B companies that publish regularly on LinkedIn and X.",
+        period: "Internal use first; no commercial launch date announced.",
+        measurementConditions: "In real use: time to prepare a post, share of drafts accepted without rewrite, publishing incidents.",
+        rigorDisclaimer: "No usage results are published until the tool has been used on real accounts.",
+      },
+    },
+    limitsAndPrerequisites: {
+      heading: "What the tool does, and what it refuses to do",
+      lead: "Human approval cannot be switched off.",
+      prerequisites: [
+        "An editorial manager available to approve content.",
+        "A written brand profile: tone, topics, rules.",
+        "Company LinkedIn or X accounts.",
+      ],
+      applicabilityLimits: [
+        "Never publishes without explicit approval.",
+        "Does not change brand rules on its own: AI suggests, the team decides.",
+        "Does not replace the writer's subject-matter expertise.",
+      ],
+      operationalConstraints: [
+        "Compliance with LinkedIn and X terms of use.",
+        "Social account access stored encrypted.",
+        "Audit log kept for every decision.",
+      ],
+    },
+    relatedResources: [SERVICE_LINKS_EN.agents, SERVICE_LINKS_EN.automation, SERVICE_LINKS_EN.rag],
+    cta: {
+      question: "Want to produce more content without losing control of what gets published?",
+      buttonLabel: "Talk about ContentOps",
+    },
+  },
+
+  avie: {
+    ...SOLUTIONS_DETAIL_FR.avie,
+    sector: "Monitoring · Product strategy",
+    sectorBadge: "Ongoing project",
+    statusBadge: "Internal tool",
+    title: "AVIE:",
+    titleAccent: "monitoring that separates facts from assumptions",
+    summary:
+      "A monitoring and opportunity-analysis engine: it collects open sources, links each claim to the evidence supporting it, flags contradictions between sources and prepares a summary file. The decision to go ahead or not stays human.",
+    tags: ["Monitoring", "Open sources", "AI agents", "Human decision"],
+    problem: {
+      heading: "An AI summary always sounds confident, even when it is wrong",
+      contextNarrative:
+        "To assess a product idea or a market, you gather articles, studies and opinions. General-purpose AI assistants turn them into fluent summaries, without saying what is established, what is estimated and what another source contradicts.",
+      coreFrictions: [
+        { title: "Facts and opinions mixed up", description: "An estimate repeated by several articles ends up passing for a fact.", impact: "Decisions made on weak grounds." },
+        { title: "Echo-chamber effect", description: "Ten articles repeating the same newswire are not ten independent sources.", impact: "Apparent but artificial consensus." },
+        { title: "Ignored contradictions", description: "Disagreements between sources disappear in the final summary.", impact: "Risks unseen at decision time." },
+        { title: "Cost of research", description: "Paid databases make monitoring expensive for a small company.", impact: "Rare or superficial monitoring." },
+      ],
+    },
+    approach: {
+      heading: "A chain from source to decision, step by step",
+      lead: "AVIE runs explicit steps, orchestrated with LangGraph, and stops before the decision to hand over to a person.",
+      stages: [
+        { stageNumber: "01", title: "Open-source collection", description: "Scientific papers (arXiv), public data (data.gouv.fr), public discussions (Reddit, personal data removed) and RSS feeds.", badge: "Sources" },
+        { stageNumber: "02", title: "Typed claims", description: "Each claim is classified (fact, observation, estimate, hypothesis) and linked to the extracts that support it.", badge: "Evidence" },
+        { stageNumber: "03", title: "Independence and contradictions", description: "Sources that copy each other are grouped, and disagreements are classified (direct contradiction, date gap, geographic gap…).", badge: "Checks" },
+        { stageNumber: "04", title: "File and human decision", description: "A summary file is produced; the analysis stops on a human decision: go, wait or drop.", badge: "Decision" },
+      ],
+      integrationDetails:
+        "Usable from the command line or through an API; files export to Markdown or JSON. Current connectors only use free sources.",
+    },
+    metrics: {
+      heading: "Project status",
+      lead: "AVIE is a tool I use for my own analyses; it is not offered as a product.",
+      items: [
+        { label: "Status", value: "Internal tool", subtext: "Used for Analyticatech's monitoring and idea assessment." },
+        { label: "Code", value: "Public repository", subtext: "Code available on GitHub (Gninhi/viiper-v4)." },
+        { label: "Sources", value: "Open and free", subtext: "arXiv, data.gouv.fr, Reddit, RSS feeds." },
+        { label: "Client use", value: "On request", subtext: "The method can be adapted to sector monitoring as part of an engagement." },
+      ],
+      methodology: {
+        sampleAndScope: "Technology monitoring, product idea and market opportunity assessment.",
+        period: "Maintained as needed; no commercial roadmap.",
+        measurementConditions: "Quality judged on traceability: every conclusion must link back to its sources.",
+        rigorDisclaimer: "An AVIE file helps you decide; it does not replace market research.",
+      },
+    },
+    limitsAndPrerequisites: {
+      heading: "What AVIE brings, and its limits",
+      lead: "The quality of the file depends directly on the available sources.",
+      prerequisites: [
+        "A precise question (a market, an idea, a technology).",
+        "Enough public sources on the topic.",
+        "A person to review the file and decide.",
+      ],
+      applicabilityLimits: [
+        "Does not cover paid databases or confidential information.",
+        "Does not replace interviews with real customers.",
+        "Flags a lack of sources rather than concluding anyway.",
+      ],
+      operationalConstraints: [
+        "Compliance with the terms of use of the sources consulted.",
+        "Personal data removed from collected content.",
+      ],
+    },
+    relatedResources: [SERVICE_LINKS_EN.agents, SERVICE_LINKS_EN.rag, SERVICE_LINKS_EN.data],
+    cta: {
+      question: "Need sector monitoring where every conclusion is sourced?",
+      buttonLabel: "Let's talk",
+    },
+  },
+
+  "retail-bi": {
+    ...SOLUTIONS_DETAIL_FR["retail-bi"],
+    sector: "Retail · Steering",
+    sectorBadge: "Idea to build",
+    statusBadge: "Idea to build",
+    title: "Sales steering:",
+    titleAccent: "sales, margins and stock in one dashboard",
+    summary:
+      "An idea I want to build for retail and distribution SMEs: a dashboard bringing together sales, margins and stock by channel and by store, with indicators defined once. Nothing has been built yet.",
+    tags: ["Business intelligence", "SMEs", "Margins", "Stock"],
+    problem: {
+      heading: "The figures exist, but everyone has their own",
+      contextNarrative:
+        "In many retail SMEs, sales live in the till or the online shop, stock in another tool and margins in a spreadsheet. Every meeting starts by reconciling figures that do not match.",
+      coreFrictions: [
+        { title: "Contradictory figures", description: "Each department calculates margin or stock its own way.", impact: "Time spent reconciling instead of deciding." },
+        { title: "Late information", description: "Spreadsheets are updated by hand, often once a month.", impact: "Restocking and pricing decided too late." },
+      ],
+    },
+    approach: {
+      heading: "What I plan to build",
+      lead: "A standard business-intelligence approach, sized for an SME.",
+      stages: [
+        { stageNumber: "01", title: "Define the indicators", description: "Agree with management on a single definition of margin, stock and sales.", badge: "Scoping" },
+        { stageNumber: "02", title: "Connect the sources", description: "Connect the till, online shop and stock tool to a shared database.", badge: "Data" },
+        { stageNumber: "03", title: "Dashboards", description: "A view by channel and by store, updated automatically.", badge: "Reporting" },
+      ],
+      integrationDetails: "Tools will be chosen to fit your setup (for example Power BI and a SQL database).",
+    },
+    metrics: {
+      heading: "Status of this idea",
+      lead: "This is a solution idea, not a delivered project.",
+      items: [
+        { label: "Status", value: "Idea to build", subtext: "No development started." },
+        { label: "Why this idea", value: "My data and BI background", subtext: "It extends the Data & Augmented Decision service." },
+      ],
+      methodology: {
+        sampleAndScope: "Retail and distribution SMEs with several channels or stores.",
+        period: "Built with a first partner company, if the need is confirmed.",
+        measurementConditions: "Baseline indicators measured before the project, then tracked after.",
+        rigorDisclaimer: "No results are claimed: this solution does not exist yet.",
+      },
+    },
+    limitsAndPrerequisites: {
+      heading: "Conditions for this idea to make sense",
+      lead: "A dashboard is only as good as the data feeding it.",
+      prerequisites: [
+        "Sales and stock data available by export or API.",
+        "Management ready to settle indicator definitions.",
+      ],
+      applicabilityLimits: [
+        "Not suited to a business with no sales history.",
+        "Does not replace stock management software.",
+      ],
+      operationalConstraints: ["Data access limited to authorised people."],
+    },
+    relatedResources: [SERVICE_LINKS_EN.data, SERVICE_LINKS_EN.automation],
+    cta: { question: "Does this need match your company?", buttonLabel: "Let's discuss" },
+  },
+
+  "logistics-ai": {
+    ...SOLUTIONS_DETAIL_FR["logistics-ai"],
+    sector: "Distribution · Purchasing",
+    sectorBadge: "Idea to build",
+    statusBadge: "Idea to build",
+    title: "Demand forecasting:",
+    titleAccent: "order at the right time, without overstock",
+    summary:
+      "An idea I want to build for wholesale and distribution SMEs: forecast sales from history to suggest reorder quantities, which the buyer approves or corrects. Nothing has been built yet.",
+    tags: ["Forecasting", "Purchasing", "SMEs", "Human approval"],
+    problem: {
+      heading: "Ordering by gut feeling is costly both ways",
+      contextNarrative:
+        "Without forecasts, orders rely on the buyer's experience and past averages. The result swings between overstock, which ties up cash, and stock-outs, which lose sales.",
+      coreFrictions: [
+        { title: "Seasonality spotted too late", description: "Sales peaks and dips are noticed too late.", impact: "Stock-outs or overstock depending on the period." },
+        { title: "Manual orders", description: "Quantities are recalculated by hand for each item.", impact: "Buyer time absorbed by calculation." },
+      ],
+    },
+    approach: {
+      heading: "What I plan to build",
+      lead: "A simple, explainable forecast rather than an opaque model.",
+      stages: [
+        { stageNumber: "01", title: "History review", description: "Check that past sales data allows a useful forecast.", badge: "Data" },
+        { stageNumber: "02", title: "Forecast per item", description: "Models that learn from history, with a readable explanation of each forecast.", badge: "Forecast" },
+        { stageNumber: "03", title: "Order proposal", description: "A suggested quantity for each item, which the buyer accepts or changes.", badge: "Human decision" },
+      ],
+      integrationDetails: "Connection to the existing sales management or stock software.",
+    },
+    metrics: {
+      heading: "Status of this idea",
+      lead: "This is a solution idea, not a delivered project.",
+      items: [
+        { label: "Status", value: "Idea to build", subtext: "No development started." },
+        { label: "Why this idea", value: "Data and AI for purchasing", subtext: "It combines the Data & Decision and Automation services." },
+      ],
+      methodology: {
+        sampleAndScope: "Wholesale and distribution SMEs with at least two years of sales history.",
+        period: "Built with a first partner company, if the need is confirmed.",
+        measurementConditions: "Stock-outs and average stock compared before and after, over the same period.",
+        rigorDisclaimer: "No results are claimed: this solution does not exist yet.",
+      },
+    },
+    limitsAndPrerequisites: {
+      heading: "Conditions for this idea to make sense",
+      lead: "A forecast is only reliable with enough history.",
+      prerequisites: [
+        "Sales history per item, ideally over several years.",
+        "A buyer who keeps the final decision.",
+      ],
+      applicabilityLimits: [
+        "Of little use for items with no history or made to order.",
+        "Does not plan delivery routes.",
+      ],
+      operationalConstraints: ["Forecasts are presented as proposals, never applied automatically."],
+    },
+    relatedResources: [SERVICE_LINKS_EN.data, SERVICE_LINKS_EN.automation],
+    cta: { question: "Do your purchases still rely on manual calculations?", buttonLabel: "Let's discuss" },
+  },
+
+  "veille-registres": {
+    ...SOLUTIONS_DETAIL_FR["veille-registres"],
+    sector: "Risk management · SMEs",
+    sectorBadge: "Idea to build",
+    statusBadge: "Idea to build",
+    title: "Customer and supplier monitoring:",
+    titleAccent: "get alerted to legal notices that concern you",
+    summary:
+      "An idea that grew out of Ciblioo: monitor the legal notices (BODACC) of your customers and suppliers to be alerted to insolvency proceedings, a business sale or a change of director. Nothing has been built yet, but the connectors it needs already exist in Ciblioo.",
+    tags: ["BODACC", "Alerts", "Risk management", "SMEs"],
+    problem: {
+      heading: "You often learn too late that a customer is in trouble",
+      contextNarrative:
+        "Insolvency proceedings at a key customer or supplier are published in the BODACC, but few SMEs monitor these notices. The news often arrives with an unpaid invoice.",
+      coreFrictions: [
+        { title: "Public but unmonitored information", description: "Nobody has time to check legal notices for every partner.", impact: "Unpaid invoices discovered too late." },
+        { title: "Unnoticed changes", description: "Business sales and changes of director go unnoticed.", impact: "Poorly adjusted business relationships." },
+      ],
+    },
+    approach: {
+      heading: "What I plan to build",
+      lead: "Reuse Ciblioo's connectors for simple monitoring focused on your partners.",
+      stages: [
+        { stageNumber: "01", title: "Partner list", description: "Import of your customers and suppliers, linked to their SIREN.", badge: "Identity" },
+        { stageNumber: "02", title: "Notice monitoring", description: "Regular reading of BODACC notices about these companies.", badge: "Sources" },
+        { stageNumber: "03", title: "Alerts", description: "A clear message when an important notice appears, with a link to the official notice.", badge: "Alert" },
+      ],
+      integrationDetails: "Import from an export of your invoicing software or CRM.",
+    },
+    metrics: {
+      heading: "Status of this idea",
+      lead: "This is a solution idea, not a delivered project.",
+      items: [
+        { label: "Status", value: "Idea to build", subtext: "No development started." },
+        { label: "Existing building blocks", value: "Ciblioo connectors", subtext: "SIREN matching and BODACC reading already developed." },
+      ],
+      methodology: {
+        sampleAndScope: "SMEs working with many business customers or suppliers.",
+        period: "After the Ciblioo pilot.",
+        measurementConditions: "Time between a notice's publication and the alert being received.",
+        rigorDisclaimer: "No results are claimed: this solution does not exist yet.",
+      },
+    },
+    limitsAndPrerequisites: {
+      heading: "Conditions for this idea to make sense",
+      lead: "Monitoring only covers officially published information.",
+      prerequisites: ["A list of partners identifiable by their SIREN."],
+      applicabilityLimits: [
+        "Does not predict a company's difficulties: it reports what is published.",
+        "Does not cover foreign companies.",
+      ],
+      operationalConstraints: ["Compliance with BODACC data reuse conditions."],
+    },
+    relatedResources: [SERVICE_LINKS_EN.automation, SERVICE_LINKS_EN.data],
+    cta: { question: "Would this kind of alert be useful to you?", buttonLabel: "Let's discuss" },
+  },
+};
+
+/** Clés de routage (identiques en FR et EN) — utilisées par generateStaticParams. */
+export const SOLUTIONS_DETAIL_REGISTRY: Record<string, SolutionDetailData> = SOLUTIONS_DETAIL_FR;
+
+/**
+ * Anciennes fiches retirées de la page Solutions. Les URL sont redirigées en
+ * 301 dans `next.config.ts` ; l'alias garde l'ancien sourcing M&A vers Ciblioo.
+ */
 const SOLUTION_ALIASES: Record<string, string> = {
-  "dealscoop-ma": "dealscoop",
-  "ma-sourcing": "dealscoop",
-  "private-equity-sourcing": "dealscoop",
-  "sourcing-ma": "dealscoop",
+  dealscoop: "ciblioo",
+  "dealscoop-ma": "ciblioo",
+  "ma-sourcing": "ciblioo",
+  "private-equity-sourcing": "ciblioo",
+  "sourcing-ma": "ciblioo",
+  dealscope: "ciblioo",
+  "content-ops": "contentops",
+  "contentops-harness": "contentops",
 };
 
 /**
- * Récupère les données de détail enrichies d'une solution selon son slug.
+ * Récupère les données de détail d'une solution selon son slug et la langue.
  */
 export function getSolutionDetailData(
   slug: string,
-  _locale: string = "fr"
+  locale: string = "fr"
 ): SolutionDetailData | null {
   if (!slug) return null;
   const normalizedSlug = slug.trim().toLowerCase();
   const resolvedSlug = SOLUTION_ALIASES[normalizedSlug] ?? normalizedSlug;
-  return SOLUTIONS_DETAIL_REGISTRY[resolvedSlug] ?? null;
+  const registry = locale === "en" ? SOLUTIONS_DETAIL_EN : SOLUTIONS_DETAIL_FR;
+  return registry[resolvedSlug] ?? null;
 }

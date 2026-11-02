@@ -40,7 +40,7 @@ export function TerminalField({
           htmlFor={name}
           className="block font-mono text-[11px] uppercase tracking-[0.2em] font-medium text-slate-700 dark:text-slate-300"
         >
-          {label} {required && <span className="text-[#F26D3D]">*</span>}
+          {label} {required && <span className="text-accent-ink">*</span>}
         </label>
         {hint && (
           <span className="font-mono text-[10px] text-slate-400 dark:text-slate-400 hidden sm:inline">
@@ -51,7 +51,7 @@ export function TerminalField({
 
       <div className="relative group">
         {icon && (
-          <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-focus-within:text-[#F26D3D] transition-colors">
+          <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-focus-within:text-accent-ink transition-colors">
             {icon}
           </div>
         )}
@@ -79,7 +79,7 @@ export function TerminalField({
       {error && (
         <p
           id={`${name}-err`}
-          className="font-mono text-[11px] text-[#F26D3D] flex items-center gap-1.5 pt-0.5"
+          className="font-mono text-[11px] text-accent-ink flex items-center gap-1.5 pt-0.5"
           role="alert"
         >
           <AlertTriangle className="h-3 w-3 shrink-0" aria-hidden="true" />

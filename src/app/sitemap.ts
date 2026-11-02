@@ -12,7 +12,7 @@ export const revalidate = 86400; // 24h
  * pour un référencement international (SEO multilingue Google).
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://analyticatech.fr";
+  const baseUrl = "https://www.analyticatech.fr";
   const lastModified = new Date("2026-07-27");
 
   const entries: MetadataRoute.Sitemap = [];

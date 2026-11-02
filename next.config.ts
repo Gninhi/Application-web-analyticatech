@@ -45,6 +45,48 @@ const nextConfig: NextConfig = {
   },
   // Compression Brotli / Gzip active au niveau serveur Next.js
   compress: true,
+  // Redirections 301 des contenus retirés ou renommés (refonte de contenu du
+  // 2 novembre 2026) : les anciennes URL indexées restent valides.
+  async redirects() {
+    const removedSolutions = [
+      "finance-agent",
+      "healthcare-nlp",
+      "industry-maintenance",
+      "energy-smartgrid",
+    ];
+    // Anciens slugs d'articles (base de données) → slug canonique
+    const insightAliases: Record<string, string> = {
+      "rag-evaluation": "evaluer-systeme-rag-production",
+      "n8n-vs-temporal": "n8n-vs-temporal-orchestration",
+      "semantic-layer-dbt": "couche-semantique-dbt-bi",
+      "agents-ia-production": "agents-production-2025",
+      "architecture-multi-agents-evenementielle": "event-driven-agents",
+    };
+    return ["", "/en"].flatMap((prefix) => [
+      ...removedSolutions.map((slug) => ({
+        source: `${prefix}/solutions/${slug}`,
+        destination: `${prefix}/solutions`,
+        permanent: true,
+      })),
+      // Le prototype de sourcing M&A est devenu Ciblioo
+      {
+        source: `${prefix}/solutions/dealscoop`,
+        destination: `${prefix}/solutions/ciblioo`,
+        permanent: true,
+      },
+      // Article FinOps dépublié (hors de l'offre, chiffres non sourcés)
+      ...["finops-cloud-native", "finops-kubernetes-optimisation"].map((slug) => ({
+        source: `${prefix}/insights/${slug}`,
+        destination: `${prefix}/insights`,
+        permanent: true,
+      })),
+      ...Object.entries(insightAliases).map(([from, to]) => ({
+        source: `${prefix}/insights/${from}`,
+        destination: `${prefix}/insights/${to}`,
+        permanent: true,
+      })),
+    ]);
+  },
   // Reverse proxy pour PostHog EU (contourne les bloqueurs tout en restant discret)
   async rewrites() {
     return [

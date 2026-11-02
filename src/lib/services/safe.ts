@@ -22,16 +22,4 @@ export async function safe<T>(label: string, promise: Promise<T>, fallback: T): 
   }
 }
 
-/** Variante d'appel sûre pour les collections : repli sur tableau vide typé. */
-export function safeArray<T>(label: string, promise: Promise<T[]>): Promise<T[]> {
-  return safe(label, promise, [] as T[]);
-}
-
-export {
-  FALLBACK_SITE_CONFIG,
-  FALLBACK_SEO_METADATA,
-  FALLBACK_SERVICES_FR,
-  FALLBACK_SERVICES_EN,
-  FALLBACK_SOLUTIONS_FR,
-  FALLBACK_SOLUTIONS_EN,
-} from "@/lib/content/fallbacks";
+export { FALLBACK_SEO_METADATA } from "@/lib/content/fallbacks";

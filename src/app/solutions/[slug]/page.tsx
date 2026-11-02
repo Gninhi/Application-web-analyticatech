@@ -29,14 +29,14 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     return { title: "Solution introuvable" };
   }
 
-  const title = solution?.title ?? detailData?.title ?? "Solution sectorielle";
+  const title = solution?.title ?? detailData?.title ?? "Solution";
   const description = solution?.summary ?? detailData?.summary ?? "";
   const resolvedSlug = detailData?.slug ?? solution?.slug ?? slug;
 
   return buildPageMetadata({
     locale,
     path: `/solutions/${resolvedSlug}`,
-    title: `${title} — Solution sectorielle`,
+    title: `${title} — Solutions`,
     description,
   });
 }
@@ -61,14 +61,14 @@ export default async function SolutionDetailPage({ params }: Params) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
-    "@id": `https://analyticatech.fr/solutions/${resolvedSlug}#solution`,
+    "@id": `https://www.analyticatech.fr/solutions/${resolvedSlug}#solution`,
     name: resolvedTitle,
     description: resolvedSummary,
     serviceType: `Solution IA Sectorielle — ${resolvedSector}`,
     provider: {
       "@type": "Organization",
       name: "Analyticatech",
-      url: "https://analyticatech.fr",
+      url: "https://www.analyticatech.fr",
     },
     areaServed: "FR",
   };

@@ -116,11 +116,11 @@ export function MethodOrbit({ nodes, activeIndex, onSelect, centerLabel }: Metho
 
       {/* 5. Hub central — identité cybernétique et statut vivant */}
       <div className="absolute top-1/2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2">
-        <div className="relative flex h-28 w-28 flex-col items-center justify-center gap-1 rounded-full text-center border backdrop-blur-xl transition-all duration-300 bg-white/90 dark:bg-[#06070B]/80 border-black/10 dark:border-white/15 shadow-[0_8px_30px_rgba(3,49,140,0.12)] dark:shadow-[0_8px_40px_rgba(0,0,0,0.60)]">
+        <div className="relative flex h-28 w-28 flex-col items-center justify-center gap-1 rounded-full text-center border backdrop-blur-xl transition-all duration-300 bg-white/90 dark:bg-background/80 border-black/10 dark:border-white/15 shadow-[0_8px_30px_rgba(3,49,140,0.12)] dark:shadow-[0_8px_40px_rgba(0,0,0,0.60)]">
           {/* Liseré de réflexion interne */}
           <div className="pointer-events-none absolute inset-1 rounded-full border border-white/80 dark:border-white/10" />
 
-          <Waypoints className="h-5 w-5 text-[#F26D3D] transition-transform duration-500 hover:rotate-45" aria-hidden />
+          <Waypoints className="h-5 w-5 text-accent-ink transition-transform duration-500 hover:rotate-45" aria-hidden />
           <span className="font-mono text-[9px] font-bold uppercase tracking-[0.25em] text-slate-700 dark:text-slate-300">
             {centerLabel}
           </span>
@@ -200,7 +200,6 @@ export function MethodOrbit({ nodes, activeIndex, onSelect, centerLabel }: Metho
                   type="button"
                   role="tab"
                   aria-selected={isActive}
-                  aria-label={`${node.number} — ${node.title}`}
                   onClick={() => onSelect(i)}
                   onMouseEnter={() => onSelect(i)}
                   className={cn(

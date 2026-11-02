@@ -93,6 +93,15 @@
   --color-input: var(--border);
   --color-ring: var(--accent);
 
+  /* Texte d'accent : orange en sombre, bleu en clair (lisibilité sur fond blanc) */
+  --color-accent-ink: var(--accent-ink);
+  --color-link: var(--fg-link);
+  --color-navy-900: #011C40;
+  --color-navy-700: #022859;
+  --color-blue-800: #022873;
+  --color-blue-600: #03318C;
+  --color-orange-500: #F26D3D;
+
   /* Palette officielle — accessible partout via Tailwind */
   --color-brand-blue: #03318C;
   --color-brand-deep: #022873;
@@ -116,6 +125,8 @@
   --surface: rgba(96, 116, 168, 0.12); /* reflet bleuté subtil (halo haut) */
   --surface-2: rgba(255, 255, 255, 0.05);
   --accent: #F26D3D;
+  --accent-ink: #F26D3D;
+  --focus: #F26D3D;
   --border: rgba(255, 255, 255, 0.12);
   --glass-bg: linear-gradient(160deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.03) 100%);
   --glass-border: rgba(255, 255, 255, 0.12);
@@ -167,6 +178,8 @@
   --surface: rgba(255, 255, 255, 0.85);
   --surface-2: rgba(224, 232, 240, 0.8);
   --accent: #F26D3D;                    /* orange — titres, CTA */
+  --accent-ink: #03318C;                /* texte d'accent lisible sur fond clair */
+  --focus: #03318C;
   --border: rgba(3, 49, 140, 0.12);    /* bleu léger */
   --glass-bg: linear-gradient(160deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.68) 100%);
   --glass-border: rgba(3, 49, 140, 0.10);
@@ -1194,3 +1207,12 @@
   display: none;
 }
 
+/* Sélection et focus clavier aux couleurs de la marque */
+::selection {
+  background: #F26D3D;
+  color: #06070B;
+}
+
+:focus-visible {
+  outline-color: var(--focus);
+}

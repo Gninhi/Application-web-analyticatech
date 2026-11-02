@@ -21,18 +21,18 @@ export function ContactView() {
   const trustMetrics = [
     {
       icon: Clock,
-      labelFr: "Réactivité SLA",
-      labelEn: "SLA Reactivity",
-      valFr: "< 2h ouvrées",
-      valEn: "< 2 business hours",
-      descFr: "Prise en compte immédiate",
-      descEn: "Immediate dispatch",
+      labelFr: "Réponse",
+      labelEn: "Reply",
+      valFr: "Réponse personnelle",
+      valEn: "Personal reply",
+      descFr: "Par le fondateur, pas un robot",
+      descEn: "From the founder, not a bot",
     },
     {
       icon: Lock,
       labelFr: "Confidentialité",
       labelEn: "Confidentiality",
-      valFr: "NDA Préalable",
+      valFr: "NDA préalable",
       valEn: "Mutual NDA",
       descFr: "Signature systématique",
       descEn: "Executed upfront",
@@ -41,19 +41,19 @@ export function ContactView() {
       icon: ShieldCheck,
       labelFr: "Infrastructure",
       labelEn: "Infrastructure",
-      valFr: "100% Souverain",
-      valEn: "100% Sovereign",
-      descFr: "Cloud & serveurs en UE",
-      descEn: "EU-only hosting",
+      valFr: "Hébergement UE possible",
+      valEn: "EU hosting available",
+      descFr: "Choix validé avec vous au cadrage",
+      descEn: "Agreed with you during scoping",
     },
     {
       icon: Headphones,
       labelFr: "Interlocuteur",
       labelEn: "Direct Contact",
-      valFr: "Lead Architecte",
-      valEn: "Lead Architect",
-      descFr: "Échange technique direct",
-      descEn: "Direct technical peer",
+      valFr: "Le fondateur",
+      valEn: "The founder",
+      descFr: "Martial Gninhi, du cadrage à la livraison",
+      descEn: "Martial Gninhi, from scoping to delivery",
     },
   ];
 
@@ -89,7 +89,7 @@ export function ContactView() {
                   key={idx}
                   className="glass-card rounded-2xl p-4 border border-black/10 dark:border-white/10 hover:border-[#F26D3D]/40 transition-colors flex items-center gap-3.5"
                 >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#F26D3D]/10 border border-[#F26D3D]/25 text-[#F26D3D]">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#F26D3D]/10 border border-[#F26D3D]/25 text-accent-ink">
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </span>
                   <div className="min-w-0">
@@ -121,12 +121,12 @@ export function ContactView() {
       {/* 3. Section FAQ Exécutive (déplacée depuis l'accueil pour un parcours de conversion optimal) */}
       <div className="pb-24 relative z-10">
         <FaqSection
-          tag={isEn ? "FAQ // CONSULTATION PROTOCOL" : "FAQ // QUESTIONS FRÉQUENTES"}
+          tag="FAQ"
           title={isEn ? "Frequently Asked Questions." : "Questions fréquentes avant de démarrer."}
           description={
             isEn
-              ? "Everything executives and engineering leaders ask before initiating an AI or data project with us."
-              : "Tout ce que les dirigeants et directeurs techniques nous demandent avant de lancer un projet avec nous."
+              ? "What business leaders and technical managers ask me most before starting an AI or data project."
+              : "Ce que les dirigeants et les responsables techniques me demandent le plus avant de lancer un projet."
           }
         />
       </div>

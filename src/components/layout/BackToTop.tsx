@@ -51,9 +51,9 @@ export function BackToTop() {
         {/* Tooltip flottant révélant le pourcentage de progression au hover */}
         <div
           role="tooltip"
-          className="pointer-events-none absolute -top-10 right-0 hidden sm:flex items-center gap-1.5 whitespace-nowrap rounded-full border border-black/10 dark:border-white/15 bg-white/95 dark:bg-[#07090E]/95 backdrop-blur-md px-3 py-1 text-[11px] font-mono text-slate-700 dark:text-slate-200 opacity-0 -translate-y-1 shadow-lg transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0"
+          className="pointer-events-none absolute -top-10 right-0 hidden sm:flex items-center gap-1.5 whitespace-nowrap rounded-full border border-black/10 dark:border-white/15 bg-white/95 dark:bg-background/95 backdrop-blur-md px-3 py-1 text-[11px] font-mono text-slate-700 dark:text-slate-200 opacity-0 -translate-y-1 shadow-lg transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0"
         >
-          <span className="font-bold text-[#F26D3D]">{progress}%</span>
+          <span className="font-bold text-accent-ink">{progress}%</span>
           <span className="text-slate-400">·</span>
           <span>{t("common.backToTop")}</span>
         </div>
@@ -67,7 +67,7 @@ export function BackToTop() {
           title={`${t("common.backToTop")} (${progress}%)`}
           className={cn(
             "relative flex h-12 w-12 items-center justify-center rounded-full cursor-pointer",
-            "bg-white/90 dark:bg-[#07090E]/90 backdrop-blur-md",
+            "bg-white/90 dark:bg-background/90 backdrop-blur-md",
             "border border-slate-200 dark:border-white/10",
             "shadow-[0_8px_24px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)]",
             "hover:border-[#F26D3D]/60 hover:shadow-[0_0_24px_rgba(242,109,61,0.35)]",
@@ -106,7 +106,7 @@ export function BackToTop() {
 
           {/* Icône de flèche avec micro-animation fluide vers le haut au survol */}
           <ArrowUp
-            className="h-5 w-5 text-slate-700 dark:text-slate-200 group-hover:text-[#F26D3D] group-hover:-translate-y-0.5 transition-all duration-200"
+            className="h-5 w-5 text-slate-700 dark:text-slate-200 group-hover:text-accent-ink group-hover:-translate-y-0.5 transition-all duration-200"
             aria-hidden="true"
           />
         </button>

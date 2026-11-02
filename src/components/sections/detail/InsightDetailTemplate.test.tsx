@@ -13,7 +13,7 @@ const mockAppContent: AppContentDTO = {
   blogPosts: FALLBACK_BLOG_POSTS_FR,
   siteConfig: {
     siteName: "Analyticatech",
-    url: "https://analyticatech.fr",
+    url: "https://www.analyticatech.fr",
     email: "contact@analyticatech.fr",
     phone: "+33 1 00 00 00 00",
     phoneHref: "tel:+33100000000",
@@ -49,7 +49,7 @@ const mockAppContent: AppContentDTO = {
     ogTitle: null,
     ogDescription: null,
     ogImageUrl: null,
-    canonicalUrl: "https://analyticatech.fr",
+    canonicalUrl: "https://www.analyticatech.fr",
     twitterCard: "summary_large_image",
   },
   seoSchemas: [],
@@ -82,38 +82,39 @@ describe("InsightDetailTemplate & Registry", () => {
     );
 
     // 01. Contexte
-    expect(html).toContain("01 // CONTEXTE & CAS D'USAGE RÉEL");
+    expect(html).toContain("01 · Contexte : scénario type");
     expect(html).toContain("Assurance & Mutuelle de santé");
     expect(html).toContain("150 000 polices contractuelles");
 
     // 02. Problème
-    expect(html).toContain("02 // LE PROBLÈME EN PRODUCTION");
+    expect(html).toContain("02 · LE PROBLÈME EN PRODUCTION");
     expect(html).toContain("ERR_01 // CHUNKING_NAÏF");
-    expect(html).toContain("Perte de 38% de recall");
+    expect(html).toContain("Les clauses liées ne sont plus retrouvées ensemble");
+    expect(html).not.toMatch(/\d+\s?% de recall/);
 
     // 03. Architecture & Stack
-    expect(html).toContain("03 // APPROCHE & ARCHITECTURE");
+    expect(html).toContain("03 · APPROCHE & ARCHITECTURE");
     expect(html).toContain("Ragas");
     expect(html).toContain("v0.2.14");
     expect(html).toContain("Qdrant");
     expect(html).toContain("Hierarchical Chunking + Document Tree");
 
     // 04. Arbitrages & Limites
-    expect(html).toContain("04 // ARBITRAGES TECHNIQUES & LIMITES ASSUMÉES");
+    expect(html).toContain("04 · ARBITRAGES TECHNIQUES & LIMITES ASSUMÉES");
     expect(html).toContain("NOTE DE TRANSPARENCE");
     expect(html).toContain("Latence P95 vs Fidélité documentaire");
     expect(html).toContain("Arbitrage retenu :");
 
     // 05. Résultats & Métriques
-    expect(html).toContain("05 // RÉSULTATS & MESURES CONTEXTUALISÉES");
-    expect(html).toContain("0.94");
+    expect(html).toContain("05 · INDICATEURS À MESURER");
+    expect(html).toContain("À mesurer");
     expect(html).toContain("À titre indicatif");
     expect(html).toContain("Protocole de mesure //");
 
     // 06. Pour aller plus loin
-    expect(html).toContain("06 // POUR ALLER PLUS LOIN · SOLUTIONS & SERVICES");
+    expect(html).toContain("06 · POUR ALLER PLUS LOIN · SOLUTIONS & SERVICES");
     expect(html).toContain("Service 01 — Raisonnement & RAG");
-    expect(html).toContain("Synthèse clinique & extraction NLP");
+    expect(html).toContain("AVIE — veille sourcée");
   });
 
   it("BlogDetailView intègre automatiquement le template enrichi pour les articles enregistrés", () => {
@@ -122,13 +123,15 @@ describe("InsightDetailTemplate & Registry", () => {
     );
 
     expect(html).toContain("Évaluer un système RAG en production :");
-    expect(html).toContain("04 // ARBITRAGES TECHNIQUES & LIMITES ASSUMÉES");
-    expect(html).toContain("05 // RÉSULTATS & MESURES CONTEXTUALISÉES");
+    expect(html).toContain("04 · ARBITRAGES TECHNIQUES & LIMITES ASSUMÉES");
+    expect(html).toContain("05 · INDICATEURS À MESURER");
   });
 
-  it("garantit que l'intégralité des 6 articles du registre respectent la grille d'expertise technique", () => {
+  it("garantit que les 5 articles du registre respectent la grille d'expertise technique", () => {
     const allSlugs = Object.keys(INSIGHTS_DETAIL_REGISTRY);
-    expect(allSlugs.length).toBe(6);
+    expect(allSlugs.length).toBe(5);
+    // L'article FinOps, hors de l'offre, a été dépublié
+    expect(allSlugs).not.toContain("finops-cloud-native");
 
     for (const slug of allSlugs) {
       const article = INSIGHTS_DETAIL_REGISTRY[slug];
@@ -178,18 +181,18 @@ describe("InsightDetailTemplate & Registry", () => {
         <InsightDetailTemplate data={article} onNavigate={() => {}} onNavigateDetail={() => {}} />
       );
       expect(html).toContain(article.hero.title);
-      expect(html).toContain("01 // CONTEXTE & CAS D'USAGE RÉEL");
-      expect(html).toContain("02 // LE PROBLÈME EN PRODUCTION");
-      expect(html).toContain("03 // APPROCHE & ARCHITECTURE");
-      expect(html).toContain("04 // ARBITRAGES TECHNIQUES & LIMITES ASSUMÉES");
-      expect(html).toContain("05 // RÉSULTATS & MESURES CONTEXTUALISÉES");
-      expect(html).toContain("06 // POUR ALLER PLUS LOIN · SOLUTIONS & SERVICES");
+      expect(html).toContain("01 · Contexte : scénario type");
+      expect(html).toContain("02 · LE PROBLÈME EN PRODUCTION");
+      expect(html).toContain("03 · APPROCHE & ARCHITECTURE");
+      expect(html).toContain("04 · ARBITRAGES TECHNIQUES & LIMITES ASSUMÉES");
+      expect(html).toContain("05 · INDICATEURS À MESURER");
+      expect(html).toContain("06 · POUR ALLER PLUS LOIN · SOLUTIONS & SERVICES");
     }
   });
 
-  it("garantit que FALLBACK_BLOG_POSTS_FR et _EN contiennent les 6 articles complets", () => {
-    expect(FALLBACK_BLOG_POSTS_FR).toHaveLength(6);
-    expect(FALLBACK_BLOG_POSTS_EN).toHaveLength(6);
+  it("garantit que FALLBACK_BLOG_POSTS_FR et _EN contiennent les 5 articles complets", () => {
+    expect(FALLBACK_BLOG_POSTS_FR).toHaveLength(5);
+    expect(FALLBACK_BLOG_POSTS_EN).toHaveLength(5);
 
     const fallbackSlugsFr = FALLBACK_BLOG_POSTS_FR.map((p) => p.slug);
     const registrySlugs = Object.keys(INSIGHTS_DETAIL_REGISTRY);

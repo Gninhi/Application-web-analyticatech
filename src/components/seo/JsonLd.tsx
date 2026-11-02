@@ -1,193 +1,89 @@
-"use client";
-
-import Script from "next/script";
-import { useAppContentOptional } from "@/components/providers/ContentProvider";
-import { KEY_STATS_CONFIG } from "@/data/stats";
-import { SLA_COMMITMENTS } from "@/data/commitments";
-
+import type { AppContentDTO } from "@/types/content";
 import { isValidSocialUrl } from "@/lib/content/site";
 
 /**
- * JsonLd — injecte le structured data (JSON-LD) via next/script.
- * Utilise next/script avec strategy="afterInteractive" pour éviter l'avertissement
- * React sur les balises <script> brutes dans les composants clients.
- * Données chargées dynamiquement depuis Supabase via useAppContent().
+ * JsonLd — données structurées (JSON-LD) rendues côté serveur dans le HTML
+ * initial, pour qu'elles soient lues par tous les robots, y compris ceux des
+ * assistants d'IA qui n'exécutent pas JavaScript.
+ *
+ * Ne déclare que des faits vérifiables (immatriculation, fondateur, adresse,
+ * services). Pas de FAQPage ni de SearchAction : leur contenu n'existe pas
+ * tel quel sur les pages, ce que Google considère comme trompeur.
  */
-export function JsonLd() {
-  const content = useAppContentOptional();
-  if (!content) return null;
 
-  const { siteConfig, services, seoSchemas, seoMetadata } = content;
+/** Échappe `<` pour qu'aucune donnée ne puisse fermer la balise <script>. */
+function serialize(schema: unknown): string {
+  return JSON.stringify(schema).replace(/</g, "\\u003c");
+}
 
-  const sanitize = (obj: unknown): string => {
-    const json = JSON.stringify(obj);
-    // Anti-XSS : retire toute balise script et attribut on* injectés dans les données
-    return json.replace(/<script|<\/script|on\w+\s*=/gi, "");
+export function buildJsonLdSchemas(content: AppContentDTO): Record<string, unknown>[] {
+  const { siteConfig, services, seoMetadata } = content;
+  const sameAs = [siteConfig.socialLinkedin, siteConfig.socialTwitter, siteConfig.socialGithub].filter(
+    (url): url is string => isValidSocialUrl(url)
+  );
+  const address = {
+    "@type": "PostalAddress",
+    streetAddress: siteConfig.streetAddress,
+    addressLocality: siteConfig.city,
+    postalCode: siteConfig.postalCode,
+    addressCountry: siteConfig.countryCode,
   };
 
-  const sameAs = [
-    siteConfig.socialLinkedin,
-    siteConfig.socialTwitter,
-    siteConfig.socialGithub,
-  ].filter((url): url is string => isValidSocialUrl(url));
-
-  const schemas: Record<string, unknown>[] = [
-    // Organization
+  return [
     {
       "@context": "https://schema.org",
-      "@type": "Organization",
+      "@type": "ProfessionalService",
+      "@id": `${siteConfig.url}/#organization`,
       name: siteConfig.siteName,
+      legalName: "Analyticatech SAS",
       url: siteConfig.url,
       logo: `${siteConfig.url}/logo.svg`,
       description: seoMetadata.description,
       email: siteConfig.email,
-      telephone: siteConfig.phoneHref,
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: siteConfig.streetAddress,
-        addressLocality: siteConfig.city,
-        postalCode: siteConfig.postalCode,
-        addressCountry: siteConfig.countryCode,
+      telephone: siteConfig.phoneHref.replace(/^tel:/, ""),
+      address,
+      foundingDate: "2024-02-13",
+      founder: {
+        "@type": "Person",
+        name: "Martial Gninhi",
+        jobTitle: "Fondateur et Président",
       },
-      sameAs,
+      identifier: { "@type": "PropertyValue", propertyID: "SIREN", value: "984609198" },
+      vatID: "FR96984609198",
+      areaServed: { "@type": "Country", name: "France" },
       availableLanguage: ["fr", "en"],
+      sameAs,
       knowsAbout: [
-        "Intelligence Artificielle",
-        "Large Language Models",
+        "Intelligence artificielle",
         "Retrieval Augmented Generation",
         "Agents IA",
-        "Automatisation",
-        "Business Intelligence",
-        "LangChain",
-        "LangGraph",
-        "n8n",
-        "Power BI",
-        "SecNumCloud",
+        "Automatisation des processus",
+        "Business intelligence",
       ],
       makesOffer: services.map((s) => ({
         "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: s.title,
-          description: s.description,
-        },
+        itemOffered: { "@type": "Service", name: s.title, description: s.description },
       })),
     },
-    // WebSite
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
       name: siteConfig.siteName,
       url: siteConfig.url,
-      description: seoMetadata.description,
-      inLanguage: "fr-FR",
-      potentialAction: {
-        "@type": "SearchAction",
-        target: {
-          "@type": "EntryPoint",
-          urlTemplate: `${siteConfig.url}/insights?q={search_term_string}`,
-        },
-        "query-input": "required name=search_term_string",
-      },
+      inLanguage: content.locale === "en" ? "en" : "fr-FR",
+      publisher: { "@id": `${siteConfig.url}/#organization` },
     },
-    // ProfessionalService
-    {
-      "@context": "https://schema.org",
-      "@type": "ProfessionalService",
-      name: siteConfig.siteName,
-      description: seoMetadata.description,
-      url: siteConfig.url,
-      telephone: siteConfig.phoneHref,
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: siteConfig.streetAddress,
-        addressLocality: siteConfig.city,
-        postalCode: siteConfig.postalCode,
-        addressCountry: siteConfig.countryCode,
-      },
-      areaServed: { "@type": "Country", name: "France" },
-      serviceType: services.map((s) => s.title),
-    },
-    // FAQPage
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "Quels services propose Analyticatech ?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: `Analyticatech propose les services suivants : ${services.map((s) => s.title).join(", ")}.`,
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Quelles technologies maîtrise Analyticatech ?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "LangChain, LangGraph, OpenAI, Pinecone, Hugging Face, vLLM, Kubernetes, Terraform, AWS, Azure, n8n, Temporal, Apache Airflow, CrewAI, AutoGen, Power BI, dbt, Snowflake, BigQuery, Looker.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Analyticatech est-il conforme RGPD et compatible cloud souverain ?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Oui. Analyticatech applique une stricte conformité RGPD, un chiffrement en transit (TLS 1.3) et au repos (AES-256) et conçoit des architectures déployables sur des infrastructures souveraines européennes qualifiées SecNumCloud.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Quel est le délai de réponse d'Analyticatech ?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: `Premier accusé de réception sous ${SLA_COMMITMENTS.ack.valueFr.replace("< ", "")}, réponse d'un architecte sous ${SLA_COMMITMENTS.architect.valueFr.replace("< ", "")}, atelier de cadrage proposé sous ${SLA_COMMITMENTS.workshop.valueFr.replace("< ", "")}. Équipe joignable ${SLA_COMMITMENTS.schedule.fullFr}.`,
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Quels sont les résultats mesurables d'Analyticatech ?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: `${KEY_STATS_CONFIG.missions.value} missions livrées, ${KEY_STATS_CONFIG.costReduction.value} de coûts réduits en moyenne, ${KEY_STATS_CONFIG.uptime.value} d'uptime plateforme, ${KEY_STATS_CONFIG.satisfaction.value} de satisfaction C-Level, 48 processus automatisés, 38 agents IA en production, 420h économisées par mois.`,
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Comment se déroule une mission avec Analyticatech ?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "4 phases : Discovery (atelier de cadrage, architecture cible), Build (sprints de 2 semaines, démos en production), Hardening (audit sécurité, tests de charge, conformité RGPD), Run & Scale (supervision continue, finops, amélioration continue).",
-          },
-        },
-      ],
-    },
-    // BreadcrumbList — URLs réelles des routes App Router
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Accueil", item: siteConfig.url },
-        { "@type": "ListItem", position: 2, name: "Services", item: `${siteConfig.url}/services` },
-        { "@type": "ListItem", position: 3, name: "Solutions", item: `${siteConfig.url}/solutions` },
-        { "@type": "ListItem", position: 4, name: "Insights", item: `${siteConfig.url}/insights` },
-        { "@type": "ListItem", position: 5, name: "Contact", item: `${siteConfig.url}/contact` },
-      ],
-    },
-    // Schémas dynamiques Supabase
-    ...seoSchemas.map((s) => s.payload as Record<string, unknown>),
   ];
+}
 
+export function JsonLd({ content }: { content: AppContentDTO }) {
   return (
     <>
-      {schemas.map((schema, i) => (
-        <Script
+      {buildJsonLdSchemas(content).map((schema, i) => (
+        <script
           key={i}
-          id={`jsonld-${i}`}
           type="application/ld+json"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{ __html: sanitize(schema) }}
+          dangerouslySetInnerHTML={{ __html: serialize(schema) }}
         />
       ))}
     </>

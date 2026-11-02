@@ -65,16 +65,16 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
                 >
                   <div>
                     <div className="flex items-center justify-between font-mono text-[10px] uppercase text-slate-500 dark:text-slate-400 mb-4">
-                      <span className="px-2.5 py-1 rounded-full bg-[#F26D3D]/10 text-[#F26D3D] font-bold border border-[#F26D3D]/20">
+                      <span className="px-2.5 py-1 rounded-full bg-[#F26D3D]/10 text-accent-ink font-bold border border-[#F26D3D]/20">
                         {featuredPost.categoryLabel || featuredPost.categoryKey}
                       </span>
                       <span className="flex items-center gap-1.5">
-                        <Calendar className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden />
+                        <Calendar className="h-3.5 w-3.5 text-accent-ink" aria-hidden />
                         {formatPostDate(featuredPost.date, locale)}
                       </span>
                     </div>
 
-                    <h3 className="font-display text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#F26D3D] transition-colors leading-snug mb-4">
+                    <h3 className="font-display text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-50 group-hover:text-accent-ink transition-colors leading-snug mb-4">
                       {featuredPost.title}
                     </h3>
 
@@ -89,7 +89,7 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
                         ? featuredPost.readingTime
                         : `${featuredPost.readingTime.replace(/\s*min.*/i, "")} ${t("common.read")}`}
                     </span>
-                    <span className="text-[#F26D3D] group-hover:translate-x-1.5 transition-transform inline-flex items-center gap-1.5 font-bold">
+                    <span className="text-accent-ink group-hover:translate-x-1.5 transition-transform inline-flex items-center gap-1.5 font-bold">
                       {t("home.insights.read")} <ArrowRight className="h-4 w-4" />
                     </span>
                   </div>
@@ -110,16 +110,16 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
                 >
                   <div>
                     <div className="flex items-center justify-between font-mono text-[10px] uppercase text-slate-500 dark:text-slate-400 mb-3">
-                      <span className="px-2 py-0.5 rounded-full bg-[#F26D3D]/10 text-[#F26D3D] font-bold border border-[#F26D3D]/20">
+                      <span className="px-2 py-0.5 rounded-full bg-[#F26D3D]/10 text-accent-ink font-bold border border-[#F26D3D]/20">
                         {post.categoryLabel || post.categoryKey}
                       </span>
                       <span className="flex items-center gap-1.5">
-                        <Calendar className="h-3 w-3 text-[#F26D3D]" aria-hidden />
+                        <Calendar className="h-3 w-3 text-accent-ink" aria-hidden />
                         {formatPostDate(post.date, locale)}
                       </span>
                     </div>
 
-                    <h4 className="font-display text-base md:text-lg font-bold text-slate-900 dark:text-slate-50 group-hover:text-[#F26D3D] transition-colors leading-snug mb-2.5">
+                    <h4 className="font-display text-base md:text-lg font-bold text-slate-900 dark:text-slate-50 group-hover:text-accent-ink transition-colors leading-snug mb-2.5">
                       {post.title}
                     </h4>
 
@@ -134,7 +134,7 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
                         ? post.readingTime
                         : `${post.readingTime.replace(/\s*min.*/i, "")} ${t("common.read")}`}
                     </span>
-                    <span className="text-[#F26D3D] group-hover:translate-x-1.5 transition-transform inline-flex items-center gap-1 font-bold">
+                    <span className="text-accent-ink group-hover:translate-x-1.5 transition-transform inline-flex items-center gap-1 font-bold">
                       {t("home.insights.read")} <ArrowRight className="h-3.5 w-3.5" />
                     </span>
                   </div>

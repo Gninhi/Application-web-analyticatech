@@ -162,15 +162,15 @@ export function CookieConsent() {
       aria-live="polite"
       aria-hidden={!visible}
     >
-      <div className="glass-card rounded-2xl border border-black/15 dark:border-white/15 p-5 md:p-6 shadow-2xl bg-white/95 dark:bg-[#06070B]/95 backdrop-blur-2xl">
+      <div className="glass-card rounded-2xl border border-black/15 dark:border-white/15 p-5 md:p-6 shadow-2xl bg-white/95 dark:bg-background/95 backdrop-blur-2xl">
         {/* En-tête avec Kicker technique // et icône dédiée */}
         <div className="flex items-start gap-3.5 mb-3.5">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 text-[#F26D3D] shadow-xs">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 text-accent-ink shadow-xs">
             <Cookie className="h-5 w-5" aria-hidden="true" />
           </span>
           <div className="flex-1 min-w-0">
-            <span className="block font-mono text-[10px] uppercase tracking-widest text-[#F26D3D] mb-0.5 font-semibold">
-              {"// "}{view === "summary" ? "CONFIDENTIALITÉ & TRACEURS" : "PARAMÉTRAGE GRANULAIRE"}
+            <span className="block font-mono text-[10px] uppercase tracking-widest text-accent-ink mb-0.5 font-semibold">
+              {view === "summary" ? "CONFIDENTIALITÉ & TRACEURS" : "PARAMÉTRAGE GRANULAIRE"}
             </span>
             <h2 className="font-display text-base md:text-lg font-bold text-slate-900 dark:text-slate-50 leading-tight">
               {t("cookie.title")}
@@ -232,8 +232,8 @@ export function CookieConsent() {
                 size="sm"
                 borderRadius="0.75rem"
                 tabIndex={visible ? 0 : -1}
-                icon={<Sliders className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden="true" />}
-                className="w-full font-mono uppercase tracking-wider text-xs h-9 text-slate-700 dark:text-slate-300 hover:text-[#F26D3D] dark:hover:text-[#F26D3D]"
+                icon={<Sliders className="h-3.5 w-3.5 text-accent-ink" aria-hidden="true" />}
+                className="w-full font-mono uppercase tracking-wider text-xs h-9 text-slate-700 dark:text-slate-300 hover:text-accent-ink dark:hover:text-accent-ink"
               >
                 {t("cookie.customize")}
               </Button>
@@ -248,12 +248,12 @@ export function CookieConsent() {
             <div className="rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 p-3.5 transition-all">
               <div className="flex items-center justify-between gap-2 mb-1.5">
                 <div className="flex items-center gap-2">
-                  <Shield className="h-4 w-4 text-emerald-500 shrink-0" aria-hidden="true" />
+                  <Shield className="h-4 w-4 text-link shrink-0" aria-hidden="true" />
                   <span className="font-display text-xs font-bold text-slate-900 dark:text-slate-100">
                     {t("cookie.category.essential.title")}
                   </span>
                 </div>
-                <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-semibold tracking-wider">
+                <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-full bg-link/15 border border-link/30 text-link dark:text-link font-semibold tracking-wider">
                   <Lock className="h-2.5 w-2.5" aria-hidden="true" />
                   {t("cookie.category.essential.alwaysActive")}
                 </span>

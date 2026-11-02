@@ -23,10 +23,9 @@ describe("ServiceDetailView Component", () => {
     expect(html).toContain("& Systèmes RAG");
     expect(html).toContain("SERVICE 01 — LLM, RAG HAUTE PRÉCISION & GARDE-FOUS");
 
-    // Preuves chiffrées
-    expect(html).toContain("280 ms");
-    expect(html).toContain("LATENCE RAG P95");
-    expect(html).toContain("94.2 %");
+    // Aucune preuve chiffrée non vérifiable
+    expect(html).not.toContain("280 ms");
+    expect(html).not.toContain("94.2 %");
 
     // Problèmes & Livrables
     expect(html).toContain("Ce que vos équipes vivent aujourd'hui");
@@ -35,19 +34,21 @@ describe("ServiceDetailView Component", () => {
 
     // Timeline & Cas sectoriels
     expect(html).toContain("Quatre phases, des jalons vérifiables");
-    expect(html).toContain("Conçu pour des secteurs d'activité exigeants");
+    expect(html).toContain("Scénarios types par secteur");
     expect(html).toContain("BANQUE & ASSURANCE");
 
     // Stack technique & Témoignage
-    expect(html).toContain("Une stack de production, pas de prototypage");
+    expect(html).toContain("Des outils éprouvés en production");
     expect(html).toContain("LangChain");
     expect(html).toContain("Mistral Large");
-    expect(html).toContain("-65%");
+    expect(html).not.toContain("-65%");
+    expect(html).toContain("Indicateur suivi");
 
     // FAQ & CTA
-    expect(html).toContain("Ce que nos clients demandent avant de démarrer");
-    expect(html).toContain("Mes données d'entreprise restent-elles confidentielles et souveraines ?");
-    expect(html).toContain("Demander un cadrage express");
+    expect(html).toContain("Les questions posées avant de démarrer");
+    expect(html).toContain("Mes données d'entreprise restent-elles confidentielles ?");
+    expect(html).not.toContain("certifié SecNumCloud");
+    expect(html).toContain("Prendre 20 minutes");
   });
 
   it("rend les données enrichies pour tous les index de services (01, 02, 03, 04)", () => {
@@ -64,7 +65,9 @@ describe("ServiceDetailView Component", () => {
 
       expect(html).toContain(data.heroTitle);
       expect(html).toContain(data.badge);
-      expect(html).toContain(data.proofMetrics[0].value);
+      // Aucun témoignage ni preuve chiffrée : ces champs n'existent plus
+      expect("caseStudy" in data).toBe(false);
+      expect("proofMetrics" in data).toBe(false);
       expect(html).toContain(data.deliverables[0].title);
       expect(html).toContain(data.timeline[0].title);
       expect(html).toContain(data.sectorCases[0].sector);

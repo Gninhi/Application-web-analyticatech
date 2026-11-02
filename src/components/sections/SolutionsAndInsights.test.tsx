@@ -21,71 +21,46 @@ const mockPost: BlogPostDTO = {
   id: "post-1",
   slug: "agents-production-2025",
   title: "Industrialiser les agents IA",
-  excerpt: "Pourquoi 80% des POC agents ne passent pas l'échelle...",
+  excerpt: "Pourquoi beaucoup de prototypes d'agents ne passent pas en production...",
   categoryKey: "IA",
   categoryLabel: "Intelligence Artificielle",
   date: "2025-09-14T00:00:00.000Z",
   readingTime: "11 min",
-  author: "L. Marchand",
+  author: "Martial GNINHI",
   tags: ["Agents", "LangGraph", "Production"],
 };
 
 describe("SolutionCard Component", () => {
-  it("affiche les informations pour les 7 cas d'usage FR, avec badge Nouvelle offre et Capacité & Méthode pour Dealscoop", () => {
-    expect(FALLBACK_SOLUTIONS_FR).toHaveLength(7);
+  for (const [locale, solutions] of [
+    ["fr", FALLBACK_SOLUTIONS_FR],
+    ["en", FALLBACK_SOLUTIONS_EN],
+  ] as const) {
+    it(`affiche les 3 projets réels puis les 3 pistes (${locale}), avec leur statut exact`, () => {
+      expect(solutions.map((s) => s.slug)).toEqual([
+        "ciblioo",
+        "contentops",
+        "avie",
+        "retail-bi",
+        "logistics-ai",
+        "veille-registres",
+      ]);
 
-    for (let i = 0; i < FALLBACK_SOLUTIONS_FR.length; i++) {
-      const solution = FALLBACK_SOLUTIONS_FR[i];
-      const html = renderWithI18n(
-        <SolutionCard
-          solution={solution}
-          index={i}
-          total={7}
-          onNavigateDetail={() => {}}
-        />,
-        "fr"
-      );
-
-      expect(html).toContain(solution.title);
-      expect(html).toContain(solution.impact);
-      expect(solution.methodology).toBeDefined();
-      expect(html).toContain(solution.methodology);
-
-      if (solution.slug === "dealscoop") {
-        expect(html).toContain("Nouvelle offre");
-        expect(html).toContain("Capacité & Méthode");
-        expect(html).not.toContain("Déployé en production");
-      }
-    }
-  });
-
-  it("affiche les chiffres d'impact et la note de méthodologie pour les 7 cas d'usage EN", () => {
-    expect(FALLBACK_SOLUTIONS_EN).toHaveLength(7);
-
-    for (let i = 0; i < FALLBACK_SOLUTIONS_EN.length; i++) {
-      const solution = FALLBACK_SOLUTIONS_EN[i];
-      const html = renderWithI18n(
-        <SolutionCard
-          solution={solution}
-          index={i}
-          total={7}
-          onNavigateDetail={() => {}}
-        />,
-        "en"
-      );
-
-      expect(html).toContain(solution.title);
-      expect(html).toContain(solution.impact);
-      expect(solution.methodology).toBeDefined();
-      expect(html).toContain(solution.methodology);
-
-      if (solution.slug === "dealscoop") {
-        expect(html).toContain("New offering");
-        expect(html).toContain("Capability & Methodology");
-        expect(html).not.toContain("Deployed in Production");
-      }
-    }
-  });
+      solutions.forEach((solution, i) => {
+        const html = renderWithI18n(
+          <SolutionCard solution={solution} index={i} total={solutions.length} onNavigateDetail={() => {}} />,
+          locale
+        );
+        expect(html).toContain(solution.title);
+        expect(html).toContain(solution.impact);
+        expect(html).toContain(solution.statusBadge ?? "");
+        expect(html).toContain(solution.impactLabel ?? "");
+        expect(html).toContain(solution.methodology ?? "");
+        // Aucun libellé de mesure fictive sur une carte
+        expect(html).not.toContain("Impact mesuré");
+        expect(html).not.toContain("Measured impact");
+      });
+    });
+  }
 });
 
 describe("Insights & Blog Cards", () => {

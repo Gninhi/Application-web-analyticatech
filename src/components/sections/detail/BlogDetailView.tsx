@@ -90,7 +90,7 @@ export function BlogDetailView({
           {/* En-tête */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-4">
-              <span className="rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-[#F26D3D]">
+              <span className="rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-accent-ink">
                 {post.categoryLabel}
               </span>
               <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
@@ -126,7 +126,7 @@ export function BlogDetailView({
             <ul className="space-y-3 mb-6">
               {post.tags.map((tag: string) => (
                 <li key={tag} className="flex items-start gap-3 text-slate-600 dark:text-slate-300">
-                  <Check className="h-5 w-5 text-[#4CAF50] shrink-0 mt-0.5" aria-hidden />
+                  <Check className="h-5 w-5 text-link shrink-0 mt-0.5" aria-hidden />
                   <span>
                     {locale === "fr"
                       ? `Approche ${tag} : méthodologie, outils et retour d'expérience`

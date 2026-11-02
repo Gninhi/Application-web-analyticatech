@@ -11,12 +11,14 @@ import {
   ExternalLink,
   FileCheck,
 } from "lucide-react";
+import Link from "next/link";
 import type { ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ContactCta } from "@/components/ui/ContactCta";
 import { SectionContainer } from "@/components/ui/SectionContainer";
+import { formatLegalDate } from "@/lib/content/legal";
 import {
   SLA_COMMITMENTS,
   getSupportScheduleNotice,
@@ -59,14 +61,10 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
           <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-500 dark:text-slate-400">
             <span>
               {t("legal.lastUpdated")}{" "}
-              {new Date().toLocaleDateString(locale, {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
+              {formatLegalDate(locale)}
             </span>
             <span className="hidden md:inline">•</span>
-            <span className="inline-flex items-center gap-1.5 font-mono text-xs text-[#F26D3D]">
+            <span className="inline-flex items-center gap-1.5 font-mono text-xs text-accent-ink">
               <FileCheck className="h-3.5 w-3.5" aria-hidden />
               Article 6-III de la loi n° 2004-575 (LCEN)
             </span>
@@ -92,10 +90,10 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
           >
             <div className="flex items-center gap-3 mb-4">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 shrink-0">
-                <Building2 className="h-5 w-5 text-[#F26D3D]" aria-hidden />
+                <Building2 className="h-5 w-5 text-accent-ink" aria-hidden />
               </span>
               <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-[#F26D3D]">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-accent-ink">
                   Section 1 • Article 6-III-1 a & b
                 </span>
                 <h2 className="font-display text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-50">
@@ -107,7 +105,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
             <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
               Le site internet accessible à l&apos;adresse{" "}
               <span className="font-mono text-xs font-semibold text-slate-900 dark:text-slate-100">
-                https://analyticatech.fr
+                https://www.analyticatech.fr
               </span>{" "}
               est édité et exploité par la société suivante :
             </p>
@@ -142,7 +140,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
 
               <div className="rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 p-4">
                 <dt className="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
-                  Adresse du siège social réel
+                  Adresse du siège social
                 </dt>
                 <dd className="text-slate-900 dark:text-slate-100">
                   60 rue François 1er, 75008 Paris, France
@@ -200,7 +198,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                 </dt>
                 <dd className="text-slate-900 dark:text-slate-100">
                   Conseil en systèmes et logiciels informatiques —{" "}
-                  <span className="font-mono text-xs font-semibold text-[#F26D3D]">
+                  <span className="font-mono text-xs font-semibold text-accent-ink">
                     Code NAF/APE : 62.02A
                   </span>
                   <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
@@ -222,10 +220,10 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
           >
             <div className="flex items-center gap-3 mb-4">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 shrink-0">
-                <Server className="h-5 w-5 text-[#F26D3D]" aria-hidden />
+                <Server className="h-5 w-5 text-accent-ink" aria-hidden />
               </span>
               <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-[#F26D3D]">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-accent-ink">
                   Section 2 • Article 6-III-1 d
                 </span>
                 <h2 className="font-display text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-50">
@@ -272,7 +270,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                     href="https://vercel.com/contact"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-[#F26D3D] hover:underline"
+                    className="inline-flex items-center gap-1 text-accent-ink hover:underline"
                   >
                     vercel.com/contact
                     <ExternalLink className="h-3 w-3" aria-hidden />
@@ -284,36 +282,28 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
             {/* Encadré d'importance majeure : distinction avec les données clients */}
             <div className="rounded-2xl p-5 md:p-6 bg-gradient-to-br from-[#F26D3D]/10 via-[#F26D3D]/5 to-transparent border border-[#F26D3D]/30">
               <div className="flex items-start gap-3">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F26D3D]/20 text-[#F26D3D] shrink-0 mt-0.5">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F26D3D]/20 text-accent-ink shrink-0 mt-0.5">
                   <Lock className="h-4 w-4" aria-hidden />
                 </span>
                 <div className="space-y-2">
                   <h4 className="font-display font-bold text-sm md:text-base text-slate-900 dark:text-slate-50">
-                    B. Distinction essentielle : hébergement web vs données clients en mission
+                    B. Données du formulaire et données de mission
                   </h4>
-                  <p className="text-xs md:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                    L&apos;hébergeur web susmentionné (Vercel Inc.) intervient exclusivement dans le cadre de la
-                    délivrance technique des pages publiques, scripts statiques et contenus institutionnels du
-                    présent site vitrine.
-                  </p>
-                  <p className="text-xs md:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
-                    Cet hébergement est strictement étanche et distinct des infrastructures cloud, environnements
-                    d&apos;exécution, bases de données vectorielles et pipelines de données exploités dans le cadre
-                    des prestations de conseil et des solutions d&apos;intelligence artificielle développées pour
-                    nos entreprises clientes :
-                  </p>
                   <ul className="list-disc list-inside space-y-1 text-xs md:text-sm text-slate-600 dark:text-slate-300 pl-1">
                     <li>
-                      <strong className="text-slate-900 dark:text-slate-100">Infrastructures clientes dédiées :</strong>{" "}
-                      Les flux de données sensibles sont traités soit directement au sein des tenants et clouds privés
-                      de nos clients (VPC, On-Premise, Azure, AWS, GCP sécurisés), soit sur des environnements
-                      infonuagiques souverains européens qualifiés SecNumCloud / ISO 27001 / SOC 2 choisis en concertation.
+                      <strong className="text-slate-900 dark:text-slate-100">Formulaire de contact :</strong>{" "}
+                      les demandes sont enregistrées dans une base de données Supabase hébergée dans l&apos;Union
+                      européenne (Francfort, Allemagne). Le détail figure dans la{" "}
+                      <Link href={locale === "en" ? "/en/confidentialite" : "/confidentialite"} className="text-link underline-offset-2 hover:underline">
+                        politique de confidentialité
+                      </Link>
+                      .
                     </li>
                     <li>
-                      <strong className="text-slate-900 dark:text-slate-100">Garanties contractuelles (DPA & NDA) :</strong>{" "}
-                      Chaque mission de conseil fait l&apos;objet d&apos;un accord contractuel rigoureux de traitement
-                      des données (Data Processing Agreement), d&apos;accords de confidentialité réciproques et d&apos;un
-                      engagement absolu de non-réutilisation des données pour l&apos;entraînement de modèles tiers.
+                      <strong className="text-slate-900 dark:text-slate-100">Données de mission :</strong>{" "}
+                      les données confiées dans le cadre d&apos;une mission sont traitées dans l&apos;environnement
+                      convenu par contrat avec chaque client (ses propres serveurs ou un hébergeur choisi ensemble),
+                      avec un accord de confidentialité et, lorsque nécessaire, un accord de traitement des données.
                     </li>
                   </ul>
                 </div>
@@ -330,10 +320,10 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
           >
             <div className="flex items-center gap-3 mb-4">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 shrink-0">
-                <ShieldCheck className="h-5 w-5 text-[#F26D3D]" aria-hidden />
+                <ShieldCheck className="h-5 w-5 text-accent-ink" aria-hidden />
               </span>
               <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-[#F26D3D]">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-accent-ink">
                   Section 3 • Code de la Propriété Intellectuelle
                 </span>
                 <h2 className="font-display text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-50">
@@ -367,14 +357,18 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
 
               <div className="rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 p-4 space-y-2">
                 <h3 className="font-display font-semibold text-slate-900 dark:text-slate-100 text-sm">
-                  Extraction automatisée & Fouille de textes et de données (TDM / AI Scraping Opt-out)
+                  Moteurs de recherche, assistants d&apos;IA et entraînement de modèles
                 </h3>
                 <p className="text-xs md:text-sm text-slate-600 dark:text-slate-300">
-                  Conformément à l&apos;article L. 122-5-3 du Code de la Propriété Intellectuelle, Analyticatech
-                  s&apos;oppose expressément à toute extraction, aspiration ou réutilisation automatisée de ses contenus
-                  à des fins de fouille de textes et de données (Text and Data Mining), ainsi qu&apos;à toute utilisation
-                  visant l&apos;entraînement, le fine-tuning ou l&apos;évaluation de modèles d&apos;intelligence
-                  artificielle tiers non autorisés.
+                  Les moteurs de recherche et les assistants d&apos;IA peuvent indexer et citer ce site. En revanche,
+                  conformément à l&apos;article L. 122-5-3 du Code de la propriété intellectuelle, Analyticatech
+                  s&apos;oppose à la réutilisation de ses contenus pour entraîner des modèles d&apos;intelligence
+                  artificielle sans accord écrit. Cette opposition est exprimée de façon lisible par les machines
+                  dans le fichier{" "}
+                  <a href="/robots.txt" className="text-link underline-offset-2 hover:underline">
+                    robots.txt
+                  </a>
+                  .
                 </p>
               </div>
 
@@ -390,7 +384,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                 </p>
                 <p className="text-xs md:text-sm text-slate-600 dark:text-slate-300">
                   Les droits de propriété intellectuelle afférents aux développements spécifiques, architectures sur
-                  mesure et livrables créés pour nos clients dans le cadre de nos missions de conseil sont régis
+                  mesure et livrables créés pour ses clients dans le cadre de ses missions de conseil sont régis
                   exclusivement par les contrats et devis signés entre les parties.
                 </p>
               </div>
@@ -406,10 +400,10 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
           >
             <div className="flex items-center gap-3 mb-4">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 shrink-0">
-                <Mail className="h-5 w-5 text-[#F26D3D]" aria-hidden />
+                <Mail className="h-5 w-5 text-accent-ink" aria-hidden />
               </span>
               <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-[#F26D3D]">
+                <span className="font-mono text-[10px] uppercase tracking-widest text-accent-ink">
                   Section 4 • Coordonnées effectives
                 </span>
                 <h2 className="font-display text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-50">
@@ -432,7 +426,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                 <dd>
                   <a
                     href={`mailto:${SLA_COMMITMENTS.email}`}
-                    className="font-mono font-medium text-slate-900 dark:text-slate-50 hover:text-[#F26D3D] transition-colors"
+                    className="font-mono font-medium text-slate-900 dark:text-slate-50 hover:text-accent-ink transition-colors"
                   >
                     {SLA_COMMITMENTS.email}
                   </a>
@@ -449,7 +443,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                 <dd>
                   <a
                     href={`tel:${SLA_COMMITMENTS.phone.replace(/\s+/g, "")}`}
-                    className="font-mono font-medium text-slate-900 dark:text-slate-50 hover:text-[#F26D3D] transition-colors"
+                    className="font-mono font-medium text-slate-900 dark:text-slate-50 hover:text-accent-ink transition-colors"
                   >
                     {SLA_COMMITMENTS.phone}
                   </a>
@@ -461,7 +455,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
 
               <div className="rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 p-4">
                 <dt className="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
-                  Adresse postale du siège réel
+                  Adresse postale du siège
                 </dt>
                 <dd className="text-slate-900 dark:text-slate-100">
                   Analyticatech SAS — 60 rue François 1er, 75008 Paris, France
@@ -476,7 +470,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
                   <button
                     type="button"
                     onClick={() => onNavigate("contact")}
-                    className="inline-flex items-center gap-1.5 text-[#F26D3D] hover:underline font-medium"
+                    className="inline-flex items-center gap-1.5 text-accent-ink hover:underline font-medium"
                   >
                     Accéder à la page /contact
                     <ArrowLeft className="h-3.5 w-3.5 rotate-180" aria-hidden />

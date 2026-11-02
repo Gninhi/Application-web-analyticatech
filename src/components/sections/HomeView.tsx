@@ -30,7 +30,6 @@ const SECTION_SKELETONS = {
 import { HomeServicesGrid } from "@/components/sections/HomeServicesGrid";
 import { BusinessPainPointsSection } from "@/components/sections/BusinessPainPointsSection";
 import { LivingSystemGraph } from "@/components/interactive/LivingSystemGraph";
-import { DataConsoleBento } from "@/components/sections/DataConsoleBento";
 import { AgentoryMethod } from "@/components/sections/AgentoryMethod";
 import { BeforeAfterDemo } from "@/components/sections/BeforeAfterDemo";
 import { HomeSocialProof } from "@/components/sections/HomeSocialProof";
@@ -54,34 +53,37 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
       {/* ============ 01 — HERO (H1 blueprint + image ASCII pipeline) ============ */}
       <HeroSection onNavigate={onNavigate} />
 
-      {/* ============ 02 — PREUVE RAPIDE ============ */}
+      {/* ============ 02 — ENGAGEMENTS VÉRIFIABLES ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <div className="glass-card rounded-3xl p-8 md:p-10">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-black/10 dark:border-white/10">
+          <div className="rounded-2xl glass-card border border-border p-8 md:p-10">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-border">
               <div>
-                <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#F26D3D] font-bold">
+                <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-accent-ink">
                   {t("home.section.proof")}
-                </span>
-                <h2 className="font-display text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-50 mt-1">
+                </p>
+                <h2 className="font-display text-[28px] leading-[34px] font-bold text-[#011C40] dark:text-white mt-2">
                   {t("home.proof.heading")}
                 </h2>
               </div>
-              <span className="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-white/50 dark:bg-white/5 px-4 py-2 rounded-full border border-black/5 dark:border-white/10">
+              <p className="text-sm text-slate-600 dark:text-[#B6C2D6] md:text-right max-w-sm">
                 {t("home.section.proof.tagline")}
-              </span>
+              </p>
             </div>
 
-            <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6">
+            <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {displayStats.map((s) => (
-                <div key={s.l} className="p-4 rounded-2xl bg-white/70 dark:bg-white/5 border border-black/5 dark:border-white/5">
-                  <p className="font-display text-3xl md:text-4xl font-bold text-[#F26D3D]">{s.v}</p>
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mt-2">
+                <li key={s.key} className="rounded-lg border border-border bg-background p-5">
+                  <p className="font-display text-[28px] leading-[34px] font-bold text-[#011C40] dark:text-white">
+                    {s.v}
+                  </p>
+                  <span className="mt-3 block h-[3px] w-8 rounded-full bg-[#F26D3D]" aria-hidden="true" />
+                  <p className="text-sm leading-[22px] text-slate-600 dark:text-[#B6C2D6] mt-3">
                     {s.l}
                   </p>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
       </section>
@@ -115,13 +117,6 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
         </div>
       </section>
 
-      {/* ============ 06 — DATA CONSOLE & TÉLÉMÉTRIE ============ */}
-      <LazySection {...SECTION_SKELETONS.bento} eager>
-        <SectionErrorBoundary sectionName="Console de Données">
-          <DataConsoleBento />
-        </SectionErrorBoundary>
-      </LazySection>
-
       {/* ============ 07 — MÉTHODE (STYLE FRAMER AGENTORY) ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
@@ -152,25 +147,17 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
       </LazySection>
 
 
-      {/* ============ 11 — CTA FINAL (EXIGENCE BLUEPRINT) ============ */}
+      {/* ============ 10 — PREMIER ÉCHANGE (bandeau Nuit) ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <div className="relative overflow-hidden rounded-3xl glass-card p-8 md:p-14 text-center">
-            <div
-              className="absolute inset-0 opacity-40 pointer-events-none"
-              style={{
-                background:
-                  "radial-gradient(circle at 50% 0%, rgba(242,109,61,0.25), transparent 60%)",
-              }}
-              aria-hidden
-            />
-            <p className="relative font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] mb-4 font-bold">
+          <div className="rounded-2xl glass-card border border-border p-8 md:p-14 text-center">
+            <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-[#F26D3D] mb-4">
               {t("home.section.cta.tag")}
             </p>
-            <h2 className="relative font-display text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 mb-4 tracking-tight">
+            <h2 className="font-display text-[28px] leading-[34px] md:text-[48px] md:leading-[52px] font-bold text-white mb-4 tracking-tight">
               {t("home.section.cta.title")}
             </h2>
-            <p className="relative max-w-2xl mx-auto text-slate-700 dark:text-slate-300 mb-8 text-base leading-relaxed">
+            <p className="max-w-2xl mx-auto text-[#B6C2D6] mb-8 text-base leading-[26px]">
               {t("home.section.cta.desc")}
             </p>
             <Button
@@ -179,7 +166,6 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
               size="lg"
               icon={<ArrowRight className="h-4 w-4" aria-hidden />}
               iconPosition="right"
-              className="relative neon-glow"
             >
               {t("home.section.cta.button")}
             </Button>

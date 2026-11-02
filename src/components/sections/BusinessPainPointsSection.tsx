@@ -28,11 +28,11 @@ export interface PainPointItem {
 }
 
 const PAIN_POINT_CONFIG: { id: string; icon: LucideIcon; accentColor: string }[] = [
-  { id: "p1", icon: Layers, accentColor: "#F26D3D" },
-  { id: "p2", icon: BarChart3, accentColor: "#A855F7" },
-  { id: "p3", icon: ShieldAlert, accentColor: "#38BDF8" },
-  { id: "p4", icon: Server, accentColor: "#F59E0B" },
-  { id: "p5", icon: BrainCircuit, accentColor: "#10B981" },
+  { id: "p1", icon: Layers, accentColor: "var(--accent-ink)" },
+  { id: "p2", icon: BarChart3, accentColor: "var(--accent-ink)" },
+  { id: "p3", icon: ShieldAlert, accentColor: "var(--accent-ink)" },
+  { id: "p4", icon: Server, accentColor: "var(--accent-ink)" },
+  { id: "p5", icon: BrainCircuit, accentColor: "var(--accent-ink)" },
 ];
 
 interface BusinessPainPointsProps {
@@ -57,7 +57,7 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
     <section className="relative py-12">
       {/* En-tête de section */}
       <div className="max-w-3xl mb-12">
-        <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#F26D3D] font-bold">
+        <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent-ink font-bold">
           {t("home.section.painpoints")}
         </span>
         <h2 className="font-display text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 mt-2 tracking-tight">
@@ -81,7 +81,6 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
                 type="button"
                 role="tab"
                 aria-selected={isSelected}
-                aria-label={`${item.sector} : ${item.problem}`}
                 onClick={() => setActivePainId(item.id)}
                 whileHover={{ x: 4 }}
                 className={`w-full text-left p-4 md:p-5 rounded-2xl border transition-all duration-300 flex items-start gap-4 cursor-pointer backdrop-blur-md focus-visible:outline-2 focus-visible:outline-offset-2 ${
@@ -161,7 +160,7 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
                 >
                   <div>
                     <div className="flex items-center justify-between gap-4 mb-6">
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#4CAF50]/10 border border-[#4CAF50]/30 font-mono text-[10px] uppercase text-[#4CAF50] font-bold">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-link/10 border border-link/30 font-mono text-[10px] uppercase text-link font-bold">
                         <Zap className="h-3 w-3" aria-hidden />
                         <span>{t("painpoint.response")}</span>
                       </div>
@@ -199,7 +198,7 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
 
                     <div className="p-4 rounded-2xl bg-white/80 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
-                        <CheckCircle2 className="h-5 w-5 text-[#4CAF50]" aria-hidden />
+                        <CheckCircle2 className="h-5 w-5 text-link" aria-hidden />
                         <span className="font-mono text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                           {t("painpoint.impact")}
                         </span>

@@ -44,12 +44,12 @@ describe("ContactView — Rendu SSR & Intégration FAQ", () => {
     const html = renderWithProviders(<ContactView />, "fr");
 
     // En-tête et formulaire
-    expect(html).toContain("PRENOM");
-    expect(html).toContain("NOM");
-    expect(html).toContain("EMAIL_PRO");
-    expect(html).toContain("ENTREPRISE");
-    expect(html).toContain("SUJET");
-    expect(html).toContain("MESSAGE");
+    expect(html).toContain("Prénom");
+    expect(html).toContain("Nom");
+    expect(html).toContain("E-mail professionnel");
+    expect(html).toContain("Entreprise");
+    expect(html).toContain("Sujet");
+    expect(html).toContain("Message");
 
     // Vérifie que les mentions obsolètes ont bien été retirées
     expect(html).not.toContain("engineer@analyticatech");
@@ -60,10 +60,10 @@ describe("ContactView — Rendu SSR & Intégration FAQ", () => {
 
     // Vérifie que les badges de sécurité pertinents sont conservés
     expect(html).toContain("Conforme RGPD");
-    expect(html).toContain("Chiffrement AES-256 au repos");
+    expect(html).toContain("Données hébergées dans l'Union européenne");
 
     // Vérifie la présence de la section FAQ intégrée
-    expect(html).toContain("FAQ // QUESTIONS FRÉQUENTES");
+    expect(html).toContain("FAQ");
     expect(html).toContain("Questions fréquentes avant de démarrer.");
     expect(html).toContain("Combien de temps faut-il pour livrer un projet");
   });
@@ -71,9 +71,9 @@ describe("ContactView — Rendu SSR & Intégration FAQ", () => {
   it("rend la page Contact en anglais avec les traductions adaptées", () => {
     const html = renderWithProviders(<ContactView />, "en");
 
-    expect(html).toContain("FIRST_NAME");
-    expect(html).toContain("LAST_NAME");
-    expect(html).toContain("FAQ // CONSULTATION PROTOCOL");
+    expect(html).toContain("First name");
+    expect(html).toContain("Last name");
+    expect(html).not.toContain("CONSULTATION PROTOCOL");
     expect(html).toContain("Frequently Asked Questions.");
   });
 });

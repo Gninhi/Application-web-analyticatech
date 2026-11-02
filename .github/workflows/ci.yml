@@ -11,7 +11,7 @@ env:
   DATABASE_URL: postgres://ci:ci@127.0.0.1:5432/ci
   DIRECT_URL: postgres://ci:ci@127.0.0.1:5432/ci
   IP_SALT: ${{ secrets.IP_SALT || 'ci-only-salt-do-not-use-in-prod-0123456789' }}
-  NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://analyticatech.fr' }}
+  NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://www.analyticatech.fr' }}
   NEXT_PUBLIC_APP_VERSION: ci
 
 jobs:
@@ -48,7 +48,7 @@ jobs:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       DIRECT_URL: ${{ secrets.DIRECT_URL }}
       IP_SALT: ${{ secrets.IP_SALT || 'ci-only-salt-do-not-use-in-prod-0123456789' }}
-      NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://analyticatech.fr' }}
+      NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://www.analyticatech.fr' }}
       ALLOWED_ORIGINS: ${{ secrets.ALLOWED_ORIGINS || 'http://localhost:3210,http://127.0.0.1:3210' }}
     steps:
       - name: Secret DATABASE_URL absent — e2e ignorés

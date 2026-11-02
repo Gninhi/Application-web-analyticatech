@@ -119,7 +119,6 @@ describe("MethodOrbit — Système Orbital & Synergie des 4 Phases", () => {
 
     // Classes et variables bi-thèmes présentes
     expect(html).toContain("dark:fill-white/80");
-    expect(html).toContain("dark:bg-[#06070B]/80");
     expect(html).toContain("dark:border-white/15");
     expect(html).toContain("dark:opacity-20");
     expect(html).toContain("var(--glass-card-bg)");

@@ -10,7 +10,7 @@ import { collectErrors } from "./helpers";
 
 const STATIC_ROUTES = [
   { path: "/", titleContains: "Analyticatech" },
-  { path: "/services", titleContains: "Expertises" },
+  { path: "/services", titleContains: "Services" },
   { path: "/services/01", titleContains: "RAG" },
   { path: "/solutions", titleContains: "Solutions" },
   { path: "/insights", titleContains: "Insights" },
@@ -41,7 +41,7 @@ test.describe("métadonnées & canonical", () => {
   test("canonical (URL de prod) + description sur /services", async ({ page }) => {
     await page.goto("/services", { waitUntil: "domcontentloaded" });
     const canonical = await page.locator("link[rel='canonical']").getAttribute("href");
-    expect(canonical).toBe("https://analyticatech.fr/services");
+    expect(canonical).toBe("https://www.analyticatech.fr/services");
     const description = await page
       .locator("meta[name='description']")
       .getAttribute("content");

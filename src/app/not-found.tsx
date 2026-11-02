@@ -80,19 +80,6 @@ export default function NotFoundPage() {
             aria-hidden="true"
           />
 
-          {/* Bandeau supérieur de télémesure de la session */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pb-6 mb-8 border-b border-black/10 dark:border-white/10 font-mono text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400">
-            <div className="flex items-center gap-2">
-              <span className="flex h-2 w-2 rounded-full bg-[#F26D3D] animate-ping" />
-              <span className="text-[#F26D3D] font-bold">NODE_STATUS: DISCONNECTED</span>
-            </div>
-            <div className="hidden sm:flex items-center gap-4">
-              <span>LATENCY: 0.00ms (PACKET_DROP)</span>
-              <span>•</span>
-              <span>MESH_FAILSAFE: ACTIVE</span>
-            </div>
-          </div>
-
           {/* Radar vectoriel stylisé en arrière-plan du 404 */}
           <div className="relative my-4 flex items-center justify-center">
             {/* Anneaux de radar en filigrane */}
@@ -121,8 +108,8 @@ export default function NotFoundPage() {
 
           {/* Badge statut de la route */}
           <div className="inline-flex items-center gap-2 rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 px-4 py-1.5 mb-5 shadow-[0_0_15px_rgba(242,109,61,0.15)]">
-            <Compass className="h-3.5 w-3.5 text-[#F26D3D] animate-spin" style={{ animationDuration: "12s" }} aria-hidden="true" />
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#F26D3D] font-bold">
+            <Compass className="h-3.5 w-3.5 text-accent-ink animate-spin" style={{ animationDuration: "12s" }} aria-hidden="true" />
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-bold">
               {t("notFound.tag")}
             </span>
           </div>
@@ -160,16 +147,12 @@ export default function NotFoundPage() {
             </Button>
           </div>
 
-          {/* Grille de liens de réorientation du maillage */}
+          {/* Grille de liens vers les pages principales */}
           <div className="text-left border-t border-black/10 dark:border-white/10 pt-8">
             <div className="flex items-center justify-between gap-4 mb-5">
-              <p className="font-mono text-[11px] uppercase tracking-widest text-[#F26D3D] font-bold">
+              <p className="font-mono text-[11px] uppercase tracking-widest text-accent-ink font-bold">
                 {t("notFound.recommended")}
               </p>
-              <div className="flex items-center gap-1.5 font-mono text-[10px] text-[#4CAF50] bg-[#4CAF50]/10 px-2.5 py-0.5 rounded-full border border-[#4CAF50]/20">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#4CAF50]" />
-                <span>{isEn ? "GRID ONLINE" : "MAILLAGE ACTIF"}</span>
-              </div>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4">
@@ -185,16 +168,16 @@ export default function NotFoundPage() {
                     <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#F26D3D] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
                     <div className="flex items-start gap-3.5">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#F26D3D]/30 bg-[#F26D3D]/10 text-[#F26D3D] group-hover:scale-105 group-hover:bg-[#F26D3D]/20 transition-all duration-200">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#F26D3D]/30 bg-[#F26D3D]/10 text-accent-ink group-hover:scale-105 group-hover:bg-[#F26D3D]/20 transition-all duration-200">
                         <Icon className="h-5 w-5" aria-hidden="true" />
                       </span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
-                          <p className="font-display font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#F26D3D] transition-colors text-sm sm:text-base">
+                          <p className="font-display font-bold text-slate-800 dark:text-slate-100 group-hover:text-accent-ink transition-colors text-sm sm:text-base">
                             {route.title}
                           </p>
                           <ArrowRight
-                            className="h-4 w-4 shrink-0 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 text-[#F26D3D]"
+                            className="h-4 w-4 shrink-0 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 text-accent-ink"
                             aria-hidden="true"
                           />
                         </div>

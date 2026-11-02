@@ -1,59 +1,61 @@
 # Analyticatech
 
-> Cabinet de conseil de haut niveau en IA, Transformation Digitale et Automatisation. Architecture d'agents LLM, RAG, automatisation workflows et industrialisation à l'échelle. 48+ missions livrées, 35% de coûts réduits.
+> Cabinet de conseil en intelligence artificielle pour les dirigeants de PME et d'ETI, fondé en 2024 et dirigé par Martial Gninhi (SAS, SIREN 984 609 198, siège à Paris). Assistants qui répondent à partir des documents de l'entreprise, automatisation des processus, agents IA sous contrôle humain, données et tableaux de bord. Interlocuteur unique : le fondateur.
+
+Ce fichier résume le site pour les assistants d'IA. Il ne contient aucun chiffre de résultat client : Analyticatech n'en publie pas tant qu'ils n'ont pas été mesurés et que le client n'a pas autorisé leur publication.
 
 ## Services
 
-- **Intelligence Artificielle** : Architecture LLM, RAG, agents cognitifs en production. LangChain, LangGraph, vLLM. Latence RAG 280ms, précision 94.2%.
-- **Transformation Digitale** : Modernisation cloud-native, Kubernetes, Terraform, microservices. Uptime 99.9%, coûts cloud -35%.
-- **Automatisation** : Workflows n8n, Temporal, Airflow. 48 processus automatisés, 420h économisées/mois.
-- **Systèmes Agentiques** : Architectures multi-agents, mémoire long-terme, orchestration LangGraph. 38 agents déployés, 72% d'autonomie.
-- **Business Intelligence** : Plateformes data end-to-end, dbt, Snowflake, Power BI. 42 dashboards, 28+ sources data.
+- [Raisonnement & RAG](https://www.analyticatech.fr/services/01) : assistants qui répondent à partir des documents internes et citent leurs sources.
+- [Automatisation & Workflows](https://www.analyticatech.fr/services/02) : enchaînements entre les outils de l'entreprise (n8n, Temporal), avec étapes de validation.
+- [Orchestration Multi-Agents](https://www.analyticatech.fr/services/03) : plusieurs agents IA qui se répartissent le travail, décisions importantes validées par une personne.
+- [Data & Décision Augmentée](https://www.analyticatech.fr/services/04) : indicateurs définis une seule fois, tableaux de bord pour la direction (dbt, Power BI).
 
-## Solutions sectorielles
+## Projets en cours (produits construits par Analyticatech)
 
-- Optimisation logistique par l'IA (-22% coûts, -41% ruptures)
-- Agents de conformité réglementaire (100% coverage, 3s latency)
-- BI prédictive omnicanal (+14% marge, 42 dashboards)
-- Assistant clinique RAG souverain (SecNumCloud, sources tracées)
-- Jumeau numérique & maintenance prédictive (-34% arrêts imprévus, +18 mois durée de vie)
-- Optimisation de grille intelligente (850 k€/an économisés, 99.9% uptime)
+- [Ciblioo](https://www.analyticatech.fr/solutions/ciblioo) : plateforme de sourcing pour cabinets de transmission et de M&A, chaque donnée rattachée à sa source (registres publics DINUM et BODACC). Statut : en développement, non commercialisé.
+- [ContentOps Harness](https://www.analyticatech.fr/solutions/contentops) : système éditorial pour LinkedIn et X avec validation humaine obligatoire avant publication. Statut : prototype fonctionnel en environnement de test. Code public : https://github.com/Gninhi/Content-builder
+- [AVIE](https://www.analyticatech.fr/solutions/avie) : moteur de veille sur sources ouvertes qui sépare faits, estimations et contradictions. Statut : outil interne. Code public : https://github.com/Gninhi/viiper-v4
 
-## Expertises techniques
+## Pistes à construire (rien n'est encore développé)
 
-LangChain, LangGraph, OpenAI, Pinecone, Hugging Face, vLLM, Kubernetes, Terraform, AWS, Azure, GitOps, Microservices, n8n, Zapier, Temporal, Apache Airflow, Make, Python, CrewAI, AutoGen, MCP, Redis, Qdrant, Power BI, dbt, Snowflake, BigQuery, Looker, Superset
+- [Pilotage commercial](https://www.analyticatech.fr/solutions/retail-bi) : ventes, marges et stocks réunis pour les PME de commerce.
+- [Prévision de la demande](https://www.analyticatech.fr/solutions/logistics-ai) : propositions de réapprovisionnement validées par l'acheteur.
+- [Veille clients et fournisseurs](https://www.analyticatech.fr/solutions/veille-registres) : alertes sur les annonces BODACC des partenaires.
 
-## Conformité & Sécurité
+## Méthode
 
-RGPD, Déploiements clouds souverains qualifiés SecNumCloud, Chiffrement AES-256 / TLS 1.3
+1. Cadrage (1 à 2 semaines) : audit de l'existant et priorisation des cas d'usage.
+2. Prototype sur les données du client (4 à 6 semaines) : décision documentée de poursuivre ou d'arrêter.
+3. Mise en production (6 à 8 semaines selon le périmètre) : supervision et garde-fous.
+4. Suivi et amélioration : améliorations planifiées chaque mois, décidées sur les mesures.
+
+## Articles
+
+- [Industrialiser les agents IA : du prototype au système en production](https://www.analyticatech.fr/insights/agents-production-2025)
+- [Évaluer un système RAG en production](https://www.analyticatech.fr/insights/evaluer-systeme-rag-production)
+- [n8n ou Temporal : choisir l'outil adapté à vos automatisations critiques](https://www.analyticatech.fr/insights/n8n-vs-temporal-orchestration)
+- [La couche sémantique : définir vos indicateurs une seule fois](https://www.analyticatech.fr/insights/couche-semantique-dbt-bi)
+- [Faire communiquer plusieurs agents IA par événements](https://www.analyticatech.fr/insights/event-driven-agents)
+
+Les articles sont des guides de méthode illustrés par des scénarios types ; ils ne décrivent pas de missions clients.
+
+## Données et conformité
+
+- Hébergement en Union européenne ou sur les serveurs du client, choisi au cadrage ; hébergeur qualifié SecNumCloud possible si le contexte l'exige (Analyticatech n'est pas lui-même qualifié ou certifié).
+- Les données des clients ne servent pas à entraîner de modèles.
+- Prise en compte du RGPD et de l'AI Act dès la conception.
 
 ## Contact
 
-- Email : contact@analyticatech.fr
-- Téléphone : +33 7 68 61 13 10
+- E-mail : contact@analyticatech.fr
+- Téléphone : +33 7 68 61 13 10 (du lundi au vendredi, 9h30 – 17h30, heure de Paris)
 - Adresse : 60 rue François 1er, 75008 Paris, France
 - LinkedIn : https://www.linkedin.com/company/102606877
-- Réponse sous 24h ouvrées (Support opérationnel 9h30 - 17h30 du lundi au vendredi)
+- Réponse personnelle du fondateur sous 2 jours ouvrés ; premier échange gratuit de 20 minutes.
 
-## Méthode de delivery
+## URL
 
-1. Discovery : Atelier de cadrage, architecture cible, ROI projet
-2. Build : Sprints de 2 semaines, démos en production, observabilité
-3. Hardening : Audit sécurité, tests de charge, conformité RGPD
-4. Run & Scale : Supervision continue, finops, amélioration continue
-
-## Insights
-
-- Industrialiser les agents IA : du POC au système agentique en production
-- Évaluer un système RAG : métriques, biais et garde-fous
-- n8n vs Temporal : choisir son orchestrateur d'automatisation
-- La couche sémantique : le chaînon manquant de votre BI
-- Architecture event-driven pour systèmes multi-agents
-- FinOps cloud-native : réduire sa facture sans sacrifier l'uptime
-
-## URLs
-
-- https://analyticatech.fr (FR)
-- https://analyticatech.fr/en (EN)
-- https://analyticatech.fr/sitemap.xml
-- https://analyticatech.fr/robots.txt
+- https://www.analyticatech.fr (FR)
+- https://www.analyticatech.fr/en (EN)
+- https://www.analyticatech.fr/sitemap.xml

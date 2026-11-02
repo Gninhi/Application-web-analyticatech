@@ -18,7 +18,7 @@ export function ServiceCardHeader({
   badge,
   title,
   promise,
-  accentColor = "#F26D3D",
+  accentColor = "var(--accent-ink)",
 }: ServiceCardHeaderProps) {
   return (
     <header className="flex flex-col gap-3">

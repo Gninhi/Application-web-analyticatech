@@ -7,35 +7,33 @@ import {
 } from "./commitments";
 
 describe("commitments (Source unique de vérité des engagements et horaires)", () => {
-  it("définit les 4 engagements majeurs avec des valeurs réalistes", () => {
-    expect(SLA_COMMITMENTS.ack.valueFr).toBe("< 2h ouvrées");
-    expect(SLA_COMMITMENTS.architect.valueFr).toBe("< 24h ouvrées");
-    expect(SLA_COMMITMENTS.workshop.valueFr).toBe("< 5 jours");
-    expect(SLA_COMMITMENTS.availability.valueFr).toBe("9h30 - 17h30 (lun-ven)");
+  it("définit les 4 engagements tenables par le fondateur", () => {
+    expect(SLA_COMMITMENTS.reply.valueFr).toBe("Sous 2 jours ouvrés");
+    expect(SLA_COMMITMENTS.firstCall.valueFr).toBe("20 minutes, gratuit");
+    expect(SLA_COMMITMENTS.proposal.valueFr).toBe("Sous 5 jours ouvrés après l'échange");
+    expect(SLA_COMMITMENTS.availability.valueFr).toBe("9h30 – 17h30, du lundi au vendredi");
   });
 
-  it("définit la plage horaire 9h30 - 17h30 CET du lundi au vendredi", () => {
-    expect(SLA_COMMITMENTS.schedule.hoursFr).toBe("9h30 - 17h30");
-    expect(getSupportScheduleNotice("fr")).toContain("9h30 - 17h30 (CET)");
-    expect(getSupportScheduleNotice("fr")).toContain("Du lundi au vendredi");
-    expect(getSupportScheduleNotice("en")).toContain("9:30 AM - 5:30 PM (CET)");
-    expect(getSupportScheduleNotice("en")).toContain("Monday to Friday");
+  it("exprime l'horaire en heure de Paris (pas « CET », faux l'été)", () => {
+    expect(getSupportScheduleNotice("fr")).toBe("Du lundi au vendredi, 9h30 – 17h30 (heure de Paris)");
+    expect(getSupportScheduleNotice("en")).toBe("Monday to Friday, 9:30 AM – 5:30 PM (Paris time)");
+    expect(getSupportScheduleNotice("fr")).not.toContain("CET");
   });
 
   it("fournit une liste complète et traduite pour getSlaList", () => {
     const frList = getSlaList("fr");
-    expect(frList).toHaveLength(4);
-    expect(frList[0].value).toBe("< 2h ouvrées");
-    expect(frList[1].value).toBe("< 24h ouvrées");
+    expect(frList.map((i) => i.key)).toEqual(["reply", "firstCall", "proposal", "availability"]);
+    expect(frList[0].value).toBe("Sous 2 jours ouvrés");
 
     const enList = getSlaList("en");
     expect(enList).toHaveLength(4);
-    expect(enList[0].value).toBe("< 2 business hours");
-    expect(enList[1].value).toBe("< 24 business hours");
+    expect(enList[1].value).toBe("20 minutes, free");
   });
 
-  it("harmonise le message de réponse par email", () => {
-    expect(getResponseNotice("fr")).toBe("Réponse sous 24h ouvrées (accusé sous 2h)");
-    expect(getResponseNotice("en")).toBe("Response within 24 business hours (acknowledgment within 2h)");
+  it("ne promet aucun « architecte » ni délai en heures", () => {
+    const all = JSON.stringify(SLA_COMMITMENTS);
+    expect(all).not.toMatch(/architect/i);
+    expect(all).not.toMatch(/< ?\d+ ?h/);
+    expect(getResponseNotice("fr")).toBe("Réponse personnelle du fondateur sous 2 jours ouvrés");
   });
 });

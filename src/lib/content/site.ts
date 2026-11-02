@@ -38,7 +38,7 @@ export function isValidSocialUrl(url?: string | null): boolean {
 
 export const SITE_CONFIG = {
   name: "Analyticatech",
-  url: "https://analyticatech.fr",
+  url: "https://www.analyticatech.fr",
   email: "contact@analyticatech.fr",
   phone: "+33 7 68 61 13 10",
   phoneHref: "tel:+33768611310",

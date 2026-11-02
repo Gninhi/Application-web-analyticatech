@@ -1,34 +1,8 @@
 import { cache } from "react";
-import { db } from "@/lib/db/client";
 import type { CapabilityDTO, Locale } from "@/types/content";
 import { FALLBACK_CAPABILITIES_FR, FALLBACK_CAPABILITIES_EN } from "@/lib/content/fallbacks";
 
-export const getCapabilities = cache(async (locale: Locale = "fr"): Promise<CapabilityDTO[]> => {
-  const fallback = locale === "en" ? FALLBACK_CAPABILITIES_EN : FALLBACK_CAPABILITIES_FR;
-  try {
-    const raw = await db.capability.findMany({
-      orderBy: { order: "asc" },
-      include: {
-        translations: { where: { locale: locale } },
-        features: { orderBy: { order: "asc" } },
-      },
-    });
-
-    if (!raw || raw.length === 0) return fallback;
-
-    return raw.map((c) => {
-      const tr = c.translations[0] || { stretch: "", title: "", description: "" };
-      return {
-        id: c.id,
-        key: c.key,
-        stretch: tr.stretch,
-        title: tr.title,
-        description: tr.description,
-        features: c.features.map((f) => (locale === "en" ? f.textEn : f.textFr)),
-        order: c.order,
-      };
-    });
-  } catch {
-    return fallback;
-  }
-});
+/** Capacités : contenu versionné dans le code ; la base n'est plus lue. */
+export const getCapabilities = cache(async (locale: Locale = "fr"): Promise<CapabilityDTO[]> =>
+  locale === "en" ? FALLBACK_CAPABILITIES_EN : FALLBACK_CAPABILITIES_FR
+);

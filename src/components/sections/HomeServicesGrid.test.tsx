@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { HomeServicesGrid } from "@/components/sections/HomeServicesGrid";
-import { DataConsoleBento } from "@/components/sections/DataConsoleBento";
 import { LivingSystemGraph } from "@/components/interactive/LivingSystemGraph";
 import { I18nProvider } from "@/lib/i18n/provider";
 import { ContentProvider } from "@/components/providers/ContentProvider";
@@ -52,13 +51,13 @@ function renderWithProviders(ui: React.ReactElement) {
 }
 
 describe("Dynamic Home Components", () => {
-  it("HomeServicesGrid rend dynamiquement les 4 services et leurs métriques réelles", () => {
+  it("HomeServicesGrid rend dynamiquement les 4 services et sans métriques", () => {
     const html = renderWithProviders(
       <HomeServicesGrid onNavigate={() => {}} onNavigateDetail={() => {}} />
     );
 
     // Titre de section
-    expect(html).toContain("Quatre piliers d'expertise");
+    expect(html).toContain("Quatre services complémentaires");
 
     // Les 4 services
     expect(html).toContain("Raisonnement & RAG");
@@ -66,29 +65,16 @@ describe("Dynamic Home Components", () => {
     expect(html).toContain("Orchestration Multi-Agents");
     expect(html).toContain("Data & Décision Augmentée");
 
-    // Métriques dynamiques
-    expect(html).toContain("94.2%");
-    expect(html).toContain("65%");
-    expect(html).toContain("72%");
-    expect(html).toContain("+18.4%");
+    // Aucune métrique non vérifiable
+    expect(html).not.toContain("94.2%");
+    expect(html).not.toContain("65%");
   });
 
-  it("DataConsoleBento rend les cartes de signaux dynamiquement basées sur les métriques", () => {
-    const html = renderWithProviders(<DataConsoleBento />);
-
-    // Cartes de signaux dynamiques
-    expect(html).toContain("99.9%");
-    expect(html).toContain("48 flux");
-    expect(html).toContain("38");
-    expect(html).toContain("< 280 ms");
-  });
-
-  it("LivingSystemGraph rend les nœuds avec les valeurs harmonisées", () => {
+  it("LivingSystemGraph rend les nœuds avec les libellés sans chiffres non vérifiables", () => {
     const html = renderWithProviders(<LivingSystemGraph />);
 
-    expect(html).toContain("28+ sources data");
-    expect(html).toContain("280 ms latence");
-    expect(html).toContain("38 agents actifs");
-    expect(html).toContain("42 KPIs actifs");
+    expect(html).toContain("Vos outils existants");
+    expect(html).toContain("Validation humaine");
+    expect(html).not.toContain("38 agents actifs");
   });
 });

@@ -16,7 +16,7 @@ export interface ServiceCardData {
   badge?: string;
   iconVariant: ServiceIconVariant;
   technologies: string[];
-  metrics: { label: string; value: string };
+  metrics?: { label: string; value: string };
   secondaryMetric?: { label: string; value: string };
   accentColor?: string;
 }
@@ -47,7 +47,7 @@ export function ServiceCard({
   actionLabel,
   onNavigateDetail,
 }: ServiceCardProps) {
-  const accent = service.accentColor ?? "#F26D3D";
+  const accent = service.accentColor ?? "var(--accent-ink)";
   const cardRef = useRef<HTMLDivElement>(null);
   const cardRectRef = useRef<DOMRect | null>(null);
   const goToDetail = () => onNavigateDetail(service.serviceIndex);
@@ -166,31 +166,6 @@ export function ServiceCard({
           </span>
         </div>
 
-        {/* 7. Stat strip bento : séparateur dashed + label mono / valeur accent */}
-        <div
-          className="relative z-20 flex items-end justify-between gap-6 border-t border-dashed pt-4"
-          style={{ borderColor: "var(--glass-card-border)" }}
-        >
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 font-bold">
-              {service.metrics.label}
-            </p>
-            <p className="mt-1 font-display font-bold text-xl tracking-tight" style={{ color: accent }}>
-              {service.metrics.value}
-            </p>
-          </div>
-
-          {service.secondaryMetric && (
-            <div className="text-right">
-              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 font-bold">
-                {service.secondaryMetric.label}
-              </p>
-              <p className="mt-1 font-display font-bold text-xl tracking-tight text-slate-900 dark:text-slate-100">
-                {service.secondaryMetric.value}
-              </p>
-            </div>
-          )}
-        </div>
       </div>
     </motion.article>
   );

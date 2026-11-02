@@ -101,7 +101,7 @@ export function SolutionDetailView({
             <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
               {t("common.impact")}
             </p>
-            <p className="font-display text-xl font-bold text-[#F26D3D]">{solution.impact}</p>
+            <p className="font-display text-xl font-bold text-accent-ink">{solution.impact}</p>
             {solution.methodology && (
               <p className="mt-1.5 font-mono text-xs text-slate-500 dark:text-slate-400">
                 {solution.methodology}

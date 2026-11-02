@@ -39,7 +39,7 @@ export function InsightDetailTemplate({
   onNavigate,
   onNavigateDetail,
 }: InsightDetailTemplateProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   const handleLinkClick = (resource: InsightDetailData["relatedResources"][0]) => {
     if (onNavigateDetail) {
@@ -53,19 +53,19 @@ export function InsightDetailTemplate({
     {
       id: "contexte",
       number: "01",
-      title: "Contexte Métier",
-      subtitle: "Cas d'usage réel",
+      title: "Contexte",
+      subtitle: "Scénario type",
     },
     {
       id: "probleme",
       number: "02",
-      title: "Problème en Prod",
-      subtitle: "Modes d'échec constatés",
+      title: "Le problème",
+      subtitle: "Modes d'échec typiques",
     },
     {
       id: "approche",
       number: "03",
-      title: "Approche & Stack",
+      title: "Approche & outils",
       subtitle: "Architecture cible",
     },
     {
@@ -77,19 +77,19 @@ export function InsightDetailTemplate({
     {
       id: "resultats",
       number: "05",
-      title: "Résultats & Mesures",
-      subtitle: "Données contextualisées",
+      title: "Ce qu'il faut mesurer",
+      subtitle: "Indicateurs et méthode",
     },
     {
       id: "aller-plus-loin",
       number: "06",
       title: "Pour aller plus loin",
-      subtitle: "Maillage solutions",
+      subtitle: "Projets et services liés",
     },
   ];
 
   return (
-    <div className="pt-28 md:pt-36 pb-24 text-slate-900 dark:text-slate-100 selection:bg-[#F26D3D]/30 selection:text-[#F26D3D]">
+    <div className="pt-28 md:pt-36 pb-24 text-slate-900 dark:text-slate-100 selection:bg-[#F26D3D]/30 selection:text-accent-ink">
       <div className="mx-auto max-w-6xl xl:max-w-7xl px-4 md:px-6 space-y-12">
         {/* ================= BREADCRUMB & RETOUR ================= */}
         <div className="flex flex-wrap items-center justify-between gap-4">
@@ -106,7 +106,7 @@ export function InsightDetailTemplate({
           </Button>
 
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#F26D3D]/30 bg-[#F26D3D]/10 px-3 py-1 font-mono text-[11px] font-semibold tracking-wider text-[#F26D3D] uppercase">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#F26D3D]/30 bg-[#F26D3D]/10 px-3 py-1 font-mono text-[11px] font-semibold tracking-wider text-accent-ink uppercase">
               <Sparkles className="h-3 w-3" aria-hidden />
               {data.category.label}
             </span>
@@ -116,6 +116,13 @@ export function InsightDetailTemplate({
             </span>
           </div>
         </div>
+
+        {/* Le corps des articles n'existe qu'en français : on le dit plutôt que de le masquer */}
+        {locale === "en" && (
+          <p lang="en" className="rounded-xl border border-border px-4 py-3 text-sm text-slate-600 dark:text-slate-300">
+            This article is currently available in French only.
+          </p>
+        )}
 
         {/* ================= HERO PANEL ================= */}
         <motion.header
@@ -131,13 +138,13 @@ export function InsightDetailTemplate({
           />
 
           <div className="relative z-10 space-y-6">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#F26D3D]">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
               {data.hero.eyebrow}
             </p>
 
             <h1 className="font-display font-bold text-3xl sm:text-5xl md:text-6xl tracking-tight leading-[1.12] text-slate-900 dark:text-white max-w-4xl">
               {data.hero.title}{" "}
-              <span className="text-[#F26D3D] dark:text-[#F26D3D] drop-shadow-sm">
+              <span className="text-accent-ink dark:text-accent-ink drop-shadow-sm">
                 {data.hero.titleAccent}
               </span>
             </h1>
@@ -149,7 +156,7 @@ export function InsightDetailTemplate({
             {/* Auteur & Méta bar */}
             <div className="pt-4 border-t border-slate-200/70 dark:border-white/10 flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 flex items-center justify-center font-mono text-xs font-bold text-[#F26D3D]">
+                <div className="h-10 w-10 rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 flex items-center justify-center font-mono text-xs font-bold text-accent-ink">
                   {data.author.avatarInitials ?? data.author.name.slice(0, 2).toUpperCase()}
                 </div>
                 <div>
@@ -202,10 +209,10 @@ export function InsightDetailTemplate({
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-6"
         >
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#F26D3D]">
-              01 // CONTEXTE & CAS D&apos;USAGE RÉEL
+            <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+              01 · Contexte : scénario type
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 font-mono text-[11px] font-semibold text-blue-600 dark:text-blue-400 uppercase">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-transparent px-3 py-1 font-mono text-[11px] font-semibold text-foreground uppercase">
               <Building2 className="h-3 w-3" aria-hidden />
               {data.context.sectorBadge}
             </span>
@@ -234,7 +241,7 @@ export function InsightDetailTemplate({
               <p className="font-mono text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
                 Enjeu critique
               </p>
-              <p className="text-sm font-semibold text-[#F26D3D]">
+              <p className="text-sm font-semibold text-accent-ink">
                 {data.context.stakes}
               </p>
             </div>
@@ -243,6 +250,9 @@ export function InsightDetailTemplate({
           <div className="prose prose-slate dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 leading-relaxed text-base pt-2">
             <p>{data.context.narrative}</p>
           </div>
+          <p className="text-sm text-slate-600 dark:text-[#B6C2D6] border-l-2 border-[#F26D3D] pl-4">
+            Ce contexte est un scénario type, construit pour illustrer la méthode. Il ne décrit pas une mission client et ne contient aucun résultat client.
+          </p>
         </section>
 
         {/* ================= 02 — LE PROBLÈME EN PRODUCTION ================= */}
@@ -251,8 +261,8 @@ export function InsightDetailTemplate({
           aria-labelledby="heading-probleme"
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-6"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#F26D3D]">
-            02 // LE PROBLÈME EN PRODUCTION
+          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+            02 · LE PROBLÈME EN PRODUCTION
           </span>
 
           <div>
@@ -302,8 +312,8 @@ export function InsightDetailTemplate({
           aria-labelledby="heading-approche"
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-8"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#F26D3D]">
-            03 // APPROCHE & ARCHITECTURE
+          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+            03 · APPROCHE & ARCHITECTURE
           </span>
 
           <div>
@@ -321,8 +331,8 @@ export function InsightDetailTemplate({
           {/* Clusters de stack technique précise avec versions */}
           <div className="space-y-3">
             <p className="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2">
-              <Cpu className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden />
-              Stack & Composants de production qualifiés
+              <Cpu className="h-3.5 w-3.5 text-accent-ink" aria-hidden />
+              Outils et composants
             </p>
             <div className="flex flex-wrap gap-2.5">
               {data.approach.techStack.map((tech) => (
@@ -349,7 +359,7 @@ export function InsightDetailTemplate({
           {/* Étapes séquentielles du pipeline d'architecture */}
           <div className="space-y-4 pt-2">
             <p className="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2">
-              <Workflow className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden />
+              <Workflow className="h-3.5 w-3.5 text-accent-ink" aria-hidden />
               {data.approach.architectureTitle}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -359,7 +369,7 @@ export function InsightDetailTemplate({
                   className="rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.01] p-5 space-y-3"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-[11px] font-bold text-[#F26D3D] tracking-wider">
+                    <span className="font-mono text-[11px] font-bold text-accent-ink tracking-wider">
                       {stage.stageNumber}
                     </span>
                     {stage.badge && (
@@ -388,17 +398,17 @@ export function InsightDetailTemplate({
 
           {/* Snippet de code ou blueprint architectural */}
           {data.approach.codeSnippet && (
-            <div className="rounded-2xl border border-slate-800 dark:border-white/10 bg-[#06070B] p-5 text-slate-200 overflow-hidden shadow-2xl">
+            <div className="rounded-2xl border border-slate-800 dark:border-white/10 bg-background p-5 text-slate-200 overflow-hidden shadow-2xl">
               <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
                 <div className="flex items-center gap-2 font-mono text-xs text-slate-400">
                   <span className="h-2.5 w-2.5 rounded-full bg-red-500/80" />
                   <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/80" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-green-500/80" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-link/80" />
                   <span className="ml-2 text-slate-300 font-medium">
                     {data.approach.codeSnippet.title}
                   </span>
                 </div>
-                <span className="font-mono text-[10px] uppercase text-[#F26D3D] bg-[#F26D3D]/10 px-2 py-0.5 rounded">
+                <span className="font-mono text-[10px] uppercase text-accent-ink bg-[#F26D3D]/10 px-2 py-0.5 rounded">
                   {data.approach.codeSnippet.language}
                 </span>
               </div>
@@ -418,12 +428,12 @@ export function InsightDetailTemplate({
         <section
           id="compromis"
           aria-labelledby="heading-compromis"
-          className="rounded-3xl border border-amber-500/30 bg-amber-500/[0.02] dark:bg-amber-500/[0.03] p-6 sm:p-10 shadow-sm space-y-6"
+          className="rounded-3xl border border-[#F26D3D]/40 bg-transparent p-6 sm:p-10 shadow-sm space-y-6"
         >
           <div className="flex items-center gap-2">
-            <ShieldAlert className="h-5 w-5 text-amber-600 dark:text-amber-400" aria-hidden />
-            <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-amber-600 dark:text-amber-400">
-              04 // ARBITRAGES TECHNIQUES & LIMITES ASSUMÉES
+            <ShieldAlert className="h-5 w-5 text-accent-ink" aria-hidden />
+            <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+              04 · ARBITRAGES TECHNIQUES & LIMITES ASSUMÉES
             </span>
           </div>
 
@@ -440,7 +450,7 @@ export function InsightDetailTemplate({
           </div>
 
           {/* Alerte d'honnêteté d'ingénierie */}
-          <div className="rounded-2xl border border-amber-500/25 bg-amber-500/10 p-4 text-xs leading-relaxed text-amber-900 dark:text-amber-200 font-mono">
+          <div className="rounded-2xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 p-4 text-xs leading-relaxed text-foreground font-mono">
             {data.tradeoffs.disclaimer}
           </div>
 
@@ -452,7 +462,7 @@ export function InsightDetailTemplate({
                 className="rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/80 dark:bg-white/[0.02] p-5 space-y-3"
               >
                 <div className="flex items-center gap-2">
-                  <Scale className="h-4 w-4 text-amber-600 dark:text-amber-400" aria-hidden />
+                  <Scale className="h-4 w-4 text-accent-ink" aria-hidden />
                   <span className="font-mono text-xs font-bold text-slate-900 dark:text-white">
                     {tradeoff.tension}
                   </span>
@@ -478,8 +488,8 @@ export function InsightDetailTemplate({
                   </div>
 
                   <div className="pt-2 border-t border-slate-200/60 dark:border-white/5">
-                    <span className="font-mono text-[10px] text-green-600 dark:text-green-400 uppercase tracking-wider">
-                      Mitigation déployée :
+                    <span className="font-mono text-[10px] text-link dark:text-link uppercase tracking-wider">
+                      Atténuation prévue :
                     </span>
                     <p className="text-slate-600 dark:text-slate-300 mt-0.5">
                       {tradeoff.mitigation}
@@ -497,8 +507,8 @@ export function InsightDetailTemplate({
           aria-labelledby="heading-resultats"
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-6"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#F26D3D]">
-            05 // RÉSULTATS & MESURES CONTEXTUALISÉES
+          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+            05 · INDICATEURS À MESURER
           </span>
 
           <div>
@@ -526,12 +536,12 @@ export function InsightDetailTemplate({
                       {metric.label}
                     </span>
                     {metric.isIndicative && (
-                      <span className="rounded bg-amber-500/10 text-amber-700 dark:text-amber-300 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase">
+                      <span className="rounded bg-[#F26D3D]/10 text-accent-ink px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase">
                         À titre indicatif
                       </span>
                     )}
                   </div>
-                  <p className="font-display text-3xl sm:text-4xl font-bold text-[#F26D3D]">
+                  <p className="font-display text-3xl sm:text-4xl font-bold text-accent-ink">
                     {metric.value}
                   </p>
                 </div>
@@ -553,7 +563,7 @@ export function InsightDetailTemplate({
           {/* Gains qualitatifs observés */}
           <div className="space-y-2.5 pt-2">
             <p className="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              Bénéfices d&apos;exploitation constatés :
+              Bénéfices attendus :
             </p>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
               {data.results.observedBenefits.map((benefit, idx) => (
@@ -561,7 +571,7 @@ export function InsightDetailTemplate({
                   key={idx}
                   className="flex items-start gap-2.5 text-xs text-slate-700 dark:text-slate-300 bg-white/50 dark:bg-white/[0.01] p-3 rounded-xl border border-slate-200/50 dark:border-white/5"
                 >
-                  <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400 shrink-0 mt-0.5" aria-hidden />
+                  <CheckCircle2 className="h-4 w-4 text-link dark:text-link shrink-0 mt-0.5" aria-hidden />
                   <span>{benefit}</span>
                 </li>
               ))}
@@ -576,8 +586,8 @@ export function InsightDetailTemplate({
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-6"
         >
           <div className="flex items-center justify-between">
-            <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#F26D3D]">
-              06 // POUR ALLER PLUS LOIN · SOLUTIONS & SERVICES
+            <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+              06 · POUR ALLER PLUS LOIN · SOLUTIONS & SERVICES
             </span>
           </div>
 
@@ -589,7 +599,7 @@ export function InsightDetailTemplate({
               Prolonger cette architecture sur vos projets
             </h2>
             <p className="mt-2 text-slate-600 dark:text-slate-300 leading-relaxed text-sm">
-              Découvrez les services d&apos;ingénierie et les solutions métiers directement liés à cette problématique :
+              Les services et les projets liés à cette problématique :
             </p>
           </div>
 
@@ -609,9 +619,9 @@ export function InsightDetailTemplate({
                     <span className="font-mono text-[10px] font-bold text-[#03318C] dark:text-blue-400 uppercase tracking-wider">
                       {res.badge}
                     </span>
-                    <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-[#F26D3D] group-hover:translate-x-1 transition-all" aria-hidden />
+                    <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-accent-ink group-hover:translate-x-1 transition-all" aria-hidden />
                   </div>
-                  <h3 className="font-display font-bold text-base text-slate-900 dark:text-white group-hover:text-[#F26D3D] transition-colors">
+                  <h3 className="font-display font-bold text-base text-slate-900 dark:text-white group-hover:text-accent-ink transition-colors">
                     {res.title}
                   </h3>
                   <p className="mt-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -619,7 +629,7 @@ export function InsightDetailTemplate({
                   </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-200/60 dark:border-white/5 flex items-center gap-1 font-mono text-[11px] font-semibold text-[#F26D3D]">
+                <div className="mt-4 pt-3 border-t border-slate-200/60 dark:border-white/5 flex items-center gap-1 font-mono text-[11px] font-semibold text-accent-ink">
                   <span>Explorer</span>
                   <ArrowRight className="h-3 w-3" aria-hidden />
                 </div>
@@ -631,7 +641,7 @@ export function InsightDetailTemplate({
         {/* ================= CALL TO ACTION ================= */}
         <ContactCta
           question="Vous concevez ou auditez une architecture similaire ?"
-          cta="Échanger avec un architecte"
+          cta={locale === "en" ? "Let's talk" : "Échanger avec le fondateur"}
           onNavigate={onNavigate}
         />
           </div>

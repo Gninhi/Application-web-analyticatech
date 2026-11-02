@@ -131,10 +131,13 @@ describe("Footer Social Links", () => {
     expect(html).not.toContain('aria-label="Twitter / X"');
   });
 
-  it("affiche le bouton permanent de gestion des cookies conforme CNIL", () => {
+  it("n'affiche pas de gestion des cookies tant qu'aucune mesure d'audience n'est configurée", () => {
+    // NEXT_PUBLIC_POSTHOG_KEY absente dans les tests (comme en production aujourd'hui) :
+    // seuls des cookies nécessaires sont déposés, aucun choix à gérer.
     const content = createMockContent();
     const html = renderFooter(content);
 
-    expect(html).toContain("Gestion des cookies");
+    expect(html).not.toContain("Gestion des cookies");
+    expect(html).not.toContain("Conformité RGPD");
   });
 });

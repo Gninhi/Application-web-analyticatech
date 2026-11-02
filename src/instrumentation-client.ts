@@ -19,6 +19,13 @@ import {
  *   de Next, un import statique alourdirait chaque page de tout le SDK.
  */
 
+/**
+ * Vrai seulement si une mesure d'audience est réellement configurée. Sans clé,
+ * le site ne dépose que des cookies nécessaires : aucun bandeau de
+ * consentement n'est affiché pour un outil qui n'existe pas.
+ */
+export const isAnalyticsConfigured = Boolean(process.env.NEXT_PUBLIC_POSTHOG_KEY);
+
 let client: PostHog | null = null;
 let loading: Promise<PostHog | null> | null = null;
 // Événements émis pendant le chargement du SDK, rejoués une fois initialisé.
