@@ -76,7 +76,7 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
               duration={3000}
               icon={<RefreshCw className="h-4 w-4" aria-hidden />}
               iconPosition="left"
-              className="mt-6 bg-[#E35F31] px-5 py-2.5 text-sm text-white hover:bg-[#E35F31]"
+              className="mt-6 bg-[#E35F31] px-5 py-2.5 text-sm text-slate-950 hover:bg-[#E35F31]"
             >
               <span>Recharger la page</span>
             </Button>

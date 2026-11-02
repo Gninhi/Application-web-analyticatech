@@ -16,7 +16,7 @@ function firstOgImage(images: OgImages): string | undefined {
 
 const MOCK_SITE: SiteConfigDTO = {
   siteName: "Analyticatech",
-  url: "https://analyticatech.fr",
+  url: "https://www.analyticatech.fr",
   email: "contact@analyticatech.fr",
   phone: "+33 1 00 00 00 00",
   phoneHref: "tel:+33100000000",
@@ -39,7 +39,7 @@ const MOCK_SEO: SeoMetadataDTO = {
   ogTitle: null,
   ogDescription: null,
   ogImageUrl: null,
-  canonicalUrl: "https://analyticatech.fr",
+  canonicalUrl: "https://www.analyticatech.fr",
   twitterCard: "summary_large_image",
 };
 
@@ -69,12 +69,12 @@ describe("page-meta", () => {
         title: "Services",
         description: "Desc",
       });
-      expect(meta.alternates?.canonical).toBe("https://analyticatech.fr/services");
-      expect(meta.openGraph?.url).toBe("https://analyticatech.fr/services");
+      expect(meta.alternates?.canonical).toBe("https://www.analyticatech.fr/services");
+      expect(meta.openGraph?.url).toBe("https://www.analyticatech.fr/services");
       expect(meta.openGraph?.siteName).toBe("Analyticatech");
-      expect(meta.alternates?.languages?.["fr-FR"]).toBe("https://analyticatech.fr/services");
-      expect(meta.alternates?.languages?.["en-US"]).toBe("https://analyticatech.fr/en/services");
-      expect(meta.alternates?.languages?.["x-default"]).toBe("https://analyticatech.fr/services");
+      expect(meta.alternates?.languages?.["fr-FR"]).toBe("https://www.analyticatech.fr/services");
+      expect(meta.alternates?.languages?.["en-US"]).toBe("https://www.analyticatech.fr/en/services");
+      expect(meta.alternates?.languages?.["x-default"]).toBe("https://www.analyticatech.fr/services");
     });
 
     it("pose le canonical et l'og:url pour une page EN (auto-référent)", async () => {
@@ -84,11 +84,11 @@ describe("page-meta", () => {
         title: "Services",
         description: "Desc",
       });
-      expect(meta.alternates?.canonical).toBe("https://analyticatech.fr/en/services");
-      expect(meta.openGraph?.url).toBe("https://analyticatech.fr/en/services");
-      expect(meta.alternates?.languages?.["fr-FR"]).toBe("https://analyticatech.fr/services");
-      expect(meta.alternates?.languages?.["en-US"]).toBe("https://analyticatech.fr/en/services");
-      expect(meta.alternates?.languages?.["x-default"]).toBe("https://analyticatech.fr/services");
+      expect(meta.alternates?.canonical).toBe("https://www.analyticatech.fr/en/services");
+      expect(meta.openGraph?.url).toBe("https://www.analyticatech.fr/en/services");
+      expect(meta.alternates?.languages?.["fr-FR"]).toBe("https://www.analyticatech.fr/services");
+      expect(meta.alternates?.languages?.["en-US"]).toBe("https://www.analyticatech.fr/en/services");
+      expect(meta.alternates?.languages?.["x-default"]).toBe("https://www.analyticatech.fr/services");
     });
 
     it("replie l'image OG sur /og-image.jpg quand la DB n'en fournit pas", async () => {
@@ -99,7 +99,7 @@ describe("page-meta", () => {
         description: "Desc",
       });
       const first = firstOgImage(meta.openGraph?.images);
-      expect(first).toBe("https://analyticatech.fr/og-image.jpg");
+      expect(first).toBe("https://www.analyticatech.fr/og-image.jpg");
     });
 
     it("utilise l'image OG de la DB quand disponible", async () => {
@@ -136,7 +136,7 @@ describe("page-meta", () => {
       expect(servicesMeta.title).toBe("Services — IA, automatisation et données");
       expect(servicesMeta.openGraph?.title).toBe("Services — IA, automatisation et données | Analyticatech");
       expect(servicesMeta.twitter?.title).toBe("Services — IA, automatisation et données | Analyticatech");
-      expect(servicesMeta.alternates?.canonical).toBe("https://analyticatech.fr/services");
+      expect(servicesMeta.alternates?.canonical).toBe("https://www.analyticatech.fr/services");
 
       const insightsMeta = await getStaticPageMetadata("fr", "insights");
       expect(insightsMeta.title).toBe("Insights — Articles et guides pratiques");
@@ -152,12 +152,12 @@ describe("page-meta", () => {
     it("fournit la copy EN et canonical EN", async () => {
       const meta = await getStaticPageMetadata("en", "contact");
       expect(meta.title).toContain("Contact");
-      expect(meta.alternates?.canonical).toBe("https://analyticatech.fr/en/contact");
+      expect(meta.alternates?.canonical).toBe("https://www.analyticatech.fr/en/contact");
     });
 
     it("canonical propre à chaque route", async () => {
       const meta = await getStaticPageMetadata("fr", "mentions-legales");
-      expect(meta.alternates?.canonical).toBe("https://analyticatech.fr/mentions-legales");
+      expect(meta.alternates?.canonical).toBe("https://www.analyticatech.fr/mentions-legales");
     });
   });
 });

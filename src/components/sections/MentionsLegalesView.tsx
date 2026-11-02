@@ -105,7 +105,7 @@ export function MentionsLegalesView({ onNavigate }: MentionsLegalesViewProps) {
             <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
               Le site internet accessible à l&apos;adresse{" "}
               <span className="font-mono text-xs font-semibold text-slate-900 dark:text-slate-100">
-                https://analyticatech.fr
+                https://www.analyticatech.fr
               </span>{" "}
               est édité et exploité par la société suivante :
             </p>

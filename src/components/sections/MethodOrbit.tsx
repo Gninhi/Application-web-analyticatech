@@ -200,7 +200,6 @@ export function MethodOrbit({ nodes, activeIndex, onSelect, centerLabel }: Metho
                   type="button"
                   role="tab"
                   aria-selected={isActive}
-                  aria-label={`${node.number} — ${node.title}`}
                   onClick={() => onSelect(i)}
                   onMouseEnter={() => onSelect(i)}
                   className={cn(

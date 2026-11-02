@@ -61,7 +61,7 @@ export default async function PostDetailPageEn({ params }: Params) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "@id": `https://analyticatech.fr/en/insights/${resolvedSlug}#article`,
+    "@id": `https://www.analyticatech.fr/en/insights/${resolvedSlug}#article`,
     headline: resolvedTitle,
     description: resolvedExcerpt,
     datePublished: resolvedDate,
@@ -72,7 +72,7 @@ export default async function PostDetailPageEn({ params }: Params) {
     publisher: {
       "@type": "Organization",
       name: "Analyticatech",
-      url: "https://analyticatech.fr",
+      url: "https://www.analyticatech.fr",
     },
     inLanguage: "en-US",
     keywords: resolvedTags.join(", "),

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { headers, cookies } from "next/headers";
-import { Manrope, Inter } from "next/font/google";
+import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/branding/ThemeProvider";
 import "./globals.css";
 import { GlobalErrorBoundary } from "@/components/system/GlobalErrorBoundary";
@@ -9,12 +9,13 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { getAppContent } from "@/lib/services/content.service";
 import type { Locale } from "@/types/content";
 
-/* === Typographie de la charte Analyticatech ===
- * Manrope pour les titres, Inter pour le texte. Aucune autre police. */
-const manrope = Manrope({
-  variable: "--font-manrope",
+/* === Typographie (identique à la production) ===
+ * Space Grotesk pour les titres, Inter pour le texte, JetBrains Mono pour
+ * les étiquettes. preload + display swap + adjustFontFallback : pas de CLS. */
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
+  weight: ["600", "700"],
   display: "swap",
   preload: true,
   adjustFontFallback: true,
@@ -29,8 +30,16 @@ const inter = Inter({
   adjustFontFallback: true,
 });
 
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
+  preload: false, // Étiquettes uniquement : pas de preload
+});
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://analyticatech.fr"),
+  metadataBase: new URL("https://www.analyticatech.fr"),
   title: {
     default: "Analyticatech — L'IA, expliquée simplement, pour les PME et ETI",
     template: "%s | Analyticatech",
@@ -49,7 +58,7 @@ export const metadata: Metadata = {
     "Power BI",
     "business intelligence PME",
   ],
-  authors: [{ name: "Analyticatech", url: "https://analyticatech.fr" }],
+  authors: [{ name: "Analyticatech", url: "https://www.analyticatech.fr" }],
   creator: "Analyticatech",
   publisher: "Analyticatech",
   icons: { icon: "/logo.svg" },
@@ -71,7 +80,7 @@ export const metadata: Metadata = {
     siteName: "Analyticatech",
     type: "website",
     locale: "fr_FR",
-    url: "https://analyticatech.fr",
+    url: "https://www.analyticatech.fr",
     images: [
       {
         url: "/og-image.jpg",
@@ -89,19 +98,19 @@ export const metadata: Metadata = {
     images: ["/og-image.jpg"],
   },
   alternates: {
-    canonical: "https://analyticatech.fr",
+    canonical: "https://www.analyticatech.fr",
     languages: {
-      "fr-FR": "https://analyticatech.fr",
-      "en-US": "https://analyticatech.fr/en",
-      fr: "https://analyticatech.fr",
-      en: "https://analyticatech.fr/en",
-      "x-default": "https://analyticatech.fr",
+      "fr-FR": "https://www.analyticatech.fr",
+      "en-US": "https://www.analyticatech.fr/en",
+      fr: "https://www.analyticatech.fr",
+      en: "https://www.analyticatech.fr/en",
+      "x-default": "https://www.analyticatech.fr",
     },
   },
   category: "technology",
   other: {
     "application-name": "Analyticatech",
-    "theme-color": "#011C40",
+    "theme-color": "#06070B",
     "geo.region": "FR",
     "geo.placename": "Paris",
     "geo.position": "48.8566;2.3522",
@@ -149,7 +158,7 @@ export default async function RootLayout({
       </head>
 
       <body
-        className={`${manrope.variable} ${inter.variable} antialiased`}
+        className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <JsonLd content={content} />
         <ThemeProvider>

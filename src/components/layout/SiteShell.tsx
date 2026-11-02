@@ -11,6 +11,7 @@ import { ContentProvider } from "@/components/providers/ContentProvider";
 import { I18nProvider, useI18n } from "@/lib/i18n/provider";
 import { pathToView } from "@/lib/navigation/routes";
 import type { AppContentDTO } from "@/types/content";
+import { isAnalyticsConfigured } from "@/instrumentation-client";
 
 const BackToTop = dynamic(
   () => import("@/components/layout/BackToTop").then((m) => m.BackToTop),
@@ -106,8 +107,8 @@ function SiteShellInner({ children }: { children: React.ReactNode }) {
       {/* Bouton retour-haut flottant */}
       <BackToTop />
 
-      {/* Bandeau consentement cookies RGPD */}
-      <CookieConsent />
+      {/* Bandeau consentement cookies RGPD — seulement si une mesure d'audience existe */}
+      {isAnalyticsConfigured && <CookieConsent />}
 
       {/* Télémétrie PostHog RGPD (chargement conditionné au consentement) */}
       <PostHogTelemetry />

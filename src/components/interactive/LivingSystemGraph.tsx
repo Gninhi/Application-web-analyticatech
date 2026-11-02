@@ -127,7 +127,7 @@ export function LivingSystemGraph() {
         </svg>
 
         {/* Grille des Nœuds */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10" role="tablist" aria-label={isEn ? "System stages" : "Étapes du système"}>
           {NODES.map((node, index) => {
             const Icon = node.icon;
             const isActive = activeNodeId === node.id;
@@ -153,7 +153,7 @@ export function LivingSystemGraph() {
                   <span
                     className={`font-mono text-xs font-bold px-2 py-0.5 rounded-full ${
                       isActive
-                        ? "bg-[#E35F31] text-white"
+                        ? "bg-[#E35F31] text-slate-950"
                         : "bg-slate-200 dark:bg-white/10 text-slate-600 dark:text-slate-300"
                     }`}
                   >

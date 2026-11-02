@@ -218,7 +218,6 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                 type="button"
                 role="tab"
                 aria-selected={isActive}
-                aria-label={`${step.number} — ${step.title}`}
                 onClick={() => handleSelectStep(idx)}
                 className={`relative flex flex-col p-4 rounded-2xl border text-left transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 overflow-hidden cursor-pointer ${
                   isActive

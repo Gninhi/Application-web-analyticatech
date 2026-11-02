@@ -41,7 +41,8 @@ export async function GET() {
       },
     },
     {
-      status: 200,
+      // 503 si la base est injoignable : un moniteur externe doit voir la panne
+      status: isHealthy ? 200 : 503,
       headers: HEALTH_HEADERS,
     }
   );

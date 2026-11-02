@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, after, type NextRequest } from "next/server";
 import { contactSchema, type ContactApiResponse } from "@/lib/validation/schemas";
 import { getServerEnv } from "@/lib/env";
 import { checkRateLimit, getClientIp } from "@/lib/security/rate-limit";
@@ -291,16 +291,21 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // 12. Notification email (non bloquant — fire-and-forget avec audit log).
-  void sendContactNotification({
-    reference,
-    prenom: sanitized.prenom,
-    nom: sanitized.nom,
-    email: sanitized.email,
-    entreprise: sanitized.entreprise,
-    sujet: sanitized.sujet,
-    message: sanitized.message,
-  });
+  // 12. Notification email après la réponse. `after()` garantit l'exécution
+  //     jusqu'à son terme (un simple `void` peut être gelé par la plateforme
+  //     serverless dès la réponse envoyée, et l'e-mail ne partirait jamais).
+  //     La demande est déjà persistée : un échec d'envoi n'est pas une perte.
+  after(() =>
+    sendContactNotification({
+      reference,
+      prenom: sanitized.prenom,
+      nom: sanitized.nom,
+      email: sanitized.email,
+      entreprise: sanitized.entreprise,
+      sujet: sanitized.sujet,
+      message: sanitized.message,
+    })
+  );
 
   audit.info("Contact: nouvelle demande persistée", {
     reference,
@@ -308,23 +313,25 @@ export async function POST(req: NextRequest) {
     sujet_len: sanitized.sujet.length,
   });
 
-  // 13. Télémétrie serveur PostHog (non bloquant, ID déterministe, 0 PII)
-  const clientPosthogId = req.headers.get("x-posthog-id");
-  const serverDistinctId =
-    clientPosthogId && clientPosthogId.trim() !== "" && clientPosthogId.toLowerCase() !== "anonymous"
-      ? clientPosthogId
-      : fingerprint;
-
-  void captureServerEvent({
-    distinctId: serverDistinctId,
-    event: "contact_form_processed_server",
-    properties: {
-      reference,
-      has_company: Boolean(sanitized.entreprise),
-      subject_len: sanitized.sujet.length,
-      status: "success",
-    },
-  });
+  // 13. Télémétrie serveur PostHog : uniquement si le visiteur a consenti à
+  //     la mesure d'audience. L'en-tête x-posthog-id n'est envoyé que par un
+  //     client PostHog initialisé, donc après consentement. Sans lui, aucun
+  //     événement (pas de repli sur l'empreinte de l'appareil). 0 PII.
+  const clientPosthogId = req.headers.get("x-posthog-id")?.trim();
+  if (clientPosthogId && clientPosthogId.toLowerCase() !== "anonymous") {
+    after(() =>
+      captureServerEvent({
+        distinctId: clientPosthogId,
+        event: "contact_form_processed_server",
+        properties: {
+          reference,
+          has_company: Boolean(sanitized.entreprise),
+          subject_len: sanitized.sujet.length,
+          status: "success",
+        },
+      })
+    );
+  }
 
   return json(
     {

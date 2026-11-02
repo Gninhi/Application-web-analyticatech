@@ -37,7 +37,7 @@ export const FALLBACK_SEO_METADATA: SeoMetadataDTO = {
   ogDescription:
     "Agents IA, automatisation et données en production pour les PME et ETI, avec une décision humaine à chaque étape sensible.",
   ogImageUrl: null,
-  canonicalUrl: "https://analyticatech.fr",
+  canonicalUrl: "https://www.analyticatech.fr",
   twitterCard: "summary_large_image",
 };
 
@@ -58,7 +58,7 @@ export const FALLBACK_SEO_METADATA_EN: SeoMetadataDTO = {
   ogDescription:
     "AI agents, automation and data in production for SMEs and mid-sized companies, with a human decision at every sensitive step.",
   ogImageUrl: null,
-  canonicalUrl: "https://analyticatech.fr/en",
+  canonicalUrl: "https://www.analyticatech.fr/en",
   twitterCard: "summary_large_image",
 };
 
@@ -845,7 +845,7 @@ export const FALLBACK_LEGAL_SECTIONS_FR: LegalSectionDTO[] = [
     id: "leg-1",
     type: "legal",
     heading: "1. Éditeur du site",
-    body: "Le site https://analyticatech.fr est édité par Analyticatech, société par actions simplifiée (SAS) au capital de 1 000,00 €.\nSiège social : 60 rue François 1er, 75008 Paris, France.\nImmatriculation : SIREN 984 609 198 — SIRET 984 609 198 00010 (RCS Paris).\nNuméro de TVA intracommunautaire : FR96984609198.\nDirecteur de la publication : Martial GNINHI, Président de la SAS.\nActivité : conseil en systèmes et logiciels informatiques (code NAF/APE 62.02A).",
+    body: "Le site https://www.analyticatech.fr est édité par Analyticatech, société par actions simplifiée (SAS) au capital de 1 000,00 €.\nSiège social : 60 rue François 1er, 75008 Paris, France.\nImmatriculation : SIREN 984 609 198 — SIRET 984 609 198 00010 (RCS Paris).\nNuméro de TVA intracommunautaire : FR96984609198.\nDirecteur de la publication : Martial GNINHI, Président de la SAS.\nActivité : conseil en systèmes et logiciels informatiques (code NAF/APE 62.02A).",
     order: 1,
   },
   {
@@ -880,7 +880,7 @@ export const FALLBACK_LEGAL_SECTIONS_FR: LegalSectionDTO[] = [
     id: "rgpd-2",
     type: "rgpd",
     heading: "2. Données collectées et finalités",
-    body: "Formulaire de contact : prénom, nom, e-mail professionnel, entreprise, sujet et message, pour répondre à votre demande et, le cas échéant, vous adresser une proposition.\nSécurité : une empreinte technique de votre connexion (adresse IP et navigateur, enregistrées uniquement sous forme hachée, donc non lisibles) sert à limiter les envois abusifs.\nMesure d'audience : uniquement si vous l'acceptez dans le bandeau cookies (voir section 5).",
+    body: "Formulaire de contact : prénom, nom, e-mail professionnel, entreprise, sujet et message, pour répondre à votre demande et, le cas échéant, vous adresser une proposition.\nSécurité : une empreinte technique de votre connexion (adresse IP et navigateur, enregistrées uniquement sous forme hachée, donc non lisibles) sert à limiter les envois abusifs.\nMesure d'audience : uniquement si elle est activée et que vous l'acceptez (voir section 5).",
     order: 2,
   },
   {
@@ -894,14 +894,14 @@ export const FALLBACK_LEGAL_SECTIONS_FR: LegalSectionDTO[] = [
     id: "rgpd-4",
     type: "rgpd",
     heading: "4. Destinataires et sous-traitants",
-    body: "Vos données ne sont ni vendues ni louées. Elles sont accessibles au seul fondateur d'Analyticatech et aux prestataires techniques nécessaires :\n- Vercel Inc. (hébergement du site, États-Unis) ;\n- Supabase (base de données, hébergée dans l'Union européenne) ;\n- Resend (envoi de l'e-mail de notification de votre demande, États-Unis) ;\n- PostHog (mesure d'audience, serveurs dans l'Union européenne), uniquement avec votre accord.\nLes transferts vers les États-Unis sont encadrés par le cadre de protection des données UE–États-Unis ou par les clauses contractuelles types de la Commission européenne.",
+    body: "Vos données ne sont ni vendues ni louées. Elles sont accessibles au seul fondateur d'Analyticatech et aux prestataires techniques nécessaires :\n- Vercel Inc. (hébergement du site, États-Unis) ;\n- Supabase (base de données, hébergée dans l'Union européenne) ;\n- Resend (envoi de l'e-mail de notification de votre demande, États-Unis) ;\n- PostHog (mesure d'audience, serveurs dans l'Union européenne), uniquement si elle est activée et avec votre accord.\nLes transferts vers les États-Unis sont encadrés par le cadre de protection des données UE–États-Unis ou par les clauses contractuelles types de la Commission européenne.",
     order: 4,
   },
   {
     id: "rgpd-5",
     type: "rgpd",
     heading: "5. Cookies et traceurs",
-    body: "Cookies nécessaires (toujours actifs) : jeton de sécurité contre la falsification de requêtes (24 heures), préférence de langue (1 an), mémorisation de votre choix de cookies.\nMesure d'audience PostHog : déposée uniquement après votre accord dans le bandeau, sans publicité ni revente. Vous pouvez modifier votre choix à tout moment via le lien « Gestion des cookies » en bas de page.",
+    body: "Cookies nécessaires (toujours actifs) : jeton de sécurité contre la falsification de requêtes (24 heures), préférence de langue (1 an), mémorisation de votre choix de cookies.\nMesure d'audience PostHog : lorsqu'elle est activée, elle n'est déposée qu'après votre accord dans le bandeau, sans publicité ni revente, et votre choix reste modifiable via le lien « Gestion des cookies » en bas de page. Tant qu'aucune mesure d'audience n'est active, seuls les cookies nécessaires sont déposés et aucun bandeau n'est affiché.",
     order: 5,
   },
   {
@@ -926,7 +926,7 @@ export const FALLBACK_LEGAL_SECTIONS_EN: LegalSectionDTO[] = [
     id: "leg-1",
     type: "legal",
     heading: "1. Publisher",
-    body: "The website https://analyticatech.fr is published by Analyticatech, a French simplified joint-stock company (SAS) with share capital of €1,000.00.\nRegistered office: 60 rue François 1er, 75008 Paris, France.\nRegistration: SIREN 984 609 198 — SIRET 984 609 198 00010 (Paris Trade and Companies Register).\nVAT number: FR96984609198.\nPublishing director: Martial GNINHI, President.\nActivity: IT systems and software consulting (NAF/APE code 62.02A).",
+    body: "The website https://www.analyticatech.fr is published by Analyticatech, a French simplified joint-stock company (SAS) with share capital of €1,000.00.\nRegistered office: 60 rue François 1er, 75008 Paris, France.\nRegistration: SIREN 984 609 198 — SIRET 984 609 198 00010 (Paris Trade and Companies Register).\nVAT number: FR96984609198.\nPublishing director: Martial GNINHI, President.\nActivity: IT systems and software consulting (NAF/APE code 62.02A).",
     order: 1,
   },
   {
@@ -961,7 +961,7 @@ export const FALLBACK_LEGAL_SECTIONS_EN: LegalSectionDTO[] = [
     id: "rgpd-2",
     type: "rgpd",
     heading: "2. Data collected and purposes",
-    body: "Contact form: first name, last name, business email, company, subject and message, to answer your request and, where relevant, send you a proposal.\nSecurity: a technical fingerprint of your connection (IP address and browser, stored only in hashed, unreadable form) is used to limit abusive submissions.\nAudience measurement: only if you accept it in the cookie banner (see section 5).",
+    body: "Contact form: first name, last name, business email, company, subject and message, to answer your request and, where relevant, send you a proposal.\nSecurity: a technical fingerprint of your connection (IP address and browser, stored only in hashed, unreadable form) is used to limit abusive submissions.\nAudience measurement: only if it is enabled and you accept it (see section 5).",
     order: 2,
   },
   {
@@ -975,14 +975,14 @@ export const FALLBACK_LEGAL_SECTIONS_EN: LegalSectionDTO[] = [
     id: "rgpd-4",
     type: "rgpd",
     heading: "4. Recipients and processors",
-    body: "Your data is neither sold nor rented. Only Analyticatech's founder and the necessary technical providers can access it:\n- Vercel Inc. (website hosting, United States);\n- Supabase (database, hosted in the European Union);\n- Resend (sending the notification email for your request, United States);\n- PostHog (audience measurement, servers in the European Union), only with your consent.\nTransfers to the United States are covered by the EU–US Data Privacy Framework or the European Commission's standard contractual clauses.",
+    body: "Your data is neither sold nor rented. Only Analyticatech's founder and the necessary technical providers can access it:\n- Vercel Inc. (website hosting, United States);\n- Supabase (database, hosted in the European Union);\n- Resend (sending the notification email for your request, United States);\n- PostHog (audience measurement, servers in the European Union), only if enabled and with your consent.\nTransfers to the United States are covered by the EU–US Data Privacy Framework or the European Commission's standard contractual clauses.",
     order: 4,
   },
   {
     id: "rgpd-5",
     type: "rgpd",
     heading: "5. Cookies and trackers",
-    body: "Necessary cookies (always on): security token against request forgery (24 hours), language preference (1 year), storage of your cookie choice.\nPostHog audience measurement: set only after your consent in the banner, with no advertising or resale. You can change your choice at any time through the “Cookie settings” link at the bottom of each page.",
+    body: "Necessary cookies (always on): security token against request forgery (24 hours), language preference (1 year), storage of your cookie choice.\nPostHog audience measurement: when it is enabled, it is set only after your consent in the banner, with no advertising or resale, and you can change your choice through the “Cookie settings” link at the bottom of each page. While no audience measurement is active, only necessary cookies are set and no banner is shown.",
     order: 5,
   },
   {

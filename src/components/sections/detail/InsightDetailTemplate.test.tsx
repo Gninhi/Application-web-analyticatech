@@ -13,7 +13,7 @@ const mockAppContent: AppContentDTO = {
   blogPosts: FALLBACK_BLOG_POSTS_FR,
   siteConfig: {
     siteName: "Analyticatech",
-    url: "https://analyticatech.fr",
+    url: "https://www.analyticatech.fr",
     email: "contact@analyticatech.fr",
     phone: "+33 1 00 00 00 00",
     phoneHref: "tel:+33100000000",
@@ -49,7 +49,7 @@ const mockAppContent: AppContentDTO = {
     ogTitle: null,
     ogDescription: null,
     ogImageUrl: null,
-    canonicalUrl: "https://analyticatech.fr",
+    canonicalUrl: "https://www.analyticatech.fr",
     twitterCard: "summary_large_image",
   },
   seoSchemas: [],

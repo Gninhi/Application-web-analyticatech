@@ -6,22 +6,22 @@ Ce fichier résume le site pour les assistants d'IA. Il ne contient aucun chiffr
 
 ## Services
 
-- [Raisonnement & RAG](https://analyticatech.fr/services/01) : assistants qui répondent à partir des documents internes et citent leurs sources.
-- [Automatisation & Workflows](https://analyticatech.fr/services/02) : enchaînements entre les outils de l'entreprise (n8n, Temporal), avec étapes de validation.
-- [Orchestration Multi-Agents](https://analyticatech.fr/services/03) : plusieurs agents IA qui se répartissent le travail, décisions importantes validées par une personne.
-- [Data & Décision Augmentée](https://analyticatech.fr/services/04) : indicateurs définis une seule fois, tableaux de bord pour la direction (dbt, Power BI).
+- [Raisonnement & RAG](https://www.analyticatech.fr/services/01) : assistants qui répondent à partir des documents internes et citent leurs sources.
+- [Automatisation & Workflows](https://www.analyticatech.fr/services/02) : enchaînements entre les outils de l'entreprise (n8n, Temporal), avec étapes de validation.
+- [Orchestration Multi-Agents](https://www.analyticatech.fr/services/03) : plusieurs agents IA qui se répartissent le travail, décisions importantes validées par une personne.
+- [Data & Décision Augmentée](https://www.analyticatech.fr/services/04) : indicateurs définis une seule fois, tableaux de bord pour la direction (dbt, Power BI).
 
 ## Projets en cours (produits construits par Analyticatech)
 
-- [Ciblioo](https://analyticatech.fr/solutions/ciblioo) : plateforme de sourcing pour cabinets de transmission et de M&A, chaque donnée rattachée à sa source (registres publics DINUM et BODACC). Statut : en développement, non commercialisé.
-- [ContentOps Harness](https://analyticatech.fr/solutions/contentops) : système éditorial pour LinkedIn et X avec validation humaine obligatoire avant publication. Statut : prototype fonctionnel en environnement de test. Code public : https://github.com/Gninhi/Content-builder
-- [AVIE](https://analyticatech.fr/solutions/avie) : moteur de veille sur sources ouvertes qui sépare faits, estimations et contradictions. Statut : outil interne. Code public : https://github.com/Gninhi/viiper-v4
+- [Ciblioo](https://www.analyticatech.fr/solutions/ciblioo) : plateforme de sourcing pour cabinets de transmission et de M&A, chaque donnée rattachée à sa source (registres publics DINUM et BODACC). Statut : en développement, non commercialisé.
+- [ContentOps Harness](https://www.analyticatech.fr/solutions/contentops) : système éditorial pour LinkedIn et X avec validation humaine obligatoire avant publication. Statut : prototype fonctionnel en environnement de test. Code public : https://github.com/Gninhi/Content-builder
+- [AVIE](https://www.analyticatech.fr/solutions/avie) : moteur de veille sur sources ouvertes qui sépare faits, estimations et contradictions. Statut : outil interne. Code public : https://github.com/Gninhi/viiper-v4
 
 ## Pistes à construire (rien n'est encore développé)
 
-- [Pilotage commercial](https://analyticatech.fr/solutions/retail-bi) : ventes, marges et stocks réunis pour les PME de commerce.
-- [Prévision de la demande](https://analyticatech.fr/solutions/logistics-ai) : propositions de réapprovisionnement validées par l'acheteur.
-- [Veille clients et fournisseurs](https://analyticatech.fr/solutions/veille-registres) : alertes sur les annonces BODACC des partenaires.
+- [Pilotage commercial](https://www.analyticatech.fr/solutions/retail-bi) : ventes, marges et stocks réunis pour les PME de commerce.
+- [Prévision de la demande](https://www.analyticatech.fr/solutions/logistics-ai) : propositions de réapprovisionnement validées par l'acheteur.
+- [Veille clients et fournisseurs](https://www.analyticatech.fr/solutions/veille-registres) : alertes sur les annonces BODACC des partenaires.
 
 ## Méthode
 
@@ -32,11 +32,11 @@ Ce fichier résume le site pour les assistants d'IA. Il ne contient aucun chiffr
 
 ## Articles
 
-- [Industrialiser les agents IA : du prototype au système en production](https://analyticatech.fr/insights/agents-production-2025)
-- [Évaluer un système RAG en production](https://analyticatech.fr/insights/evaluer-systeme-rag-production)
-- [n8n ou Temporal : choisir l'outil adapté à vos automatisations critiques](https://analyticatech.fr/insights/n8n-vs-temporal-orchestration)
-- [La couche sémantique : définir vos indicateurs une seule fois](https://analyticatech.fr/insights/couche-semantique-dbt-bi)
-- [Faire communiquer plusieurs agents IA par événements](https://analyticatech.fr/insights/event-driven-agents)
+- [Industrialiser les agents IA : du prototype au système en production](https://www.analyticatech.fr/insights/agents-production-2025)
+- [Évaluer un système RAG en production](https://www.analyticatech.fr/insights/evaluer-systeme-rag-production)
+- [n8n ou Temporal : choisir l'outil adapté à vos automatisations critiques](https://www.analyticatech.fr/insights/n8n-vs-temporal-orchestration)
+- [La couche sémantique : définir vos indicateurs une seule fois](https://www.analyticatech.fr/insights/couche-semantique-dbt-bi)
+- [Faire communiquer plusieurs agents IA par événements](https://www.analyticatech.fr/insights/event-driven-agents)
 
 Les articles sont des guides de méthode illustrés par des scénarios types ; ils ne décrivent pas de missions clients.
 
@@ -56,6 +56,6 @@ Les articles sont des guides de méthode illustrés par des scénarios types ; i
 
 ## URL
 
-- https://analyticatech.fr (FR)
-- https://analyticatech.fr/en (EN)
-- https://analyticatech.fr/sitemap.xml
+- https://www.analyticatech.fr (FR)
+- https://www.analyticatech.fr/en (EN)
+- https://www.analyticatech.fr/sitemap.xml

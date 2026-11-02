@@ -1,11 +1,11 @@
 {
-  "home.badge": "AI consulting for SMEs",
-  "home.hero.title1": "AI, explained simply.",
-  "home.hero.keyword": "",
-  "home.hero.title2": "Reliable systems, in production, for SMEs and mid-market companies.",
-  "home.hero.desc": "I help business leaders and their CIOs move from an AI pilot to a tool used every day: AI agents (programs that chain tasks under human control), process automation and decision dashboards, compliant with GDPR and the EU AI Act.",
-  "home.hero.cta1": "Let's take 20 minutes",
-  "home.hero.cta2": "See services",
+  "home.badge": "AI consulting · Automation · Data",
+  "home.hero.title1": "SYSTEMS THAT ARE",
+  "home.hero.keyword": "INTELLIGENT|RELIABLE|TRACEABLE|MEASURABLE|USEFUL",
+  "home.hero.title2": "for simpler operations.",
+  "home.hero.desc": "I help SME and mid-market leaders move from an AI pilot to a tool used every day: assistants that answer from your documents, AI agents under human control, process automation and decision dashboards.",
+  "home.hero.cta1": "Assess your project",
+  "home.hero.cta2": "Explore the solutions",
   "home.section.proof": "02 — COMMITMENTS",
   "home.section.proof.tagline": "One method, clear deliverables, a single point of contact",
   "home.proof.heading": "What you can verify from the first call",
@@ -152,7 +152,7 @@
   "home.faq.a4": "Yes, within my scope: maturity audit, process automation, data-driven steering and AI governance. For topics outside that scope, I point you to the right people.",
   "home.faq.q5": "What happens during an initial discovery call?",
   "home.faq.a5": "A free 20-minute call to understand your challenges. If the need is confirmed, I send you a written proposal within 5 business days. No commitment.",
-  "home.hero.fact1": "Head office in Paris",
-  "home.hero.fact2": "GDPR and AI Act compliance built in",
-  "home.hero.fact3": "Remote work across France"
+  "home.hero.fact1": "The founder, your single contact",
+  "home.hero.fact2": "GDPR and AI Act by design",
+  "home.hero.fact3": "Hosting in the EU or on your servers"
 }

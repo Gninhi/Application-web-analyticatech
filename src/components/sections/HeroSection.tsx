@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
-import { MoveRight, ArrowRight } from "lucide-react";
+import React, { useState, useEffect, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MoveRight, ArrowRight, ShieldCheck, Sparkles, Server } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { SectionContainer } from "@/components/ui/SectionContainer";
@@ -12,43 +13,164 @@ interface HeroSectionProps {
 }
 
 /**
- * HeroSection — Ouverture conforme au design system Analyticatech.
- * Promesse unique de la charte : « L'IA, expliquée simplement ».
- * Pas d'ombre, pas de dégradé, pas de halo ; un filet orange comme signal.
+ * HeroSection — Bloc d'ouverture cinématique avec faisceau lumineux et rotateur de mots.
+ *
+ * - Faisceau lumineux courbé incandescent (#F26D3D) réactif aux thèmes clair et sombre.
+ * - Rotateur typographique : le premier mot (« INTELLIGENTS ») est celui du rendu SSR,
+ *   les suivants ne décrivent que des qualités vérifiables (pas « autonomes » ni
+ *   « souverains », contraires à la promesse de contrôle humain et non certifiés).
+ * - Barre de réassurance : uniquement des faits contrôlables dès le premier échange.
+ * - 100% centré, net, SSR-compatible sans aucun CLS.
  */
 export function HeroSection({ onNavigate }: HeroSectionProps) {
   const { t } = useI18n();
 
+  const keywords = t("home.hero.keyword");
+  const rotatingWords = useMemo(() => keywords.split("|").filter(Boolean), [keywords]);
+
+  const [wordIndex, setWordIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setWordIndex((prev) => (prev + 1) % rotatingWords.length);
+    }, 2400);
+    return () => clearInterval(timer);
+  }, [rotatingWords.length]);
+
   return (
-    <section className="relative pt-32 sm:pt-40 md:pt-44 pb-12 sm:pb-16">
+    <section className="relative pt-32 sm:pt-40 md:pt-48 pb-16 sm:pb-24 overflow-hidden">
+      {/* ============================================================ */}
+      {/* 1. HALOS AMBIANTS & GRILLE COSMIQUE DE FOND                  */}
+      {/* ============================================================ */}
+      <div
+        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+        aria-hidden="true"
+      >
+        {/* Halo ambiant supérieur */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[450px] bg-[radial-gradient(ellipse_at_top,rgba(242,109,61,0.18),transparent_70%)] dark:bg-[radial-gradient(ellipse_at_top,rgba(242,109,61,0.25),transparent_70%)] blur-3xl opacity-90" />
+
+        {/* Halo bleu nuit / cosmique */}
+        <div className="absolute top-1/4 right-0 w-[600px] h-[500px] bg-[radial-gradient(circle,rgba(2,40,89,0.25),transparent_70%)] dark:bg-[radial-gradient(circle,rgba(2,40,89,0.6),transparent_70%)] blur-3xl" />
+
+        {/* Grille technique de fond très discrète */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_30%,#000_70%,transparent_100%)]" />
+      </div>
+
+      {/* ============================================================ */}
+      {/* 2. CONTENU PRINCIPAL CENTRÉ                                 */}
+      {/* ============================================================ */}
       <SectionContainer className="relative z-10">
         <div className="mx-auto max-w-4xl text-center flex flex-col items-center">
-          {/* Étiquette */}
-          <p className="mb-8 inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-[11px] sm:text-[12px] text-balance font-semibold uppercase tracking-[0.08em] text-slate-600 dark:text-[#B6C2D6]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#F26D3D]" aria-hidden="true" />
-            {t("home.badge")}
-          </p>
+          {/* Badge supérieur interactif */}
+          <Button
+            onClick={() => onNavigate("services")}
+            variant="secondary"
+            size="sm"
+            icon={<MoveRight className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden="true" />}
+            iconPosition="right"
+            className="mb-8 max-w-full h-auto min-h-9 py-2 whitespace-normal"
+          >
+            <span className="flex h-2 w-2 shrink-0 rounded-full bg-[#F26D3D] animate-pulse mr-1" aria-hidden="true" />
+            <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.1em] sm:tracking-[0.2em] font-medium text-balance">
+              {t("home.badge")}
+            </span>
+          </Button>
 
-          {/* Promesse */}
-          <h1 className="font-display text-[40px] leading-[1.08] sm:text-[56px] md:text-[64px] md:leading-[66px] font-extrabold tracking-tight text-balance text-[#011C40] dark:text-white">
-            {t("home.hero.title1")}
-            <span className="block mx-auto max-w-[30ch] text-balance mt-3 font-display text-2xl sm:text-3xl md:text-[36px] md:leading-[42px] font-bold text-slate-600 dark:text-[#B6C2D6] tracking-normal">
-              {t("home.hero.title2")}
+          {/* Titre H1 avec rotateur de mots */}
+          <h1 className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-[1.08] flex flex-col items-center">
+            {/* Titre accessible complet (le mot rotatif n'est lu qu'une fois) */}
+            <span className="sr-only">
+              {`${t("home.hero.title1")} ${rotatingWords[0]} ${t("home.hero.title2")}`}
+            </span>
+
+            <span aria-hidden="true" className="flex flex-col items-center w-full">
+              {/* Ligne 1 : titre fixe */}
+              <span className="block">{t("home.hero.title1")}</span>
+
+              {/* Ligne 2 : mot en rotation */}
+              <span className="relative flex w-full justify-center overflow-hidden h-[1.18em] my-1 sm:my-2">
+                <span className="invisible select-none">{rotatingWords[0]}</span>
+                <AnimatePresence mode="popLayout" initial={false}>
+                  <motion.span
+                    key={wordIndex}
+                    initial={{ opacity: 0, y: 50, filter: "blur(6px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, y: -50, filter: "blur(6px)" }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 70,
+                      damping: 14,
+                      mass: 0.8,
+                    }}
+                    className="absolute font-display font-bold text-shimmer tracking-tight"
+                  >
+                    {rotatingWords[wordIndex]}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
+
+              {/* Ligne 3 : sous-titre d'ancrage */}
+              <span className="block font-medium text-2xl sm:text-3xl md:text-4xl text-slate-600 dark:text-slate-300 tracking-normal mt-1">
+                {t("home.hero.title2")}
+              </span>
             </span>
           </h1>
 
-          {/* Filet de flux : trait plein + point orange (sans dégradé) */}
-          <div className="mt-8 flex items-center gap-0 w-40" aria-hidden="true">
-            <span className="h-[3px] flex-1 rounded-full bg-[#03318C] dark:bg-[#8DB0FF]" />
-            <span className="h-[3px] w-10 rounded-full bg-[#F26D3D]" />
-            <span className="ml-1 h-2.5 w-2.5 rounded-full bg-[#F26D3D]" />
+          {/* Trait lumineux courbé sous le titre */}
+          <div
+            className="relative mt-2 sm:mt-3.5 flex justify-center w-full max-w-[280px] sm:max-w-[360px] md:max-w-[420px] mx-auto pointer-events-none"
+            aria-hidden="true"
+          >
+            <svg
+              className="w-full h-4 sm:h-5 md:h-6 overflow-visible"
+              viewBox="0 0 360 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <linearGradient id="hero-underline-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#F26D3D" stopOpacity="0.15" />
+                  <stop offset="20%" stopColor="#F26D3D" stopOpacity="0.9" />
+                  <stop offset="50%" stopColor="#FFA066" stopOpacity="1" />
+                  <stop offset="80%" stopColor="#F26D3D" stopOpacity="0.9" />
+                  <stop offset="100%" stopColor="#F26D3D" stopOpacity="0.15" />
+                </linearGradient>
+                <filter id="hero-underline-glow" x="-20%" y="-100%" width="140%" height="300%">
+                  <feGaussianBlur stdDeviation="3.5" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* Halo diffus */}
+              <path
+                d="M 6 5 Q 180 18 354 5"
+                stroke="url(#hero-underline-grad)"
+                strokeWidth="7"
+                strokeLinecap="round"
+                opacity="0.6"
+                filter="url(#hero-underline-glow)"
+              />
+
+              {/* Trait central net */}
+              <path
+                d="M 6 5 Q 180 18 354 5"
+                stroke="url(#hero-underline-grad)"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+              />
+            </svg>
           </div>
 
-          <p className="mt-8 max-w-2xl text-[18px] leading-[28px] text-slate-600 dark:text-[#B6C2D6]">
+          {/* Paragraphe descriptif */}
+          <p className="mt-6 max-w-2xl text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
             {t("home.hero.desc")}
           </p>
 
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
+          {/* Boutons d'action */}
+          <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto">
             <Button
               onClick={() => onNavigate("contact")}
               variant="primary"
@@ -60,12 +182,13 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
             >
               <span>{t("home.hero.cta1")}</span>
             </Button>
+
             <Button
-              onClick={() => onNavigate("services")}
+              onClick={() => onNavigate("solutions")}
               variant="outline"
               size="lg"
               data-cta="hero_decouvrir_solutions"
-              icon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
+              icon={<ArrowRight className="h-4 w-4 text-slate-400 dark:text-slate-400" aria-hidden="true" />}
               iconPosition="right"
               className="w-full sm:w-auto"
             >
@@ -73,13 +196,22 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
             </Button>
           </div>
 
-          {/* Repères vérifiables (aucun chiffre non démontré) */}
-          <ul className="mt-12 pt-6 border-t border-border flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-sm text-slate-600 dark:text-[#B6C2D6]">
-            <li>{t("home.hero.fact1")}</li>
-            <li aria-hidden="true" className="hidden sm:inline text-slate-300 dark:text-[#25417A]">·</li>
-            <li>{t("home.hero.fact2")}</li>
-            <li aria-hidden="true" className="hidden sm:inline text-slate-300 dark:text-[#25417A]">·</li>
-            <li>{t("home.hero.fact3")}</li>
+          {/* Barre de réassurance : faits vérifiables uniquement */}
+          <ul className="mt-12 pt-6 border-t border-black/5 dark:border-white/5 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-mono uppercase tracking-wider">
+            <li className="flex items-center gap-1.5">
+              <Sparkles className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden="true" />
+              {t("home.hero.fact1")}
+            </li>
+            <li aria-hidden="true" className="hidden sm:inline text-slate-300 dark:text-slate-700">•</li>
+            <li className="flex items-center gap-1.5">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" aria-hidden="true" />
+              {t("home.hero.fact2")}
+            </li>
+            <li aria-hidden="true" className="hidden sm:inline text-slate-300 dark:text-slate-700">•</li>
+            <li className="flex items-center gap-1.5">
+              <Server className="h-3.5 w-3.5 text-[#60A5FA]" aria-hidden="true" />
+              {t("home.hero.fact3")}
+            </li>
           </ul>
         </div>
       </SectionContainer>

@@ -31,7 +31,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: "/",
       },
     ],
-    sitemap: "https://analyticatech.fr/sitemap.xml",
-    host: "https://analyticatech.fr",
+    sitemap: "https://www.analyticatech.fr/sitemap.xml",
+    host: "https://www.analyticatech.fr",
   };
 }

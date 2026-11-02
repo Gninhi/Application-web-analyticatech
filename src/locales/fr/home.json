@@ -1,11 +1,11 @@
 {
-  "home.badge": "Conseil en IA pour PME et ETI",
-  "home.hero.title1": "L'IA, expliquée simplement.",
-  "home.hero.keyword": "",
-  "home.hero.title2": "Des systèmes fiables, en production, pour les PME et les ETI.",
-  "home.hero.desc": "J'aide les dirigeants et leurs DSI à passer du pilote d'intelligence artificielle à un outil utilisé chaque jour : agents IA (des programmes qui enchaînent des tâches sous contrôle humain), automatisation des processus et tableaux de bord de décision, conformes au RGPD et à l'AI Act, le règlement européen sur l'IA.",
-  "home.hero.cta1": "Prenons 20 minutes",
-  "home.hero.cta2": "Voir les services",
+  "home.badge": "Conseil en IA · Automatisation · Données",
+  "home.hero.title1": "DES SYSTÈMES",
+  "home.hero.keyword": "INTELLIGENTS|FIABLES|TRAÇABLES|MESURABLES|UTILES",
+  "home.hero.title2": "pour des opérations plus simples.",
+  "home.hero.desc": "J'aide les dirigeants de PME et d'ETI à passer du pilote d'intelligence artificielle à un outil utilisé chaque jour : assistants qui répondent à partir de vos documents, agents IA sous contrôle humain, automatisation des processus et tableaux de bord de décision.",
+  "home.hero.cta1": "Évaluer votre projet",
+  "home.hero.cta2": "Découvrir les solutions",
   "home.section.proof": "02 — ENGAGEMENTS",
   "home.section.proof.tagline": "Une méthode, des livrables, un interlocuteur unique",
   "home.proof.heading": "Ce que vous pouvez vérifier dès le premier échange",
@@ -152,7 +152,7 @@
   "home.faq.a4": "Oui, dans la limite de mon périmètre : audit de maturité, automatisation des processus, pilotage par la donnée et gouvernance de l'IA. Pour les sujets hors de ce périmètre, je vous oriente vers les bons interlocuteurs.",
   "home.faq.q5": "Comment se déroule un premier échange ?",
   "home.faq.a5": "Un appel gratuit de 20 minutes pour comprendre vos enjeux. Si le besoin se confirme, je vous adresse une proposition écrite sous 5 jours ouvrés. Sans engagement.",
-  "home.hero.fact1": "Siège à Paris",
-  "home.hero.fact2": "Conformité RGPD et AI Act intégrée",
-  "home.hero.fact3": "Interventions à distance partout en France"
+  "home.hero.fact1": "Le fondateur, interlocuteur unique",
+  "home.hero.fact2": "RGPD et AI Act dès la conception",
+  "home.hero.fact3": "Hébergement UE ou sur vos serveurs"
 }

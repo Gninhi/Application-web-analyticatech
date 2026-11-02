@@ -500,7 +500,6 @@ export function Orbit3DMethod({
                   type="button"
                   role="tab"
                   aria-selected={isActive}
-                  aria-label={`${node.number} — ${node.title}`}
                   onClick={() => onSelect(idx)}
                   className={cn(
                     "group relative flex items-center gap-2.5 rounded-full transition-all duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2",
@@ -625,7 +624,6 @@ export function Orbit3DMethod({
               type="button"
               role="tab"
               aria-selected={isActive}
-              aria-label={`${node.number} — ${node.title}`}
               onClick={() => onSelect(idx)}
               className={cn(
                 "group relative flex h-8 items-center gap-2 rounded-xl px-3 font-mono text-[11px] font-bold uppercase transition-all duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2",

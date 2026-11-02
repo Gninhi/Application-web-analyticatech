@@ -57,7 +57,8 @@ describe("HomeView — Rendu SSR initial (crawl sans JS & robots IA)", () => {
     );
 
     // Section 01 — Hero
-    expect(html).toContain("IA, expliquée simplement.");
+    expect(html).toContain("DES SYSTÈMES INTELLIGENTS pour des opérations plus simples.");
+    expect(html).not.toContain("missions déployées");
 
     // Section 02 — Engagements vérifiables (aucun chiffre non vérifiable)
     expect(html).toContain("02 — ENGAGEMENTS");

@@ -1,7 +1,9 @@
 "use client";
 
 import { useCallback, useMemo, useState, useTransition } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
+import { ArrowRight, Compass, FlaskConical, Hammer } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
@@ -9,6 +11,7 @@ import { FilterPill } from "@/components/interactive/FilterPill";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SectionContainer } from "@/components/ui/SectionContainer";
 import { getCategoryAccent } from "@/lib/utils/colors";
+import { viewToPath } from "@/lib/navigation/routes";
 import { HeroCard } from "./blog/HeroCard";
 import { ReportCard } from "./blog/ReportCard";
 
@@ -19,15 +22,16 @@ interface BlogViewProps {
 }
 
 /**
- * BlogView — Hub des rapports techniques, insights et analyses.
+ * BlogView — Hub des articles de méthode (guides illustrés par des scénarios types).
  * Orchestration modulaire :
  *  - En-tête de page standardisé
  *  - Barre d'onglets de filtrage par catégorie (accessible WAI-ARIA)
  *  - HeroCard (article à la une pleine largeur)
- *  - ReportCard (grille de rapports interactifs)
+ *  - ReportCard (grille d'articles)
+ *  - Ligne éditoriale : ce que les articles promettent (et ne promettent pas)
  */
 export function BlogView({ onNavigateDetail }: BlogViewProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { blogPosts: BLOG_POSTS, blogCategories: DB_CATEGORIES } = useAppContent();
   const [filter, setFilter] = useState<Filter>("all");
   const [, startTransition] = useTransition();
@@ -136,24 +140,21 @@ export function BlogView({ onNavigateDetail }: BlogViewProps) {
         <section className="pb-24">
           <div className="mx-auto max-w-7xl px-4 md:px-6">
             {/* Article à la une — hero pleine largeur */}
-            <AnimatePresence mode="wait">
-              {featured && (
-                <motion.div
-                  key={featured.id}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.35 }}
-                >
-                  <HeroCard
-                    post={featured}
-                    index={0}
-                    total={filtered.length}
-                    onNavigateDetail={onNavigateDetail}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {featured && (
+              <motion.div
+                key={featured.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35 }}
+              >
+                <HeroCard
+                  post={featured}
+                  index={0}
+                  total={filtered.length}
+                  onNavigateDetail={onNavigateDetail}
+                />
+              </motion.div>
+            )}
 
             {/* Grille d'articles */}
             {rest.length > 0 && (
@@ -191,6 +192,48 @@ export function BlogView({ onNavigateDetail }: BlogViewProps) {
           </div>
         </section>
       </div>
+
+      {/* Ligne éditoriale : la promesse des articles, alignée sur la charte */}
+      <section aria-labelledby="blog-line-title" className="pb-24">
+        <div className="mx-auto max-w-7xl px-4 md:px-6">
+          <div className="glass-card rounded-2xl border border-border p-6 sm:p-10">
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent-ink">{t("blog.line.tag")}</p>
+            <h2 id="blog-line-title" className="mt-2 font-display text-2xl sm:text-3xl font-bold text-foreground">
+              {t("blog.line.title")}
+            </h2>
+            <ul className="mt-8 grid gap-6 md:grid-cols-3">
+              {[
+                { icon: Compass, key: "p1" },
+                { icon: FlaskConical, key: "p2" },
+                { icon: Hammer, key: "p3" },
+              ].map(({ icon: Icon, key }) => (
+                <li key={key} className="space-y-2">
+                  <Icon className="h-5 w-5 text-accent-ink" aria-hidden="true" />
+                  <h3 className="font-display text-base font-bold text-foreground">{t(`blog.line.${key}.title`)}</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{t(`blog.line.${key}.desc`)}</p>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href={viewToPath("solutions", undefined, locale)}
+                className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 font-mono text-xs uppercase tracking-wider text-foreground hover:border-[#F26D3D] hover:text-accent-ink transition-colors"
+              >
+                {t("blog.line.cta.projects")}
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </Link>
+              <Link
+                href={viewToPath("contact", undefined, locale)}
+                data-cta="blog_line_contact"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#F26D3D] px-4 py-2.5 font-mono text-xs font-semibold uppercase tracking-wider text-slate-950 hover:bg-[#ff7b4b] transition-colors"
+              >
+                {t("blog.line.cta.contact")}
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

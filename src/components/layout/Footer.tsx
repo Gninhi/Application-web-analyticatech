@@ -12,6 +12,7 @@ import { BrandLogo } from "@/components/branding/BrandLogo";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
 import { isValidSocialUrl } from "@/lib/content/site";
+import { isAnalyticsConfigured } from "@/instrumentation-client";
 
 export interface SocialLinkItem {
   id: "linkedin" | "twitter" | "github";
@@ -60,7 +61,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative mt-auto border-t border-border bg-[#F4F6FA] dark:bg-[#011C40]">
+    <footer className="relative mt-auto border-t border-border bg-[#F0F4F8] dark:bg-[#06070B]">
       <div className="mx-auto max-w-7xl px-4 md:px-6 py-12 md:py-16">
         <div className="grid gap-10 md:grid-cols-12">
           {/* Marque + statut */}
@@ -69,7 +70,7 @@ export function Footer() {
               <BrandLogo height={52} signature alt="Analyticatech — L'IA, expliquée simplement" />
             </div>
             <p className="text-sm text-slate-600 dark:text-[#B6C2D6] max-w-xs mb-5">
-              {currentLocale === "en" ? "AI consulting for SME and mid-market leaders: AI agents, automation, data and EU AI Act compliance." : "Conseil en intelligence artificielle pour les dirigeants de PME et d'ETI : agents IA, automatisation, données et conformité AI Act."}
+              {currentLocale === "en" ? "AI consulting for SME and mid-market leaders: AI agents, automation and data, with the EU AI Act taken into account from the start." : "Conseil en intelligence artificielle pour les dirigeants de PME et d'ETI : agents IA, automatisation et données, avec l'AI Act pris en compte dès le départ."}
             </p>
             <p className="text-sm text-slate-600 dark:text-[#B6C2D6]">
               {currentLocale === "en" ? "Head office in Paris · Working across France" : "Siège à Paris · Interventions partout en France"}
@@ -168,6 +169,7 @@ export function Footer() {
             >
               {t("footer.legal")}
             </Link>
+{isAnalyticsConfigured && (
             <button
               type="button"
               onClick={handleOpenCookiePreferences}
@@ -175,6 +177,7 @@ export function Footer() {
             >
               {t("footer.cookies")}
             </button>
+            )}
             <Link
               href={viewToPath("about", undefined, currentLocale)}
               className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-accent-ink px-2 py-1"

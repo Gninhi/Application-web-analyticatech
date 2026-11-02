@@ -56,7 +56,7 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
       {/* ============ 02 — ENGAGEMENTS VÉRIFIABLES ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <div className="rounded-2xl border border-border bg-[#F4F6FA] dark:bg-[#022859] p-8 md:p-10">
+          <div className="rounded-2xl glass-card border border-border p-8 md:p-10">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-border">
               <div>
                 <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-accent-ink">
@@ -150,7 +150,7 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
       {/* ============ 10 — PREMIER ÉCHANGE (bandeau Nuit) ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          <div className="rounded-2xl bg-[#011C40] border border-[#25417A] p-8 md:p-14 text-center">
+          <div className="rounded-2xl glass-card border border-border p-8 md:p-14 text-center">
             <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-[#F26D3D] mb-4">
               {t("home.section.cta.tag")}
             </p>

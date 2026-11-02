@@ -81,7 +81,6 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
                 type="button"
                 role="tab"
                 aria-selected={isSelected}
-                aria-label={`${item.sector} : ${item.problem}`}
                 onClick={() => setActivePainId(item.id)}
                 whileHover={{ x: 4 }}
                 className={`w-full text-left p-4 md:p-5 rounded-2xl border transition-all duration-300 flex items-start gap-4 cursor-pointer backdrop-blur-md focus-visible:outline-2 focus-visible:outline-offset-2 ${

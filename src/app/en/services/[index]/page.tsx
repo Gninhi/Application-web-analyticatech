@@ -66,13 +66,13 @@ export default async function ServiceDetailPageEn({ params }: Params) {
     "@graph": [
       {
         "@type": "Service",
-        "@id": `https://analyticatech.fr/en/services/${normalizedIndex}#service`,
+        "@id": `https://www.analyticatech.fr/en/services/${normalizedIndex}#service`,
         name: detailData ? `${detailData.heroTitle} ${detailData.heroAccent}` : service?.title,
         description: detailData?.heroSubtitle ?? service?.description,
         provider: {
           "@type": "Organization",
           name: "Analyticatech",
-          url: "https://analyticatech.fr",
+          url: "https://www.analyticatech.fr",
         },
         serviceType: detailData?.eyebrow ?? "AI & Autonomous Systems Consulting",
         areaServed: "Global",
@@ -81,7 +81,7 @@ export default async function ServiceDetailPageEn({ params }: Params) {
         ? [
             {
               "@type": "FAQPage",
-              "@id": `https://analyticatech.fr/en/services/${normalizedIndex}#faq`,
+              "@id": `https://www.analyticatech.fr/en/services/${normalizedIndex}#faq`,
               mainEntity: detailData.faqs.map((faq) => ({
                 "@type": "Question",
                 name: faq.question,

@@ -65,7 +65,7 @@ describe("instrumentation-client", () => {
 
     // Simule l'environnement navigateur dans le runner Node de Vitest
     (globalThis as unknown as { window: unknown }).window = {
-      location: { href: "https://analyticatech.fr/solutions", pathname: "/solutions" },
+      location: { href: "https://www.analyticatech.fr/solutions", pathname: "/solutions" },
       addEventListener: vi.fn(),
       removeEventListener: vi.fn(),
     };
