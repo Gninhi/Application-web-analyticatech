@@ -52,8 +52,11 @@ test.describe("métadonnées & canonical", () => {
     await page.goto("/solutions", { waitUntil: "domcontentloaded" });
     const firstCard = page.locator("article").first();
     await expect(firstCard).toBeVisible();
+    // Même séquence que navigation.spec : laisser l'hydratation se terminer,
+    // puis cliquer sur le titre (le centre forcé de la carte ne navigue pas).
+    await page.waitForTimeout(500);
     await firstCard.scrollIntoViewIfNeeded();
-    await firstCard.click({ force: true });
+    await firstCard.locator("h2").click();
     await page.waitForURL(/\/solutions\/[a-z0-9-]+$/, { timeout: 15_000 });
 
     const ogUrl = await page.locator("meta[property='og:url']").last().getAttribute("content");
