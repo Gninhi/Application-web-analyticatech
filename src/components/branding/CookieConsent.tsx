@@ -79,7 +79,7 @@ export function getStoredConsent(): "accepted" | "refused" | null {
  * - Réouverture permanente à tout moment via l'événement `at:open-cookie-preferences` déclenché depuis le footer.
  */
 export function CookieConsent() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [visible, setVisible] = useState(false);
   const [view, setView] = useState<"summary" | "customize">("summary");
   const [analyticsEnabled, setAnalyticsEnabled] = useState(() => {
@@ -170,7 +170,9 @@ export function CookieConsent() {
           </span>
           <div className="flex-1 min-w-0">
             <span className="block font-mono text-[10px] uppercase tracking-widest text-accent-ink mb-0.5 font-semibold">
-              {view === "summary" ? "CONFIDENTIALITÉ & TRACEURS" : "PARAMÉTRAGE GRANULAIRE"}
+              {locale === "en"
+                ? view === "summary" ? "PRIVACY & TRACKERS" : "DETAILED SETTINGS"
+                : view === "summary" ? "CONFIDENTIALITÉ & TRACEURS" : "PARAMÉTRAGE GRANULAIRE"}
             </span>
             <h2 className="font-display text-base md:text-lg font-bold text-slate-900 dark:text-slate-50 leading-tight">
               {t("cookie.title")}

@@ -22,6 +22,80 @@ import { Button } from "@/components/ui/button";
 import { ContactCta } from "@/components/ui/ContactCta";
 import { VerticalSectionNav, type VerticalNavItem } from "@/components/ui/VerticalSectionNav";
 
+/** Libellés fixes du gabarit (le contenu des articles vient du registre FR ou EN). */
+const LABELS = {
+  fr: {
+    nav: [
+      ["Contexte", "Scénario type"],
+      ["Le problème", "Modes d'échec typiques"],
+      ["Approche & outils", "Architecture cible"],
+      ["Arbitrages & Limites", "Compromis assumés"],
+      ["Ce qu'il faut mesurer", "Indicateurs et méthode"],
+      ["Pour aller plus loin", "Projets et services liés"],
+    ],
+    contextEyebrow: "01 · Contexte : scénario type",
+    sector: "Secteur & Contexte",
+    constraints: "Contraintes d'exploitation",
+    stakes: "Enjeu critique",
+    scenarioNote:
+      "Ce contexte est un scénario type, construit pour illustrer la méthode. Il ne décrit pas une mission client et ne contient aucun résultat client.",
+    problemEyebrow: "02 · LE PROBLÈME EN PRODUCTION",
+    approachEyebrow: "03 · APPROCHE & ARCHITECTURE",
+    tools: "Outils et composants",
+    pattern: "Pattern :",
+    tradeoffsEyebrow: "04 · ARBITRAGES TECHNIQUES & LIMITES ASSUMÉES",
+    arbitrage: "Arbitrage retenu :",
+    cost: "Le coût assumé :",
+    mitigation: "Atténuation prévue :",
+    resultsEyebrow: "05 · INDICATEURS À MESURER",
+    indicative: "À titre indicatif",
+    protocol: "Protocole de mesure //",
+    benefits: "Bénéfices attendus :",
+    relatedEyebrow: "06 · POUR ALLER PLUS LOIN · SOLUTIONS & SERVICES",
+    relatedTitle: "Prolonger cette architecture sur vos projets",
+    relatedLead: "Les services et les projets liés à cette problématique :",
+    explore: "Explorer",
+    ctaQuestion: "Vous concevez ou auditez une architecture similaire ?",
+    cta: "Échanger avec le fondateur",
+  },
+  en: {
+    nav: [
+      ["Context", "Typical scenario"],
+      ["The problem", "Typical failure modes"],
+      ["Approach & tools", "Target architecture"],
+      ["Trade-offs & limits", "Accepted compromises"],
+      ["What to measure", "Indicators and method"],
+      ["Going further", "Related projects and services"],
+    ],
+    contextEyebrow: "01 · Context: typical scenario",
+    sector: "Sector & context",
+    constraints: "Operating constraints",
+    stakes: "Critical stake",
+    scenarioNote:
+      "This context is a typical scenario built to illustrate the method. It does not describe a client engagement and contains no client results.",
+    problemEyebrow: "02 · THE PROBLEM IN PRODUCTION",
+    approachEyebrow: "03 · APPROACH & ARCHITECTURE",
+    tools: "Tools and components",
+    pattern: "Pattern:",
+    tradeoffsEyebrow: "04 · TECHNICAL TRADE-OFFS & ACCEPTED LIMITS",
+    arbitrage: "Chosen trade-off:",
+    cost: "The accepted cost:",
+    mitigation: "Planned mitigation:",
+    resultsEyebrow: "05 · INDICATORS TO MEASURE",
+    indicative: "Indicative",
+    protocol: "Measurement protocol //",
+    benefits: "Expected benefits:",
+    relatedEyebrow: "06 · GOING FURTHER · SOLUTIONS & SERVICES",
+    relatedTitle: "Extend this architecture to your projects",
+    relatedLead: "Services and projects related to this topic:",
+    explore: "Explore",
+    ctaQuestion: "Are you designing or auditing a similar architecture?",
+    cta: "Let's talk",
+  },
+} as const;
+
+const NAV_IDS = ["contexte", "probleme", "approche", "compromis", "resultats", "aller-plus-loin"] as const;
+
 export interface InsightDetailTemplateProps {
   data: InsightDetailData;
   onNavigate: (view: ViewKey) => void;
@@ -49,44 +123,13 @@ export function InsightDetailTemplate({
     }
   };
 
-  const navItems: VerticalNavItem[] = [
-    {
-      id: "contexte",
-      number: "01",
-      title: "Contexte",
-      subtitle: "Scénario type",
-    },
-    {
-      id: "probleme",
-      number: "02",
-      title: "Le problème",
-      subtitle: "Modes d'échec typiques",
-    },
-    {
-      id: "approche",
-      number: "03",
-      title: "Approche & outils",
-      subtitle: "Architecture cible",
-    },
-    {
-      id: "compromis",
-      number: "04",
-      title: "Arbitrages & Limites",
-      subtitle: "Compromis assumés",
-    },
-    {
-      id: "resultats",
-      number: "05",
-      title: "Ce qu'il faut mesurer",
-      subtitle: "Indicateurs et méthode",
-    },
-    {
-      id: "aller-plus-loin",
-      number: "06",
-      title: "Pour aller plus loin",
-      subtitle: "Projets et services liés",
-    },
-  ];
+  const L = LABELS[locale === "en" ? "en" : "fr"];
+  const navItems: VerticalNavItem[] = NAV_IDS.map((id, i) => ({
+    id,
+    number: String(i + 1).padStart(2, "0"),
+    title: L.nav[i][0],
+    subtitle: L.nav[i][1],
+  }));
 
   return (
     <div className="pt-28 md:pt-36 pb-24 text-slate-900 dark:text-slate-100 selection:bg-[#F26D3D]/30 selection:text-accent-ink">
@@ -116,13 +159,6 @@ export function InsightDetailTemplate({
             </span>
           </div>
         </div>
-
-        {/* Le corps des articles n'existe qu'en français : on le dit plutôt que de le masquer */}
-        {locale === "en" && (
-          <p lang="en" className="rounded-xl border border-border px-4 py-3 text-sm text-slate-600 dark:text-slate-300">
-            This article is currently available in French only.
-          </p>
-        )}
 
         {/* ================= HERO PANEL ================= */}
         <motion.header
@@ -210,7 +246,7 @@ export function InsightDetailTemplate({
         >
           <div className="flex flex-wrap items-center justify-between gap-4">
             <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
-              01 · Contexte : scénario type
+              {L.contextEyebrow}
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-transparent px-3 py-1 font-mono text-[11px] font-semibold text-foreground uppercase">
               <Building2 className="h-3 w-3" aria-hidden />
@@ -221,7 +257,7 @@ export function InsightDetailTemplate({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
             <div className="p-4 rounded-2xl border border-slate-200/60 dark:border-white/5 bg-slate-50/70 dark:bg-white/[0.02]">
               <p className="font-mono text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
-                Secteur & Contexte
+                {L.sector}
               </p>
               <p className="text-sm font-semibold text-slate-900 dark:text-white">
                 {data.context.sector}
@@ -230,7 +266,7 @@ export function InsightDetailTemplate({
 
             <div className="p-4 rounded-2xl border border-slate-200/60 dark:border-white/5 bg-slate-50/70 dark:bg-white/[0.02]">
               <p className="font-mono text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
-                Contraintes d&apos;exploitation
+                {L.constraints}
               </p>
               <p className="text-sm font-semibold text-slate-900 dark:text-white">
                 {data.context.constraints}
@@ -239,7 +275,7 @@ export function InsightDetailTemplate({
 
             <div className="p-4 rounded-2xl border border-slate-200/60 dark:border-white/5 bg-slate-50/70 dark:bg-white/[0.02]">
               <p className="font-mono text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
-                Enjeu critique
+                {L.stakes}
               </p>
               <p className="text-sm font-semibold text-accent-ink">
                 {data.context.stakes}
@@ -251,7 +287,7 @@ export function InsightDetailTemplate({
             <p>{data.context.narrative}</p>
           </div>
           <p className="text-sm text-slate-600 dark:text-[#B6C2D6] border-l-2 border-[#F26D3D] pl-4">
-            Ce contexte est un scénario type, construit pour illustrer la méthode. Il ne décrit pas une mission client et ne contient aucun résultat client.
+            {L.scenarioNote}
           </p>
         </section>
 
@@ -262,7 +298,7 @@ export function InsightDetailTemplate({
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-6"
         >
           <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
-            02 · LE PROBLÈME EN PRODUCTION
+            {L.problemEyebrow}
           </span>
 
           <div>
@@ -313,7 +349,7 @@ export function InsightDetailTemplate({
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-8"
         >
           <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
-            03 · APPROCHE & ARCHITECTURE
+            {L.approachEyebrow}
           </span>
 
           <div>
@@ -332,7 +368,7 @@ export function InsightDetailTemplate({
           <div className="space-y-3">
             <p className="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2">
               <Cpu className="h-3.5 w-3.5 text-accent-ink" aria-hidden />
-              Outils et composants
+              {L.tools}
             </p>
             <div className="flex flex-wrap gap-2.5">
               {data.approach.techStack.map((tech) => (
@@ -387,7 +423,7 @@ export function InsightDetailTemplate({
                   {stage.keyPattern && (
                     <div className="pt-2 border-t border-slate-200/50 dark:border-white/5">
                       <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400">
-                        Pattern : <code className="text-slate-800 dark:text-slate-200 font-semibold">{stage.keyPattern}</code>
+                        {L.pattern} <code className="text-slate-800 dark:text-slate-200 font-semibold">{stage.keyPattern}</code>
                       </span>
                     </div>
                   )}
@@ -433,7 +469,7 @@ export function InsightDetailTemplate({
           <div className="flex items-center gap-2">
             <ShieldAlert className="h-5 w-5 text-accent-ink" aria-hidden />
             <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
-              04 · ARBITRAGES TECHNIQUES & LIMITES ASSUMÉES
+              {L.tradeoffsEyebrow}
             </span>
           </div>
 
@@ -471,7 +507,7 @@ export function InsightDetailTemplate({
                 <div className="space-y-2 text-xs">
                   <div>
                     <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                      Arbitrage retenu :
+                      {L.arbitrage}
                     </span>
                     <p className="font-medium text-slate-800 dark:text-slate-200 mt-0.5">
                       {tradeoff.arbitrage}
@@ -480,7 +516,7 @@ export function InsightDetailTemplate({
 
                   <div>
                     <span className="font-mono text-[10px] text-red-500 uppercase tracking-wider">
-                      Le coût assumé :
+                      {L.cost}
                     </span>
                     <p className="text-slate-600 dark:text-slate-300 mt-0.5">
                       {tradeoff.costOrDrawback}
@@ -489,7 +525,7 @@ export function InsightDetailTemplate({
 
                   <div className="pt-2 border-t border-slate-200/60 dark:border-white/5">
                     <span className="font-mono text-[10px] text-link dark:text-link uppercase tracking-wider">
-                      Atténuation prévue :
+                      {L.mitigation}
                     </span>
                     <p className="text-slate-600 dark:text-slate-300 mt-0.5">
                       {tradeoff.mitigation}
@@ -508,7 +544,7 @@ export function InsightDetailTemplate({
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-6"
         >
           <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
-            05 · INDICATEURS À MESURER
+            {L.resultsEyebrow}
           </span>
 
           <div>
@@ -537,7 +573,7 @@ export function InsightDetailTemplate({
                     </span>
                     {metric.isIndicative && (
                       <span className="rounded bg-[#F26D3D]/10 text-accent-ink px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase">
-                        À titre indicatif
+                        {L.indicative}
                       </span>
                     )}
                   </div>
@@ -555,7 +591,7 @@ export function InsightDetailTemplate({
           {/* Note méthodologique de rigueur */}
           <div className="rounded-2xl border border-slate-200/60 dark:border-white/10 bg-slate-100/50 dark:bg-white/[0.02] p-4 text-xs font-mono text-slate-600 dark:text-slate-400 leading-relaxed">
             <span className="font-bold text-slate-900 dark:text-white uppercase mr-1">
-              Protocole de mesure //
+              {L.protocol}
             </span>
             {data.results.methodologyNote}
           </div>
@@ -563,7 +599,7 @@ export function InsightDetailTemplate({
           {/* Gains qualitatifs observés */}
           <div className="space-y-2.5 pt-2">
             <p className="font-mono text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              Bénéfices attendus :
+              {L.benefits}
             </p>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
               {data.results.observedBenefits.map((benefit, idx) => (
@@ -587,7 +623,7 @@ export function InsightDetailTemplate({
         >
           <div className="flex items-center justify-between">
             <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
-              06 · POUR ALLER PLUS LOIN · SOLUTIONS & SERVICES
+              {L.relatedEyebrow}
             </span>
           </div>
 
@@ -596,10 +632,10 @@ export function InsightDetailTemplate({
               id="heading-aller-plus-loin"
               className="font-display font-bold text-2xl sm:text-3xl text-slate-900 dark:text-white tracking-tight"
             >
-              Prolonger cette architecture sur vos projets
+              {L.relatedTitle}
             </h2>
             <p className="mt-2 text-slate-600 dark:text-slate-300 leading-relaxed text-sm">
-              Les services et les projets liés à cette problématique :
+              {L.relatedLead}
             </p>
           </div>
 
@@ -630,7 +666,7 @@ export function InsightDetailTemplate({
                 </div>
 
                 <div className="mt-4 pt-3 border-t border-slate-200/60 dark:border-white/5 flex items-center gap-1 font-mono text-[11px] font-semibold text-accent-ink">
-                  <span>Explorer</span>
+                  <span>{L.explore}</span>
                   <ArrowRight className="h-3 w-3" aria-hidden />
                 </div>
               </Link>
@@ -640,8 +676,8 @@ export function InsightDetailTemplate({
 
         {/* ================= CALL TO ACTION ================= */}
         <ContactCta
-          question="Vous concevez ou auditez une architecture similaire ?"
-          cta={locale === "en" ? "Let's talk" : "Échanger avec le fondateur"}
+          question={L.ctaQuestion}
+          cta={L.cta}
           onNavigate={onNavigate}
         />
           </div>

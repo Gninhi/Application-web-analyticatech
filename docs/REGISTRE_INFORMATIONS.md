@@ -16,7 +16,7 @@ Statuts : **Vérifié** (source primaire consultée) · **Déclaratif** (fourni 
 | Code NAF | 62.02A | Mentions légales | Idem | Vérifié |
 | Président, directeur de publication | Martial GNINHI | Mentions légales, JSON-LD, articles | Idem | Vérifié |
 | Capital social | 1 000,00 € | Mentions légales | Non présent dans l'API publique | À valider (extrait Kbis) |
-| TVA intracommunautaire | FR96984609198 | Mentions légales, JSON-LD | Clé calculée depuis le SIREN, cohérente | À valider (VIES) |
+| TVA intracommunautaire | FR96984609198 | Mentions légales, JSON-LD | VIES (Commission européenne), consulté le 02/11/2026 : valide, « SAS ANALYTICATECH, 60 rue François 1er » | Vérifié |
 | Effectif | « Le fondateur, interlocuteur unique » | Accueil, contact, solutions | Annuaire : tranche « NN » (aucun salarié) | Vérifié |
 | Bureau à Strasbourg | — | — | Absent du registre (un seul établissement) | Retiré |
 | Téléphone, e-mail | +33 7 68 61 13 10 · contact@analyticatech.fr | Contact, mentions, llms.txt | Fournis par le fondateur | Déclaratif |

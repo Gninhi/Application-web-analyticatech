@@ -35,6 +35,7 @@ const CONTENT_FILES = [
   "src/lib/content/solutions-detail-data.ts",
   "src/lib/content/services-detail-data.ts",
   "src/lib/content/insights-detail-data.ts",
+  "src/lib/content/insights-detail-data.en.ts",
   "src/lib/services/page-meta.ts",
   "src/data/commitments.ts",
   "src/data/stats.ts",
@@ -51,6 +52,8 @@ const CONTENT_FILES = [
 const ALLOWED_PERCENTAGES = [
   "Échantillonnage asynchrone à 5% en production au lieu d'un scoring à 100% en direct.",
   "Exiger que 100% des agents injectent et propagent les contextes OpenTelemetry sur chaque événement.",
+  "Asynchronous sampling of 5% of production traffic instead of scoring 100% live.",
+  "Require 100% of agents to inject and propagate OpenTelemetry contexts on every event.",
 ];
 
 /** Retire les extraits de code des articles (template literals). */
