@@ -149,9 +149,24 @@ function forwardDelta(from: number, to: number): number {
   return d;
 }
 
-/** Angle de départ d'une orbite : la phase active commence déjà à l'avant (rendu serveur stable). */
-function startAngle(idx: number, activeIndex: number): number {
-  return idx === activeIndex ? FRONT_ANGLES[idx] ?? 0 : ORBIT_CONFIGS[idx]?.initialPhase ?? 0;
+/**
+ * Constellation : les 4 phases tournent ensemble (angle commun φ + décalage fixe
+ * par phase). Décalages calculés sur les tailles réelles des capsules (compactes,
+ * active en pleine largeur, perspective comprise) pour garder ≥ 9 px entre elles
+ * sur toute la dérive de lecture ; des orbites indépendantes se superposaient
+ * ~22 % du temps.
+ */
+const PHASE_OFFSETS = [0, 95, 210, 290].map((deg) => (deg * Math.PI) / 180);
+/** Révolution lente (s) : ~40° de dérive pendant le plus long temps de lecture (15 s). */
+const CONSTELLATION_PERIOD_S = 135;
+/** Dérive maximale après l'arrivée à l'avant : au-delà, la constellation ralentit
+ *  jusqu'à l'arrêt (pause longue) pour ne jamais recréer de superposition. */
+const MAX_DRIFT = (40 * Math.PI) / 180;
+const DRIFT_FADE = (10 * Math.PI) / 180;
+
+/** Angle commun qui amène la phase `idx` à l'avant de la scène. */
+function frontPhi(idx: number): number {
+  return (FRONT_ANGLES[idx] ?? 0) - (PHASE_OFFSETS[idx] ?? 0);
 }
 
 /**
@@ -179,12 +194,16 @@ export function Orbit3DMethod({
   const beamPathRef = useRef<SVGPathElement>(null);
   const beamGlowRef = useRef<SVGPathElement>(null);
 
-  // État cinétique des orbites
-  const speedsRef = useRef<number[]>([1, 1, 1, 1]);
-  const targetSpeedsRef = useRef<number[]>([1, 1, 1, 1]);
+  // État cinétique de la constellation
+  const speedRef = useRef(1);
+  const targetSpeedRef = useRef(1);
   // Phase active au premier rendu : fixe les positions serveur, puis la boucle rAF prend le relais
   const [initialActiveIndex] = useState(activeIndex);
-  const anglesRef = useRef<number[]>(ORBIT_CONFIGS.map((_, idx) => startAngle(idx, initialActiveIndex)));
+  const phiRef = useRef(frontPhi(initialActiveIndex));
+  /** Angle commun visé après un changement de phase (null : simple révolution). */
+  const targetPhiRef = useRef<number | null>(null);
+  /** Dérive parcourue depuis l'arrivée de la phase active à l'avant. */
+  const driftRef = useRef(0);
   const reducedMotionRef = useRef(false);
 
   // Caches de mutation de styles DOM pour éliminer les écritures superflues
@@ -197,6 +216,10 @@ export function Orbit3DMethod({
 
   const activeIndexRef = useRef(activeIndex);
   useEffect(() => {
+    if (activeIndexRef.current !== activeIndex) {
+      // Changement de phase : la constellation accélère pour amener la phase à l'avant
+      targetPhiRef.current = frontPhi(activeIndex);
+    }
     activeIndexRef.current = activeIndex;
   }, [activeIndex]);
 
@@ -276,15 +299,15 @@ export function Orbit3DMethod({
     [activeIndex, nodes.length, onSelect]
   );
 
-  // Ralentissement fluide au survol
+  // Ralentissement fluide au survol d'une capsule (toute la constellation)
   const handleNodeMouseEnter = useCallback((index: number) => {
     setHoveredIndex(index);
-    targetSpeedsRef.current[index] = 0.25; // Décélération confortable
+    targetSpeedRef.current = 0.25;
   }, []);
 
-  const handleNodeMouseLeave = useCallback((index: number) => {
+  const handleNodeMouseLeave = useCallback(() => {
     setHoveredIndex(null);
-    targetSpeedsRef.current[index] = 1.0; // Reprise vitesse nominale
+    targetSpeedRef.current = 1.0;
   }, []);
 
   // Boucle d'animation GPU continue haute performance
@@ -302,37 +325,34 @@ export function Orbit3DMethod({
       let activeNodePy = 0;
       let hasActiveNode = false;
 
+      // Vitesse lissée (survol) puis avance de l'angle commun φ
+      speedRef.current += (targetSpeedRef.current - speedRef.current) * 0.08;
+      const reduced = reducedMotionRef.current;
+      const target = targetPhiRef.current;
+      if (target !== null) {
+        const delta = forwardDelta(phiRef.current, target);
+        const step = reduced ? delta : delta * (1 - Math.exp(-FRONT_EASING * deltaSec));
+        phiRef.current = (phiRef.current + step) % TWO_PI;
+        if (Math.abs(delta - step) < 0.002) {
+          targetPhiRef.current = null;
+          driftRef.current = 0;
+        }
+      } else if (!reduced) {
+        // Révolution lente, atténuée à l'approche de la dérive maximale
+        const fade = Math.min(1, Math.max(0, (MAX_DRIFT - driftRef.current) / DRIFT_FADE));
+        const advance = (TWO_PI / CONSTELLATION_PERIOD_S) * speedRef.current * fade * deltaSec;
+        phiRef.current = (phiRef.current + advance) % TWO_PI;
+        driftRef.current += advance;
+      }
+      const currentActiveIdx = activeIndexRef.current;
+
       for (let idx = 0; idx < COMPILED_ORBITS.length; idx++) {
         const cfg = COMPILED_ORBITS[idx];
         if (!cfg) continue;
         const nodeEl = nodeRefs.current[idx];
         if (!nodeEl) continue;
 
-        // Inertie douce sur la vitesse
-        const targetSpeed = targetSpeedsRef.current[idx] ?? 1;
-        const currentSpeedVal = speedsRef.current[idx] ?? 1;
-        speedsRef.current[idx] = currentSpeedVal + (targetSpeed - currentSpeedVal) * 0.08;
-        const currentSpeed = speedsRef.current[idx] ?? 1;
-
-        const currentAngle = anglesRef.current[idx] ?? 0;
-        const currentActiveIdx = activeIndexRef.current;
-        const reduced = reducedMotionRef.current;
-        let nextAngle: number;
-
-        if (idx === currentActiveIdx) {
-          // Phase active : rotation amortie jusqu'à l'avant de la scène, puis maintien
-          const delta = forwardDelta(currentAngle, FRONT_ANGLES[idx] ?? 0);
-          const step = reduced ? delta : delta * (1 - Math.exp(-FRONT_EASING * deltaSec));
-          nextAngle = (currentAngle + step) % TWO_PI;
-        } else if (reduced) {
-          nextAngle = currentAngle;
-        } else {
-          // Autres phases : révolution képlérienne continue
-          const keplerFactor = 1.0 + cfg.eccentricity * Math.cos(currentAngle);
-          const angularVelocity = (TWO_PI / cfg.period) * currentSpeed * keplerFactor;
-          nextAngle = (currentAngle + angularVelocity * deltaSec) % TWO_PI;
-        }
-        anglesRef.current[idx] = nextAngle;
+        const nextAngle = phiRef.current + (PHASE_OFFSETS[idx] ?? 0);
 
         // Calcul 3D linéaire précompilé ultra-rapide
         const c = Math.cos(nextAngle);
@@ -394,7 +414,7 @@ export function Orbit3DMethod({
 
   // Positions statiques initiales (SSR)
   const initialPositions = COMPILED_ORBITS.map((cfg, idx) => {
-    const angle = startAngle(idx, initialActiveIndex);
+    const angle = frontPhi(initialActiveIndex) + (PHASE_OFFSETS[idx] ?? 0);
     const c = Math.cos(angle);
     const s = Math.sin(angle);
     const x = cfg.radius * (cfg.Ax * c + cfg.Bx * s);
@@ -587,13 +607,15 @@ export function Orbit3DMethod({
                   willChange: "transform, opacity",
                 }}
                 onMouseEnter={() => handleNodeMouseEnter(idx)}
-                onMouseLeave={() => handleNodeMouseLeave(idx)}
+                onMouseLeave={handleNodeMouseLeave}
               >
                 {/* Capsule Technologique Interactive Haute Visibilité */}
                 <button
                   type="button"
                   role="tab"
                   aria-selected={isActive}
+                  aria-label={`${node.number} — ${node.title}`}
+                  title={isActive ? undefined : node.title}
                   tabIndex={-1}
                   onClick={() => onSelect(idx)}
                   className={cn(
@@ -652,17 +674,13 @@ export function Orbit3DMethod({
                       {node.number}
                     </span>
 
-                    {/* Libellé textuel */}
-                    <span
-                      className={cn(
-                        "whitespace-nowrap tracking-tight transition-colors",
-                        isActive
-                          ? "text-[12px] font-semibold text-slate-950 dark:text-white"
-                          : "text-[11px] font-semibold text-slate-700 dark:text-slate-300"
-                      )}
-                    >
-                      {node.title}
-                    </span>
+                    {/* Libellé : pleine largeur pour la phase active seulement (capsules
+                        compactes ailleurs, ce qui évite toute superposition en orbite) */}
+                    {isActive && (
+                      <span className="whitespace-nowrap tracking-tight text-[12px] font-semibold text-slate-950 dark:text-white">
+                        {node.title}
+                      </span>
+                    )}
 
                     {/* Point LED lumineux d'activation */}
                     {isActive && (

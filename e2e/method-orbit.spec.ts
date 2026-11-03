@@ -32,6 +32,19 @@ test("la sphère amène la phase choisie à l'avant et le défilement continue",
   const front = depths.reduce((a, b) => (b.z > a.z ? b : a));
   expect(front.n).toBe("03");
 
+  // Capsules des autres phases compactes et sans superposition
+  const overlaps = await page.evaluate(() => {
+    const boxes = [...document.querySelectorAll("[data-orbit-node] button")].map((e) => e.getBoundingClientRect());
+    let count = 0;
+    boxes.forEach((a, i) =>
+      boxes.slice(i + 1).forEach((b) => {
+        if (Math.min(a.right, b.right) - Math.max(a.left, b.left) > 2 && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 2) count++;
+      })
+    );
+    return count;
+  });
+  expect(overlaps).toBe(0);
+
   // Le choix manuel ne fige pas le cycle : la jauge tourne
   await expect(page.locator(".method-progress-bar").first()).toHaveCSS("animation-play-state", "running");
 
