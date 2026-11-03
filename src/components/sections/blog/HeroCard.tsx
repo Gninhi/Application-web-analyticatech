@@ -1,175 +1,82 @@
 "use client";
 
-import { type CSSProperties, useRef } from "react";
-import { ArrowUpRight, Clock, Newspaper, User } from "lucide-react";
-import { type BlogPostDTO, type ViewKey } from "@/types/content";
+import Link from "next/link";
+import { ArrowUpRight, Clock } from "lucide-react";
+import { type BlogPostDTO } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { BorderRotate } from "@/components/ui/animated-gradient-border";
 import { formatPostDate } from "@/lib/utils/date";
 import { tint, getCategoryAccent } from "@/lib/utils/colors";
-import { ReportVisual } from "./ReportVisual";
+import { viewToPath } from "@/lib/navigation/routes";
 import { CategoryPill } from "./CategoryPill";
+import { InsightCover } from "./InsightCover";
+import { formatReadingTime } from "./reading-time";
 
 export interface HeroCardProps {
   post: BlogPostDTO;
-  index: number;
-  total: number;
-  onNavigateDetail: (view: ViewKey, id: string) => void;
 }
 
 /**
- * Carte à la une — hero pleine largeur, contenu à gauche, "couverture"
- * de rapport à droite (grille masquée, halo, balayage, numéro géant).
+ * Article à la une — grande carte en verre : texte à gauche (catégorie, titre,
+ * résumé, date et temps de lecture), couverture propre à la catégorie à droite.
+ * Lien réel vers l'article (clic du milieu, indexation).
  */
-export function HeroCard({
-  post,
-  index,
-  total,
-  onNavigateDetail,
-}: HeroCardProps) {
+export function HeroCard({ post }: HeroCardProps) {
   const { t, locale } = useI18n();
   const accent = getCategoryAccent(post.categoryKey, post.categoryLabel);
-  const num = String(index + 1).padStart(2, "0");
   const borderColors = { primary: accent, secondary: tint(accent, 44), accent: tint(accent, 96) };
-
-  const cardRectRef = useRef<DOMRect | null>(null);
-
-  const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
-    cardRectRef.current = e.currentTarget.getBoundingClientRect();
-  };
-  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    const el = e.currentTarget;
-    const rect = cardRectRef.current;
-    if (!rect) return;
-    el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
-    el.style.setProperty("--my", `${e.clientY - rect.top}px`);
-  };
-  const handleMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
-    cardRectRef.current = null;
-    const el = e.currentTarget;
-    el.style.setProperty("--mx", "-200px");
-    el.style.setProperty("--my", "-200px");
-  };
 
   return (
     <BorderRotate
+      animationMode="rotate-on-hover"
       animationSpeed={9}
       borderRadius={30}
       borderWidth={1.5}
       gradientColors={borderColors}
       backgroundColor="var(--glass-card-bg)"
     >
-      <button
-        type="button"
-        onClick={() => onNavigateDetail("blog-detail", post.slug)}
-        onMouseEnter={handleMouseEnter}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        className="group relative block w-full overflow-hidden rounded-[28px] text-left glass-card grain flex flex-col lg:grid lg:grid-cols-[1.05fr_1fr] focus-visible:outline-2 focus-visible:outline-[color:var(--ca)] focus-visible:outline-offset-2"
-        style={{ "--ca": accent, "--mx": "-200px", "--my": "-200px" } as CSSProperties}
+      <Link
+        href={viewToPath("blog-detail", post.slug, locale)}
+        className="group relative grid overflow-hidden rounded-[28px] glass-card grain lg:grid-cols-[1.15fr_1fr] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--accent-ink)]"
       >
-        {/* Liseré supérieur — teinte de la catégorie */}
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 z-30 h-px"
-          style={{ background: `linear-gradient(90deg, transparent, ${accent}b3, transparent)` }}
-          aria-hidden
-        />
-
-        {/* Spot lumineux suivant le curseur */}
-        <div
-          className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-          style={{
-            background:
-              "radial-gradient(480px circle at var(--mx) var(--my), color-mix(in srgb, var(--ca) 18%, transparent), transparent 70%)",
-          }}
-          aria-hidden
-        />
-
-        {/* Contenu */}
-        <div className="relative z-20 flex flex-col justify-center gap-4 p-6 md:p-10">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <div className="relative z-10 flex flex-col gap-5 p-6 sm:p-8 lg:p-10">
+          <div className="flex flex-wrap items-center gap-3">
             <CategoryPill accent={accent} label={post.categoryLabel} />
-            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-600 dark:text-slate-400">
               {t("blog.featured")}
             </span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            <span>{formatPostDate(post.date, locale)}</span>
-            <span className="h-px w-4 bg-border" aria-hidden />
-            <span className="inline-flex items-center gap-1.5">
-              <Clock className="h-3 w-3" style={{ color: accent }} aria-hidden />
-              {post.readingTime.includes("lecture") || post.readingTime.includes("read")
-                ? post.readingTime
-                : `${post.readingTime.replace(/\s*min.*/i, "")} ${t("common.read")}`}
-            </span>
-            <span className="h-px w-4 bg-border" aria-hidden />
-            <span className="inline-flex items-center gap-1.5">
-              <User className="h-3 w-3" style={{ color: accent }} aria-hidden />
-              {post.author}
-            </span>
-          </div>
-
-          <h2 className="font-display text-2xl font-bold tracking-tight leading-tight text-foreground transition-colors duration-300 group-hover:text-[var(--ca)] md:text-4xl">
+          <h2 className="font-display text-2xl font-bold leading-tight tracking-tight text-foreground md:text-4xl">
             {post.title}
           </h2>
+          <p className="max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">{post.excerpt}</p>
 
-          <div
-            className="h-px w-16"
-            style={{ background: `linear-gradient(90deg, ${accent}, transparent)` }}
-            aria-hidden
-          />
-
-          <p className="max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
-            {post.excerpt}
-          </p>
-
-          <span className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-foreground transition-colors duration-300 group-hover:text-[var(--ca)]">
-            {t("common.readArticle")}
-            <ArrowUpRight
-              className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-              style={{ color: accent }}
-              aria-hidden
-            />
-          </span>
+          <div className="mt-auto flex flex-wrap items-center justify-between gap-4 border-t border-border/60 pt-5">
+            <p className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] uppercase tracking-widest text-slate-600 dark:text-slate-400">
+              <span>{formatPostDate(post.date, locale)}</span>
+              <span className="h-px w-4 bg-border" aria-hidden />
+              <span className="inline-flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5 text-accent-ink" aria-hidden />
+                {formatReadingTime(post.readingTime, t("common.read"))}
+              </span>
+            </p>
+            <span className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-accent-ink">
+              {t("common.readArticle")}
+              <ArrowUpRight
+                className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                aria-hidden
+              />
+            </span>
+          </div>
         </div>
 
-        {/* Couverture du rapport */}
-        <ReportVisual accent={accent} className="min-h-[260px] lg:min-h-full">
-          <span
-            className="absolute top-5 left-5 z-20 font-mono text-[10px] uppercase tracking-widest"
-            style={{ color: `color-mix(in srgb, ${accent} 65%, transparent)` }}
-          >
-            {t("blog.badge")} {String(index + 1).padStart(2, "0")}
-          </span>
-          <Newspaper
-            className="absolute top-5 right-5 z-20 h-4 w-4"
-            style={{ color: `color-mix(in srgb, ${accent} 35%, transparent)` }}
-            aria-hidden
-          />
-          <div className="absolute bottom-5 left-5 z-20 flex max-w-[60%] flex-wrap gap-1.5">
-            {post.tags.slice(0, 2).map((tag) => (
-              <span key={tag} className="glass rounded-md px-2 py-1 font-mono text-[10px] text-muted-foreground">
-                #{tag}
-              </span>
-            ))}
-          </div>
-          <div className="absolute bottom-4 right-6 z-20 flex items-baseline gap-1.5">
-            <span
-              className="font-display text-7xl font-bold leading-none md:text-8xl"
-              style={{ color: `color-mix(in srgb, ${accent} 30%, transparent)` }}
-            >
-              /{num}
-            </span>
-            <span
-              className="font-mono text-xs"
-              style={{ color: `color-mix(in srgb, ${accent} 65%, transparent)` }}
-            >
-              /{String(total).padStart(2, "0")}
-            </span>
-          </div>
-        </ReportVisual>
-      </button>
+        <InsightCover
+          categoryKey={post.categoryKey}
+          categoryLabel={post.categoryLabel}
+          className="min-h-[200px] border-t border-border/60 sm:min-h-[240px] lg:min-h-full lg:border-t-0 lg:border-l"
+        />
+      </Link>
     </BorderRotate>
   );
 }

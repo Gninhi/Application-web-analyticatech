@@ -1,9 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState, useTransition } from "react";
-import { AnimatePresence, m } from "framer-motion";
 import { ArrowRight, Compass, FlaskConical, Hammer } from "lucide-react";
-import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
 import { FilterPill } from "@/components/interactive/FilterPill";
@@ -13,25 +11,21 @@ import { SectionContainer } from "@/components/ui/SectionContainer";
 import { getCategoryAccent } from "@/lib/utils/colors";
 import { viewToPath } from "@/lib/navigation/routes";
 import { HeroCard } from "./blog/HeroCard";
-import { ReportCard } from "./blog/ReportCard";
+import { InsightRow } from "./blog/InsightRow";
 import { IconBadge } from "@/components/ui/IconBadge";
 
 type Filter = string;
-
-interface BlogViewProps {
-  onNavigateDetail: (view: ViewKey, id: string) => void;
-}
 
 /**
  * BlogView — Hub des articles de méthode (guides illustrés par des scénarios types).
  * Orchestration modulaire :
  *  - En-tête de page standardisé
  *  - Barre d'onglets de filtrage par catégorie (accessible WAI-ARIA)
- *  - HeroCard (article à la une pleine largeur)
- *  - ReportCard (grille d'articles)
+ *  - HeroCard (article à la une pleine largeur, couverture propre à la catégorie)
+ *  - InsightRow (liste éditoriale : se parcourt d'un coup d'œil)
  *  - Ligne éditoriale : ce que les articles promettent (et ne promettent pas)
  */
-export function BlogView({ onNavigateDetail }: BlogViewProps) {
+export function BlogView() {
   const { t, locale } = useI18n();
   const { blogPosts: BLOG_POSTS, blogCategories: DB_CATEGORIES } = useAppContent();
   const [filter, setFilter] = useState<Filter>("all");
@@ -140,47 +134,18 @@ export function BlogView({ onNavigateDetail }: BlogViewProps) {
       <div role="tabpanel" id="blog-results" aria-labelledby={`blog-tab-${filter}`}>
         <section className="pb-24">
           <div className="mx-auto max-w-7xl px-4 md:px-6">
-            {/* Article à la une — hero pleine largeur */}
-            {featured && (
-              <m.div
-                key={featured.id}
-                initial={false}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35 }}
-              >
-                <HeroCard
-                  post={featured}
-                  index={0}
-                  total={filtered.length}
-                  onNavigateDetail={onNavigateDetail}
-                />
-              </m.div>
-            )}
+            {/* Article à la une */}
+            {featured && <HeroCard post={featured} />}
 
-            {/* Grille d'articles */}
+            {/* Autres articles — liste éditoriale */}
             {rest.length > 0 && (
-              <m.div layout className="mt-5 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-                <AnimatePresence mode="popLayout">
-                  {rest.map((post, i) => (
-                    <m.div
-                      key={post.id}
-                      layout
-                      initial={{ opacity: 0, scale: 0.96 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.96 }}
-                      transition={{ duration: 0.25 }}
-                      className="h-full"
-                    >
-                      <ReportCard
-                        post={post}
-                        index={i + 1}
-                        total={filtered.length}
-                        onNavigateDetail={onNavigateDetail}
-                      />
-                    </m.div>
-                  ))}
-                </AnimatePresence>
-              </m.div>
+              <ul className="mt-6 space-y-3" aria-label={t("blog.list.aria")}>
+                {rest.map((post) => (
+                  <li key={post.id}>
+                    <InsightRow post={post} />
+                  </li>
+                ))}
+              </ul>
             )}
 
             {filtered.length === 0 && (
