@@ -114,6 +114,46 @@ const COMPILED_ORBITS: CompiledOrbitConfig[] = ORBIT_CONFIGS.map((cfg) => {
 });
 
 /**
+ * Angle « avant » de chaque orbite : point bas de la scène (premier plan, la caméra
+ * plonge), gardé près de l'axe vertical pour que la capsule active, large, reste
+ * dans le cadre. La phase active y est amenée par rotation à chaque changement.
+ */
+const FRONT_MAX_X = 20; // décalage horizontal toléré (px) avant pénalité (perspective comprise)
+function frontAngle(cfg: CompiledOrbitConfig): number {
+  let best = 0;
+  let bestScore = -Infinity;
+  for (let i = 0; i < 720; i++) {
+    const a = (i / 720) * 2 * Math.PI;
+    const c = Math.cos(a);
+    const s = Math.sin(a);
+    const x = cfg.radius * (cfg.Ax * c + cfg.Bx * s);
+    const y = cfg.radius * (cfg.Ay * c + cfg.By * s);
+    const score = y - 1.5 * Math.max(0, Math.abs(x) - FRONT_MAX_X);
+    if (score > bestScore) {
+      bestScore = score;
+      best = a;
+    }
+  }
+  return best;
+}
+const FRONT_ANGLES = COMPILED_ORBITS.map(frontAngle);
+const TWO_PI = 2 * Math.PI;
+/** Raideur de l'amorti vers l'avant (1/s) : ~95 % du trajet en ≈ 1,6 s. */
+const FRONT_EASING = 1.9;
+
+/** Écart angulaire vers l'avant, parcouru dans le sens de l'orbite (petit retour si l'avant vient d'être dépassé). */
+function forwardDelta(from: number, to: number): number {
+  let d = (((to - from) % TWO_PI) + TWO_PI) % TWO_PI;
+  if (d > TWO_PI * 0.85) d -= TWO_PI;
+  return d;
+}
+
+/** Angle de départ d'une orbite : la phase active commence déjà à l'avant (rendu serveur stable). */
+function startAngle(idx: number, activeIndex: number): number {
+  return idx === activeIndex ? FRONT_ANGLES[idx] ?? 0 : ORBIT_CONFIGS[idx]?.initialPhase ?? 0;
+}
+
+/**
  * Orbit3DMethod — Système orbital tridimensionnel haute performance avec Hub central et Capsules de Méthode.
  *
  * Design & Ergonomie :
@@ -121,6 +161,9 @@ const COMPILED_ORBITS: CompiledOrbitConfig[] = ORBIT_CONFIGS.map((cfg) => {
  * - Dock de contrôle cybernétique ergonomique repensé avec retour tactile et indicateurs LED colorés.
  * - Cœur cybernétique épuré avec lueur thermique et emblème vectoriel Waypoints.
  * - Suppression des éléments superflus pour une lisibilité maximale.
+ * - Lien phase ↔ rotation : à chaque changement de phase (auto ou manuel), la
+ *   sphère fait tourner la phase active jusqu'à l'avant de la scène ; les autres
+ *   poursuivent leur révolution. Mouvement réduit : placement direct, sans rotation.
  */
 export function Orbit3DMethod({
   nodes,
@@ -131,15 +174,17 @@ export function Orbit3DMethod({
 }: Orbit3DMethodProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const nodeRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const dockRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const beamPathRef = useRef<SVGPathElement>(null);
   const beamGlowRef = useRef<SVGPathElement>(null);
 
   // État cinétique des orbites
   const speedsRef = useRef<number[]>([1, 1, 1, 1]);
   const targetSpeedsRef = useRef<number[]>([1, 1, 1, 1]);
-  const anglesRef = useRef<number[]>(
-    ORBIT_CONFIGS.map((cfg) => cfg.initialPhase)
-  );
+  // Phase active au premier rendu : fixe les positions serveur, puis la boucle rAF prend le relais
+  const [initialActiveIndex] = useState(activeIndex);
+  const anglesRef = useRef<number[]>(ORBIT_CONFIGS.map((_, idx) => startAngle(idx, initialActiveIndex)));
+  const reducedMotionRef = useRef(false);
 
   // Caches de mutation de styles DOM pour éliminer les écritures superflues
   const zIndexCache = useRef<number[]>([0, 0, 0, 0]);
@@ -155,6 +200,18 @@ export function Orbit3DMethod({
   }, [activeIndex]);
 
   const activeNode = nodes[activeIndex] ?? nodes[0];
+
+  // Préférence « mouvement réduit » : la phase active est placée à l'avant sans rotation
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => {
+      reducedMotionRef.current = mq.matches;
+    };
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   // Initialisation client
   useEffect(() => {
@@ -197,6 +254,27 @@ export function Orbit3DMethod({
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, []);
 
+  // Clavier (motif ARIA « onglets ») : flèches, Début, Fin ; le focus suit la phase choisie
+  const handleDockKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      const count = nodes.length;
+      const keys: Record<string, number> = {
+        ArrowRight: (activeIndex + 1) % count,
+        ArrowDown: (activeIndex + 1) % count,
+        ArrowLeft: (activeIndex - 1 + count) % count,
+        ArrowUp: (activeIndex - 1 + count) % count,
+        Home: 0,
+        End: count - 1,
+      };
+      const next = keys[e.key];
+      if (next === undefined) return;
+      e.preventDefault();
+      onSelect(next);
+      dockRefs.current[next]?.focus();
+    },
+    [activeIndex, nodes.length, onSelect]
+  );
+
   // Ralentissement fluide au survol
   const handleNodeMouseEnter = useCallback((index: number) => {
     setHoveredIndex(index);
@@ -235,12 +313,24 @@ export function Orbit3DMethod({
         speedsRef.current[idx] = currentSpeedVal + (targetSpeed - currentSpeedVal) * 0.08;
         const currentSpeed = speedsRef.current[idx] ?? 1;
 
-        // Vitesse képlérienne
         const currentAngle = anglesRef.current[idx] ?? 0;
-        const keplerFactor = 1.0 + cfg.eccentricity * Math.cos(currentAngle);
-        const angularVelocity = ((2 * Math.PI) / cfg.period) * currentSpeed * keplerFactor;
+        const currentActiveIdx = activeIndexRef.current;
+        const reduced = reducedMotionRef.current;
+        let nextAngle: number;
 
-        const nextAngle = (currentAngle + angularVelocity * deltaSec) % (2 * Math.PI);
+        if (idx === currentActiveIdx) {
+          // Phase active : rotation amortie jusqu'à l'avant de la scène, puis maintien
+          const delta = forwardDelta(currentAngle, FRONT_ANGLES[idx] ?? 0);
+          const step = reduced ? delta : delta * (1 - Math.exp(-FRONT_EASING * deltaSec));
+          nextAngle = (currentAngle + step) % TWO_PI;
+        } else if (reduced) {
+          nextAngle = currentAngle;
+        } else {
+          // Autres phases : révolution képlérienne continue
+          const keplerFactor = 1.0 + cfg.eccentricity * Math.cos(currentAngle);
+          const angularVelocity = (TWO_PI / cfg.period) * currentSpeed * keplerFactor;
+          nextAngle = (currentAngle + angularVelocity * deltaSec) % TWO_PI;
+        }
         anglesRef.current[idx] = nextAngle;
 
         // Calcul 3D linéaire précompilé ultra-rapide
@@ -250,7 +340,6 @@ export function Orbit3DMethod({
         const y = cfg.radius * (cfg.Ay * c + cfg.By * s);
         const z = cfg.radius * (cfg.Az * c + cfg.Bz * s);
 
-        const currentActiveIdx = activeIndexRef.current;
         if (idx === currentActiveIdx) {
           activeNodePx = x;
           activeNodePy = y;
@@ -304,8 +393,9 @@ export function Orbit3DMethod({
 
   // Positions statiques initiales (SSR)
   const initialPositions = COMPILED_ORBITS.map((cfg, idx) => {
-    const c = Math.cos(cfg.initialPhase);
-    const s = Math.sin(cfg.initialPhase);
+    const angle = startAngle(idx, initialActiveIndex);
+    const c = Math.cos(angle);
+    const s = Math.sin(angle);
     const x = cfg.radius * (cfg.Ax * c + cfg.Bx * s);
     const y = cfg.radius * (cfg.Ay * c + cfg.By * s);
     const z = cfg.radius * (cfg.Az * c + cfg.Bz * s);
@@ -341,7 +431,10 @@ export function Orbit3DMethod({
         style={{
           perspective: 1200,
           perspectiveOrigin: "50% 50%",
-          transformStyle: "preserve-3d",
+          // Pas de contexte 3D partagé : le plan incliné des orbites coupait les
+          // capsules et les masquait. Les anneaux gardent leur propre contexte 3D,
+          // l'ordre des capsules suit leur z-index (calculé selon la profondeur).
+          transformStyle: "flat",
         }}
       >
         {/* === A. Pistes orbitales 3D inclinées === */}
@@ -500,6 +593,7 @@ export function Orbit3DMethod({
                   type="button"
                   role="tab"
                   aria-selected={isActive}
+                  tabIndex={-1}
                   onClick={() => onSelect(idx)}
                   className={cn(
                     "group relative flex items-center gap-2.5 rounded-full transition-all duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2",
@@ -535,14 +629,6 @@ export function Orbit3DMethod({
                     />
                   )}
 
-                  {/* Halo d'activation pulsant externe */}
-                  {isActive && (
-                    <span
-                      className="animate-ping absolute inset-0 rounded-full opacity-35 pointer-events-none"
-                      style={{ backgroundColor: node.color }}
-                      aria-hidden
-                    />
-                  )}
 
                   {/* Pastille circulaire avec icône — Pleine saturation éclatante sur l'active */}
                   <div
@@ -613,6 +699,7 @@ export function Orbit3DMethod({
       <div
         role="tablist"
         aria-label="Contrôles d'accès direct aux phases"
+        onKeyDown={handleDockKeyDown}
         className="absolute -bottom-2 sm:bottom-0 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 rounded-2xl border border-black/10 dark:border-white/15 bg-white/95 dark:bg-background/95 p-1.5 backdrop-blur-xl shadow-xl shadow-black/5 dark:shadow-black/50"
       >
         {nodes.map((node, idx) => {
@@ -621,9 +708,14 @@ export function Orbit3DMethod({
           return (
             <button
               key={node.number}
+              ref={(el) => {
+                dockRefs.current[idx] = el;
+              }}
               type="button"
               role="tab"
               aria-selected={isActive}
+              aria-label={`${node.number} — ${node.title}`}
+              tabIndex={isActive ? 0 : -1}
               onClick={() => onSelect(idx)}
               className={cn(
                 "group relative flex h-8 items-center gap-2 rounded-xl px-3 font-mono text-[11px] font-semibold uppercase transition-all duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2",

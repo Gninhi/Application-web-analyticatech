@@ -38,8 +38,19 @@ const STEP_ICONS = [Search, FlaskConical, Factory, TrendingUp] as const;
 // Charte : un seul accent (orange) pour les repères graphiques
 const STEP_COLORS = ["#F26D3D", "#F26D3D", "#F26D3D", "#F26D3D"] as const;
 
-// Intervalle de lecture confortable : 9 secondes par phase
-const STEP_DURATION_MS = 9000;
+/* Temps de lecture accordé à chaque phase, calculé sur son texte (titre, sous-titre,
+   description, résultat, livrables) : 2 s pour se repérer + 150 ms par mot,
+   borné entre 9 et 15 s. */
+const READING_BASE_MS = 2000;
+const READING_PER_WORD_MS = 150;
+const READING_MIN_MS = 9000;
+const READING_MAX_MS = 15000;
+
+export function readingTimeMs(step: Pick<MethodStep, "title" | "subtitle" | "description" | "result" | "deliverables">): number {
+  const text = [step.title, step.subtitle, step.description, step.result, ...step.deliverables].join(" ");
+  const words = text.split(/\s+/).filter(Boolean).length;
+  return Math.min(READING_MAX_MS, Math.max(READING_MIN_MS, READING_BASE_MS + words * READING_PER_WORD_MS));
+}
 
 interface AgentoryMethodProps {
   onNavigateContact?: () => void;
@@ -51,12 +62,12 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
   const [isPausedByUser, setIsPausedByUser] = useState(false);
   const [isCardHovered, setIsCardHovered] = useState(false);
   const [isOrbitHovered, setIsOrbitHovered] = useState(false);
-  const [isTouched, setIsTouched] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isInView, setIsInView] = useState(true);
   const [isDocumentHidden, setIsDocumentHidden] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const touchStartXRef = useRef<number | null>(null);
+  const stepperRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   // Détection du respect des préférences d'accessibilité (motion réduite)
   useEffect(() => {
@@ -121,27 +132,54 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
     !isPausedByUser &&
     !isCardHovered &&
     !isOrbitHovered &&
-    !isTouched &&
     !prefersReducedMotion;
 
-  // Rotation automatique cadencée à 9s (suspendue au touch, hover, pause ou reduced-motion)
+  const stepDurationMs = readingTimeMs(METHOD_STEPS[activeStepIndex] ?? METHOD_STEPS[0]);
+
+  /* Défilement automatique avec temps de lecture restant : une pause (survol,
+     bouton, onglet masqué) suspend le décompte au lieu de le remettre à zéro.
+     Chaque changement de phase, automatique ou manuel, repart d'un temps plein. */
+  const remainingMsRef = useRef(stepDurationMs);
+  useEffect(() => {
+    remainingMsRef.current = stepDurationMs;
+  }, [activeStepIndex, stepDurationMs]);
+
   useEffect(() => {
     if (!isAutoPlaying) return;
-
+    const startedAt = performance.now();
     const timer = setTimeout(() => {
-      setActiveStepIndex((prev) => (prev + 1) % 4);
-    }, STEP_DURATION_MS);
+      setActiveStepIndex((prev) => (prev + 1) % METHOD_STEPS.length);
+    }, remainingMsRef.current);
+    return () => {
+      clearTimeout(timer);
+      remainingMsRef.current = Math.max(0, remainingMsRef.current - (performance.now() - startedAt));
+    };
+  }, [isAutoPlaying, activeStepIndex, METHOD_STEPS.length]);
 
-    return () => clearTimeout(timer);
-  }, [isAutoPlaying, activeStepIndex]);
-
+  // Choix manuel : la phase change tout de suite et le défilement automatique continue ensuite
   const handleSelectStep = useCallback((index: number) => {
     setActiveStepIndex(index);
-    setIsPausedByUser(true);
   }, []);
 
+  // Clavier sur le sélecteur mobile (motif ARIA « onglets »)
+  const handleStepperKeyDown = (e: React.KeyboardEvent) => {
+    const count = METHOD_STEPS.length;
+    const keys: Record<string, number> = {
+      ArrowRight: (activeStepIndex + 1) % count,
+      ArrowDown: (activeStepIndex + 1) % count,
+      ArrowLeft: (activeStepIndex - 1 + count) % count,
+      ArrowUp: (activeStepIndex - 1 + count) % count,
+      Home: 0,
+      End: count - 1,
+    };
+    const next = keys[e.key];
+    if (next === undefined) return;
+    e.preventDefault();
+    handleSelectStep(next);
+    stepperRefs.current[next]?.focus();
+  };
+
   const handleTouchStart = (e: React.TouchEvent) => {
-    setIsTouched(true);
     touchStartXRef.current = e.touches[0]?.clientX ?? null;
   };
 
@@ -156,7 +194,6 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
           // Swipe droite -> étape précédente
           setActiveStepIndex((prev) => (prev - 1 + 4) % 4);
         }
-        setIsPausedByUser(true);
       }
     }
     touchStartXRef.current = null;
@@ -207,7 +244,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
           aria-label={t("home.section.method")}
           onMouseEnter={() => setIsCardHovered(true)}
           onMouseLeave={() => setIsCardHovered(false)}
-          onTouchStart={() => setIsTouched(true)}
+          onKeyDown={handleStepperKeyDown}
         >
           {METHOD_STEPS.map((step, idx) => {
             const isActive = idx === activeStepIndex;
@@ -215,9 +252,13 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
             return (
               <button
                 key={step.number}
+                ref={(el) => {
+                  stepperRefs.current[idx] = el;
+                }}
                 type="button"
                 role="tab"
                 aria-selected={isActive}
+                tabIndex={isActive ? 0 : -1}
                 onClick={() => handleSelectStep(idx)}
                 className={`relative flex flex-col p-4 rounded-2xl border text-left transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 overflow-hidden cursor-pointer ${
                   isActive
@@ -225,14 +266,15 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                     : "glass hover:border-slate-400 dark:hover:border-slate-500"
                 }`}
               >
-                {/* Jauge de progression de l'étape active sur mobile */}
-                {isActive && isAutoPlaying && (
+                {/* Jauge de lecture de l'étape active (se fige pendant une pause) */}
+                {isActive && !prefersReducedMotion && (
                   <span
-                    key={`mob-${activeStepIndex}-${isAutoPlaying}`}
+                    key={`mob-${activeStepIndex}`}
                     className="method-progress-bar absolute bottom-0 inset-x-0 h-1"
                     style={{
                       backgroundColor: step.color,
-                      animationDuration: `${STEP_DURATION_MS}ms`,
+                      animationDuration: `${stepDurationMs}ms`,
+                      animationPlayState: isAutoPlaying ? "running" : "paused",
                     }}
                   />
                 )}
@@ -272,25 +314,17 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
-            {/* Ligne de progression temporelle de lecture (9s par phase) */}
+            {/* Jauge du temps de lecture de la phase (se fige pendant une pause, repart à chaque phase) */}
             <div className="absolute top-0 inset-x-0 h-[3px] bg-black/5 dark:bg-white/10 overflow-hidden z-20">
-              {isAutoPlaying ? (
+              {!prefersReducedMotion && (
                 <div
-                  key={`desk-${activeStepIndex}-${isAutoPlaying}`}
+                  key={`desk-${activeStepIndex}`}
                   className="method-progress-bar h-full rounded-full"
                   style={{
                     backgroundColor: METHOD_STEPS[activeStepIndex]?.color ?? "#F26D3D",
                     boxShadow: `0 0 10px ${METHOD_STEPS[activeStepIndex]?.color ?? "#F26D3D"}`,
-                    animationDuration: `${STEP_DURATION_MS}ms`,
-                  }}
-                />
-              ) : (
-                <div
-                  className="h-full w-full opacity-35 transition-colors"
-                  style={{
-                    backgroundColor: isPausedByUser
-                      ? "#F26D3D"
-                      : METHOD_STEPS[activeStepIndex]?.color ?? "#F26D3D",
+                    animationDuration: `${stepDurationMs}ms`,
+                    animationPlayState: isAutoPlaying ? "running" : "paused",
                   }}
                 />
               )}

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
-import { AgentoryMethod } from "@/components/sections/AgentoryMethod";
+import { AgentoryMethod, readingTimeMs } from "@/components/sections/AgentoryMethod";
 import { I18nProvider } from "@/lib/i18n/provider";
 
 function renderMethod(locale: "fr" | "en" = "fr", onNavigateContact?: () => void) {
@@ -54,5 +54,22 @@ describe("AgentoryMethod — Démarche Méthodologique & Rotation Dynamique", ()
     const html = renderMethod("fr", onNavigateContact);
 
     expect(html).toContain("Démarrer à cette étape");
+  });
+
+  it("accorde un temps de lecture proportionnel au texte, borné entre 9 et 15 s", () => {
+    const base = { title: "Titre", subtitle: "Sous-titre", result: "Résultat", deliverables: ["a", "b", "c"] };
+    const short = readingTimeMs({ ...base, description: "Court." });
+    const long = readingTimeMs({ ...base, description: "mot ".repeat(60) });
+    const huge = readingTimeMs({ ...base, description: "mot ".repeat(400) });
+    expect(short).toBe(9000);
+    expect(long).toBeGreaterThan(short);
+    expect(long).toBeLessThan(15000);
+    expect(huge).toBe(15000);
+  });
+
+  it("la jauge de lecture reprend où elle s'était arrêtée (pause sans remise à zéro)", () => {
+    const html = renderMethod("fr");
+    expect(html).toMatch(/method-progress-bar[^>]*animation-play-state:(running|paused)/);
+    expect(html).not.toContain("animation-duration:9000ms;animation-play-state:paused;opacity");
   });
 });
