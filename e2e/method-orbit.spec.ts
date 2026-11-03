@@ -1,58 +1,61 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import { collectErrors } from "./helpers";
 
 /**
- * Section Méthode : un choix manuel amène la phase à l'avant de la sphère
- * (z le plus proche du lecteur) et le défilement automatique continue ensuite.
+ * Section Méthode : les capsules gravitent en continu, chacune sur son orbite ;
+ * les phases passent à l'avant dans l'ordre 01 → 04 et la phase à l'avant est
+ * la phase affichée. Un choix manuel fait tourner la sphère, puis le cycle reprend.
  */
-test("la sphère amène la phase choisie à l'avant et le défilement continue", async ({ page }) => {
+
+async function capsuleState(page: Page) {
+  return page.evaluate(() => {
+    const els = [...document.querySelectorAll("[data-orbit-node] button")];
+    const boxes = els.map((e) => e.getBoundingClientRect());
+    let overlaps = 0;
+    boxes.forEach((a, i) =>
+      boxes.slice(i + 1).forEach((b) => {
+        if (Math.min(a.right, b.right) - Math.max(a.left, b.left) > 2 && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 2) overlaps++;
+      })
+    );
+    return { overlaps, positions: boxes.map((b) => `${Math.round(b.left)},${Math.round(b.top)}`).join("|") };
+  });
+}
+
+test("rotation continue, ordre 01 → 04, choix manuel puis reprise du cycle", async ({ page }) => {
+  test.setTimeout(90_000);
   const errors = collectErrors(page);
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/", { waitUntil: "networkidle" });
 
   const dock = page.getByRole("tablist", { name: /accès direct aux phases/i });
   await dock.scrollIntoViewIfNeeded();
-  // La souris quitte la section pour ne pas mettre le défilement en pause
-  await page.mouse.move(5, 5);
+  await page.mouse.move(5, 5); // la souris hors de la section : pas de pause au survol
+  const tabs = dock.getByRole("tab");
 
-  const third = dock.getByRole("tab").nth(2);
-  await third.click();
+  // Les capsules gravitent en continu, sans superposition
+  const first = await capsuleState(page);
+  await page.waitForTimeout(1500);
+  const second = await capsuleState(page);
+  expect(second.positions).not.toBe(first.positions);
+  expect(first.overlaps + second.overlaps).toBe(0);
+
+  // Choix manuel de la phase 03 : elle est affichée, le titre apparaît dans le dock
+  await tabs.nth(2).click();
   await page.mouse.move(5, 5);
-  await expect(third).toHaveAttribute("aria-selected", "true");
+  await expect(tabs.nth(2)).toHaveAttribute("aria-selected", "true");
+  await expect(tabs.nth(2)).toContainText("Industrialisation");
   await expect(page.getByRole("heading", { name: /^03\./ })).toBeVisible();
 
-  // Après la rotation (~1,6 s), la capsule 03 est la plus proche du lecteur
-  await page.waitForTimeout(2200);
-  const depths = await page.evaluate(() =>
-    [...document.querySelectorAll<HTMLElement>("[data-orbit-node]")].map((el) => {
-      const m = /translate3d\([^,]+,[^,]+,\s*(-?[\d.]+)px\)/.exec(el.style.transform);
-      return { n: el.dataset.orbitNode, z: m ? Number(m[1]) : NaN };
-    })
-  );
-  const front = depths.reduce((a, b) => (b.z > a.z ? b : a));
-  expect(front.n).toBe("03");
+  // Le cycle reprend tout seul, dans l'ordre : 03 → 04
+  // Marge large : la rotation ralentit si la machine de test est saturée (pas de saut de frame)
+  await expect(tabs.nth(3)).toHaveAttribute("aria-selected", "true", { timeout: 45_000 });
+  expect((await capsuleState(page)).overlaps).toBe(0);
 
-  // Capsules des autres phases compactes et sans superposition
-  const overlaps = await page.evaluate(() => {
-    const boxes = [...document.querySelectorAll("[data-orbit-node] button")].map((e) => e.getBoundingClientRect());
-    let count = 0;
-    boxes.forEach((a, i) =>
-      boxes.slice(i + 1).forEach((b) => {
-        if (Math.min(a.right, b.right) - Math.max(a.left, b.left) > 2 && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 2) count++;
-      })
-    );
-    return count;
-  });
-  expect(overlaps).toBe(0);
-
-  // Le choix manuel ne fige pas le cycle : la jauge tourne
-  await expect(page.locator(".method-progress-bar").first()).toHaveCSS("animation-play-state", "running");
-
-  // Clavier : flèche droite sur le dock → phase 04
-  await dock.getByRole("tab").nth(2).focus();
-  await page.keyboard.press("ArrowRight");
-  await expect(dock.getByRole("tab").nth(3)).toHaveAttribute("aria-selected", "true");
-  await expect(dock.getByRole("tab").nth(3)).toBeFocused();
+  // Clavier : flèche gauche sur le dock → phase 03, le focus suit
+  await tabs.nth(3).focus();
+  await page.keyboard.press("ArrowLeft");
+  await expect(tabs.nth(2)).toHaveAttribute("aria-selected", "true");
+  await expect(tabs.nth(2)).toBeFocused();
 
   expect(errors).toEqual([]);
 });

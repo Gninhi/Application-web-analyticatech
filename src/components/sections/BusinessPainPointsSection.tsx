@@ -70,9 +70,9 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
       </div>
 
       {/* Liste des peines et résolution */}
-      <div className="grid lg:grid-cols-12 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Colonne Gauche : Liste des 5 peines thématiques */}
-        <div className="lg:col-span-6 space-y-3" role="tablist" aria-label={t("home.section.painpoints.title")}>
+        <div className="min-w-0 lg:col-span-6 space-y-3" role="tablist" aria-label={t("home.section.painpoints.title")}>
           {PAIN_POINTS.map((item, idx) => {
             const isSelected = activePainId === item.id;
             const Icon = item.icon;
@@ -139,8 +139,8 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
         </div>
 
         {/* Colonne Droite : Transformation & Solution Analyticatech */}
-        <div className="lg:col-span-6 sticky top-28">
-          <div className="grid">
+        <div className="min-w-0 lg:col-span-6 sticky top-28">
+          <div className="grid min-w-0">
             {PAIN_POINTS.map((item) => {
               const isSelected = activePainId === item.id;
               const Icon = item.icon;
@@ -152,7 +152,7 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
                   transition={{ duration: 0.35, ease: "easeOut" }}
                   inert={!isSelected}
                   aria-hidden={!isSelected}
-                  className="glass-card rounded-3xl p-6 md:p-8 flex flex-col justify-between min-h-[380px] col-start-1 row-start-1 pointer-events-none [&:not([inert])]:pointer-events-auto border"
+                  className="glass-card rounded-3xl p-6 md:p-8 flex min-w-0 flex-col justify-between min-h-[380px] col-start-1 row-start-1 break-words pointer-events-none [&:not([inert])]:pointer-events-auto border"
                   style={{
                     borderColor: isSelected
                       ? `color-mix(in srgb, ${item.accentColor} 35%, transparent)`
