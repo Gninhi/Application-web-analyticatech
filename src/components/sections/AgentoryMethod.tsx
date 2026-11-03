@@ -135,32 +135,22 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
     !isOrbitHovered &&
     !prefersReducedMotion;
 
-  const stepDurationMs = readingTimeMs(METHOD_STEPS[activeStepIndex] ?? METHOD_STEPS[0]);
-
-  /* Défilement automatique avec temps de lecture restant : une pause (survol,
-     bouton, onglet masqué) suspend le décompte au lieu de le remettre à zéro.
-     Chaque changement de phase, automatique ou manuel, repart d'un temps plein. */
-  const remainingMsRef = useRef(stepDurationMs);
-  useEffect(() => {
-    remainingMsRef.current = stepDurationMs;
-  }, [activeStepIndex, stepDurationMs]);
-
-  useEffect(() => {
-    if (!isAutoPlaying) return;
-    const startedAt = performance.now();
-    const timer = setTimeout(() => {
-      setActiveStepIndex((prev) => (prev + 1) % METHOD_STEPS.length);
-    }, remainingMsRef.current);
-    return () => {
-      clearTimeout(timer);
-      remainingMsRef.current = Math.max(0, remainingMsRef.current - (performance.now() - startedAt));
-    };
-  }, [isAutoPlaying, activeStepIndex, METHOD_STEPS.length]);
-
-  // Choix manuel : la phase change tout de suite et le défilement automatique continue ensuite
-  const handleSelectStep = useCallback((index: number) => {
+  /* Défilement : c'est la rotation de la sphère qui le pilote. Les phases passent
+     à l'avant dans l'ordre 01 → 04, espacées selon leur temps de lecture ; la
+     phase à l'avant devient la phase affichée. Pause (survol, bouton, onglet
+     masqué, hors écran) = rotation arrêtée, la jauge se fige. */
+  const dwellMs = METHOD_STEPS.map((step) => readingTimeMs(step));
+  const [stepDurationMs, setStepDurationMs] = useState(() => dwellMs[0] ?? 10_000);
+  const handleOrbitActiveChange = useCallback((index: number, windowMs: number) => {
     setActiveStepIndex(index);
+    setStepDurationMs(windowMs);
   }, []);
+
+  // Choix manuel : la sphère tourne jusqu'à la phase choisie, puis le cycle reprend
+  const handleSelectStep = (index: number) => {
+    setActiveStepIndex(index);
+    setStepDurationMs(dwellMs[index] ?? 10_000);
+  };
 
   // Clavier sur le sélecteur mobile (motif ARIA « onglets »)
   const handleStepperKeyDown = (e: React.KeyboardEvent) => {
@@ -215,10 +205,10 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
         </p>
       </div>
 
-      <div className="grid items-center gap-10 lg:grid-cols-12">
+      <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12">
         {/* === Visualisation 3D native CSS/GPU avec Hub Central & Orbites (desktop) === */}
         <div
-          className="lg:col-span-5"
+          className="min-w-0 lg:col-span-5"
           onMouseEnter={() => setIsOrbitHovered(true)}
           onMouseLeave={() => setIsOrbitHovered(false)}
         >
@@ -233,6 +223,9 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
               }))}
               activeIndex={activeStepIndex}
               onSelect={handleSelectStep}
+              dwellMs={dwellMs}
+              playing={isAutoPlaying}
+              onActiveChange={handleOrbitActiveChange}
               centerLabel={t("home.section.method")}
             />
           </SectionErrorBoundary>
@@ -240,7 +233,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
 
         {/* === Stepper mobile/tablette (l'orbite est masquée sous lg) === */}
         <div
-          className="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:hidden"
+          className="grid min-w-0 grid-cols-2 sm:grid-cols-4 gap-3 lg:hidden"
           role="tablist"
           aria-label={t("home.section.method")}
           onMouseEnter={() => setIsCardHovered(true)}
@@ -261,7 +254,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                 aria-selected={isActive}
                 tabIndex={isActive ? 0 : -1}
                 onClick={() => handleSelectStep(idx)}
-                className={`relative flex flex-col p-4 rounded-2xl border text-left transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 overflow-hidden cursor-pointer ${
+                className={`relative flex min-w-0 flex-col p-4 rounded-2xl border text-left transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 overflow-hidden cursor-pointer ${
                   isActive
                     ? "border-[#F26D3D] glass-strong shadow-lg shadow-[#F26D3D]/10"
                     : "glass hover:border-slate-400 dark:hover:border-slate-500"
@@ -294,7 +287,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                     aria-hidden
                   />
                 </div>
-                <span className="font-display text-sm font-bold text-slate-900 dark:text-slate-100">
+                <span className="font-display text-sm font-bold text-slate-900 dark:text-slate-100 break-words hyphens-auto">
                   {step.title}
                 </span>
                 <span className="font-mono text-[10px] text-slate-600 dark:text-slate-400 mt-1 truncate">
@@ -306,7 +299,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
         </div>
 
         {/* === Panneau de détail — crossfade grid-stack avec émanation spatiale (hauteur stable) === */}
-        <div className="lg:col-span-7">
+        <div className="min-w-0 lg:col-span-7">
           <div
             className="relative overflow-hidden glass-card rounded-3xl p-6 md:p-10 grid"
             style={{ perspective: 1000, transformStyle: "preserve-3d" }}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { Waypoints, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { IconBadge } from "@/components/ui/IconBadge";
@@ -17,6 +17,12 @@ export interface Orbit3DMethodProps {
   nodes: OrbitNodeData[];
   activeIndex: number;
   onSelect: (index: number) => void;
+  /** Temps de lecture de chaque phase (ms) : il fixe l'écart entre deux phases sur la sphère. */
+  dwellMs?: number[];
+  /** La sphère tourne (défilement automatique) ; false : rotation arrêtée (survol, pause). */
+  playing?: boolean;
+  /** La rotation a fait passer une nouvelle phase à l'avant : elle devient la phase affichée. */
+  onActiveChange?: (index: number, windowMs: number) => void;
   centerLabel?: string;
   className?: string;
 }
@@ -150,23 +156,51 @@ function forwardDelta(from: number, to: number): number {
 }
 
 /**
- * Constellation : les 4 phases tournent ensemble (angle commun φ + décalage fixe
- * par phase). Décalages calculés sur les tailles réelles des capsules (compactes,
- * active en pleine largeur, perspective comprise) pour garder ≥ 9 px entre elles
- * sur toute la dérive de lecture ; des orbites indépendantes se superposaient
- * ~22 % du temps.
+ * Rotation continue « 01 → 04 » : chaque capsule suit sa propre orbite et toutes
+ * avancent au même rythme (sens horaire), décalées pour passer à l'avant de la
+ * scène l'une après l'autre, dans l'ordre des phases. La phase qui traverse
+ * l'avant est la phase affichée : le changement de phase EST la rotation.
+ * L'écart entre deux phases est proportionnel à leur temps de lecture. Simulé
+ * sur les tailles réelles des capsules (active agrandie sans titre, perspective
+ * comprise) : aucune superposition sur un tour complet (≥ 6 px d'écart).
  */
-const PHASE_OFFSETS = [0, 95, 210, 290].map((deg) => (deg * Math.PI) / 180);
-/** Révolution lente (s) : ~40° de dérive pendant le plus long temps de lecture (15 s). */
-const CONSTELLATION_PERIOD_S = 135;
-/** Dérive maximale après l'arrivée à l'avant : au-delà, la constellation ralentit
- *  jusqu'à l'arrêt (pause longue) pour ne jamais recréer de superposition. */
-const MAX_DRIFT = (40 * Math.PI) / 180;
-const DRIFT_FADE = (10 * Math.PI) / 180;
+interface Schedule {
+  /** Décalage angulaire de chaque capsule sur son orbite. */
+  offsets: number[];
+  /** Début de la fenêtre d'affichage de chaque phase (progression τ, rad). */
+  starts: number[];
+  /** Vitesse de progression (rad/s) : un tour = somme des temps de lecture. */
+  omega: number;
+  totalMs: number;
+}
 
-/** Angle commun qui amène la phase `idx` à l'avant de la scène. */
-function frontPhi(idx: number): number {
-  return (FRONT_ANGLES[idx] ?? 0) - (PHASE_OFFSETS[idx] ?? 0);
+const DEFAULT_DWELL_MS = [10_000, 10_000, 10_000, 10_000];
+
+function buildSchedule(dwellMs: number[]): Schedule {
+  const count = FRONT_ANGLES.length;
+  const dwell = Array.from({ length: count }, (_, i) => Math.max(1000, dwellMs[i] ?? 10_000));
+  const totalMs = dwell.reduce((sum, d) => sum + d, 0);
+  const gaps = dwell.map((d) => (d / totalMs) * TWO_PI);
+  // Passage à l'avant de la phase k à la progression A_k ; sa fenêtre est centrée dessus
+  const arrivals = gaps.map((_, k) => gaps.slice(0, k).reduce((sum, g) => sum + g, 0));
+  const starts = arrivals.map((a, k) => a - (gaps[(k + count - 1) % count] ?? 0) / 2);
+  // Angle de la capsule k = décalage − τ (sens horaire) ; à τ = A_k elle est à l'avant
+  const offsets = arrivals.map((a, k) => (FRONT_ANGLES[k] ?? 0) + a);
+  return { offsets, starts, omega: TWO_PI / (totalMs / 1000), totalMs };
+}
+
+/** Phase dont la fenêtre contient la progression τ, et durée de cette fenêtre (ms). */
+function phaseAt(tau: number, sched: Schedule): { index: number; windowMs: number } {
+  const count = sched.starts.length;
+  const t = ((tau % TWO_PI) + TWO_PI) % TWO_PI;
+  for (let k = 0; k < count; k++) {
+    const start = (((sched.starts[k] ?? 0) % TWO_PI) + TWO_PI) % TWO_PI;
+    const next = ((((sched.starts[(k + 1) % count] ?? 0) % TWO_PI) + TWO_PI) % TWO_PI);
+    const span = (((next - start) % TWO_PI) + TWO_PI) % TWO_PI;
+    const into = (((t - start) % TWO_PI) + TWO_PI) % TWO_PI;
+    if (into < span) return { index: k, windowMs: (span / sched.omega) * 1000 };
+  }
+  return { index: 0, windowMs: sched.totalMs / count };
 }
 
 /**
@@ -177,14 +211,18 @@ function frontPhi(idx: number): number {
  * - Dock de contrôle cybernétique ergonomique repensé avec retour tactile et indicateurs LED colorés.
  * - Cœur cybernétique épuré avec lueur thermique et emblème vectoriel Waypoints.
  * - Suppression des éléments superflus pour une lisibilité maximale.
- * - Lien phase ↔ rotation : à chaque changement de phase (auto ou manuel), la
- *   sphère fait tourner la phase active jusqu'à l'avant de la scène ; les autres
- *   poursuivent leur révolution. Mouvement réduit : placement direct, sans rotation.
+ * - Rotation continue : les phases passent à l'avant dans l'ordre 01 → 04 et la
+ *   phase à l'avant devient la phase affichée (`onActiveChange`). Un choix manuel
+ *   fait tourner la sphère jusqu'à cette phase, puis le cycle reprend. Rotation
+ *   arrêtée si `playing` est faux (survol, pause, mouvement réduit).
  */
 export function Orbit3DMethod({
   nodes,
   activeIndex,
   onSelect,
+  dwellMs = DEFAULT_DWELL_MS,
+  playing = false,
+  onActiveChange,
   centerLabel = "07 — Méthode",
   className,
 }: Orbit3DMethodProps) {
@@ -194,17 +232,31 @@ export function Orbit3DMethod({
   const beamPathRef = useRef<SVGPathElement>(null);
   const beamGlowRef = useRef<SVGPathElement>(null);
 
-  // État cinétique de la constellation
-  const speedRef = useRef(1);
-  const targetSpeedRef = useRef(1);
-  // Phase active au premier rendu : fixe les positions serveur, puis la boucle rAF prend le relais
+  // Calendrier de rotation (décalages, fenêtres d'affichage) selon les temps de lecture
+  const dwellKey = dwellMs.join(",");
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- recalcul uniquement si les durées changent
+  const schedule = useMemo(() => buildSchedule(dwellMs), [dwellKey]);
+  const scheduleRef = useRef(schedule);
+  useEffect(() => {
+    scheduleRef.current = schedule;
+  }, [schedule]);
+
+  // État cinétique : progression τ du cycle, vitesse lissée (arrêt doux en pause)
   const [initialActiveIndex] = useState(activeIndex);
-  const phiRef = useRef(frontPhi(initialActiveIndex));
-  /** Angle commun visé après un changement de phase (null : simple révolution). */
-  const targetPhiRef = useRef<number | null>(null);
-  /** Dérive parcourue depuis l'arrivée de la phase active à l'avant. */
-  const driftRef = useRef(0);
+  const tauRef = useRef(schedule.starts[initialActiveIndex] ?? 0);
+  /** Progression visée après un choix manuel (null : rotation continue). */
+  const targetTauRef = useRef<number | null>(null);
+  const speedRef = useRef(playing ? 1 : 0);
+  const playingRef = useRef(playing);
+  const hoverSlowRef = useRef(1);
   const reducedMotionRef = useRef(false);
+  /** Dernière phase annoncée par la rotation (distingue un choix manuel). */
+  const emittedRef = useRef(activeIndex);
+  const onActiveChangeRef = useRef(onActiveChange);
+  useEffect(() => {
+    onActiveChangeRef.current = onActiveChange;
+    playingRef.current = playing;
+  }, [onActiveChange, playing]);
 
   // Caches de mutation de styles DOM pour éliminer les écritures superflues
   const zIndexCache = useRef<number[]>([0, 0, 0, 0]);
@@ -216,9 +268,10 @@ export function Orbit3DMethod({
 
   const activeIndexRef = useRef(activeIndex);
   useEffect(() => {
-    if (activeIndexRef.current !== activeIndex) {
-      // Changement de phase : la constellation accélère pour amener la phase à l'avant
-      targetPhiRef.current = frontPhi(activeIndex);
+    if (activeIndex !== emittedRef.current) {
+      // Choix manuel : la sphère tourne jusqu'à cette phase, puis le cycle reprend
+      targetTauRef.current = scheduleRef.current.starts[activeIndex] ?? 0;
+      emittedRef.current = activeIndex;
     }
     activeIndexRef.current = activeIndex;
   }, [activeIndex]);
@@ -235,6 +288,19 @@ export function Orbit3DMethod({
     sync();
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  // Échelle de la scène : les orbites sont calculées pour un cadre de 500 px
+  const [sceneScale, setSceneScale] = useState(1);
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(([entry]) => {
+      const width = entry?.contentRect.width ?? 500;
+      setSceneScale(Math.min(1, width / 500));
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
 
   // Initialisation client
@@ -302,12 +368,12 @@ export function Orbit3DMethod({
   // Ralentissement fluide au survol d'une capsule (toute la constellation)
   const handleNodeMouseEnter = useCallback((index: number) => {
     setHoveredIndex(index);
-    targetSpeedRef.current = 0.25;
+    hoverSlowRef.current = 0.25;
   }, []);
 
   const handleNodeMouseLeave = useCallback(() => {
     setHoveredIndex(null);
-    targetSpeedRef.current = 1.0;
+    hoverSlowRef.current = 1;
   }, []);
 
   // Boucle d'animation GPU continue haute performance
@@ -325,25 +391,28 @@ export function Orbit3DMethod({
       let activeNodePy = 0;
       let hasActiveNode = false;
 
-      // Vitesse lissée (survol) puis avance de l'angle commun φ
-      speedRef.current += (targetSpeedRef.current - speedRef.current) * 0.08;
+      const sched = scheduleRef.current;
       const reduced = reducedMotionRef.current;
-      const target = targetPhiRef.current;
+      const target = targetTauRef.current;
       if (target !== null) {
-        const delta = forwardDelta(phiRef.current, target);
+        // Choix manuel : rotation accélérée (dans le sens du cycle) jusqu'à la phase choisie
+        const delta = forwardDelta(tauRef.current, target);
         const step = reduced ? delta : delta * (1 - Math.exp(-FRONT_EASING * deltaSec));
-        phiRef.current = (phiRef.current + step) % TWO_PI;
-        if (Math.abs(delta - step) < 0.002) {
-          targetPhiRef.current = null;
-          driftRef.current = 0;
+        tauRef.current += step;
+        if (Math.abs(delta - step) < 0.002) targetTauRef.current = null;
+      } else {
+        // Rotation continue ; arrêt doux en pause, ralentie au survol d'une capsule
+        const targetSpeed = playingRef.current && !reduced ? hoverSlowRef.current : 0;
+        speedRef.current += (targetSpeed - speedRef.current) * 0.08;
+        tauRef.current += sched.omega * speedRef.current * deltaSec;
+        // La phase qui traverse l'avant devient la phase affichée
+        const { index, windowMs } = phaseAt(tauRef.current, sched);
+        if (index !== emittedRef.current) {
+          emittedRef.current = index;
+          onActiveChangeRef.current?.(index, windowMs);
         }
-      } else if (!reduced) {
-        // Révolution lente, atténuée à l'approche de la dérive maximale
-        const fade = Math.min(1, Math.max(0, (MAX_DRIFT - driftRef.current) / DRIFT_FADE));
-        const advance = (TWO_PI / CONSTELLATION_PERIOD_S) * speedRef.current * fade * deltaSec;
-        phiRef.current = (phiRef.current + advance) % TWO_PI;
-        driftRef.current += advance;
       }
+      tauRef.current %= TWO_PI;
       const currentActiveIdx = activeIndexRef.current;
 
       for (let idx = 0; idx < COMPILED_ORBITS.length; idx++) {
@@ -352,7 +421,7 @@ export function Orbit3DMethod({
         const nodeEl = nodeRefs.current[idx];
         if (!nodeEl) continue;
 
-        const nextAngle = phiRef.current + (PHASE_OFFSETS[idx] ?? 0);
+        const nextAngle = (sched.offsets[idx] ?? 0) - tauRef.current;
 
         // Calcul 3D linéaire précompilé ultra-rapide
         const c = Math.cos(nextAngle);
@@ -414,7 +483,7 @@ export function Orbit3DMethod({
 
   // Positions statiques initiales (SSR)
   const initialPositions = COMPILED_ORBITS.map((cfg, idx) => {
-    const angle = frontPhi(initialActiveIndex) + (PHASE_OFFSETS[idx] ?? 0);
+    const angle = (schedule.offsets[idx] ?? 0) - (schedule.starts[initialActiveIndex] ?? 0);
     const c = Math.cos(angle);
     const s = Math.sin(angle);
     const x = cfg.radius * (cfg.Ax * c + cfg.Bx * s);
@@ -456,6 +525,8 @@ export function Orbit3DMethod({
           // capsules et les masquait. Les anneaux gardent leur propre contexte 3D,
           // l'ordre des capsules suit leur z-index (calculé selon la profondeur).
           transformStyle: "flat",
+          // Scène dessinée pour 500 px : réduite sur les écrans étroits (orbites dans le cadre)
+          transform: sceneScale < 1 ? `scale(${sceneScale.toFixed(3)})` : undefined,
         }}
       >
         {/* === A. Pistes orbitales 3D inclinées === */}
@@ -615,7 +686,7 @@ export function Orbit3DMethod({
                   role="tab"
                   aria-selected={isActive}
                   aria-label={`${node.number} — ${node.title}`}
-                  title={isActive ? undefined : node.title}
+                  title={node.title}
                   tabIndex={-1}
                   onClick={() => onSelect(idx)}
                   className={cn(
@@ -674,13 +745,8 @@ export function Orbit3DMethod({
                       {node.number}
                     </span>
 
-                    {/* Libellé : pleine largeur pour la phase active seulement (capsules
-                        compactes ailleurs, ce qui évite toute superposition en orbite) */}
-                    {isActive && (
-                      <span className="whitespace-nowrap tracking-tight text-[12px] font-semibold text-slate-950 dark:text-white">
-                        {node.title}
-                      </span>
-                    )}
+                    {/* Pas de libellé dans les capsules : le titre de la phase active est
+                        affiché dans le dock, sous la sphère (aucune superposition en orbite) */}
 
                     {/* Point LED lumineux d'activation */}
                     {isActive && (
@@ -721,7 +787,7 @@ export function Orbit3DMethod({
               tabIndex={isActive ? 0 : -1}
               onClick={() => onSelect(idx)}
               className={cn(
-                "group relative flex h-8 items-center gap-2 rounded-xl px-3 font-mono text-[11px] font-semibold uppercase transition-all duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2",
+                "group relative flex h-8 items-center gap-1.5 rounded-xl px-2 font-mono sm:gap-2 sm:px-3 text-[11px] font-semibold uppercase transition-all duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2",
                 isActive
                   ? "shadow-md text-slate-900 dark:text-white"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-black/5 dark:hover:bg-white/5"
@@ -752,10 +818,13 @@ export function Orbit3DMethod({
                 <Icon className="h-3 w-3" aria-hidden />
               </div>
 
-              {/* Numéro de la méthode */}
-              <span style={{ color: isActive ? node.color : "inherit" }}>
-                {node.number}
-              </span>
+              {/* Numéro de la phase ; titre complet pour la phase affichée */}
+              <span style={{ color: isActive ? node.color : "inherit" }}>{node.number}</span>
+              {isActive && (
+                <span className="hidden max-w-[11rem] truncate font-sans text-[12px] font-semibold normal-case tracking-tight text-slate-900 dark:text-white xl:inline">
+                  {node.title}
+                </span>
+              )}
 
               {/* Point LED lumineux d'activation */}
               {isActive && (
