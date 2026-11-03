@@ -20,7 +20,7 @@ import { LazySection } from "@/components/ui/LazySection";
 const SECTION_SKELETONS = {
   services: { minHeight: 960, mobileMinHeight: 2100 },
   pains: { minHeight: 640, mobileMinHeight: 850 },
-  graph: { minHeight: 520, mobileMinHeight: 800 },
+  graph: { minHeight: 900, mobileMinHeight: 1700 },
   bento: { minHeight: 640, mobileMinHeight: 1300 },
   method: { minHeight: 930, mobileMinHeight: 1520 },
   demo: { minHeight: 640, mobileMinHeight: 850 },
@@ -29,7 +29,7 @@ const SECTION_SKELETONS = {
 
 import { HomeServicesGrid } from "@/components/sections/HomeServicesGrid";
 import { BusinessPainPointsSection } from "@/components/sections/BusinessPainPointsSection";
-import { LivingSystemGraph } from "@/components/interactive/LivingSystemGraph";
+import { AiRunTrace } from "@/components/interactive/AiRunTrace";
 import { AgentoryMethod } from "@/components/sections/AgentoryMethod";
 import { BeforeAfterDemo } from "@/components/sections/BeforeAfterDemo";
 import { HomeSocialProof } from "@/components/sections/HomeSocialProof";
@@ -106,12 +106,12 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
         </div>
       </section>
 
-      {/* ============ 05 — SYSTÈME VIVANT ============ */}
+      {/* ============ 05 — DE LA DONNÉE À LA DÉCISION (trace d'une demande réelle) ============ */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           <LazySection {...SECTION_SKELETONS.graph} eager>
-            <SectionErrorBoundary sectionName="Système Vivant">
-              <LivingSystemGraph />
+            <SectionErrorBoundary sectionName="De la donnée à la décision">
+              <AiRunTrace />
             </SectionErrorBoundary>
           </LazySection>
         </div>

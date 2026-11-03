@@ -41,7 +41,7 @@ fin, animation discrète au survol, sans 3D, verre ni dégradé.
 - Icônes « de repère » (en tête de carte, de section, d'état) : toujours `IconBadge`.
   Remplacées : contact (moyens de contact, e-mail, téléphone, adresse, confidentialité),
   bandeau cookies, page 404, en-têtes de page, valeurs (À propos), étapes et fiches
-  Services, solutions, problèmes métiers, système vivant, ligne éditoriale Insights,
+  Services, solutions, problèmes métiers, trace de la section 05, ligne éditoriale Insights,
   fiches service, article et solution, états d'erreur et de succès du formulaire,
   capsules de la sphère Méthode (dont l'ancien dégradé est retiré).
 - Icônes fonctionnelles (flèches, chevrons, fermer, coches, 12–16 px) : Lucide nu,
