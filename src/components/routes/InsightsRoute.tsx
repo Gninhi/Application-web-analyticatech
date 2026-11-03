@@ -1,15 +1,13 @@
 "use client";
 
-import { useViewNavigation } from "@/lib/navigation/useViewNavigation";
 import { BlogView } from "@/components/sections/BlogView";
 import { SectionErrorBoundary } from "@/components/system/SectionErrorBoundary";
 
-/** Route "/insights" — vue Insights (articles). Navigation router-backed. */
+/** Route "/insights" — vue Insights (articles). Les cartes sont de vrais liens vers les articles. */
 export function InsightsRoute() {
-  const { handleNavigateDetail } = useViewNavigation();
   return (
     <SectionErrorBoundary sectionName="Insights & Analyses">
-      <BlogView onNavigateDetail={handleNavigateDetail} />
+      <BlogView />
     </SectionErrorBoundary>
   );
 }

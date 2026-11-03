@@ -46,6 +46,11 @@ fin, animation discrète au survol, sans 3D, verre ni dégradé.
   capsules de la sphère Méthode (dont l'ancien dégradé est retiré).
 - Icônes fonctionnelles (flèches, chevrons, fermer, coches, 12–16 px) : Lucide nu,
   même trait 1,5 px (règle `svg.lucide` dans globals.css).
+- Cartes Solutions et Insights (3 novembre 2026) : plus d'en-tête générique commun
+  (grille + balayage en boucle) ni de grand numéro « /01 ». Chaque solution a son
+  pictogramme et le schéma de ses étapes (tirées du texte publié) ; chaque catégorie
+  d'article a son motif (réseau, flux, courbes sans valeurs, blocs). Aucune zone ne
+  défile à l'intérieur d'une carte (test e2e `cards-wheel-scroll.spec.ts`).
 - Correctif : les 4 services affichaient le même pictogramme (clés `brain`/`workflow`/
   `bot`/`chart` absentes de `SERVICE_ICONS`).
 
@@ -56,7 +61,8 @@ le bouton burger du header (icône animée ouvert/fermé),
 le retour en haut (`BackToTop`, anneau de progression), les étapes de la méthode
 (`AgentoryMethod`, `MethodOrbit`, `orbit-3d-method`), la bascule avant/après
 (`BeforeAfterDemo`, couleurs de sens), le choix de domaine du formulaire de contact
-(cases à cocher en grille), les cartes cliquables Insights (`HeroCard`, `ReportCard`),
+(cases à cocher en grille), les cartes Insights (`HeroCard` à la une, `InsightRow` en liste, couvertures `InsightCover` par catégorie — de vrais liens),
+les cartes Solutions (`SolutionCard` : schéma du parcours de l'outil, trait plein pour un projet, pointillés pour une piste),
 le sommaire vertical (`VerticalSectionNav`), les liens de navigation (`NavLink`).
 
 ## Règles
