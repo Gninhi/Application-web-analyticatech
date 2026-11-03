@@ -71,7 +71,7 @@ export function getStoredConsent(): "accepted" | "refused" | null {
  *
  * Exigences respectées :
  * - Symétrie visuelle stricte : « Tout accepter » et « Tout refuser » utilisent le composant officiel <Button />,
- *   avec les mêmes dimensions (h-10), la même typographie JetBrains Mono uppercase et un contraste WCAG AAA/AA.
+ *   avec les mêmes dimensions (h-10), la même typographie (Inter en capitales) et un contraste WCAG AAA/AA.
  * - Aucune asymétrie de couleur déceptive (dark-pattern / nudge proscrit).
  * - Fermeture (croix) équivalente au refus explicite.
  * - Granularité par finalité (Traceurs essentiels vs Mesure d'audience PostHog EU).

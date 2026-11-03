@@ -70,7 +70,7 @@ export function FaqSection({
                   >
                     <span
                       className={cn(
-                        "font-mono text-xs font-bold transition-colors",
+                        "font-mono text-xs font-semibold transition-colors",
                         isOpen
                           ? "text-accent-ink"
                           : "text-slate-500 dark:text-slate-400 group-hover:text-accent-ink"

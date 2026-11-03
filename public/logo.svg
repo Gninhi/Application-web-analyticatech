@@ -1,5 +1,6 @@
-<svg width="64" height="75" viewBox="0 0 48 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="64" height="75" fill="#011C40"/>
-  <path d="M4 52 L18 4 L24 4 L44 52 M16 36 L32 36 M14 44 L34 44 M18 28 L30 28 M20 22 L28 22 M22 16 L26 16" stroke="#F26D3D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="24" cy="3" r="1.5" fill="#F26D3D"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-33.1 -191.7 239.4 239.4" width="64" height="64">
+<!-- Favicon provisoire Analyticatech : le « A » et le point orange du logotype officiel, sur navy-900. Le monogramme définitif reste à dessiner (design system). -->
+<rect x="-33.1" y="-191.7" width="239.4" height="239.4" rx="43.1" fill="#011C40"/>
+<path d="M28.8 0L4 0L49.4 -144L84.7 -144L130.1 0L105.3 0L95.4 -31.2L38.6 -31.2L28.8 0M45.7 -53.7L88.2 -53.7L66.8 -120.7L45.7 -53.7" fill="#FFFFFF"/>
+<circle cx="155.6" cy="-13.5" r="13.5" fill="#F26D3D"/>
 </svg>

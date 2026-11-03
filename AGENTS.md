@@ -37,6 +37,7 @@ Finish work with `lint → typecheck → test:unit`; run e2e (or at least the to
 - The `react-hooks/set-state-in-effect` lint rule blocks synchronous setState in an effect body — wrap in `requestAnimationFrame`/`setTimeout` callbacks.
 - Animations: transform/opacity only, respect `prefers-reduced-motion` (`MotionConfig reducedMotion="user"` in `SiteShell`). No WebGL/Three.js in this app.
 - Design tokens: accent orange `#F26D3D`, `glass-card` / `glass-strong` utilities, mono uppercase eyebrow tags. Match existing patterns; don't redesign.
+- **Brand typography & logotype** (design system artifact « Analyticatech »): only **Manrope** 600/700/800 (titles, `font-display`, h1–h4) and **Inter** 400/500/600 (everything else), self-hosted from `src/app/fonts/` via `next/font/local` — never add another web font. `font-mono` is kept for eyebrow tags but maps to Inter; real code uses `font-code` (system monospace). Use only those weights (no `font-bold` on Inter text, no `font-medium` on Manrope). `@theme inline` font vars don't exist at runtime: base CSS rules use `var(--font-inter)` / `var(--font-manrope)` directly. Logo = `BrandLogo` (`/public/brand/*.svg`, official A-flux files; `variant="mot"` below 160 px wide); no text-built logotype. `public/logo.svg` (favicon) is provisional until the monogram is designed.
 
 ## Data & architecture
 

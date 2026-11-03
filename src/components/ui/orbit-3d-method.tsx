@@ -452,7 +452,7 @@ export function Orbit3DMethod({
           <div className="relative z-20 flex size-16 md:size-18 items-center justify-center rounded-full border border-black/15 dark:border-white/20 bg-white/90 dark:bg-background/90 shadow-xl backdrop-blur-md transition-transform duration-300 hover:scale-105">
             <div className="flex flex-col items-center justify-center text-center">
               <Waypoints className="h-5 w-5 text-accent-ink" aria-hidden />
-              <span className="font-mono text-[8px] font-bold text-slate-900 dark:text-slate-100 tracking-wider mt-0.5">
+              <span className="font-mono text-[8px] font-semibold text-slate-900 dark:text-slate-100 tracking-wider mt-0.5">
                 MÉTHODE
               </span>
             </div>
@@ -568,7 +568,7 @@ export function Orbit3DMethod({
                     {/* Badge numérique mono */}
                     <span
                       className={cn(
-                        "font-mono font-bold tracking-tight rounded-md px-1.5 py-0.5 transition-colors",
+                        "font-mono font-semibold tracking-tight rounded-md px-1.5 py-0.5 transition-colors",
                         isActive
                           ? "text-[10px] text-white shadow-xs"
                           : "text-[10px]"
@@ -586,7 +586,7 @@ export function Orbit3DMethod({
                       className={cn(
                         "whitespace-nowrap tracking-tight transition-colors",
                         isActive
-                          ? "text-[12px] font-bold text-slate-950 dark:text-white"
+                          ? "text-[12px] font-semibold text-slate-950 dark:text-white"
                           : "text-[11px] font-semibold text-slate-700 dark:text-slate-300"
                       )}
                     >
@@ -626,7 +626,7 @@ export function Orbit3DMethod({
               aria-selected={isActive}
               onClick={() => onSelect(idx)}
               className={cn(
-                "group relative flex h-8 items-center gap-2 rounded-xl px-3 font-mono text-[11px] font-bold uppercase transition-all duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2",
+                "group relative flex h-8 items-center gap-2 rounded-xl px-3 font-mono text-[11px] font-semibold uppercase transition-all duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2",
                 isActive
                   ? "shadow-md text-slate-900 dark:text-white"
                   : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-black/5 dark:hover:bg-white/5"

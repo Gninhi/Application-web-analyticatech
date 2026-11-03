@@ -121,7 +121,7 @@ export function MethodOrbit({ nodes, activeIndex, onSelect, centerLabel }: Metho
           <div className="pointer-events-none absolute inset-1 rounded-full border border-white/80 dark:border-white/10" />
 
           <Waypoints className="h-5 w-5 text-accent-ink transition-transform duration-500 hover:rotate-45" aria-hidden />
-          <span className="font-mono text-[9px] font-bold uppercase tracking-[0.25em] text-slate-700 dark:text-slate-300">
+          <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.25em] text-slate-700 dark:text-slate-300">
             {centerLabel}
           </span>
 
@@ -257,7 +257,7 @@ export function MethodOrbit({ nodes, activeIndex, onSelect, centerLabel }: Metho
                     }}
                   >
                     <span
-                      className="font-mono text-[11px] font-bold tracking-widest transition-colors duration-200"
+                      className="font-mono text-[11px] font-semibold tracking-widest transition-colors duration-200"
                       style={{ color: isActive ? node.color : "var(--fg-muted)" }}
                     >
                       {node.number}

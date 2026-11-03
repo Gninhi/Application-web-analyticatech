@@ -92,7 +92,7 @@ export default function NotFoundPage() {
             {/* Monumental 404 */}
             <div className="relative z-10 select-none">
               <p
-                className="font-display text-7xl sm:text-8xl md:text-9xl font-black tracking-tighter leading-none"
+                className="font-display text-7xl sm:text-8xl md:text-9xl font-extrabold tracking-tighter leading-none"
                 style={{
                   background:
                     "linear-gradient(135deg, #F26D3D 0%, #F5F7FA 45%, #03318C 100%)",
@@ -109,7 +109,7 @@ export default function NotFoundPage() {
           {/* Badge statut de la route */}
           <div className="inline-flex items-center gap-2 rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 px-4 py-1.5 mb-5 shadow-[0_0_15px_rgba(242,109,61,0.15)]">
             <Compass className="h-3.5 w-3.5 text-accent-ink animate-spin" style={{ animationDuration: "12s" }} aria-hidden="true" />
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-bold">
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-semibold">
               {t("notFound.tag")}
             </span>
           </div>
@@ -131,7 +131,7 @@ export default function NotFoundPage() {
               size="lg"
               icon={<Home className="h-4 w-4" aria-hidden="true" />}
               iconPosition="left"
-              className="font-bold shadow-[0_0_20px_rgba(242,109,61,0.3)] hover:shadow-[0_0_30px_rgba(242,109,61,0.5)]"
+              className="font-semibold shadow-[0_0_20px_rgba(242,109,61,0.3)] hover:shadow-[0_0_30px_rgba(242,109,61,0.5)]"
             >
               <span>{t("notFound.home")}</span>
             </Button>
@@ -150,7 +150,7 @@ export default function NotFoundPage() {
           {/* Grille de liens vers les pages principales */}
           <div className="text-left border-t border-black/10 dark:border-white/10 pt-8">
             <div className="flex items-center justify-between gap-4 mb-5">
-              <p className="font-mono text-[11px] uppercase tracking-widest text-accent-ink font-bold">
+              <p className="font-mono text-[11px] uppercase tracking-widest text-accent-ink font-semibold">
                 {t("notFound.recommended")}
               </p>
             </div>

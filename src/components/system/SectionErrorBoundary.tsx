@@ -64,7 +64,7 @@ export class SectionErrorBoundary extends React.Component<
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10">
             <AlertTriangle className="h-6 w-6 text-accent-ink" aria-hidden />
           </div>
-          <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-accent-ink font-bold">
+          <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-accent-ink font-semibold">
             Incident de rendu // {this.props.sectionName ?? "Module"}
           </span>
           <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto">

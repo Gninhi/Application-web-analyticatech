@@ -38,7 +38,7 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
     <section className="relative py-8 sm:py-12">
       {/* En-tête de section */}
       <div className="max-w-3xl mb-8 sm:mb-12">
-        <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent-ink font-bold">
+        <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent-ink font-semibold">
           {t("home.section.demo")}
         </span>
         <h2 className="font-display text-2xl sm:text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 mt-2 tracking-tight">
@@ -60,7 +60,7 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
           role="tab"
           aria-selected={viewMode === "before"}
           onClick={() => setViewMode("before")}
-          className={`flex-1 min-h-[44px] py-2 px-2.5 sm:px-4 rounded-xl sm:rounded-full font-mono text-[10px] sm:text-xs font-bold transition-all duration-300 flex items-center justify-center gap-1.5 sm:gap-2 text-center leading-snug cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 ${
+          className={`flex-1 min-h-[44px] py-2 px-2.5 sm:px-4 rounded-xl sm:rounded-full font-mono text-[10px] sm:text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-1.5 sm:gap-2 text-center leading-snug cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 ${
             viewMode === "before"
               ? "bg-red-500/15 text-red-600 dark:text-red-400 border border-red-500/30 shadow-md shadow-red-500/10"
               : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
@@ -74,7 +74,7 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
           role="tab"
           aria-selected={viewMode === "after"}
           onClick={() => setViewMode("after")}
-          className={`flex-1 min-h-[44px] py-2 px-2.5 sm:px-4 rounded-xl sm:rounded-full font-mono text-[10px] sm:text-xs font-bold transition-all duration-300 flex items-center justify-center gap-1.5 sm:gap-2 text-center leading-snug cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 ${
+          className={`flex-1 min-h-[44px] py-2 px-2.5 sm:px-4 rounded-xl sm:rounded-full font-mono text-[10px] sm:text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-1.5 sm:gap-2 text-center leading-snug cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 ${
             viewMode === "after"
               ? "bg-link/15 text-link border border-link/30"
               : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
@@ -198,11 +198,11 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
                   <div className="lg:col-span-5 w-full flex flex-col">
                     <div className="grid grid-cols-2 gap-2.5 sm:gap-3 w-full">
                       <div className="rounded-xl sm:rounded-2xl border border-link/30 bg-link/10 p-3 sm:p-4 lg:p-5 text-center transition-transform duration-300 hover:scale-[1.02] flex flex-col justify-center">
-                        <span className="font-mono text-[9px] sm:text-[10px] uppercase text-link font-bold block leading-tight">{t("demo.after.m1.label")}</span>
+                        <span className="font-mono text-[9px] sm:text-[10px] uppercase text-link font-semibold block leading-tight">{t("demo.after.m1.label")}</span>
                         <span className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-50 mt-1 block">{t("demo.after.m1.value")}</span>
                       </div>
                       <div className="rounded-xl sm:rounded-2xl border border-[#F26D3D]/30 bg-[#F26D3D]/10 p-3 sm:p-4 lg:p-5 text-center transition-transform duration-300 hover:scale-[1.02] flex flex-col justify-center">
-                        <span className="font-mono text-[9px] sm:text-[10px] uppercase text-accent-ink font-bold block leading-tight">{t("demo.after.m2.label")}</span>
+                        <span className="font-mono text-[9px] sm:text-[10px] uppercase text-accent-ink font-semibold block leading-tight">{t("demo.after.m2.label")}</span>
                         <span className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-50 mt-1 block">{t("demo.after.m2.value")}</span>
                       </div>
                       <div className="col-span-2 rounded-xl sm:rounded-2xl border border-black/10 dark:border-white/20 bg-black/5 dark:bg-white/5 p-3.5 sm:p-5 text-center transition-transform duration-300 hover:scale-[1.01]">

@@ -110,7 +110,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               </span>
 
               {/* Ligne 3 : sous-titre d'ancrage */}
-              <span className="block font-medium text-2xl sm:text-3xl md:text-4xl text-slate-600 dark:text-slate-300 tracking-normal mt-1">
+              <span className="block font-semibold text-2xl sm:text-3xl md:text-4xl text-slate-600 dark:text-slate-300 tracking-normal mt-1">
                 {t("home.hero.title2")}
               </span>
             </span>

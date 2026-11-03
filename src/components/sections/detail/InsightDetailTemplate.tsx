@@ -174,7 +174,7 @@ export function InsightDetailTemplate({
           />
 
           <div className="relative z-10 space-y-6">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink">
               {data.hero.eyebrow}
             </p>
 
@@ -192,7 +192,7 @@ export function InsightDetailTemplate({
             {/* Auteur & Méta bar */}
             <div className="pt-4 border-t border-slate-200/70 dark:border-white/10 flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 flex items-center justify-center font-mono text-xs font-bold text-accent-ink">
+                <div className="h-10 w-10 rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 flex items-center justify-center font-mono text-xs font-semibold text-accent-ink">
                   {data.author.avatarInitials ?? data.author.name.slice(0, 2).toUpperCase()}
                 </div>
                 <div>
@@ -245,7 +245,7 @@ export function InsightDetailTemplate({
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-6"
         >
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+            <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink">
               {L.contextEyebrow}
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-transparent px-3 py-1 font-mono text-[11px] font-semibold text-foreground uppercase">
@@ -297,7 +297,7 @@ export function InsightDetailTemplate({
           aria-labelledby="heading-probleme"
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-6"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+          <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink">
             {L.problemEyebrow}
           </span>
 
@@ -321,7 +321,7 @@ export function InsightDetailTemplate({
                 className="rounded-2xl border border-red-500/20 dark:border-red-500/20 bg-red-500/[0.03] dark:bg-red-500/[0.02] p-5 flex flex-col justify-between space-y-4"
               >
                 <div>
-                  <span className="font-mono text-[10px] font-bold text-red-600 dark:text-red-400 tracking-wider">
+                  <span className="font-mono text-[10px] font-semibold text-red-600 dark:text-red-400 tracking-wider">
                     {failure.code}
                   </span>
                   <h3 className="font-display font-bold text-base text-slate-900 dark:text-white mt-1">
@@ -348,7 +348,7 @@ export function InsightDetailTemplate({
           aria-labelledby="heading-approche"
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-8"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+          <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink">
             {L.approachEyebrow}
           </span>
 
@@ -376,7 +376,7 @@ export function InsightDetailTemplate({
                   key={tech.name}
                   className="rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.03] px-3.5 py-2 flex items-center gap-2"
                 >
-                  <span className="text-sm font-bold text-slate-900 dark:text-white font-mono">
+                  <span className="text-sm font-semibold text-slate-900 dark:text-white font-mono">
                     {tech.name}
                   </span>
                   {tech.version && (
@@ -405,7 +405,7 @@ export function InsightDetailTemplate({
                   className="rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.01] p-5 space-y-3"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-[11px] font-bold text-accent-ink tracking-wider">
+                    <span className="font-mono text-[11px] font-semibold text-accent-ink tracking-wider">
                       {stage.stageNumber}
                     </span>
                     {stage.badge && (
@@ -423,7 +423,7 @@ export function InsightDetailTemplate({
                   {stage.keyPattern && (
                     <div className="pt-2 border-t border-slate-200/50 dark:border-white/5">
                       <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400">
-                        {L.pattern} <code className="text-slate-800 dark:text-slate-200 font-semibold">{stage.keyPattern}</code>
+                        {L.pattern} <code className="font-code text-slate-800 dark:text-slate-200 font-semibold">{stage.keyPattern}</code>
                       </span>
                     </div>
                   )}
@@ -448,7 +448,7 @@ export function InsightDetailTemplate({
                   {data.approach.codeSnippet.language}
                 </span>
               </div>
-              <pre className="overflow-x-auto text-xs font-mono leading-relaxed text-slate-300 py-2">
+              <pre className="overflow-x-auto text-xs font-code leading-relaxed text-slate-300 py-2">
                 <code>{data.approach.codeSnippet.code}</code>
               </pre>
               {data.approach.codeSnippet.caption && (
@@ -468,7 +468,7 @@ export function InsightDetailTemplate({
         >
           <div className="flex items-center gap-2">
             <ShieldAlert className="h-5 w-5 text-accent-ink" aria-hidden />
-            <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+            <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink">
               {L.tradeoffsEyebrow}
             </span>
           </div>
@@ -499,7 +499,7 @@ export function InsightDetailTemplate({
               >
                 <div className="flex items-center gap-2">
                   <Scale className="h-4 w-4 text-accent-ink" aria-hidden />
-                  <span className="font-mono text-xs font-bold text-slate-900 dark:text-white">
+                  <span className="font-mono text-xs font-semibold text-slate-900 dark:text-white">
                     {tradeoff.tension}
                   </span>
                 </div>
@@ -543,7 +543,7 @@ export function InsightDetailTemplate({
           aria-labelledby="heading-resultats"
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-6"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+          <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink">
             {L.resultsEyebrow}
           </span>
 
@@ -590,7 +590,7 @@ export function InsightDetailTemplate({
 
           {/* Note méthodologique de rigueur */}
           <div className="rounded-2xl border border-slate-200/60 dark:border-white/10 bg-slate-100/50 dark:bg-white/[0.02] p-4 text-xs font-mono text-slate-600 dark:text-slate-400 leading-relaxed">
-            <span className="font-bold text-slate-900 dark:text-white uppercase mr-1">
+            <span className="font-semibold text-slate-900 dark:text-white uppercase mr-1">
               {L.protocol}
             </span>
             {data.results.methodologyNote}
@@ -622,7 +622,7 @@ export function InsightDetailTemplate({
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-6"
         >
           <div className="flex items-center justify-between">
-            <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+            <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink">
               {L.relatedEyebrow}
             </span>
           </div>
@@ -652,7 +652,7 @@ export function InsightDetailTemplate({
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <span className="font-mono text-[10px] font-bold text-[#03318C] dark:text-blue-400 uppercase tracking-wider">
+                    <span className="font-mono text-[10px] font-semibold text-[#03318C] dark:text-blue-400 uppercase tracking-wider">
                       {res.badge}
                     </span>
                     <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-accent-ink group-hover:translate-x-1 transition-all" aria-hidden />

@@ -154,7 +154,7 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
                   className={cn(
                     "glass rounded-lg px-3.5 py-1.5 font-mono text-xs uppercase tracking-wider cursor-pointer transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2",
                     isSelected
-                      ? "font-bold shadow-xs"
+                      ? "font-semibold shadow-xs"
                       : "text-muted-foreground hover:bg-white/10"
                   )}
                   style={{
@@ -267,7 +267,7 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
                     >
                       <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-accent/40 bg-accent/10">
                         <StepIcon className="h-5 w-5 text-accent" aria-hidden />
-                        <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-foreground font-mono text-[9px] font-bold text-background">
+                        <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-foreground font-mono text-[9px] font-semibold text-background">
                           {String(i + 1).padStart(2, "0")}
                         </span>
                       </span>

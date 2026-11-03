@@ -2,7 +2,7 @@
 
 import { type CSSProperties, useRef } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, TrendingUp } from "lucide-react";
+import { ArrowRight, ArrowUpRight, TrendingUp } from "lucide-react";
 import { type SolutionDTO, type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { Button } from "@/components/ui/button";
@@ -196,7 +196,7 @@ export function SolutionCard({
               className="font-mono text-[9px] sm:text-[10px] uppercase tracking-widest opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               style={{ color: accent }}
             >
-              {t("solutions.card.viewDetail")} ↗
+              {t("solutions.card.viewDetail")} <ArrowUpRight className="inline h-3 w-3" aria-hidden />
             </span>
           </div>
 

@@ -151,7 +151,7 @@ export function LivingSystemGraph() {
                 {/* Badge numéro */}
                 <div className="flex items-center justify-between mb-4">
                   <span
-                    className={`font-mono text-xs font-bold px-2 py-0.5 rounded-full ${
+                    className={`font-mono text-xs font-semibold px-2 py-0.5 rounded-full ${
                       isActive
                         ? "bg-[#E35F31] text-slate-950"
                         : "bg-slate-200 dark:bg-white/10 text-slate-600 dark:text-slate-300"
@@ -223,7 +223,7 @@ export function LivingSystemGraph() {
             >
               <div className="max-w-xl">
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="font-mono text-xs text-accent-ink font-bold">
+                  <span className="font-mono text-xs text-accent-ink font-semibold">
                     {isEn ? `Step ${node.step}` : `Étape ${node.step}`}
                   </span>
                   <span className="text-slate-300 dark:text-slate-300">•</span>

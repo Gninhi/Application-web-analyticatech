@@ -6,7 +6,7 @@ import type { ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
 import { Button } from "@/components/ui/button";
-import { Logo } from "@/components/branding/Logo";
+import { BrandLogo } from "@/components/branding/BrandLogo";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SectionContainer } from "@/components/ui/SectionContainer";
 
@@ -54,7 +54,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
         {/* Hero */}
         <div className="text-center mb-16">
           <div className="flex justify-center mb-6">
-            <Logo size={64} delay={0.2} />
+            <BrandLogo variant="signature" height={104} alt="Analyticatech — L'IA, expliquée simplement" />
           </div>
           <PageHeader
             align="center"

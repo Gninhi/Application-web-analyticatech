@@ -166,7 +166,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
     <section ref={sectionRef} className="relative py-12">
       {/* En-tête de section style Agentory */}
       <div className="max-w-3xl mb-12">
-        <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent-ink font-bold">
+        <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent-ink font-semibold">
           {t("home.section.method")}
         </span>
         <h2 className="font-display text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 mt-2 tracking-tight leading-tight">
@@ -238,7 +238,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                 )}
                 <div className="flex items-center justify-between mb-2">
                   <span
-                    className={`font-mono text-xs font-bold ${
+                    className={`font-mono text-xs font-semibold ${
                       isActive ? "text-accent-ink" : "text-slate-500 dark:text-slate-400"
                     }`}
                   >
@@ -394,7 +394,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                     <div className="p-4 rounded-2xl border border-link/30 bg-link/10 flex items-start gap-3 mb-6">
                       <ShieldCheck className="h-5 w-5 text-link shrink-0 mt-0.5" aria-hidden />
                       <div>
-                        <span className="font-mono text-[10px] uppercase tracking-widest text-link font-bold block">
+                        <span className="font-mono text-[10px] uppercase tracking-widest text-link font-semibold block">
                           {t("method.result")}
                         </span>
                         <span className="font-display font-semibold text-slate-900 dark:text-slate-100 text-sm md:text-base">
@@ -441,7 +441,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
 
                     <div className="mt-6 pt-4 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400">
                       <span>{t("method.duration")}</span>
-                      <span className="font-bold" style={{ color: step.color }}>
+                      <span className="font-semibold" style={{ color: step.color }}>
                         {step.duration}
                       </span>
                     </div>

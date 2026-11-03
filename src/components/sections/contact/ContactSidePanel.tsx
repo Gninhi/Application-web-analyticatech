@@ -63,7 +63,7 @@ export function ContactSidePanel() {
       {/* 1. Canaux de contact directs */}
       <div className="glass-card rounded-3xl p-6 border border-black/10 dark:border-white/10 relative overflow-hidden">
         <div className="flex items-center justify-between gap-2 mb-5">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-accent-ink font-bold">
+          <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-accent-ink font-semibold">
             {t("contact.channels")}
           </h2>
           <div className="flex items-center gap-1.5 font-mono text-[10px] text-link bg-link/10 px-2 py-0.5 rounded-full border border-link/20">
@@ -161,7 +161,7 @@ export function ContactSidePanel() {
 
       {/* 2. Notre Protocole de Cadrage en 3 Étapes */}
       <div className="glass-card rounded-3xl p-6 border border-black/10 dark:border-white/10">
-        <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-accent-ink font-bold mb-4">
+        <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-accent-ink font-semibold mb-4">
           {isEn ? "3-STEP SCOPING" : "CADRAGE EN 3 ÉTAPES"}
         </h2>
 
@@ -170,7 +170,7 @@ export function ContactSidePanel() {
             const Icon = item.icon;
             return (
               <div key={item.step} className="flex items-start gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#F26D3D]/10 border border-[#F26D3D]/30 font-mono text-[11px] font-bold text-accent-ink">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#F26D3D]/10 border border-[#F26D3D]/30 font-mono text-[11px] font-semibold text-accent-ink">
                   {item.step}
                 </span>
                 <div className="min-w-0">
@@ -192,7 +192,7 @@ export function ContactSidePanel() {
       <div className="glass-card rounded-3xl p-6 border border-black/10 dark:border-white/10">
         <div className="flex items-center gap-2 mb-4">
           <Clock className="h-4 w-4 text-accent-ink" aria-hidden="true" />
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-accent-ink font-bold">
+          <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-accent-ink font-semibold">
             {t("contact.sla.title")}
           </h2>
         </div>
@@ -203,7 +203,7 @@ export function ContactSidePanel() {
               className="flex items-center justify-between py-2 border-b border-black/5 dark:border-white/5 last:border-0"
             >
               <span className="text-xs text-slate-600 dark:text-slate-300 font-medium">{s.label}</span>
-              <span className="font-mono text-[11px] text-link font-bold bg-link/10 px-2 py-0.5 rounded border border-link/20">
+              <span className="font-mono text-[11px] text-link font-semibold bg-link/10 px-2 py-0.5 rounded border border-link/20">
                 {s.value}
               </span>
             </div>

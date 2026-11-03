@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { type ViewKey } from "@/types/content";
 import { viewToPath, pathToView, getLocaleFromPath } from "@/lib/navigation/routes";
 import { RandomLetterSwap, type RandomLetterSwapHandle } from "@/components/ui/random-letter-swap";
-import { Logo } from "@/components/branding/Logo";
+import { BrandLogo } from "@/components/branding/BrandLogo";
 import { ThemeToggle } from "@/components/branding/ThemeToggle";
 import { LanguageToggle } from "@/components/branding/LanguageToggle";
 import { ButtonBorder } from "@/components/ui/button-border";
@@ -224,12 +224,11 @@ export function Navbar() {
             <Link
               href={currentLocale === "en" ? "/en" : "/"}
               className="group flex items-center gap-2 rounded-xl px-1.5 py-1 sm:px-2 sm:py-1.5 transition-transform hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-[#F26D3D] shrink-0"
-              aria-label={`${t("nav.home")} — AnalyticaTech`}
+              aria-label={`${t("nav.home")} — Analyticatech`}
             >
-              <Logo size={28} delay={0.2} />
-              <span className="font-display text-sm sm:text-lg font-bold tracking-tight text-slate-900 dark:text-slate-50 inline-block">
-                Analytica<span className="text-[#F26D3D]">tech</span>
-              </span>
+              {/* Logotype officiel : mot seul sur mobile (< 160 px), version flux au-delà */}
+              <BrandLogo variant="mot" height={26} priority alt="Analyticatech" className="sm:hidden" />
+              <BrandLogo variant="flux" height={40} priority alt="Analyticatech" className="hidden sm:inline-flex" />
             </Link>
 
             {/* Desktop Capsule (≥ 1024px) */}
@@ -347,12 +346,9 @@ export function Navbar() {
                 href={currentLocale === "en" ? "/en" : "/"}
                 onClick={closeMenu}
                 className="flex items-center gap-2"
-                aria-label={`${t("nav.home")} — AnalyticaTech`}
+                aria-label={`${t("nav.home")} — Analyticatech`}
               >
-                <Logo size={28} />
-                <span className="font-display text-lg font-bold tracking-tight text-slate-900 dark:text-[#F5F7FA]">
-                  Analytica<span className="text-[#F26D3D]">tech</span>
-                </span>
+                <BrandLogo variant="flux" height={40} alt="Analyticatech" />
               </Link>
               <button
                 type="button"
@@ -428,7 +424,7 @@ export function Navbar() {
                   handleCta();
                 }}
                 data-cta="navbar_demander_audit_mobile"
-                className="w-full min-h-[48px] py-3.5 px-6 rounded-xl bg-[#F26D3D] text-[#1A2332] font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-[#F26D3D]/25 hover:brightness-105 active:scale-[0.98] transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26D3D]"
+                className="w-full min-h-[48px] py-3.5 px-6 rounded-xl bg-[#F26D3D] text-[#1A2332] font-mono text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-[#F26D3D]/25 hover:brightness-105 active:scale-[0.98] transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26D3D]"
               >
                 <span>{t("nav.cta")}</span>
                 <ArrowUpRight className="h-4 w-4 text-[#1A2332]" aria-hidden="true" />

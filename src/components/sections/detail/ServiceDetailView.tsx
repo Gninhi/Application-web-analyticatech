@@ -128,7 +128,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
               </span>
             </div>
 
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink mb-3">
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink mb-3">
               {detailData.eyebrow}
             </p>
 
@@ -147,7 +147,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
         <section className="pt-4">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             <div className="lg:col-span-5">
-              <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-bold block mb-2">
+              <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-semibold block mb-2">
                 {t("detail.service.problem.tag")}
               </span>
               <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white leading-tight">
@@ -184,7 +184,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
         {/* ================= 04 — CE QUE NOUS LIVRONS ================= */}
         <section className="pt-8 border-t border-black/10 dark:border-white/10">
           <div className="mb-8">
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-bold block mb-2">
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-semibold block mb-2">
               {t("detail.service.deliverables.tag")}
             </span>
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
@@ -199,7 +199,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
                 className="glass-card rounded-2xl p-6 sm:p-7 border border-black/10 dark:border-white/10 hover:border-[#F26D3D]/40 transition-all duration-300 flex flex-col justify-between group"
               >
                 <div>
-                  <span className="font-mono text-xs font-bold text-accent-ink px-2.5 py-1 rounded-md bg-[#F26D3D]/10 inline-block mb-4">
+                  <span className="font-mono text-xs font-semibold text-accent-ink px-2.5 py-1 rounded-md bg-[#F26D3D]/10 inline-block mb-4">
                     {t("detail.service.deliverable.badge")} {deliv.number}
                   </span>
                   <h3 className="font-display font-bold text-lg text-slate-900 dark:text-white mb-2 group-hover:text-accent-ink transition-colors">
@@ -222,7 +222,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
         {/* ================= 05 — MÉTHODOLOGIE & JALONS ================= */}
         <section className="pt-8 border-t border-black/10 dark:border-white/10">
           <div className="mb-10">
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-bold block mb-2">
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-semibold block mb-2">
               {t("detail.service.method.tag")}
             </span>
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
@@ -238,7 +238,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 font-mono text-xs font-bold text-accent-ink">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 font-mono text-xs font-semibold text-accent-ink">
                       {step.step}
                     </span>
                     <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400 flex items-center gap-1">
@@ -267,7 +267,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
         {/* ================= 06 — CAS D'USAGE SECTORIELS ================= */}
         <section className="pt-8 border-t border-black/10 dark:border-white/10">
           <div className="mb-8">
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-bold block mb-2">
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-semibold block mb-2">
               {t("detail.service.cases.tag")}
             </span>
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
@@ -284,7 +284,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
                 <div>
                   <div className="flex items-center gap-2 mb-3">
                     <Building2 className="h-3.5 w-3.5 text-accent-ink" aria-hidden />
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-bold">
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-semibold">
                       {sc.sector}
                     </span>
                   </div>
@@ -311,7 +311,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
         {/* ================= 07 — STACK TECHNIQUE DE PRODUCTION ================= */}
         <section className="pt-8 border-t border-black/10 dark:border-white/10">
           <div className="mb-8">
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-bold block mb-2">
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-semibold block mb-2">
               {t("detail.service.stack.tag")}
             </span>
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
@@ -322,7 +322,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {detailData.techStackGroups.map((group, idx) => (
               <div key={idx} className="glass-card rounded-2xl p-5 border border-black/10 dark:border-white/10">
-                <h3 className="font-mono text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400 font-bold mb-4 pb-2 border-b border-black/5 dark:border-white/5">
+                <h3 className="font-mono text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400 font-semibold mb-4 pb-2 border-b border-black/5 dark:border-white/5">
                   {group.category}
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -344,7 +344,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
         <section className="pt-8 border-t border-black/10 dark:border-white/10">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-8">
-              <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-bold block mb-2">
+              <span className="font-mono text-xs uppercase tracking-[0.25em] text-accent-ink font-semibold block mb-2">
                 {t("detail.service.faq.tag")}
               </span>
               <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">

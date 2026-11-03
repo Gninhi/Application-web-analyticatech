@@ -20,34 +20,6 @@
   }
 }
 
-@keyframes logo-draw {
-  0% {
-    stroke-dashoffset: 260;
-    opacity: 0;
-  }
-  15% {
-    opacity: 1;
-  }
-  100% {
-    stroke-dashoffset: 0;
-    opacity: 1;
-  }
-}
-
-@keyframes logo-dot {
-  0% {
-    opacity: 0;
-    transform: scale(0);
-    transform-origin: 24px 3px;
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-    transform-origin: 24px 3px;
-  }
-}
-
-
 /*
  * ============================================================
  * ANALYTICATECH — DESIGN SYSTEM PREMIUM
@@ -69,9 +41,13 @@
 
 @theme inline {
   /* Polices */
-  --font-display: var(--font-space-grotesk);
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-jetbrains-mono);
+  /* Charte : Manrope (titres) et Inter (texte). Les étiquettes `font-mono`
+     passent en Inter : aucune autre police n'est chargée. */
+  --font-display: var(--font-manrope), "Inter", system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-inter), system-ui, sans-serif;
+  /* Extraits de code uniquement : chasse fixe du système (aucune police web). */
+  --font-code: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Couleurs système mappées vers les variables de thème */
   --color-background: var(--bg);
@@ -214,10 +190,17 @@
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
   }
+  /* Charte : les titres sont en Manrope (h1–h4). Une classe utilitaire
+     (`font-mono`, `font-sans`) reste prioritaire pour les étiquettes. */
+  h1, h2, h3, h4 {
+    font-family: var(--font-manrope), var(--font-inter), system-ui, sans-serif;
+  }
   body {
     background-color: var(--bg);
     color: var(--fg);
-    font-family: var(--font-sans), system-ui, sans-serif;
+    /* Variables posées par next/font sur <body> : les variables de @theme inline
+       n'existent pas à l'exécution, d'où l'usage direct de --font-inter. */
+    font-family: var(--font-inter), system-ui, sans-serif;
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -655,7 +638,7 @@
       inset 0 1px 1px 0 rgba(255, 255, 255, 0.2),
       inset 0 0 12px rgba(242, 109, 61, 0.15),
       0 0 16px rgba(242, 109, 61, 0.25);
-    font-family: var(--font-mono, monospace);
+    font-family: var(--font-inter), system-ui, sans-serif;
   }
   :root.light .glass-btn-terminal,
   html.light .glass-btn-terminal {

@@ -137,7 +137,7 @@ export function ContactForm() {
               </div>
 
               <div className="max-w-md mx-auto space-y-2">
-                <span className="font-mono text-xs uppercase tracking-[0.25em] text-link font-bold">
+                <span className="font-mono text-xs uppercase tracking-[0.25em] text-link font-semibold">
                   {isEn ? "REQUEST SENT" : "DEMANDE ENVOYÉE"}
                 </span>
                 <h3 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-50">
@@ -155,7 +155,7 @@ export function ContactForm() {
                     <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
                       {t("contact.reference")}
                     </p>
-                    <p className="font-mono text-base font-bold text-accent-ink truncate">
+                    <p className="font-mono text-base font-semibold text-accent-ink truncate">
                       {reference}
                     </p>
                   </div>
@@ -182,20 +182,20 @@ export function ContactForm() {
 
               {/* Prochaines étapes SLA */}
               <div className="max-w-md mx-auto border-t border-black/10 dark:border-white/10 pt-6 text-left space-y-3">
-                <p className="font-mono text-[11px] uppercase tracking-widest text-accent-ink font-bold">
+                <p className="font-mono text-[11px] uppercase tracking-widest text-accent-ink font-semibold">
                   {isEn ? "NEXT STEPS" : "PROCHAINES ÉTAPES"}
                 </p>
                 <div className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
                   <div className="flex items-start gap-2.5">
-                    <span className="font-mono text-accent-ink font-bold">01.</span>
+                    <span className="font-mono text-accent-ink font-semibold">01.</span>
                     <span>{isEn ? `Personal reply from the founder ${SLA_COMMITMENTS.reply.valueEn.toLowerCase()}` : `Réponse personnelle du fondateur ${SLA_COMMITMENTS.reply.valueFr.toLowerCase()}`}</span>
                   </div>
                   <div className="flex items-start gap-2.5">
-                    <span className="font-mono text-accent-ink font-bold">02.</span>
+                    <span className="font-mono text-accent-ink font-semibold">02.</span>
                     <span>{isEn ? `A first call: ${SLA_COMMITMENTS.firstCall.valueEn}` : `Un premier échange : ${SLA_COMMITMENTS.firstCall.valueFr}`}</span>
                   </div>
                   <div className="flex items-start gap-2.5">
-                    <span className="font-mono text-accent-ink font-bold">03.</span>
+                    <span className="font-mono text-accent-ink font-semibold">03.</span>
                     <span>{isEn ? `A written proposal ${SLA_COMMITMENTS.proposal.valueEn.toLowerCase()}` : `Une proposition écrite ${SLA_COMMITMENTS.proposal.valueFr.toLowerCase()}`}</span>
                   </div>
                 </div>
@@ -220,7 +220,7 @@ export function ContactForm() {
               {/* SECTION 1 : IDENTITÉ & ORGANISATION */}
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#F26D3D]/10 font-mono text-[10px] font-bold text-accent-ink">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#F26D3D]/10 font-mono text-[10px] font-semibold text-accent-ink">
                     01
                   </span>
                   <span className="font-mono text-xs uppercase tracking-wider font-semibold text-slate-800 dark:text-slate-200">
@@ -295,7 +295,7 @@ export function ContactForm() {
               <div className="space-y-3 pt-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#F26D3D]/10 font-mono text-[10px] font-bold text-accent-ink">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#F26D3D]/10 font-mono text-[10px] font-semibold text-accent-ink">
                       02
                     </span>
                     <span className="font-mono text-xs uppercase tracking-wider font-semibold text-slate-800 dark:text-slate-200">
@@ -348,7 +348,7 @@ export function ContactForm() {
               <div className="space-y-3 pt-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#F26D3D]/10 font-mono text-[10px] font-bold text-accent-ink">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#F26D3D]/10 font-mono text-[10px] font-semibold text-accent-ink">
                       03
                     </span>
                     <span className="font-mono text-xs uppercase tracking-wider font-semibold text-slate-800 dark:text-slate-200">
@@ -469,7 +469,7 @@ export function ContactForm() {
                     size="lg"
                     icon={<ChevronRight className="h-4 w-4" aria-hidden="true" />}
                     iconPosition="right"
-                    className="w-full font-bold shadow-[0_0_20px_rgba(242,109,61,0.25)] hover:shadow-[0_0_30px_rgba(242,109,61,0.4)]"
+                    className="w-full font-semibold shadow-[0_0_20px_rgba(242,109,61,0.25)] hover:shadow-[0_0_30px_rgba(242,109,61,0.4)]"
                   >
                     <span>
                       {status === "submitting" ? t("contact.encrypting") : t("contact.execute")}

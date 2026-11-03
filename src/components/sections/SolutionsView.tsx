@@ -266,8 +266,8 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
                 />
               ))}
             </div>
-            <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400">
-              Défiler →
+            <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider text-slate-400">
+              Défiler <ArrowRight className="h-3 w-3" aria-hidden />
             </span>
           </div>
 

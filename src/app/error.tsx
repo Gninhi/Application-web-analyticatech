@@ -78,7 +78,7 @@ export default function ErrorPage({ error, reset }: ErrorProps) {
               onClick={reset}
               icon={<RefreshCw className="h-4 w-4" aria-hidden />}
               iconPosition="left"
-              className="neon-glow font-bold"
+              className="neon-glow font-semibold"
             >
               <span>{t("error.retry")}</span>
             </Button>

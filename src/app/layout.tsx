@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { headers, cookies } from "next/headers";
-import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/branding/ThemeProvider";
 import "./globals.css";
 import { GlobalErrorBoundary } from "@/components/system/GlobalErrorBoundary";
@@ -9,33 +9,32 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { getAppContent } from "@/lib/services/content.service";
 import type { Locale } from "@/types/content";
 
-/* === Typographie (identique à la production) ===
- * Space Grotesk pour les titres, Inter pour le texte, JetBrains Mono pour
- * les étiquettes. preload + display swap + adjustFontFallback : pas de CLS. */
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-  weight: ["600", "700"],
+/* === Typographie (design system Analyticatech) ===
+ * Manrope pour les titres, Inter pour le texte, étiquettes comprises : ce sont
+ * les deux seules polices de la charte. Fichiers fournis par le design system,
+ * auto-hébergés (src/app/fonts). display swap + adjustFontFallback : pas de CLS. */
+const manrope = localFont({
+  variable: "--font-manrope",
+  src: [
+    { path: "./fonts/Manrope-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/Manrope-Bold.woff2", weight: "700", style: "normal" },
+    { path: "./fonts/Manrope-ExtraBold.woff2", weight: "800", style: "normal" },
+  ],
   display: "swap",
   preload: true,
-  adjustFontFallback: true,
+  adjustFontFallback: "Arial",
 });
 
-const inter = Inter({
+const inter = localFont({
   variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  src: [
+    { path: "./fonts/Inter-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/Inter-Medium.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/Inter-SemiBold.woff2", weight: "600", style: "normal" },
+  ],
   display: "swap",
   preload: true,
-  adjustFontFallback: true,
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  display: "swap",
-  preload: false, // Étiquettes uniquement : pas de preload
+  adjustFontFallback: "Arial",
 });
 
 export const metadata: Metadata = {
@@ -158,7 +157,7 @@ export default async function RootLayout({
       </head>
 
       <body
-        className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${manrope.variable} ${inter.variable} antialiased`}
       >
         <JsonLd content={content} />
         <ThemeProvider>

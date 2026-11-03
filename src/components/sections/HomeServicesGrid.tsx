@@ -122,7 +122,7 @@ export function HomeServicesGrid({ onNavigate: _onNavigate, onNavigateDetail }: 
                     aria-hidden
                   />
                 )}
-                <span className="font-bold">{tab.label}</span>
+                <span className="font-semibold">{tab.label}</span>
               </button>
             );
           })}

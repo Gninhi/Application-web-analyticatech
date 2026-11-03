@@ -57,7 +57,7 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
     <section className="relative py-12">
       {/* En-tête de section */}
       <div className="max-w-3xl mb-12">
-        <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent-ink font-bold">
+        <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent-ink font-semibold">
           {t("home.section.painpoints")}
         </span>
         <h2 className="font-display text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 mt-2 tracking-tight">
@@ -137,7 +137,7 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
           })}
         </div>
 
-        {/* Colonne Droite : Transformation & Solution AnalyticaTech */}
+        {/* Colonne Droite : Transformation & Solution Analyticatech */}
         <div className="lg:col-span-6 sticky top-28">
           <div className="grid">
             {PAIN_POINTS.map((item) => {
@@ -160,12 +160,12 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
                 >
                   <div>
                     <div className="flex items-center justify-between gap-4 mb-6">
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-link/10 border border-link/30 font-mono text-[10px] uppercase text-link font-bold">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-link/10 border border-link/30 font-mono text-[10px] uppercase text-link font-semibold">
                         <Zap className="h-3 w-3" aria-hidden />
                         <span>{t("painpoint.response")}</span>
                       </div>
                       <div
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-mono text-[10px] uppercase font-bold"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-mono text-[10px] uppercase font-semibold"
                         style={{
                           backgroundColor: `color-mix(in srgb, ${item.accentColor} 15%, transparent)`,
                           color: item.accentColor,
