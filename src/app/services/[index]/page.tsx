@@ -63,6 +63,12 @@ export default async function ServiceDetailPage({ params }: Params) {
     notFound();
   }
 
+  // Service connu sans fiche enrichie : la fiche 01 sert de gabarit (comportement historique)
+  const viewData = detailData ?? getServiceDetailData("01", locale);
+  if (!viewData) {
+    notFound();
+  }
+
   // Schéma JSON-LD Service & FAQPage pour Google Search Rich Snippets
   const jsonLd = {
     "@context": "https://schema.org",
@@ -105,7 +111,10 @@ export default async function ServiceDetailPage({ params }: Params) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ServiceDetailRoute index={normalizedIndex} />
+      <ServiceDetailRoute
+        index={normalizedIndex}
+        detailData={viewData}
+      />
     </>
   );
 }

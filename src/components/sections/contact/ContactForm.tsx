@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { SLA_COMMITMENTS } from "@/data/commitments";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import {
   ShieldCheck,
   Lock,
@@ -112,7 +112,7 @@ export function ContactForm() {
             </span>
           </div>
 
-          <div className="flex items-center gap-2 font-mono text-[10px] text-slate-500 dark:text-slate-400 bg-black/5 dark:bg-white/5 px-2.5 py-1 rounded-full border border-black/5 dark:border-white/5">
+          <div className="flex items-center gap-2 font-mono text-[10px] text-slate-600 dark:text-slate-400 bg-black/5 dark:bg-white/5 px-2.5 py-1 rounded-full border border-black/5 dark:border-white/5">
             <span className="h-2 w-2 rounded-full bg-link animate-pulse" aria-hidden="true" />
             <span className="uppercase tracking-wider">
               {isEn ? "ENCRYPTED CONNECTION" : "CONNEXION CHIFFRÉE"}
@@ -123,7 +123,7 @@ export function ContactForm() {
         {/* Formulaire ou Écran de confirmation de succès */}
         <AnimatePresence mode="wait">
           {status === "success" ? (
-            <motion.div
+            <m.div
               key="success-card"
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -137,7 +137,7 @@ export function ContactForm() {
               </div>
 
               <div className="max-w-md mx-auto space-y-2">
-                <span className="font-mono text-xs uppercase tracking-[0.25em] text-link font-bold">
+                <span className="font-mono text-xs uppercase tracking-[0.25em] text-link font-semibold">
                   {isEn ? "REQUEST SENT" : "DEMANDE ENVOYÉE"}
                 </span>
                 <h3 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-50">
@@ -152,10 +152,10 @@ export function ContactForm() {
               {reference && (
                 <div className="max-w-md mx-auto rounded-2xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 p-4 flex items-center justify-between gap-4">
                   <div className="text-left min-w-0">
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-600 dark:text-slate-400">
                       {t("contact.reference")}
                     </p>
-                    <p className="font-mono text-base font-bold text-accent-ink truncate">
+                    <p className="font-mono text-base font-semibold text-accent-ink truncate">
                       {reference}
                     </p>
                   </div>
@@ -182,20 +182,20 @@ export function ContactForm() {
 
               {/* Prochaines étapes SLA */}
               <div className="max-w-md mx-auto border-t border-black/10 dark:border-white/10 pt-6 text-left space-y-3">
-                <p className="font-mono text-[11px] uppercase tracking-widest text-accent-ink font-bold">
+                <p className="font-mono text-[11px] uppercase tracking-widest text-accent-ink font-semibold">
                   {isEn ? "NEXT STEPS" : "PROCHAINES ÉTAPES"}
                 </p>
                 <div className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
                   <div className="flex items-start gap-2.5">
-                    <span className="font-mono text-accent-ink font-bold">01.</span>
+                    <span className="font-mono text-accent-ink font-semibold">01.</span>
                     <span>{isEn ? `Personal reply from the founder ${SLA_COMMITMENTS.reply.valueEn.toLowerCase()}` : `Réponse personnelle du fondateur ${SLA_COMMITMENTS.reply.valueFr.toLowerCase()}`}</span>
                   </div>
                   <div className="flex items-start gap-2.5">
-                    <span className="font-mono text-accent-ink font-bold">02.</span>
+                    <span className="font-mono text-accent-ink font-semibold">02.</span>
                     <span>{isEn ? `A first call: ${SLA_COMMITMENTS.firstCall.valueEn}` : `Un premier échange : ${SLA_COMMITMENTS.firstCall.valueFr}`}</span>
                   </div>
                   <div className="flex items-start gap-2.5">
-                    <span className="font-mono text-accent-ink font-bold">03.</span>
+                    <span className="font-mono text-accent-ink font-semibold">03.</span>
                     <span>{isEn ? `A written proposal ${SLA_COMMITMENTS.proposal.valueEn.toLowerCase()}` : `Une proposition écrite ${SLA_COMMITMENTS.proposal.valueFr.toLowerCase()}`}</span>
                   </div>
                 </div>
@@ -213,14 +213,14 @@ export function ContactForm() {
                   <span>{isEn ? "Send another request" : "Envoyer une autre demande"}</span>
                 </Button>
               </div>
-            </motion.div>
+            </m.div>
           ) : (
             <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-6" noValidate>
 
               {/* SECTION 1 : IDENTITÉ & ORGANISATION */}
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#F26D3D]/10 font-mono text-[10px] font-bold text-accent-ink">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#F26D3D]/10 font-mono text-[10px] font-semibold text-accent-ink">
                     01
                   </span>
                   <span className="font-mono text-xs uppercase tracking-wider font-semibold text-slate-800 dark:text-slate-200">
@@ -295,7 +295,7 @@ export function ContactForm() {
               <div className="space-y-3 pt-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#F26D3D]/10 font-mono text-[10px] font-bold text-accent-ink">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#F26D3D]/10 font-mono text-[10px] font-semibold text-accent-ink">
                       02
                     </span>
                     <span className="font-mono text-xs uppercase tracking-wider font-semibold text-slate-800 dark:text-slate-200">
@@ -348,7 +348,7 @@ export function ContactForm() {
               <div className="space-y-3 pt-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#F26D3D]/10 font-mono text-[10px] font-bold text-accent-ink">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#F26D3D]/10 font-mono text-[10px] font-semibold text-accent-ink">
                       03
                     </span>
                     <span className="font-mono text-xs uppercase tracking-wider font-semibold text-slate-800 dark:text-slate-200">
@@ -469,7 +469,7 @@ export function ContactForm() {
                     size="lg"
                     icon={<ChevronRight className="h-4 w-4" aria-hidden="true" />}
                     iconPosition="right"
-                    className="w-full font-bold shadow-[0_0_20px_rgba(242,109,61,0.25)] hover:shadow-[0_0_30px_rgba(242,109,61,0.4)]"
+                    className="w-full font-semibold shadow-[0_0_20px_rgba(242,109,61,0.25)] hover:shadow-[0_0_30px_rgba(242,109,61,0.4)]"
                   >
                     <span>
                       {status === "submitting" ? t("contact.encrypting") : t("contact.execute")}
@@ -479,7 +479,7 @@ export function ContactForm() {
 
                 {/* Message d'erreur serveur si applicable */}
                 {status === "error" && serverMsg && (
-                  <motion.div
+                  <m.div
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     role="alert"
@@ -487,7 +487,7 @@ export function ContactForm() {
                   >
                     <AlertTriangle className="h-4 w-4 shrink-0" />
                     <span>{serverMsg}</span>
-                  </motion.div>
+                  </m.div>
                 )}
               </div>
             </form>

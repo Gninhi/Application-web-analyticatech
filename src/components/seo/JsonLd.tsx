@@ -37,7 +37,7 @@ export function buildJsonLdSchemas(content: AppContentDTO): Record<string, unkno
       name: siteConfig.siteName,
       legalName: "Analyticatech SAS",
       url: siteConfig.url,
-      logo: `${siteConfig.url}/logo.svg`,
+      logo: `${siteConfig.url}/brand/analyticatech-logotype-A-flux.svg`,
       description: seoMetadata.description,
       email: siteConfig.email,
       telephone: siteConfig.phoneHref.replace(/^tel:/, ""),

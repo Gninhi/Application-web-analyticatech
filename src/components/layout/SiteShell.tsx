@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { motion, MotionConfig } from "framer-motion";
+import { LazyMotion, m, MotionConfig } from "framer-motion";
 import dynamic from "next/dynamic";
 import { ImmersiveBackground } from "@/components/effects/ImmersiveBackground";
 import { Navbar } from "@/components/layout/Navbar";
@@ -12,6 +12,9 @@ import { I18nProvider, useI18n } from "@/lib/i18n/provider";
 import { pathToView } from "@/lib/navigation/routes";
 import type { AppContentDTO } from "@/types/content";
 import { isAnalyticsConfigured } from "@/instrumentation-client";
+
+/** Fonctions d'animation chargées après l'hydratation, hors du bundle initial. */
+const loadMotionFeatures = () => import("@/lib/motion-features").then((mod) => mod.default);
 
 const BackToTop = dynamic(
   () => import("@/components/layout/BackToTop").then((m) => m.BackToTop),
@@ -32,6 +35,8 @@ const PostHogTelemetry = dynamic(
 
 interface SiteShellProps {
   content: AppContentDTO;
+  /** Dictionnaire de la langue de la page (`getDictionary`, côté serveur). */
+  dictionary: Record<string, string>;
   children: React.ReactNode;
 }
 
@@ -90,7 +95,7 @@ function SiteShellInner({ children }: { children: React.ReactNode }) {
 
       {/* Contenu principal — transitions entre routes */}
       <main className="flex-1 relative outline-none" id="main-content" tabIndex={-1}>
-        <motion.div
+        <m.div
 
           key={pathname}
           initial={mounted ? { opacity: 0, y: 12 } : false}
@@ -98,7 +103,7 @@ function SiteShellInner({ children }: { children: React.ReactNode }) {
           transition={{ duration: 0.35, ease: "easeOut" }}
         >
           {children}
-        </motion.div>
+        </m.div>
       </main>
 
       {/* Footer global */}
@@ -122,14 +127,16 @@ function SiteShellInner({ children }: { children: React.ReactNode }) {
 /**
  * SiteShell — enveloppe globale partagée par toutes les routes.
  */
-export function SiteShell({ content, children }: SiteShellProps) {
+export function SiteShell({ content, dictionary, children }: SiteShellProps) {
   return (
-    <MotionConfig reducedMotion="user">
-      <I18nProvider initialLocale={content.locale}>
-        <ContentProvider content={content}>
-          <SiteShellInner>{children}</SiteShellInner>
-        </ContentProvider>
-      </I18nProvider>
-    </MotionConfig>
+    <LazyMotion features={loadMotionFeatures} strict>
+      <MotionConfig reducedMotion="user">
+        <I18nProvider initialLocale={content.locale} dictionary={dictionary}>
+          <ContentProvider content={content}>
+            <SiteShellInner>{children}</SiteShellInner>
+          </ContentProvider>
+        </I18nProvider>
+      </MotionConfig>
+    </LazyMotion>
   );
 }

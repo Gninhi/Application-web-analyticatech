@@ -66,7 +66,7 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
               écrivez à contact@analyticatech.fr.
             </p>
             {process.env.NODE_ENV !== "production" && this.state.error && (
-              <pre className="font-mono text-[11px] text-accent-ink/80 bg-black/30 border border-black/10 dark:border-white/10 rounded-lg p-3 mt-4 overflow-auto max-h-32 text-left">
+              <pre className="font-code text-[11px] text-accent-ink/80 bg-black/30 border border-black/10 dark:border-white/10 rounded-lg p-3 mt-4 overflow-auto max-h-32 text-left">
                 {this.state.error.message}
               </pre>
             )}

@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Sparkles } from "lucide-react";
+import { m } from "framer-motion";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { SectionContainer } from "@/components/ui/SectionContainer";
+import { FilterPill } from "@/components/interactive/FilterPill";
 import { ServiceCard, type ServiceCardData, type BentoVariant } from "@/components/services/ServiceCard";
 import type { ServiceIconVariant } from "@/components/services/ServiceAnimatedIcon";
 
@@ -78,6 +79,11 @@ export function HomeServicesGrid({ onNavigate: _onNavigate, onNavigateDetail }: 
     return [allTab, ...serviceTabs];
   }, [services, t]);
 
+  // Position d'origine conservée : elle pilote l'animation d'entrée de la carte
+  const visibleCards = SERVICE_CARDS.map((card, position) => ({ ...card, position })).filter(
+    (card) => activeFocus === null || card.data.id === activeFocus
+  );
+
 
   return (
     <section className="relative">
@@ -88,69 +94,54 @@ export function HomeServicesGrid({ onNavigate: _onNavigate, onNavigateDetail }: 
           description={t("home.section.services.desc")}
         />
 
-        {/* Sélecteur de Focus Interactif — Style 21st.dev */}
+        {/* Filtre : une pilule affiche son seul service, en pleine largeur ; « Tous » rétablit la grille */}
         <div className="mt-8 flex flex-wrap items-center justify-center gap-2" role="tablist" aria-label={t("home.section.services")}>
           {FOCUS_TABS.map((tab) => {
-            const isSelected = activeFocus === tab.id || (tab.id === "all" && activeFocus === null);
+            const isSelected = tab.id === "all" ? activeFocus === null : activeFocus === tab.id;
             return (
-              <button
+              <FilterPill
                 key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={isSelected}
-                onClick={() => setActiveFocus(tab.id === "all" ? null : isSelected ? null : tab.id)}
-                className="group relative inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-xs uppercase tracking-wider transition-all duration-300 cursor-pointer backdrop-blur-md focus-visible:outline-2 focus-visible:outline-offset-2"
-                style={{
-                  borderColor: isSelected
-                    ? `color-mix(in srgb, ${tab.color} 60%, transparent)`
-                    : "var(--glass-card-border)",
-                  background: isSelected
-                    ? `color-mix(in srgb, ${tab.color} 16%, transparent)`
-                    : "var(--glass-card-bg)",
-                  color: isSelected ? tab.color : "var(--muted-foreground)",
-                  boxShadow: isSelected
-                    ? `0 0 16px color-mix(in srgb, ${tab.color} 20%, transparent)`
-                    : "none",
-                }}
+                active={isSelected}
+                aria-controls="home-services-panel"
+                dotColor={tab.id === "all" ? undefined : tab.color}
+                onClick={() => setActiveFocus(tab.id === "all" || isSelected ? null : tab.id)}
               >
-                {tab.id === "all" ? (
-                  <Sparkles className="h-3 w-3" aria-hidden />
-                ) : (
-                  <span
-                    className="h-1.5 w-1.5 rounded-full"
-                    style={{ background: tab.color }}
-                    aria-hidden
-                  />
-                )}
-                <span className="font-bold">{tab.label}</span>
-              </button>
+                {tab.label}
+              </FilterPill>
             );
           })}
         </div>
 
-        {/* Grille Bento 12 colonnes avec réactivité au focus et hauteurs unifiées */}
-        <div className="mt-10 grid grid-cols-12 gap-6 items-stretch">
-          {SERVICE_CARDS.map(({ data, variant }, i) => {
-            const isDimmed = activeFocus !== null && activeFocus !== data.id;
-            const isHighlighted = activeFocus === data.id;
+        <div
+          id="home-services-panel"
+          role="tabpanel"
+          aria-live="polite"
+          className="mt-10 grid grid-cols-12 gap-6 items-stretch"
+        >
+          {visibleCards.map(({ data, variant, position }) => {
             const colSpanClass =
-              variant === "hero"
-                ? "col-span-12 lg:col-span-7"
-                : "col-span-12 lg:col-span-5";
+              activeFocus !== null
+                ? "col-span-12"
+                : variant === "hero"
+                  ? "col-span-12 lg:col-span-7"
+                  : "col-span-12 lg:col-span-5";
 
             return (
-              <div
-                key={data.id}
-                className={`h-full transition-all duration-500 ${isDimmed ? "opacity-35 scale-[0.98] blur-[0.5px]" : "opacity-100 scale-100"} ${isHighlighted ? "ring-2 ring-[#F26D3D] rounded-[28px] shadow-2xl" : ""} ${colSpanClass}`}
+              <m.div
+                key={`${data.id}-${activeFocus ?? "all"}`}
+                initial={activeFocus === null ? false : { opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className={`h-full ${colSpanClass}`}
               >
                 <ServiceCard
                   service={data}
-                  index={i}
-                  variant={variant}
+                  index={position}
+                  variant={activeFocus !== null ? "hero" : variant}
                   actionLabel={t("home.section.services.explore")}
                   onNavigateDetail={(idx) => onNavigateDetail("service-detail", idx)}
                 />
-              </div>
+              </m.div>
             );
           })}
         </div>

@@ -71,7 +71,7 @@ export function getStoredConsent(): "accepted" | "refused" | null {
  *
  * Exigences respectées :
  * - Symétrie visuelle stricte : « Tout accepter » et « Tout refuser » utilisent le composant officiel <Button />,
- *   avec les mêmes dimensions (h-10), la même typographie JetBrains Mono uppercase et un contraste WCAG AAA/AA.
+ *   avec les mêmes dimensions (h-10), la même typographie (Inter en capitales) et un contraste WCAG AAA/AA.
  * - Aucune asymétrie de couleur déceptive (dark-pattern / nudge proscrit).
  * - Fermeture (croix) équivalente au refus explicite.
  * - Granularité par finalité (Traceurs essentiels vs Mesure d'audience PostHog EU).
@@ -182,15 +182,16 @@ export function CookieConsent() {
             </p>
           </div>
           {/* Fermeture par la croix = Refus explicite (Doctrine CNIL 2026) */}
-          <button
-            type="button"
+          <Button
+            variant="secondary"
+            iconOnly
             onClick={handleRefuseAll}
             aria-label={t("cookie.close")}
             tabIndex={visible ? 0 : -1}
-            className="shrink-0 h-8 w-8 inline-flex items-center justify-center rounded-lg border border-black/10 dark:border-white/15 bg-black/5 dark:bg-white/5 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+            className="shrink-0 h-8 w-8 rounded-lg"
           >
             <X className="h-4 w-4" aria-hidden="true" />
-          </button>
+          </Button>
         </div>
 
         {view === "summary" ? (
@@ -260,7 +261,7 @@ export function CookieConsent() {
                   {t("cookie.category.essential.alwaysActive")}
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
+              <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed font-sans">
                 {t("cookie.category.essential.desc")}
               </p>
             </div>
@@ -298,7 +299,7 @@ export function CookieConsent() {
                   />
                 </button>
               </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
+              <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed font-sans">
                 {t("cookie.category.analytics.desc")}
               </p>
             </div>
@@ -331,7 +332,7 @@ export function CookieConsent() {
 
         {/* Note de bas de carte avec conformité CNIL 2026 */}
         <div className="mt-3.5 pt-3 border-t border-black/10 dark:border-white/10">
-          <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono tracking-tight leading-relaxed">
+          <p className="text-[10px] text-slate-600 dark:text-slate-400 font-mono tracking-tight leading-relaxed">
             {t("cookie.rgpd")}
           </p>
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import {
   Search,
   FlaskConical,
@@ -166,7 +166,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
     <section ref={sectionRef} className="relative py-12">
       {/* En-tête de section style Agentory */}
       <div className="max-w-3xl mb-12">
-        <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent-ink font-bold">
+        <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent-ink font-semibold">
           {t("home.section.method")}
         </span>
         <h2 className="font-display text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-50 mt-2 tracking-tight leading-tight">
@@ -238,15 +238,15 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                 )}
                 <div className="flex items-center justify-between mb-2">
                   <span
-                    className={`font-mono text-xs font-bold ${
-                      isActive ? "text-accent-ink" : "text-slate-500 dark:text-slate-400"
+                    className={`font-mono text-xs font-semibold ${
+                      isActive ? "text-accent-ink" : "text-slate-600 dark:text-slate-400"
                     }`}
                   >
                     {step.number}
                   </span>
                   <StepIcon
                     className={`h-4 w-4 ${
-                      isActive ? "text-accent-ink" : "text-slate-500 dark:text-slate-400"
+                      isActive ? "text-accent-ink" : "text-slate-600 dark:text-slate-400"
                     }`}
                     aria-hidden
                   />
@@ -254,7 +254,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                 <span className="font-display text-sm font-bold text-slate-900 dark:text-slate-100">
                   {step.title}
                 </span>
-                <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400 mt-1 truncate">
+                <span className="font-mono text-[10px] text-slate-600 dark:text-slate-400 mt-1 truncate">
                   {step.duration}
                 </span>
               </button>
@@ -307,7 +307,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
             {METHOD_STEPS.map((step, idx) => {
               const isActive = idx === activeStepIndex;
               return (
-                <motion.div
+                <m.div
                   key={step.number}
                   initial={false}
                   animate={{
@@ -382,7 +382,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                     <h3 className="font-display text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-50 mb-2">
                       {step.number}. {step.title}
                     </h3>
-                    <p className="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-4">
+                    <p className="font-mono text-xs uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-4">
                       {step.subtitle}
                     </p>
 
@@ -394,7 +394,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                     <div className="p-4 rounded-2xl border border-link/30 bg-link/10 flex items-start gap-3 mb-6">
                       <ShieldCheck className="h-5 w-5 text-link shrink-0 mt-0.5" aria-hidden />
                       <div>
-                        <span className="font-mono text-[10px] uppercase tracking-widest text-link font-bold block">
+                        <span className="font-mono text-[10px] uppercase tracking-widest text-link font-semibold block">
                           {t("method.result")}
                         </span>
                         <span className="font-display font-semibold text-slate-900 dark:text-slate-100 text-sm md:text-base">
@@ -419,7 +419,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
 
                   {/* Colonne droite : Liste des Livrables Clés */}
                   <div className="lg:col-span-5 rounded-2xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/5 p-6 backdrop-blur-md">
-                    <span className="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-300 block mb-4 border-b border-black/10 dark:border-white/10 pb-2">
+                    <span className="font-mono text-xs uppercase tracking-wider text-slate-600 dark:text-slate-300 block mb-4 border-b border-black/10 dark:border-white/10 pb-2">
                       {t("method.deliverables")}
                     </span>
                     <ul className="space-y-3">
@@ -439,14 +439,14 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
                       ))}
                     </ul>
 
-                    <div className="mt-6 pt-4 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400">
+                    <div className="mt-6 pt-4 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-xs font-mono text-slate-600 dark:text-slate-400">
                       <span>{t("method.duration")}</span>
-                      <span className="font-bold" style={{ color: step.color }}>
+                      <span className="font-semibold" style={{ color: step.color }}>
                         {step.duration}
                       </span>
                     </div>
                   </div>
-                </motion.div>
+                </m.div>
               );
             })}
           </div>

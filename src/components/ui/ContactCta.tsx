@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
@@ -41,7 +41,7 @@ export function ContactCta({
   delay = 0.2,
 }: ContactCtaProps) {
   return (
-    <motion.div
+    <m.div
       initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay }}
@@ -58,6 +58,6 @@ export function ContactCta({
       >
         {cta}
       </Button>
-    </motion.div>
+    </m.div>
   );
 }

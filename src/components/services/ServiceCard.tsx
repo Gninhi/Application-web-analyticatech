@@ -1,7 +1,8 @@
 "use client";
 
+import { ArrowUpRight } from "lucide-react";
 import { useRef, type CSSProperties } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { ServiceCardHeader } from "./ServiceCardHeader";
 import { ServiceCardMeta } from "./ServiceCardMeta";
 import { ServiceCardAction } from "./ServiceCardAction";
@@ -74,8 +75,8 @@ export function ServiceCard({
   };
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 24 }}
+    <m.article
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.08 }}
       onClick={goToDetail}
@@ -128,7 +129,7 @@ export function ServiceCard({
                (grille 2 colonnes sur mobile : ID + icône en ligne, entête dessous) */}
         <div className="relative z-20 grid grid-cols-[auto_1fr] sm:grid-cols-[auto_1fr_auto] items-start gap-x-5 gap-y-4">
           <span
-            className="col-start-1 row-start-1 font-mono text-sm font-bold tracking-widest opacity-70"
+            className="col-start-1 row-start-1 font-mono text-sm font-semibold tracking-widest opacity-70"
             style={{ color: accent }}
             aria-hidden
           >
@@ -162,11 +163,11 @@ export function ServiceCard({
             className="font-mono text-[10px] transition-colors"
             style={{ color: "var(--muted-foreground)" }}
           >
-            Fiche #{service.serviceIndex} ↗
+            Fiche #{service.serviceIndex} <ArrowUpRight className="inline h-3 w-3" aria-hidden />
           </span>
         </div>
 
       </div>
-    </motion.article>
+    </m.article>
   );
 }

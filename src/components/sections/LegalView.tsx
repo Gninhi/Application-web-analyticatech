@@ -50,7 +50,7 @@ export function LegalView({ type, onNavigate }: LegalViewProps) {
         {/* En-tête */}
         <div className="mb-10">
           <PageHeader icon={Icon} kicker={subtitle} title={title} size="md" />
-          <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
+          <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">
             {t("legal.lastUpdated")} {formatLegalDate(locale)}
           </p>
         </div>

@@ -93,13 +93,13 @@ export function ContactView() {
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </span>
                   <div className="min-w-0">
-                    <p className="font-mono text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    <p className="font-mono text-[10px] uppercase tracking-wider text-slate-600 dark:text-slate-400">
                       {isEn ? metric.labelEn : metric.labelFr}
                     </p>
                     <p className="font-display font-bold text-slate-900 dark:text-slate-50 text-sm truncate">
                       {isEn ? metric.valEn : metric.valFr}
                     </p>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                    <p className="text-[11px] text-slate-600 dark:text-slate-400 truncate">
                       {isEn ? metric.descEn : metric.descFr}
                     </p>
                   </div>

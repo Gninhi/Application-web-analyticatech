@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -109,8 +109,8 @@ export function SolutionDetailTemplate({
         </div>
 
         {/* ================= HERO PANEL ================= */}
-        <motion.header
-          initial={{ opacity: 0, y: 16 }}
+        <m.header
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
           className="relative rounded-3xl border border-slate-200/80 dark:border-white/10 p-8 sm:p-12 overflow-hidden glass-card bg-white/80 dark:bg-white/[0.02] shadow-xl shadow-slate-200/40 dark:shadow-none"
@@ -122,7 +122,7 @@ export function SolutionDetailTemplate({
           />
 
           <div className="relative z-10 space-y-6">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink">
               {t("solutions.detail.eyebrow")}{" // "}{data.sector}
             </p>
 
@@ -154,7 +154,7 @@ export function SolutionDetailTemplate({
               ))}
             </div>
           </div>
-        </motion.header>
+        </m.header>
 
         {/* ================= CONTENU AVEC NAVIGATION VERTICALE ================= */}
         <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] xl:grid-cols-[260px_1fr] gap-8 xl:gap-12 items-start">
@@ -176,7 +176,7 @@ export function SolutionDetailTemplate({
               aria-labelledby="heading-probleme"
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-6"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+          <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink">
             {t("solutions.detail.section.problem")}
           </span>
 
@@ -226,7 +226,7 @@ export function SolutionDetailTemplate({
           aria-labelledby="heading-approche"
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-8"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+          <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink">
             {t("solutions.detail.section.approach")}
           </span>
 
@@ -249,7 +249,7 @@ export function SolutionDetailTemplate({
                 className="rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.01] p-5 space-y-3"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-[11px] font-bold text-accent-ink tracking-wider">
+                  <span className="font-mono text-[11px] font-semibold text-accent-ink tracking-wider">
                     {stage.stageNumber}
                   </span>
                   {stage.badge && (
@@ -268,8 +268,8 @@ export function SolutionDetailTemplate({
 
                 {stage.keyPattern && (
                   <div className="pt-2 border-t border-slate-200/50 dark:border-white/5">
-                    <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400">
-                      {t("solutions.detail.pattern")} <code className="text-slate-800 dark:text-slate-200 font-semibold">{stage.keyPattern}</code>
+                    <span className="font-mono text-[10px] text-slate-600 dark:text-slate-400">
+                      {t("solutions.detail.pattern")} <code className="font-code text-slate-800 dark:text-slate-200 font-semibold">{stage.keyPattern}</code>
                     </span>
                   </div>
                 )}
@@ -279,7 +279,7 @@ export function SolutionDetailTemplate({
 
           {/* Intégration non-disruptive SI */}
           <div className="rounded-2xl border border-[#03318C]/20 dark:border-blue-500/20 bg-[#03318C]/5 dark:bg-blue-500/[0.03] p-5 space-y-2">
-            <div className="flex items-center gap-2 font-mono text-xs font-bold text-[#03318C] dark:text-blue-400 uppercase tracking-wider">
+            <div className="flex items-center gap-2 font-mono text-xs font-semibold text-[#03318C] dark:text-blue-400 uppercase tracking-wider">
               <Workflow className="h-4 w-4" aria-hidden />
               {t("solutions.detail.integration")}
             </div>
@@ -295,7 +295,7 @@ export function SolutionDetailTemplate({
           aria-labelledby="heading-mesures"
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-6"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+          <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink">
             {t("solutions.detail.section.status")}
           </span>
 
@@ -319,7 +319,7 @@ export function SolutionDetailTemplate({
                 className="rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50/80 dark:bg-white/[0.03] p-6 flex flex-col justify-between"
               >
                 <div>
-                  <span className="font-mono text-[11px] text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                  <span className="font-mono text-[11px] text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                     {metric.label}
                   </span>
                   <p className="font-display text-xl font-bold text-foreground my-2">
@@ -335,7 +335,7 @@ export function SolutionDetailTemplate({
 
           {/* Ce qu'il reste à prouver, et comment ce sera mesuré */}
           <div className="rounded-2xl border border-slate-200/70 dark:border-white/10 bg-slate-100/60 dark:bg-white/[0.02] p-5 space-y-3">
-            <div className="flex items-center gap-2 font-mono text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+            <div className="flex items-center gap-2 font-mono text-xs font-semibold text-slate-900 dark:text-white uppercase tracking-wider">
               <FileCheck2 className="h-4 w-4 text-accent-ink" aria-hidden />
               {t("solutions.detail.frame")}
             </div>
@@ -361,7 +361,7 @@ export function SolutionDetailTemplate({
               </div>
             </div>
 
-            <p className="pt-2 border-t border-slate-200/50 dark:border-white/5 text-[11px] font-mono text-slate-500 dark:text-slate-400">
+            <p className="pt-2 border-t border-slate-200/50 dark:border-white/5 text-[11px] font-mono text-slate-600 dark:text-slate-400">
               {t("solutions.detail.frame.transparency")} {data.metrics.methodology.rigorDisclaimer}
             </p>
           </div>
@@ -375,7 +375,7 @@ export function SolutionDetailTemplate({
         >
           <div className="flex items-center gap-2">
             <AlertOctagon className="h-5 w-5 text-accent-ink" aria-hidden />
-            <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+            <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink">
               {t("solutions.detail.section.limits")}
             </span>
           </div>
@@ -395,7 +395,7 @@ export function SolutionDetailTemplate({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
             {/* Prérequis */}
             <div className="rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/80 dark:bg-white/[0.02] p-5 space-y-3">
-              <span className="font-mono text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <span className="font-mono text-xs font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
                 <CheckCircle2 className="h-4 w-4 text-link dark:text-link" aria-hidden />
                 {t("solutions.detail.prerequisites")}
               </span>
@@ -411,7 +411,7 @@ export function SolutionDetailTemplate({
 
             {/* Où ça ne s'applique PAS */}
             <div className="rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/80 dark:bg-white/[0.02] p-5 space-y-3">
-              <span className="font-mono text-xs font-bold text-red-600 dark:text-red-400 flex items-center gap-1.5">
+              <span className="font-mono text-xs font-semibold text-red-600 dark:text-red-400 flex items-center gap-1.5">
                 <XCircle className="h-4 w-4 text-red-600 dark:text-red-400" aria-hidden />
                 {t("solutions.detail.notApplicable")}
               </span>
@@ -427,7 +427,7 @@ export function SolutionDetailTemplate({
 
             {/* Contraintes opérationnelles */}
             <div className="rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/80 dark:bg-white/[0.02] p-5 space-y-3">
-              <span className="font-mono text-xs font-bold text-accent-ink flex items-center gap-1.5">
+              <span className="font-mono text-xs font-semibold text-accent-ink flex items-center gap-1.5">
                 <ShieldCheck className="h-4 w-4 text-accent-ink" aria-hidden />
                 {t("solutions.detail.constraints")}
               </span>
@@ -449,7 +449,7 @@ export function SolutionDetailTemplate({
           aria-labelledby="heading-ressources"
           className="rounded-3xl border border-slate-200/80 dark:border-white/10 p-6 sm:p-10 glass-card bg-white/70 dark:bg-white/[0.02] shadow-sm space-y-6"
         >
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-ink">
+          <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink">
             {t("solutions.detail.section.links")}
           </span>
 
@@ -478,7 +478,7 @@ export function SolutionDetailTemplate({
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <span className="font-mono text-[10px] font-bold text-[#03318C] dark:text-blue-400 uppercase tracking-wider">
+                    <span className="font-mono text-[10px] font-semibold text-[#03318C] dark:text-blue-400 uppercase tracking-wider">
                       {res.badge}
                     </span>
                     <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-accent-ink group-hover:translate-x-1 transition-all" aria-hidden />

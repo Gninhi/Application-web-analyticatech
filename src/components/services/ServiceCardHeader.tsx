@@ -25,7 +25,7 @@ export function ServiceCardHeader({
       {/* 1. Capsule meta façon bento + badge d'impact */}
       <div className="flex flex-wrap items-center gap-2">
         <span
-          className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.25em] font-bold backdrop-blur-sm"
+          className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.25em] font-semibold backdrop-blur-sm"
           style={{
             borderColor: "var(--glass-card-border)",
             background: "var(--glass-card-bg)",
@@ -37,7 +37,7 @@ export function ServiceCardHeader({
 
         {badge && (
           <span
-            className="inline-flex items-center rounded-md border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider font-bold"
+            className="inline-flex items-center rounded-md border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider font-semibold"
             style={{
               borderColor: `color-mix(in srgb, ${accentColor} 30%, transparent)`,
               background: `color-mix(in srgb, ${accentColor} 14%, transparent)`,

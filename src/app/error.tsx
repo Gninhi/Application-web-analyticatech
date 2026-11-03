@@ -63,7 +63,7 @@ export default function ErrorPage({ error, reset }: ErrorProps) {
                 {error.message || "Runtime exception without description"}
               </p>
               {error.digest && (
-                <p className="font-mono text-[10px] text-slate-500 mt-1">
+                <p className="font-mono text-[10px] text-slate-600 mt-1">
                   Digest : {error.digest}
                 </p>
               )}
@@ -78,7 +78,7 @@ export default function ErrorPage({ error, reset }: ErrorProps) {
               onClick={reset}
               icon={<RefreshCw className="h-4 w-4" aria-hidden />}
               iconPosition="left"
-              className="neon-glow font-bold"
+              className="neon-glow font-semibold"
             >
               <span>{t("error.retry")}</span>
             </Button>

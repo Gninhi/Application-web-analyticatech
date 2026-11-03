@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Database, BrainCircuit, Workflow, BarChart3, ArrowRight, Activity, CheckCircle2 } from "lucide-react";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils/cn";
@@ -132,7 +132,7 @@ export function LivingSystemGraph() {
             const Icon = node.icon;
             const isActive = activeNodeId === node.id;
             return (
-              <motion.button
+              <m.button
                 key={node.id}
                 type="button"
                 role="tab"
@@ -151,7 +151,7 @@ export function LivingSystemGraph() {
                 {/* Badge numéro */}
                 <div className="flex items-center justify-between mb-4">
                   <span
-                    className={`font-mono text-xs font-bold px-2 py-0.5 rounded-full ${
+                    className={`font-mono text-xs font-semibold px-2 py-0.5 rounded-full ${
                       isActive
                         ? "bg-[#E35F31] text-slate-950"
                         : "bg-slate-200 dark:bg-white/10 text-slate-600 dark:text-slate-300"
@@ -191,12 +191,12 @@ export function LivingSystemGraph() {
                     <ArrowRight className="h-3 w-3" aria-hidden />
                   </div>
                 )}
-              </motion.button>
+              </m.button>
             );
           })}
         </div>
         {/* Indication visuelle discrète réservée au mobile */}
-        <p className="text-center font-mono text-[11px] text-slate-500 dark:text-slate-400 mt-3 lg:hidden" aria-hidden="true">
+        <p className="text-center font-mono text-[11px] text-slate-600 dark:text-slate-400 mt-3 lg:hidden" aria-hidden="true">
           {isEn ? "Tap a node to inspect details" : "Touchez un nœud pour explorer"}
         </p>
       </div>
@@ -209,7 +209,7 @@ export function LivingSystemGraph() {
         {NODES.map((node) => {
           const isActive = node.id === activeNodeId;
           return (
-            <motion.div
+            <m.div
               key={node.id}
               initial={false}
               animate={{ opacity: isActive ? 1 : 0 }}
@@ -223,7 +223,7 @@ export function LivingSystemGraph() {
             >
               <div className="max-w-xl">
                 <div className="flex items-center gap-2 mb-1.5">
-                  <span className="font-mono text-xs text-accent-ink font-bold">
+                  <span className="font-mono text-xs text-accent-ink font-semibold">
                     {isEn ? `Step ${node.step}` : `Étape ${node.step}`}
                   </span>
                   <span className="text-slate-300 dark:text-slate-300">•</span>
@@ -244,7 +244,7 @@ export function LivingSystemGraph() {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </m.div>
           );
         })}
       </div>

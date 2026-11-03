@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useCallback, useState } from "react";
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { m, useMotionValue, useTransform } from "framer-motion";
 import { ArrowRight, Compass, Zap, ShieldCheck, Sparkles } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
@@ -219,21 +219,21 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
           />
 
           {/* Barre de progression horizontale */}
-          <motion.div
+          <m.div
             style={{ opacity: driftActive }}
             className="mt-10 flex items-center gap-3"
           >
             <Compass className="h-4 w-4 text-accent-ink" aria-hidden />
             <div className="relative h-px flex-1 bg-black/10 dark:bg-white/10 overflow-hidden">
-              <motion.div
+              <m.div
                 style={{ width: progressWidth }}
                 className="absolute inset-y-0 left-0 bg-[#F26D3D]"
               />
             </div>
-            <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-slate-600 dark:text-slate-400">
               {t("solutions.drift.label")}
             </span>
-          </motion.div>
+          </m.div>
         </SectionContainer>
       </section>
 
@@ -250,7 +250,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
                 {String(mobileActiveIndex + 1).padStart(2, "0")}
               </span>
               <span className="text-slate-400 dark:text-slate-600">/</span>
-              <span className="text-slate-500 dark:text-slate-400">
+              <span className="text-slate-600 dark:text-slate-400">
                 {String(SOLUTIONS.length + 1).padStart(2, "0")}
               </span>
             </div>
@@ -266,8 +266,8 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
                 />
               ))}
             </div>
-            <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400">
-              Défiler →
+            <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider text-slate-400">
+              Défiler <ArrowRight className="h-3 w-3" aria-hidden />
             </span>
           </div>
 
@@ -306,7 +306,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
               <h3 className="relative font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 dark:text-slate-50 mb-2 sm:mb-3">
                 {t("solutions.final.title")}
               </h3>
-              <p className="relative text-slate-500 dark:text-slate-400 mb-6 sm:mb-8 max-w-md text-sm sm:text-base leading-relaxed">
+              <p className="relative text-slate-600 dark:text-slate-400 mb-6 sm:mb-8 max-w-md text-sm sm:text-base leading-relaxed">
                 {t("solutions.final.desc")}
               </p>
               <Button
@@ -333,7 +333,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
               { icon: Zap, t: t("solutions.confiance.time"), d: t("solutions.confiance.time.desc") },
               { icon: Compass, t: t("solutions.confiance.long"), d: t("solutions.confiance.long.desc") },
             ].map((f) => (
-              <motion.div
+              <m.div
                 key={f.t}
                 initial={{ opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -354,7 +354,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
                   {f.t}
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{f.d}</p>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>

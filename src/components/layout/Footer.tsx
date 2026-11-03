@@ -1,14 +1,14 @@
 "use client";
 
-
 import Link from "next/link";
-import { ArrowUpRight, ShieldCheck, Github, Linkedin, Twitter } from "lucide-react";
+import { ArrowUpRight, Mail, ShieldCheck, Github, Linkedin, Twitter } from "lucide-react";
 
 import { type ViewKey } from "@/types/content";
 import { usePathname } from "next/navigation";
 import { viewToPath, getLocaleFromPath } from "@/lib/navigation/routes";
 import { NavLink } from "@/components/interactive/NavLink";
 import { BrandLogo } from "@/components/branding/BrandLogo";
+import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
 import { isValidSocialUrl } from "@/lib/content/site";
@@ -46,6 +46,23 @@ export function getValidSocialLinks(config: {
   );
 }
 
+/** Lien du pied de page (colonnes) : cible tactile ≥ 44 px sur mobile. */
+const COLUMN_LINK =
+  "inline-flex min-h-11 items-center text-sm text-slate-600 dark:text-[#B6C2D6] hover:text-accent-ink transition-colors sm:min-h-0 sm:py-1";
+/** Lien de la barre légale. */
+const LEGAL_LINK =
+  "inline-flex min-h-11 items-center font-mono text-[11px] uppercase tracking-widest text-slate-600 dark:text-slate-400 hover:text-accent-ink transition-colors sm:min-h-0 sm:py-1";
+const COLUMN_TITLE = "font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-ink mb-3 sm:mb-4";
+
+/**
+ * Footer — pied de page commun.
+ *
+ * Inspiré des pieds de page primés (Awwwards) sans en reprendre un : appel au
+ * premier échange en tête, colonnes de navigation, barre légale, puis logotype
+ * en pleine largeur comme signature. Mise en page fluide : 1 colonne (mobile),
+ * 2 (tablette), 12 colonnes (desktop) ; aucun débordement horizontal, liens à
+ * 44 px de hauteur tactile sur mobile.
+ */
 export function Footer() {
   const pathname = usePathname() || "/";
   const currentLocale = getLocaleFromPath(pathname);
@@ -61,28 +78,54 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative mt-auto border-t border-border bg-[#F0F4F8] dark:bg-[#06070B]">
-      <div className="mx-auto max-w-7xl px-4 md:px-6 py-12 md:py-16">
-        <div className="grid gap-10 md:grid-cols-12">
-          {/* Marque + statut */}
-          <div className="md:col-span-4">
-            <div className="mb-5">
-              <BrandLogo height={52} signature alt="Analyticatech — L'IA, expliquée simplement" />
-            </div>
-            <p className="text-sm text-slate-600 dark:text-[#B6C2D6] max-w-xs mb-5">
-              {currentLocale === "en" ? "AI consulting for SME and mid-market leaders: AI agents, automation and data, with the EU AI Act taken into account from the start." : "Conseil en intelligence artificielle pour les dirigeants de PME et d'ETI : agents IA, automatisation et données, avec l'AI Act pris en compte dès le départ."}
-            </p>
-            <p className="text-sm text-slate-600 dark:text-[#B6C2D6]">
-              {currentLocale === "en" ? "Head office in Paris · Working across France" : "Siège à Paris · Interventions partout en France"}
+    <footer className="relative mt-auto overflow-hidden border-t border-border bg-[#F0F4F8] dark:bg-[#06070B]">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-12 sm:pt-16 lg:pt-20">
+        {/* 1 — Appel au premier échange */}
+        <div className="grid gap-8 pb-10 sm:pb-12 border-b border-black/10 dark:border-white/10 lg:grid-cols-12 lg:items-end">
+          <div className="lg:col-span-8">
+            <p className={COLUMN_TITLE}>{t("footer.cta.tag")}</p>
+            <h2 className="font-display font-bold tracking-tight text-slate-900 dark:text-white text-[clamp(1.875rem,5vw,3.5rem)] leading-[1.05] text-balance">
+              {t("footer.cta.title")}
+            </h2>
+            <p className="mt-4 max-w-xl text-base leading-[26px] text-slate-600 dark:text-[#B6C2D6]">
+              {t("footer.cta.desc")}
             </p>
           </div>
+          <div className="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center lg:col-span-4 lg:flex-col lg:items-end">
+            <Button
+              href={viewToPath("contact", undefined, currentLocale)}
+              variant="primary"
+              size="lg"
+              data-cta="footer_premier_echange"
+              icon={<ArrowUpRight className="h-4 w-4" aria-hidden="true" />}
+              iconPosition="right"
+              className="w-full sm:w-auto"
+            >
+              {t("nav.cta")}
+            </Button>
+            {siteConfig.email && (
+              <a
+                href={`mailto:${siteConfig.email}`}
+                aria-label={`${t("footer.contact.email")} : ${siteConfig.email}`}
+                className="inline-flex min-h-11 items-center justify-center gap-2 break-all font-display text-base sm:text-lg font-semibold text-slate-900 dark:text-white underline decoration-[#F26D3D] decoration-2 underline-offset-[6px] hover:text-accent-ink transition-colors"
+              >
+                <Mail className="h-4 w-4 shrink-0 text-accent-ink" aria-hidden="true" />
+                {siteConfig.email}
+              </a>
+            )}
+          </div>
+        </div>
 
-          {/* Navigation secondaire */}
-          <nav className="md:col-span-2" aria-label={t("footer.nav.title")}>
-            <h2 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-ink mb-4">
-              {t("footer.nav.title")}
-            </h2>
-            <ul className="space-y-2.5">
+        {/* 2 — Colonnes */}
+        <div className="grid grid-cols-1 gap-10 py-10 sm:grid-cols-2 sm:py-12 lg:grid-cols-12 lg:gap-8">
+          <div className="sm:col-span-2 lg:col-span-5">
+            <p className="max-w-sm text-sm leading-[22px] text-slate-600 dark:text-[#B6C2D6]">{t("footer.tagline")}</p>
+            <p className="mt-4 text-sm text-slate-600 dark:text-[#B6C2D6]">{t("footer.location")}</p>
+          </div>
+
+          <nav className="lg:col-span-2" aria-label={t("footer.nav.title")}>
+            <h2 className={COLUMN_TITLE}>{t("footer.nav.title")}</h2>
+            <ul className="grid grid-cols-2 gap-x-4 sm:grid-cols-1 sm:space-y-1.5">
               {NAV_ITEMS.map((item) => (
                 <li key={item.key}>
                   <NavLink variant="footer" href={viewToPath(item.key, undefined, currentLocale)}>
@@ -93,18 +136,12 @@ export function Footer() {
             </ul>
           </nav>
 
-          {/* Expertises */}
-          <div className="md:col-span-3">
-            <h2 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-ink mb-4">
-              {t("footer.expertises.title")}
-            </h2>
-            <ul className="space-y-2.5 text-sm text-slate-500 dark:text-slate-400">
+          <div className="lg:col-span-3">
+            <h2 className={COLUMN_TITLE}>{t("footer.expertises.title")}</h2>
+            <ul className="sm:space-y-1.5">
               {services.slice(0, 5).map((s) => (
                 <li key={s.id}>
-                  <Link
-                    href={viewToPath("service-detail", s.index, currentLocale)}
-                    className="hover:text-accent-ink transition-colors"
-                  >
+                  <Link href={viewToPath("service-detail", s.index, currentLocale)} className={COLUMN_LINK}>
                     {s.title}
                   </Link>
                 </li>
@@ -112,25 +149,22 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Premier échange */}
-          <div className="md:col-span-3">
-            <h2 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-ink mb-4">
-              {currentLocale === "en" ? "First call" : "Premier échange"}
-            </h2>
-            <p className="text-sm text-slate-600 dark:text-[#B6C2D6] mb-4">
-              {currentLocale === "en" ? "Let's take 20 minutes to scope your needs." : "Prenons 20 minutes pour cadrer votre besoin."}
-            </p>
-            <Link
-              href={viewToPath("contact", undefined, currentLocale)}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-[#F26D3D] px-4 py-2.5 text-[14px] font-semibold text-[#011C40] hover:bg-[#E35F31] transition-colors"
-              data-cta="footer_premier_echange"
-            >
-              {currentLocale === "en" ? "Book a call" : "Prendre rendez-vous"}
-              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-
+          <div className="lg:col-span-2">
+            <h2 className={COLUMN_TITLE}>{t("footer.contact.title")}</h2>
+            <ul className="sm:space-y-1.5">
+              <li>
+                <Link href={viewToPath("contact", undefined, currentLocale)} className={COLUMN_LINK}>
+                  {t("nav.cta")}
+                </Link>
+              </li>
+              <li>
+                <Link href={viewToPath("about", undefined, currentLocale)} className={COLUMN_LINK}>
+                  {t("footer.about")}
+                </Link>
+              </li>
+            </ul>
             {socialLinks.length > 0 && (
-              <div className="flex items-center gap-3 mt-5">
+              <div className="mt-4 flex items-center gap-2" aria-label={t("footer.social.title")}>
                 {socialLinks.map((social) => {
                   const Icon = social.icon;
                   return (
@@ -139,7 +173,7 @@ export function Footer() {
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-slate-500 dark:text-slate-400 hover:text-accent-ink transition-colors"
+                      className="flex h-11 w-11 items-center justify-center rounded-lg border border-border text-slate-600 dark:text-slate-400 hover:text-accent-ink hover:border-[#F26D3D]/40 transition-colors"
                       aria-label={social.label}
                     >
                       <Icon className="h-4 w-4" aria-hidden="true" />
@@ -151,46 +185,33 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Barre inférieure */}
-        <div className="mt-12 pt-6 border-t border-black/10 dark:border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
+        {/* 3 — Barre légale */}
+        <div className="flex flex-col gap-4 border-t border-black/10 dark:border-white/10 py-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="grid grid-cols-2 gap-x-4 sm:flex sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-2">
+            <p className="col-span-2 mb-1 font-mono text-[11px] uppercase tracking-widest text-slate-600 dark:text-slate-400 sm:mb-0">
               © {new Date().getFullYear()} Analyticatech — {t("footer.copyright")}
-          </p>
-            <Link
-              href={viewToPath("rgpd", undefined, currentLocale)}
-              className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-accent-ink px-2 py-1"
-            >
+            </p>
+            <Link href={viewToPath("rgpd", undefined, currentLocale)} className={LEGAL_LINK}>
               {t("footer.confidentiality")}
             </Link>
-            <Link
-              href={viewToPath("legal", undefined, currentLocale)}
-              className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-accent-ink px-2 py-1"
-            >
+            <Link href={viewToPath("legal", undefined, currentLocale)} className={LEGAL_LINK}>
               {t("footer.legal")}
             </Link>
-{isAnalyticsConfigured && (
-            <button
-              type="button"
-              onClick={handleOpenCookiePreferences}
-              className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-accent-ink px-2 py-1 cursor-pointer transition-colors"
-            >
-              {t("footer.cookies")}
-            </button>
+            {isAnalyticsConfigured && (
+              <button type="button" onClick={handleOpenCookiePreferences} className={`${LEGAL_LINK} cursor-pointer text-left`}>
+                {t("footer.cookies")}
+              </button>
             )}
-            <Link
-              href={viewToPath("about", undefined, currentLocale)}
-              className="font-mono text-[10px] uppercase tracking-widest bg-transparent text-slate-500 dark:text-slate-400 hover:text-accent-ink px-2 py-1"
-            >
-              {t("footer.about")}
-            </Link>
-       </div>
-          <div className="flex items-center gap-4">
-            <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
-              <ShieldCheck className="h-3.5 w-3.5 text-link" aria-hidden />
-              {t("footer.compliance")}
-            </span>
           </div>
+          <span className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest text-slate-600 dark:text-slate-400">
+            <ShieldCheck className="h-3.5 w-3.5 text-link" aria-hidden />
+            {t("footer.compliance")}
+          </span>
+        </div>
+
+        {/* 4 — Signature : logotype officiel en pleine largeur */}
+        <div className="pb-6 sm:pb-8">
+          <BrandLogo variant="mot" fluid alt="Analyticatech" />
         </div>
       </div>
     </footer>

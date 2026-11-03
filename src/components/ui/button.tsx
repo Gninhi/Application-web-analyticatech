@@ -136,6 +136,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     if (href) {
       return (
         <Link
+          {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
           href={href}
           className={cn(buttonVariants({ variant, size: resolvedSize, className }))}
           aria-disabled={isDisabled}

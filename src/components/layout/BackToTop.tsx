@@ -53,7 +53,7 @@ export function BackToTop() {
           role="tooltip"
           className="pointer-events-none absolute -top-10 right-0 hidden sm:flex items-center gap-1.5 whitespace-nowrap rounded-full border border-black/10 dark:border-white/15 bg-white/95 dark:bg-background/95 backdrop-blur-md px-3 py-1 text-[11px] font-mono text-slate-700 dark:text-slate-200 opacity-0 -translate-y-1 shadow-lg transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0"
         >
-          <span className="font-bold text-accent-ink">{progress}%</span>
+          <span className="font-semibold text-accent-ink">{progress}%</span>
           <span className="text-slate-400">·</span>
           <span>{t("common.backToTop")}</span>
         </div>

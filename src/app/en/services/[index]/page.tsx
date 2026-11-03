@@ -61,6 +61,12 @@ export default async function ServiceDetailPageEn({ params }: Params) {
     notFound();
   }
 
+  // Service connu sans fiche enrichie : la fiche 01 sert de gabarit (comportement historique)
+  const viewData = detailData ?? getServiceDetailData("01", "en");
+  if (!viewData) {
+    notFound();
+  }
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -102,7 +108,10 @@ export default async function ServiceDetailPageEn({ params }: Params) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ServiceDetailRoute index={normalizedIndex} />
+      <ServiceDetailRoute
+        index={normalizedIndex}
+        detailData={viewData}
+      />
     </>
   );
 }

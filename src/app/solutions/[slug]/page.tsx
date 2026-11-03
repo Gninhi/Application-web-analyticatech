@@ -79,7 +79,7 @@ export default async function SolutionDetailPage({ params }: Params) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <SolutionDetailRoute slug={resolvedSlug} />
+      <SolutionDetailRoute slug={resolvedSlug} detailData={detailData ?? null} />
     </>
   );
 }

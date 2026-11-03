@@ -56,10 +56,16 @@ function renderNavbar(content = createMockContent()) {
 }
 
 describe("Navbar — Header Capsule Premium", () => {
-  it("rend le logo avec distinction d'accentuation", () => {
+  it("affiche le logotype officiel du design system (mot seul sur mobile, version flux au-delà)", () => {
     const html = renderNavbar();
-    expect(html).toContain("Analytica");
-    expect(html).toContain("tech");
+    expect(html).toContain('/brand/analyticatech-logotype-mot.svg');
+    expect(html).toContain('/brand/analyticatech-logotype-mot-fond-sombre.svg');
+    expect(html).toContain('/brand/analyticatech-logotype-A-flux.svg');
+    expect(html).toContain('/brand/analyticatech-logotype-A-flux-fond-sombre.svg');
+    expect(html).toContain('alt="Analyticatech"');
+    // Ancien logo « A Tour Eiffel » et logotype en texte retirés
+    expect(html).not.toContain("Tour Eiffel");
+    expect(html).not.toMatch(/Analytica<span/);
   });
 
   it("rend les liens de navigation avec le composant RandomLetterSwap et balisage accessible", () => {

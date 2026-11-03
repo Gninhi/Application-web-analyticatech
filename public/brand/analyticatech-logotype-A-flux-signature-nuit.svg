@@ -2,8 +2,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" height="812" viewBox="-60.0 -212.9 1457.8 405.9" width="2916">
 <defs>
     <linearGradient gradientUnits="userSpaceOnUse" id="flux" x1="4.0" x2="1322.6" y1="0" y2="0">
-      <stop offset="0" stop-color="#03318C"/>
-      <stop offset="0.5" stop-color="#03318C"/>
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="0.5" stop-color="#FFFFFF"/>
       <stop offset="0.8" stop-color="#F26D3D"/>
       <stop offset="1" stop-color="#F26D3D"/>
     </linearGradient>

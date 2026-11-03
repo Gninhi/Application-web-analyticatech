@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import type { ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
@@ -9,11 +9,13 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ContactCta } from "@/components/ui/ContactCta";
 import { DetailNotFound } from "./DetailNotFound";
-import { getSolutionDetailData } from "@/lib/content/solutions-detail-data";
+import type { SolutionDetailData } from "@/types/solution-detail";
 import { SolutionDetailTemplate } from "./SolutionDetailTemplate";
 
 export interface SolutionDetailViewProps {
   solutionSlug: string;
+  /** Fiche résolue par la page serveur (null : fiche simple issue du contenu). */
+  detailData: SolutionDetailData | null;
   onNavigate: (view: ViewKey) => void;
   onNavigateDetail?: (view: ViewKey, id: string) => void;
 }
@@ -26,15 +28,15 @@ export interface SolutionDetailViewProps {
  */
 export function SolutionDetailView({
   solutionSlug,
+  detailData,
   onNavigate,
   onNavigateDetail,
 }: SolutionDetailViewProps) {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
   const { solutions } = useAppContent();
   const solution = solutions.find((s) => s.slug === solutionSlug);
 
   // Recherche de données enrichies dans le registre
-  const detailData = getSolutionDetailData(solutionSlug, locale);
 
   if (detailData) {
     return (
@@ -82,8 +84,8 @@ export function SolutionDetailView({
           {`${t("common.back")} ${t("nav.solutions")}`}
         </Button>
 
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
+        <m.div
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="glass-card rounded-3xl p-8 md:p-12 mb-8"
@@ -98,12 +100,12 @@ export function SolutionDetailView({
           />
 
           <div className="rounded-xl border border-[#F26D3D]/25 bg-[#F26D3D]/5 p-4 mb-6">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-1">
               {t("common.impact")}
             </p>
             <p className="font-display text-xl font-bold text-accent-ink">{solution.impact}</p>
             {solution.methodology && (
-              <p className="mt-1.5 font-mono text-xs text-slate-500 dark:text-slate-400">
+              <p className="mt-1.5 font-mono text-xs text-slate-600 dark:text-slate-400">
                 {solution.methodology}
               </p>
             )}
@@ -119,7 +121,7 @@ export function SolutionDetailView({
               </span>
             ))}
           </div>
-        </motion.div>
+        </m.div>
 
         <ContactCta question={t("detail.solution.cta")} cta={t("common.contact")} onNavigate={onNavigate} />
       </div>

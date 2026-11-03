@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 
 interface NavLinkProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> {
@@ -37,7 +37,7 @@ export function NavLink({
     "relative inline-flex items-center min-h-8 transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 rounded-lg",
     variant === "navbar"
       ? "px-3 py-1.5 font-sans text-[13px] font-medium tracking-tight group"
-      : "text-sm text-slate-700 dark:text-slate-400 hover:text-[#03318C] dark:hover:text-white",
+      : "min-h-11 sm:min-h-8 text-sm text-slate-600 dark:text-[#B6C2D6] hover:text-accent-ink",
     active && variant === "navbar" && "text-[#03318C] dark:text-white font-semibold",
     !active && variant === "navbar" && "text-slate-600 dark:text-slate-300/80 hover:text-[#03318C] dark:hover:text-white",
     className
@@ -48,7 +48,7 @@ export function NavLink({
       {/* Background pill : coulissante (layoutId) si active, fondu au survol sinon */}
       {variant === "navbar" &&
         (active ? (
-          <motion.span
+          <m.span
             layoutId="navbar-active-pill"
             transition={{ type: "spring", stiffness: 420, damping: 32 }}
             className="absolute inset-0 rounded-lg bg-gradient-to-r from-[#03318C]/12 via-[#03318C]/8 to-[#03318C]/12 dark:from-[#F26D3D]/18 dark:via-[#F26D3D]/10 dark:to-[#F26D3D]/18 border border-[#03318C]/25 dark:border-[#F26D3D]/35 shadow-[0_2px_10px_rgba(3,49,140,0.08)] dark:shadow-[0_0_14px_rgba(242,109,61,0.22)]"

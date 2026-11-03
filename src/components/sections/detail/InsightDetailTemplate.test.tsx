@@ -120,7 +120,7 @@ describe("InsightDetailTemplate & Registry", () => {
 
   it("BlogDetailView intègre automatiquement le template enrichi pour les articles enregistrés", () => {
     const html = renderWithProviders(
-      <BlogDetailView postSlug="evaluer-systeme-rag-production" onNavigate={() => {}} />
+      <BlogDetailView postSlug="evaluer-systeme-rag-production" detailData={getInsightDetailData("evaluer-systeme-rag-production", "fr")} onNavigate={() => {}} />
     );
 
     expect(html).toContain("Évaluer un système RAG en production :");

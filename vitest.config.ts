@@ -9,6 +9,7 @@ export default defineConfig({
     environment: "node",
     include: ["src/**/*.test.{ts,tsx}"],
     globals: false,
+    setupFiles: ["tests/setup-i18n.ts"],
     testTimeout: 30000,
   },
   resolve: {

@@ -6,5 +6,13 @@
   "footer.legal": "Mentions légales",
   "footer.cookies": "Gestion des cookies",
   "footer.about": "À propos",
-  "footer.compliance": "Engagement RGPD"
+  "footer.compliance": "Engagement RGPD",
+  "footer.cta.tag": "Premier échange",
+  "footer.cta.title": "Un projet d'IA à cadrer ?",
+  "footer.cta.desc": "Prenons 20 minutes pour comprendre votre contexte. Je vous dis franchement si l'IA est la bonne réponse.",
+  "footer.contact.title": "Contact",
+  "footer.contact.email": "Écrire un e-mail",
+  "footer.tagline": "Conseil en intelligence artificielle pour les dirigeants de PME et d'ETI : agents IA, automatisation et données, avec l'AI Act pris en compte dès le départ.",
+  "footer.location": "Siège à Paris · Interventions partout en France",
+  "footer.social.title": "Réseaux"
 }

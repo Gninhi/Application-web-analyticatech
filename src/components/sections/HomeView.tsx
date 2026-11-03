@@ -154,10 +154,10 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
             <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-[#F26D3D] mb-4">
               {t("home.section.cta.tag")}
             </p>
-            <h2 className="font-display text-[28px] leading-[34px] md:text-[48px] md:leading-[52px] font-bold text-white mb-4 tracking-tight">
+            <h2 className="font-display text-[28px] leading-[34px] md:text-[48px] md:leading-[52px] font-bold text-slate-900 dark:text-white mb-4 tracking-tight">
               {t("home.section.cta.title")}
             </h2>
-            <p className="max-w-2xl mx-auto text-[#B6C2D6] mb-8 text-base leading-[26px]">
+            <p className="max-w-2xl mx-auto text-slate-600 dark:text-[#B6C2D6] mb-8 text-base leading-[26px]">
               {t("home.section.cta.desc")}
             </p>
             <Button

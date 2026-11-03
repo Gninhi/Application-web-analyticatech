@@ -14,6 +14,7 @@ describe("ServiceDetailView Component", () => {
     const html = renderWithI18n(
       <ServiceDetailView
         serviceIndex="01"
+        detailData={SERVICES_DETAIL_REGISTRY["01"]}
         onNavigate={() => {}}
       />
     );
@@ -59,6 +60,7 @@ describe("ServiceDetailView Component", () => {
       const html = renderWithI18n(
         <ServiceDetailView
           serviceIndex={index}
+          detailData={data}
           onNavigate={() => {}}
         />
       );
@@ -78,6 +80,7 @@ describe("ServiceDetailView Component", () => {
     const html = renderWithI18n(
       <ServiceDetailView
         serviceIndex="1"
+        detailData={SERVICES_DETAIL_REGISTRY["01"]}
         onNavigate={() => {}}
       />
     );

@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { m, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import {
   ArrowUpRight,
   ChevronDown,
@@ -22,9 +22,9 @@ import {
   getServiceMeshOverlay,
 } from "@/lib/content/services";
 import { Button } from "@/components/ui/button";
+import { FilterPill } from "@/components/interactive/FilterPill";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SectionContainer } from "@/components/ui/SectionContainer";
-import { cn } from "@/lib/utils/cn";
 
 interface ServicesViewProps {
   onNavigate: (view: ViewKey) => void;
@@ -145,50 +145,37 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
             ].map((p) => {
               const isSelected = activePersona === p.id;
               return (
-                <button
+                <FilterPill
                   key={p.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={isSelected}
+                  active={isSelected}
+                  dotColor={p.color}
                   onClick={() => handleSelectPersona(p.id)}
-                  className={cn(
-                    "glass rounded-lg px-3.5 py-1.5 font-mono text-xs uppercase tracking-wider cursor-pointer transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2",
-                    isSelected
-                      ? "font-bold shadow-xs"
-                      : "text-muted-foreground hover:bg-white/10"
-                  )}
-                  style={{
-                    borderColor: isSelected ? p.color : undefined,
-                    backgroundColor: isSelected ? `color-mix(in srgb, ${p.color} 18%, transparent)` : undefined,
-                    color: isSelected ? p.color : undefined,
-                    boxShadow: isSelected ? `0 0 12px color-mix(in srgb, ${p.color} 25%, transparent)` : undefined,
-                  }}
                 >
                   {p.label}
-                </button>
+                </FilterPill>
               );
             })}
           </div>
 
           {/* Indice de défilement — guide vers la pile de cartes */}
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
+          <m.div
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
-            className="mt-10 inline-flex items-center gap-3 text-accent"
+            className="mt-10 inline-flex items-center gap-3 text-accent-ink"
           >
-            <motion.span
+            <m.span
               animate={reduceMotion ? { y: 0 } : { y: [0, 5, 0] }}
               transition={{ repeat: reduceMotion ? 0 : Infinity, duration: 1.6, ease: "easeInOut" }}
               className="flex h-7 w-7 items-center justify-center rounded-full border border-accent/40 bg-accent/10"
               aria-hidden
             >
               <ChevronDown className="h-4 w-4" />
-            </motion.span>
+            </m.span>
             <span className="font-mono text-[11px] uppercase tracking-[0.3em]">
               {t("services.scrollHint")}
             </span>
-          </motion.div>
+          </m.div>
         </SectionContainer>
       </section>
 
@@ -217,13 +204,13 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
       <section className="relative bg-background py-24 md:py-32">
         <SectionContainer>
           <div className="grid items-center gap-12 md:grid-cols-2">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.3em] text-accent">
+              <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.3em] text-accent-ink">
                 {t("services.method.tag")}
               </p>
               <h2 className="mb-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
@@ -242,10 +229,10 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
               >
                 {t("services.method.cta")}
               </Button>
-            </motion.div>
+            </m.div>
 
             {/* Pipeline des 4 phases de livraison */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -266,8 +253,8 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
                       className="glass-card relative flex items-start gap-4 rounded-xl p-4 transition-colors duration-300 hover:border-accent/40"
                     >
                       <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-accent/40 bg-accent/10">
-                        <StepIcon className="h-5 w-5 text-accent" aria-hidden />
-                        <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-foreground font-mono text-[9px] font-bold text-background">
+                        <StepIcon className="h-5 w-5 text-accent-ink" aria-hidden />
+                        <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-foreground font-mono text-[9px] font-semibold text-background">
                           {String(i + 1).padStart(2, "0")}
                         </span>
                       </span>
@@ -286,7 +273,7 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
                   );
                 })}
               </div>
-            </motion.div>
+            </m.div>
           </div>
         </SectionContainer>
       </section>
@@ -385,7 +372,7 @@ function ServiceDeckCard({
       } as CSSProperties}
     >
       {/* Décor : image en parallaxe + mesh + voile sombre haute lisibilité */}
-      <motion.div
+      <m.div
         className="service-card-bg absolute inset-0 overflow-hidden"
         data-testid="service-card-bg"
         style={{ y: bgY, scale: 1.1, willChange: "transform" }}
@@ -396,13 +383,13 @@ function ServiceDeckCard({
           alt=""
           fill
           sizes="(max-width: 768px) 100vw, 1200px"
-          priority={index < 2}
-          loading={index < 2 ? "eager" : "lazy"}
+          priority={index === 0}
+          loading={index === 0 ? "eager" : "lazy"}
           decoding="async"
           quality={75}
           className="object-cover object-center"
         />
-      </motion.div>
+      </m.div>
       <div className="absolute inset-0" style={{ background: meshOverlay }} aria-hidden />
       {/* Overlay sombre pour assurer un contraste >= 4.5:1 sur toutes résolutions */}
       <div
@@ -418,7 +405,7 @@ function ServiceDeckCard({
 
       {/* Overlay de profondeur (desktop uniquement car les cartes ne s'empilent pas sur mobile) */}
       {!isLast && (
-        <motion.div
+        <m.div
           className="pointer-events-none absolute inset-0 z-30 hidden lg:block bg-black"
           data-testid="service-card-depth"
           style={{ opacity: overlayOpacity }}
