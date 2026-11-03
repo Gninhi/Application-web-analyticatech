@@ -1,8 +1,7 @@
 "use client";
 
-import { useTransition, useCallback } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { useI18n } from "@/lib/i18n/provider";
+import { useCallback } from "react";
+import { usePathname } from "next/navigation";
 import { getAlternatePath, getLocaleFromPath } from "@/lib/navigation/routes";
 import { NavbarActionToggle } from "@/components/branding/NavbarActionToggle";
 import type { Locale } from "@/types/content";
@@ -59,14 +58,11 @@ function FlagEN() {
  * Conçu pour mobile et desktop :
  *  - Format carré standard 36x36px (h-9 w-9) strictement aligné sur le ThemeToggle.
  *  - Affiche le drapeau de la langue sélectionnée (FR 🇫🇷 ou EN 🇬🇧).
- *  - Bascule instantanée sans blocage du thread principal (startTransition).
+ *  - Recharge la page dans l'autre langue (dictionnaire et contenu rendus côté serveur).
  *  - Mémorisation dans cookie NEXT_LOCALE (1 an) et localStorage.
  */
 export function LanguageToggle() {
-  const router = useRouter();
   const pathname = usePathname() || "/";
-  const { setLocale } = useI18n();
-  const [, startTransition] = useTransition();
 
   const displayLocale: Locale = getLocaleFromPath(pathname);
   const targetLocale: Locale = displayLocale === "fr" ? "en" : "fr";
@@ -81,12 +77,10 @@ export function LanguageToggle() {
       // Ignorer si localStorage est restreint
     }
 
-    startTransition(() => {
-      setLocale(targetLocale);
-      document.documentElement.lang = targetLocale;
-      router.push(targetUrl);
-    });
-  }, [pathname, targetLocale, router, setLocale, startTransition]);
+    // Chargement complet : le serveur rend la page avec le dictionnaire et le
+    // contenu de l'autre langue (aucune autre langue n'est embarquée côté client).
+    window.location.assign(targetUrl);
+  }, [pathname, targetLocale]);
 
   const title =
     displayLocale === "fr"

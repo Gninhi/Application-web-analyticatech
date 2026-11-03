@@ -9,11 +9,13 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ContactCta } from "@/components/ui/ContactCta";
 import { DetailNotFound } from "./DetailNotFound";
-import { getSolutionDetailData } from "@/lib/content/solutions-detail-data";
+import type { SolutionDetailData } from "@/types/solution-detail";
 import { SolutionDetailTemplate } from "./SolutionDetailTemplate";
 
 export interface SolutionDetailViewProps {
   solutionSlug: string;
+  /** Fiche résolue par la page serveur (null : fiche simple issue du contenu). */
+  detailData: SolutionDetailData | null;
   onNavigate: (view: ViewKey) => void;
   onNavigateDetail?: (view: ViewKey, id: string) => void;
 }
@@ -26,15 +28,15 @@ export interface SolutionDetailViewProps {
  */
 export function SolutionDetailView({
   solutionSlug,
+  detailData,
   onNavigate,
   onNavigateDetail,
 }: SolutionDetailViewProps) {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
   const { solutions } = useAppContent();
   const solution = solutions.find((s) => s.slug === solutionSlug);
 
   // Recherche de données enrichies dans le registre
-  const detailData = getSolutionDetailData(solutionSlug, locale);
 
   if (detailData) {
     return (
@@ -83,7 +85,7 @@ export function SolutionDetailView({
         </Button>
 
         <m.div
-          initial={{ opacity: 0, y: 18 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="glass-card rounded-3xl p-8 md:p-12 mb-8"

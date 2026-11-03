@@ -84,7 +84,7 @@ export default async function PostDetailPageEn({ params }: Params) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <PostDetailRoute slug={resolvedSlug} />
+      <PostDetailRoute slug={resolvedSlug} detailData={detailData ?? null} />
     </>
   );
 }

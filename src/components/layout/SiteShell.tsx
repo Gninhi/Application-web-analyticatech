@@ -35,6 +35,8 @@ const PostHogTelemetry = dynamic(
 
 interface SiteShellProps {
   content: AppContentDTO;
+  /** Dictionnaire de la langue de la page (`getDictionary`, côté serveur). */
+  dictionary: Record<string, string>;
   children: React.ReactNode;
 }
 
@@ -125,11 +127,11 @@ function SiteShellInner({ children }: { children: React.ReactNode }) {
 /**
  * SiteShell — enveloppe globale partagée par toutes les routes.
  */
-export function SiteShell({ content, children }: SiteShellProps) {
+export function SiteShell({ content, dictionary, children }: SiteShellProps) {
   return (
     <LazyMotion features={loadMotionFeatures} strict>
       <MotionConfig reducedMotion="user">
-        <I18nProvider initialLocale={content.locale}>
+        <I18nProvider initialLocale={content.locale} dictionary={dictionary}>
           <ContentProvider content={content}>
             <SiteShellInner>{children}</SiteShellInner>
           </ContentProvider>

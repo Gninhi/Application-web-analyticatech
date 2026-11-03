@@ -9,11 +9,13 @@ import { Button } from "@/components/ui/button";
 import { ContactCta } from "@/components/ui/ContactCta";
 import { formatPostDate } from "@/lib/utils/date";
 import { DetailNotFound } from "./DetailNotFound";
-import { getInsightDetailData } from "@/lib/content/insights-detail-data";
+import type { InsightDetailData } from "@/types/insight-detail";
 import { InsightDetailTemplate } from "./InsightDetailTemplate";
 
 export interface BlogDetailViewProps {
   postSlug: string;
+  /** Article résolu par la page serveur (null : fiche simple issue du contenu). */
+  detailData: InsightDetailData | null;
   onNavigate: (view: ViewKey) => void;
   onNavigateDetail?: (view: ViewKey, id: string) => void;
 }
@@ -26,6 +28,7 @@ export interface BlogDetailViewProps {
  */
 export function BlogDetailView({
   postSlug,
+  detailData,
   onNavigate,
   onNavigateDetail,
 }: BlogDetailViewProps) {
@@ -33,8 +36,6 @@ export function BlogDetailView({
   const { blogPosts } = useAppContent();
   const post = blogPosts.find((p) => p.slug === postSlug);
 
-  // Recherche de données enrichies (avec gestion des alias)
-  const detailData = getInsightDetailData(postSlug, locale);
 
   if (detailData) {
     return (
@@ -83,7 +84,7 @@ export function BlogDetailView({
         </Button>
 
         <m.article
-          initial={{ opacity: 0, y: 18 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >

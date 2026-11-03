@@ -35,6 +35,8 @@ interface BrandLogoProps {
   /** Texte alternatif. Défaut : « Analyticatech ». */
   alt?: string;
   priority?: boolean;
+  /** Occupe toute la largeur du conteneur (signature de pied de page). */
+  fluid?: boolean;
 }
 
 /**
@@ -49,6 +51,7 @@ export function BrandLogo({
   className,
   alt = "Analyticatech",
   priority = false,
+  fluid = false,
 }: BrandLogoProps) {
   const files = VARIANTS[variant ?? (signature ? "signature" : "flux")];
   const width = Math.round(height * files.ratio);
@@ -59,7 +62,10 @@ export function BrandLogo({
   const fetchPriority = priority ? "high" : undefined;
 
   return (
-    <span className={cn("inline-flex shrink-0", className)} style={{ height }}>
+    <span
+      className={cn(fluid ? "flex w-full" : "inline-flex shrink-0", className)}
+      style={fluid ? undefined : { height }}
+    >
       <img
         src={files.clair}
         alt={alt}
@@ -68,7 +74,7 @@ export function BrandLogo({
         loading={loading}
         decoding="async"
         fetchPriority={fetchPriority}
-        className="block h-full w-auto dark:hidden"
+        className={cn("block dark:hidden", fluid ? "h-auto w-full" : "h-full w-auto")}
       />
       <img
         src={files.nuit}
@@ -78,7 +84,7 @@ export function BrandLogo({
         loading={loading}
         decoding="async"
         fetchPriority={fetchPriority}
-        className="hidden h-full w-auto dark:block"
+        className={cn("hidden dark:block", fluid ? "h-auto w-full" : "h-full w-auto")}
       />
     </span>
   );

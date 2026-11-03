@@ -1,40 +1,16 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useCallback, useMemo, type ReactNode } from "react";
 import type { Locale } from "@/types/content";
 
 // Importations des namespaces modulaires français
-import commonFr from "@/locales/fr/common.json";
-import navFr from "@/locales/fr/nav.json";
-import homeFr from "@/locales/fr/home.json";
-import servicesFr from "@/locales/fr/services.json";
-import servicesDetailFr from "@/locales/fr/services-detail.json";
-import solutionsFr from "@/locales/fr/solutions.json";
-import insightsFr from "@/locales/fr/insights.json";
-import contactFr from "@/locales/fr/contact.json";
-import aboutFr from "@/locales/fr/about.json";
-import legalFr from "@/locales/fr/legal.json";
-import footerFr from "@/locales/fr/footer.json";
 
 // Importations des namespaces modulaires anglais
-import commonEn from "@/locales/en/common.json";
-import navEn from "@/locales/en/nav.json";
-import homeEn from "@/locales/en/home.json";
-import servicesEn from "@/locales/en/services.json";
-import servicesDetailEn from "@/locales/en/services-detail.json";
-import solutionsEn from "@/locales/en/solutions.json";
-import insightsEn from "@/locales/en/insights.json";
-import contactEn from "@/locales/en/contact.json";
-import aboutEn from "@/locales/en/about.json";
-import legalEn from "@/locales/en/legal.json";
-import footerEn from "@/locales/en/footer.json";
 
 export type { Locale };
 
 interface I18nContextValue {
   locale: Locale;
-  setLocale: (locale: Locale) => void;
-  toggleLocale: () => void;
   t: (key: string, params?: Record<string, string | number>) => string;
 }
 
@@ -42,94 +18,55 @@ const I18nContext = createContext<I18nContextValue | null>(null);
 
 const STORAGE_KEY = "at-locale";
 
-/** Dictionnaires agrégés par langue */
-const translations: Record<Locale, Record<string, string>> = {
-  fr: {
-    ...commonFr,
-    ...navFr,
-    ...homeFr,
-    ...servicesFr,
-    ...servicesDetailFr,
-    ...solutionsFr,
-    ...insightsFr,
-    ...contactFr,
-    ...aboutFr,
-    ...legalFr,
-    ...footerFr,
-  },
-  en: {
-    ...commonEn,
-    ...navEn,
-    ...homeEn,
-    ...servicesEn,
-    ...servicesDetailEn,
-    ...solutionsEn,
-    ...insightsEn,
-    ...contactEn,
-    ...aboutEn,
-    ...legalEn,
-    ...footerEn,
-  },
-};
+/**
+ * Dictionnaires de repli, enregistrés hors production (tests unitaires) quand un
+ * composant est rendu sans dictionnaire explicite. En production, le layout
+ * transmet toujours le dictionnaire de la page (`getDictionary`).
+ */
+const registeredDictionaries: Partial<Record<Locale, Record<string, string>>> = {};
+
+export function registerDictionaries(dicts: Partial<Record<Locale, Record<string, string>>>): void {
+  Object.assign(registeredDictionaries, dicts);
+}
+
+function interpolate(value: string, params?: Record<string, string | number>): string {
+  if (!params) return value;
+  return Object.entries(params).reduce(
+    (str, [k, v]) => str.replace(new RegExp(`\\{${k}\\}`, "g"), String(v)),
+    value
+  );
+}
 
 const defaultFallbackContext: I18nContextValue = {
   locale: "fr",
-  setLocale: () => {},
-  toggleLocale: () => {},
-  t: (key: string, params?: Record<string, string | number>): string => {
-    const value = translations.fr[key] ?? key;
-    if (params) {
-      return Object.entries(params).reduce(
-        (str, [k, v]) => str.replace(new RegExp(`\\{${k}\\}`, "g"), String(v)),
-        value
-      );
-    }
-    return value;
-  },
+  t: (key, params) => interpolate(registeredDictionaries.fr?.[key] ?? key, params),
 };
 
 /**
- * I18nProvider — fournisseur de contexte pour l'internationalisation modulaire.
+ * I18nProvider — traductions de la page courante.
  *
- * - Persiste le choix de langue dans localStorage et Cookie NEXT_LOCALE (1 an).
- * - Met à jour `lang` sur <html> pour l'accessibilité et le SEO.
- * - Expose `t(key, params)` avec détection de clé manquante explicite en développement.
+ * La langue est fixée par l'URL (`/` ou `/en`) et le dictionnaire vient du
+ * serveur : changer de langue recharge la page (voir LanguageToggle), si bien
+ * qu'aucune autre langue n'est embarquée côté client.
+ * - Met à jour `lang` sur <html>, le cookie NEXT_LOCALE (1 an) et localStorage.
+ * - `t(key, params)` : interpolation `{name}`, clé affichée si absente.
  */
 export function I18nProvider({
   children,
   initialLocale = "fr",
   locale: propLocale,
+  dictionary,
 }: {
   children: ReactNode;
   initialLocale?: Locale;
   locale?: Locale;
+  /** Dictionnaire de la langue affichée (fourni par le layout). */
+  dictionary?: Record<string, string>;
 }) {
-  const effectiveInitial = propLocale ?? initialLocale;
-  const [locale, setLocaleState] = useState<Locale>(effectiveInitial);
+  const locale = propLocale ?? initialLocale;
+  const dict = dictionary ?? registeredDictionaries[locale] ?? registeredDictionaries.fr;
 
-  // Synchronise si la prop change (ex: navigation / tests)
-  useEffect(() => {
-    if (propLocale && propLocale !== locale) {
-      const raf = requestAnimationFrame(() => {
-        setLocaleState(propLocale);
-      });
-      return () => cancelAnimationFrame(raf);
-    }
-  }, [propLocale, locale]);
-
-  // Initialise depuis localStorage uniquement si non spécifié explicitement
-  useEffect(() => {
-    if (propLocale) return;
-    const raf = requestAnimationFrame(() => {
-      const stored = localStorage.getItem(STORAGE_KEY) as Locale | null;
-      if (stored === "fr" || stored === "en") {
-        setLocaleState(stored);
-      }
-    });
-    return () => cancelAnimationFrame(raf);
-  }, [propLocale]);
-
-  // Met à jour <html lang>, localStorage + Cookie quand la locale change
+  // Synchronise <html lang>, localStorage + cookie avec la langue affichée
   useEffect(() => {
     document.documentElement.lang = locale;
     try {
@@ -140,53 +77,24 @@ export function I18nProvider({
     document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; SameSite=Lax`;
   }, [locale]);
 
-  const setLocale = useCallback((next: Locale) => {
-    setLocaleState(next);
-  }, []);
-
-  const toggleLocale = useCallback(() => {
-    setLocaleState((prev) => (prev === "fr" ? "en" : "fr"));
-  }, []);
-
   const t = useCallback(
     (key: string, params?: Record<string, string | number>): string => {
-      const dict = translations[locale];
-      let value = dict?.[key];
-
+      const value = dict?.[key];
       if (value === undefined) {
         if (process.env.NODE_ENV === "development") {
-          console.warn(`[i18n] ⚠️ Clé manquante pour la locale "${locale}": "${key}"`);
-        }
-        // Repli sur le français
-        value = translations.fr[key];
-      }
-
-      // Si introuvable même en français
-      if (value === undefined) {
-        if (process.env.NODE_ENV === "development") {
+          console.warn(`[i18n] Clé manquante pour la locale "${locale}": "${key}"`);
           return `⚠️[${key}]`;
         }
         return key;
       }
-
-      // Interpolation des variables simples : {name}, {count}, etc.
-      if (params) {
-        return Object.entries(params).reduce(
-          (str, [k, v]) => str.replace(new RegExp(`\\{${k}\\}`, "g"), String(v)),
-          value
-        );
-      }
-
-      return value;
+      return interpolate(value, params);
     },
-    [locale]
+    [dict, locale]
   );
 
-  return (
-    <I18nContext.Provider value={{ locale, setLocale, toggleLocale, t }}>
-      {children}
-    </I18nContext.Provider>
-  );
+  const value = useMemo(() => ({ locale, t }), [locale, t]);
+
+  return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
 
 /** Hook pour accéder aux traductions et à la locale courante. */

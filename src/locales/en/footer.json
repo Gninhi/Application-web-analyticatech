@@ -6,5 +6,13 @@
   "footer.legal": "Legal Notice",
   "footer.cookies": "Cookie Settings",
   "footer.about": "About Us",
-  "footer.compliance": "GDPR commitment"
+  "footer.compliance": "GDPR commitment",
+  "footer.cta.tag": "First call",
+  "footer.cta.title": "An AI project to scope?",
+  "footer.cta.desc": "Let's take 20 minutes to understand your context. I'll tell you plainly whether AI is the right answer.",
+  "footer.contact.title": "Contact",
+  "footer.contact.email": "Send an email",
+  "footer.tagline": "AI consulting for SME and mid-market leaders: AI agents, automation and data, with the EU AI Act taken into account from the start.",
+  "footer.location": "Head office in Paris · Working across France",
+  "footer.social.title": "Social"
 }

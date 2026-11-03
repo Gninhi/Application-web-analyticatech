@@ -10,10 +10,6 @@ import { BrandLogo } from "@/components/branding/BrandLogo";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SectionContainer } from "@/components/ui/SectionContainer";
 
-import {
-  FALLBACK_COMPANY_VALUES_FR,
-  FALLBACK_COMPANY_VALUES_EN,
-} from "@/lib/content/fallbacks";
 import { getKeyStats } from "@/data/stats";
 
 interface AboutViewProps {
@@ -24,11 +20,9 @@ const VALUE_ICONS: Record<string, LucideIcon> = { Target, Eye, Heart, Users };
 
 export function AboutView({ onNavigate }: AboutViewProps) {
   const { t, locale } = useI18n();
-  const { companyValues: DB_VALUES } = useAppContent();
-
-  const valuesFallback = locale === "en" ? FALLBACK_COMPANY_VALUES_EN : FALLBACK_COMPANY_VALUES_FR;
-  const valuesSource = DB_VALUES.length > 0 ? DB_VALUES : valuesFallback;
-  const VALUES = valuesSource.map((v) => ({
+  // Valeurs fournies par le serveur (getCompanyValues), dans la langue de la page
+  const { companyValues } = useAppContent();
+  const VALUES = companyValues.map((v) => ({
     icon: VALUE_ICONS[v.iconKey] || Target,
     title: v.title,
     description: v.description,

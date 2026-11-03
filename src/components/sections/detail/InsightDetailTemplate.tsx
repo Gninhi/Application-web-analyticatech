@@ -162,7 +162,7 @@ export function InsightDetailTemplate({
 
         {/* ================= HERO PANEL ================= */}
         <m.header
-          initial={{ opacity: 0, y: 16 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
           className="relative rounded-3xl border border-slate-200/80 dark:border-white/10 p-8 sm:p-12 overflow-hidden glass-card bg-white/80 dark:bg-white/[0.02] shadow-xl shadow-slate-200/40 dark:shadow-none"

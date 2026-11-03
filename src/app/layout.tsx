@@ -7,6 +7,7 @@ import { GlobalErrorBoundary } from "@/components/system/GlobalErrorBoundary";
 import { SiteShell } from "@/components/layout/SiteShell";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getAppContent } from "@/lib/services/content.service";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import type { Locale } from "@/types/content";
 
 /* === Typographie (design system Analyticatech) ===
@@ -163,7 +164,9 @@ export default async function RootLayout({
         <JsonLd content={content} />
         <ThemeProvider>
           <GlobalErrorBoundary>
-            <SiteShell content={content}>{children}</SiteShell>
+            <SiteShell content={content} dictionary={getDictionary(locale)}>
+              {children}
+            </SiteShell>
           </GlobalErrorBoundary>
         </ThemeProvider>
         <VercelMonitoring />

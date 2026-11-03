@@ -113,7 +113,7 @@ describe("SolutionDetailTemplate & Registry", () => {
 
   it("SolutionDetailView rend la fiche d'une piste avec son statut", () => {
     const html = renderWithProviders(
-      <SolutionDetailView solutionSlug="logistics-ai" onNavigate={() => {}} />
+      <SolutionDetailView solutionSlug="logistics-ai" detailData={getSolutionDetailData("logistics-ai", "fr") ?? null} onNavigate={() => {}} />
     );
     expect(html).toContain("Prévision de la demande :");
     expect(html).toContain("Piste à construire");

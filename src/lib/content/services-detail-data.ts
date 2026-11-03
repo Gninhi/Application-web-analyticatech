@@ -1,10 +1,11 @@
-import type { LucideIcon } from "lucide-react";
-import { BrainCircuit, Workflow, Bot, BarChart3 } from "lucide-react";
+
+export type ServiceIconName = "brain-circuit" | "workflow" | "bot" | "bar-chart";
 
 export interface ServiceDetailData {
   index: string;
   slug: string;
-  icon: LucideIcon;
+  /** Icône du service, résolue côté client (données sérialisables serveur → client). */
+  iconName: ServiceIconName;
   iconEmoji: string;
   accentColor: string;
   accentSoft: string;
@@ -70,7 +71,7 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
   "01": {
     index: "01",
     slug: "raisonnement-rag",
-    icon: BrainCircuit,
+    iconName: "brain-circuit",
     iconEmoji: "🧠",
     accentColor: "var(--accent-ink)",
     accentSoft: "rgba(242, 109, 61, 0.12)",
@@ -220,7 +221,7 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
   "02": {
     index: "02",
     slug: "automatisation-workflows",
-    icon: Workflow,
+    iconName: "workflow",
     iconEmoji: "⚙️",
     accentColor: "var(--accent-ink)",
     accentSoft: "rgba(56, 189, 248, 0.12)",
@@ -370,7 +371,7 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
   "03": {
     index: "03",
     slug: "orchestration-multi-agents",
-    icon: Bot,
+    iconName: "bot",
     iconEmoji: "🤖",
     accentColor: "var(--accent-ink)",
     accentSoft: "rgba(16, 185, 129, 0.12)",
@@ -520,7 +521,7 @@ export const SERVICES_DETAIL_REGISTRY: Record<string, ServiceDetailData> = {
   "04": {
     index: "04",
     slug: "data-decision-augmentee",
-    icon: BarChart3,
+    iconName: "bar-chart",
     iconEmoji: "📊",
     accentColor: "var(--accent-ink)",
     accentSoft: "rgba(168, 85, 247, 0.12)",
@@ -671,7 +672,7 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
   "01": {
     index: "01",
     slug: "reasoning-rag",
-    icon: BrainCircuit,
+    iconName: "brain-circuit",
     iconEmoji: "🧠",
     accentColor: "var(--accent-ink)",
     accentSoft: "rgba(242, 109, 61, 0.12)",
@@ -817,7 +818,7 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
   "02": {
     index: "02",
     slug: "automation-workflows",
-    icon: Workflow,
+    iconName: "workflow",
     iconEmoji: "⚙️",
     accentColor: "var(--accent-ink)",
     accentSoft: "rgba(56, 189, 248, 0.12)",
@@ -962,7 +963,7 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
   "03": {
     index: "03",
     slug: "multi-agent-orchestration",
-    icon: Bot,
+    iconName: "bot",
     iconEmoji: "🤖",
     accentColor: "var(--accent-ink)",
     accentSoft: "rgba(16, 185, 129, 0.12)",
@@ -1108,7 +1109,7 @@ export const SERVICES_DETAIL_REGISTRY_EN: Record<string, ServiceDetailData> = {
   "04": {
     index: "04",
     slug: "data-augmented-decision",
-    icon: BarChart3,
+    iconName: "bar-chart",
     iconEmoji: "📊",
     accentColor: "var(--accent-ink)",
     accentSoft: "rgba(168, 85, 247, 0.12)",

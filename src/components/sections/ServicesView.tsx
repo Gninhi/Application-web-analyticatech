@@ -159,7 +159,7 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
 
           {/* Indice de défilement — guide vers la pile de cartes */}
           <m.div
-            initial={{ opacity: 0, y: 8 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
             className="mt-10 inline-flex items-center gap-3 text-accent-ink"
@@ -383,8 +383,8 @@ function ServiceDeckCard({
           alt=""
           fill
           sizes="(max-width: 768px) 100vw, 1200px"
-          priority={index < 2}
-          loading={index < 2 ? "eager" : "lazy"}
+          priority={index === 0}
+          loading={index === 0 ? "eager" : "lazy"}
           decoding="async"
           quality={75}
           className="object-cover object-center"

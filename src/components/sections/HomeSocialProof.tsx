@@ -57,7 +57,7 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
             {featuredPost && (
               <div className="lg:col-span-7 h-full">
                 <m.article
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={false}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4 }}
                   onClick={() => onNavigate("blog")}
@@ -102,7 +102,7 @@ export function HomeSocialProof({ onNavigate }: HomeSocialProofProps) {
               {secondaryPosts.map((post, idx) => (
                 <m.article
                   key={post.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={false}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: (idx + 1) * 0.08 }}
                   onClick={() => onNavigate("blog")}

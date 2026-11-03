@@ -37,7 +37,7 @@ export function NavLink({
     "relative inline-flex items-center min-h-8 transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 rounded-lg",
     variant === "navbar"
       ? "px-3 py-1.5 font-sans text-[13px] font-medium tracking-tight group"
-      : "text-sm text-slate-700 dark:text-slate-400 hover:text-[#03318C] dark:hover:text-white",
+      : "min-h-11 sm:min-h-8 text-sm text-slate-600 dark:text-[#B6C2D6] hover:text-accent-ink",
     active && variant === "navbar" && "text-[#03318C] dark:text-white font-semibold",
     !active && variant === "navbar" && "text-slate-600 dark:text-slate-300/80 hover:text-[#03318C] dark:hover:text-white",
     className

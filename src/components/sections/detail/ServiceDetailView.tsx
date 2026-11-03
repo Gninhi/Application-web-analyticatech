@@ -5,6 +5,9 @@ import {
   ArrowLeft,
   ArrowRight,
   BrainCircuit,
+  Workflow,
+  Bot,
+  BarChart3,
   Sparkles,
   Building2,
   Clock,
@@ -14,12 +17,14 @@ import type { ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContentOptional } from "@/components/providers/ContentProvider";
 import { Button } from "@/components/ui/button";
-import { getServiceDetailData, SERVICES_DETAIL_REGISTRY } from "@/lib/content/services-detail-data";
+import type { ServiceDetailData, ServiceIconName } from "@/lib/content/services-detail-data";
 import { FaqAccordion } from "@/components/ui/FaqAccordion";
 import { DetailNotFound } from "./DetailNotFound";
 
 export interface ServiceDetailViewProps {
   serviceIndex: string;
+  /** Fiche du service, résolue par la page serveur (aucun registre embarqué côté client). */
+  detailData: ServiceDetailData;
   onNavigate: (view: ViewKey) => void;
   onNavigateDetail?: (view: ViewKey, id: string) => void;
 }
@@ -38,16 +43,19 @@ export interface ServiceDetailViewProps {
  *  - Section "FAQ spécifique" (accordéon interactif levant les objections)
  *  - Section CTA & Navigation séquentielle vers le service suivant
  */
-export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }: ServiceDetailViewProps) {
-  const { locale, t } = useI18n();
+const SERVICE_ICONS: Record<ServiceIconName, typeof BrainCircuit> = {
+  "brain-circuit": BrainCircuit,
+  workflow: Workflow,
+  bot: Bot,
+  "bar-chart": BarChart3,
+};
+
+export function ServiceDetailView({ serviceIndex, detailData, onNavigate, onNavigateDetail }: ServiceDetailViewProps) {
+  const { t } = useI18n();
   const appContent = useAppContentOptional();
   const services = appContent?.services ?? [];
   const normalizedIndex = (serviceIndex ?? "").trim().padStart(2, "0");
   const service = services.find((s) => s.index === serviceIndex || s.index === normalizedIndex);
-  const detailData =
-    getServiceDetailData(normalizedIndex, locale) ??
-    getServiceDetailData("01", locale) ??
-    SERVICES_DETAIL_REGISTRY["01"];
 
   // État de l'accordéon FAQ
 
@@ -75,7 +83,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
     );
   }
 
-  const IconComp = detailData.icon || BrainCircuit;
+  const IconComp = SERVICE_ICONS[detailData.iconName] ?? BrainCircuit;
 
   return (
     <div className="pt-28 md:pt-36 pb-24 text-slate-900 dark:text-slate-100 selection:bg-[#F26D3D]/30 selection:text-accent-ink">
@@ -99,7 +107,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
 
         {/* ================= 01 — HERO PANEL ================= */}
         <m.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
           className="relative rounded-3xl border border-black/10 dark:border-white/10 p-8 sm:p-12 overflow-hidden glass-card bg-gradient-to-br from-orange-950/20 via-background to-background"
