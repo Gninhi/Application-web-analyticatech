@@ -4,6 +4,7 @@ import React from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { trackClientException } from "@/instrumentation-client";
 import { Button } from "@/components/ui/button";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 interface SectionErrorBoundaryProps {
   children: React.ReactNode;
@@ -62,9 +63,7 @@ export class SectionErrorBoundary extends React.Component<
 
       return (
         <div className="my-8 w-full rounded-2xl border border-[#F26D3D]/30 bg-[#F26D3D]/5 p-8 text-center backdrop-blur-md">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10">
-            <AlertTriangle className="h-6 w-6 text-accent-ink" aria-hidden />
-          </div>
+          <IconBadge icon={AlertTriangle} size="lg" className="mx-auto mb-4" />
           <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-accent-ink font-semibold">
             Incident de rendu // {this.props.sectionName ?? "Module"}
           </span>

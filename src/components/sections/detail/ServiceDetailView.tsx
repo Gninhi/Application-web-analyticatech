@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import type { ServiceDetailData, ServiceIconName } from "@/lib/content/services-detail-data";
 import { FaqAccordion } from "@/components/ui/FaqAccordion";
 import { DetailNotFound } from "./DetailNotFound";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 export interface ServiceDetailViewProps {
   serviceIndex: string;
@@ -121,9 +122,7 @@ export function ServiceDetailView({ serviceIndex, detailData, onNavigate, onNavi
 
           <div className="relative z-10">
             <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-              <span className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[#F26D3D]/30 bg-[#F26D3D]/10 backdrop-blur-md shadow-lg shadow-[#F26D3D]/10">
-                <IconComp className="h-7 w-7 text-accent-ink" aria-hidden />
-              </span>
+              <IconBadge icon={IconComp} size="lg" />
 
               <span className="font-mono text-xs font-semibold px-3 py-1 rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 text-accent-ink tracking-wider uppercase">
                 {detailData.badge}

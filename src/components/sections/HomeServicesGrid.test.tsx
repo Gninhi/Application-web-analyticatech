@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { HomeServicesGrid } from "@/components/sections/HomeServicesGrid";
-import { LivingSystemGraph } from "@/components/interactive/LivingSystemGraph";
+import { AiRunTrace } from "@/components/interactive/AiRunTrace";
 import { I18nProvider } from "@/lib/i18n/provider";
 import { ContentProvider } from "@/components/providers/ContentProvider";
 import {
@@ -70,11 +70,21 @@ describe("Dynamic Home Components", () => {
     expect(html).not.toContain("65%");
   });
 
-  it("LivingSystemGraph rend les nœuds avec les libellés sans chiffres non vérifiables", () => {
-    const html = renderWithProviders(<LivingSystemGraph />);
+  it("AiRunTrace montre une demande traitée de bout en bout, texte complet dès le premier rendu", () => {
+    const html = renderWithProviders(<AiRunTrace />);
 
-    expect(html).toContain("Vos outils existants");
+    // Titre conservé (SEO) et exemple signalé comme illustratif (charte)
+    expect(html).toContain("Comment fonctionne un système d'IA en production");
+    expect(html).toContain("Exemple illustratif");
+    // Question, sources numérotées, réponse sourcée, action soumise à validation, décision
+    expect(html).toContain("Quels clients risquent de ne pas renouveler ce trimestre ?");
+    expect(html).toContain("CRM · historique des échanges");
+    expect(html).toContain('aria-label="Source 2"');
     expect(html).toContain("Validation humaine");
-    expect(html).not.toContain("38 agents actifs");
+    expect(html).toMatch(/tableau de bord/i);
+    // Quatre étapes, toutes présentes, garanties affichées
+    expect(html.match(/data-status="/g)).toHaveLength(4);
+    expect(html).toContain("Aucune action sans votre accord");
+    expect(html.replace(/<[^>]+>/g, " ")).not.toMatch(/\d+\s?%/);
   });
 });

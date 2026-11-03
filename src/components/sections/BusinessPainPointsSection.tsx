@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/provider";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 export interface PainPointItem {
   id: string;
@@ -178,15 +179,7 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
                     </div>
 
                     <div className="flex items-center gap-3 mb-4">
-                      <div
-                        className="p-2 rounded-xl"
-                        style={{
-                          backgroundColor: `color-mix(in srgb, ${item.accentColor} 18%, transparent)`,
-                          color: item.accentColor,
-                        }}
-                      >
-                        <Icon className="h-5 w-5" aria-hidden />
-                      </div>
+                      <IconBadge icon={Icon} size="md" color={item.accentColor} />
                       <h3 className="font-display text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-50">
                         {t("painpoint.solution")}
                       </h3>

@@ -8,6 +8,7 @@ import { useI18n } from "@/lib/i18n/provider";
 import { Button } from "@/components/ui/button";
 import { BorderRotate } from "@/components/ui/animated-gradient-border";
 import { tint, getSolutionAccent } from "@/lib/utils/colors";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 export interface SolutionCardProps {
   solution: SolutionDTO;
@@ -230,9 +231,7 @@ export function SolutionCard({
           {/* Impact sectoriel ou Capacité & Méthode */}
           <div className="relative rounded-xl p-2.5 sm:p-3 lg:p-3.5 mb-3 sm:mb-4 flex items-start gap-2.5 sm:gap-3 overflow-hidden shrink-0" style={impactStyle}>
             <span className="absolute inset-y-2 left-0 w-0.5 rounded-full" style={{ background: accent }} aria-hidden />
-            <span className="h-8 w-8 sm:h-9 sm:w-9 shrink-0 rounded-lg border flex items-center justify-center mt-0.5" style={chipStyle}>
-              <TrendingUp className="h-4 w-4 sm:h-4.5 sm:w-4.5" style={{ color: accent }} aria-hidden />
-            </span>
+            <IconBadge icon={TrendingUp} size="sm" color={accent} className="mt-0.5" />
             <div className="min-w-0 flex-1">
               <p className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground mb-0.5">
                 {sol.impactLabel ?? t("common.impact")}

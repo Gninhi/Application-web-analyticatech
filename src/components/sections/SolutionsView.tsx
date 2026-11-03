@@ -11,6 +11,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { SectionContainer } from "@/components/ui/SectionContainer";
 import { SolutionCard } from "./solutions/SolutionCard";
 import { PhaseIndicator } from "./solutions/PhaseIndicator";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 interface SolutionsViewProps {
   onNavigate: (view: ViewKey) => void;
@@ -300,9 +301,7 @@ export function SolutionsView({ onNavigate, onNavigateDetail }: SolutionsViewPro
                 }}
                 aria-hidden
               />
-              <span className="relative h-14 w-14 sm:h-16 sm:w-16 rounded-2xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 flex items-center justify-center mb-4 sm:mb-5">
-                <Sparkles className="h-7 w-7 sm:h-8 sm:w-8 text-accent-ink" aria-hidden />
-              </span>
+              <IconBadge icon={Sparkles} size="lg" className="relative mb-4 sm:mb-5" />
               <h3 className="relative font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 dark:text-slate-50 mb-2 sm:mb-3">
                 {t("solutions.final.title")}
               </h3>

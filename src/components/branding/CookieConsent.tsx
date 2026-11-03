@@ -5,6 +5,7 @@ import { Cookie, Check, X, Sliders, Shield, ArrowLeft, Lock } from "lucide-react
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils/cn";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 export const CONSENT_KEY = "at-cookie-consent";
 export const CONSENT_VERSION = "2.0"; // Bump version 2.0 pour alignement strict CNIL 2026
@@ -165,9 +166,7 @@ export function CookieConsent() {
       <div className="glass-card rounded-2xl border border-black/15 dark:border-white/15 p-5 md:p-6 shadow-2xl bg-white/95 dark:bg-background/95 backdrop-blur-2xl">
         {/* En-tête avec Kicker technique // et icône dédiée */}
         <div className="flex items-start gap-3.5 mb-3.5">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 text-accent-ink shadow-xs">
-            <Cookie className="h-5 w-5" aria-hidden="true" />
-          </span>
+          <IconBadge icon={Cookie} size="sm" />
           <div className="flex-1 min-w-0">
             <span className="block font-mono text-[10px] uppercase tracking-widest text-accent-ink mb-0.5 font-semibold">
               {locale === "en"

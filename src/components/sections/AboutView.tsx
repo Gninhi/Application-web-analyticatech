@@ -11,6 +11,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { SectionContainer } from "@/components/ui/SectionContainer";
 
 import { getKeyStats } from "@/data/stats";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 interface AboutViewProps {
   onNavigate: (view: ViewKey) => void;
@@ -113,9 +114,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
                 transition={{ duration: 0.4, delay: i * 0.08 }}
                 className="glass-card rounded-2xl p-6 text-center"
               >
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 mb-4">
-                  <value.icon className="h-6 w-6 text-accent-ink" aria-hidden />
-                </span>
+                <IconBadge icon={value.icon} size="lg" className="mb-4" />
                 <h3 className="font-display text-lg font-bold text-slate-900 dark:text-slate-50 mb-2">
                   {value.title}
                 </h3>
