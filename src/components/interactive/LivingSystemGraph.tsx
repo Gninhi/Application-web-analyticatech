@@ -5,6 +5,7 @@ import { m } from "framer-motion";
 import { Database, BrainCircuit, Workflow, BarChart3, ArrowRight, Activity, CheckCircle2 } from "lucide-react";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils/cn";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 export interface NodeItem {
   id: string;
@@ -166,15 +167,7 @@ export function LivingSystemGraph() {
 
                 {/* Icône & Titre */}
                 <div className="flex items-center gap-3 mb-2">
-                  <div
-                    className={`p-2.5 rounded-xl transition-colors ${
-                      isActive
-                        ? "bg-[#F26D3D]/20 text-accent-ink"
-                        : "bg-black/5 dark:bg-white/10 text-slate-700 dark:text-slate-300"
-                    }`}
-                  >
-                    <Icon className="h-5 w-5" aria-hidden />
-                  </div>
+                  <IconBadge icon={Icon} size="md" tone={isActive ? "accent" : "neutral"} />
                   <div>
                     <h3 className="font-display font-bold text-slate-900 dark:text-slate-50 text-base">
                       {node.title}

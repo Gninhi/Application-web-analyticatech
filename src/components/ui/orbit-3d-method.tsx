@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { Waypoints, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 export interface OrbitNodeData {
   number: string;
@@ -630,24 +631,8 @@ export function Orbit3DMethod({
                   )}
 
 
-                  {/* Pastille circulaire avec icône — Pleine saturation éclatante sur l'active */}
-                  <div
-                    className={cn(
-                      "flex items-center justify-center rounded-full transition-transform duration-200",
-                      isActive
-                        ? "size-8 shadow-md ring-2 ring-offset-1 ring-offset-white dark:ring-offset-black"
-                        : "size-7 group-hover:scale-110"
-                    )}
-                    style={{
-                      background: isActive
-                        ? `linear-gradient(135deg, ${node.color} 0%, color-mix(in srgb, ${node.color} 80%, #000) 100%)`
-                        : `${node.color}20`,
-                      color: isActive ? "#FFFFFF" : node.color,
-                      boxShadow: isActive ? `0 0 16px ${node.color}80` : undefined,
-                    }}
-                  >
-                    <Icon className={isActive ? "h-4 w-4" : "h-3.5 w-3.5"} aria-hidden />
-                  </div>
+                  {/* Pastille d'icône commune (même style que tout le site) */}
+                  <IconBadge icon={Icon} size="sm" color={node.color} className={isActive ? "scale-105" : "scale-90"} />
 
                   {/* Numéro et intitulé de phase */}
                   <div className="flex items-center gap-2 pr-1.5">

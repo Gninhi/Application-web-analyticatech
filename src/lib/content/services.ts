@@ -7,7 +7,13 @@ import { BrainCircuit, Workflow, Bot, BarChart3, type LucideIcon } from "lucide-
  */
 
 /** Map statique des icônes Lucide par nom de service. */
+/** Icône de chaque service, indexée par `iconKey` du contenu (brain, workflow, bot, chart).
+ *  Les noms de composants restent acceptés pour compatibilité. */
 export const SERVICE_ICONS: Record<string, LucideIcon> = {
+  brain: BrainCircuit,
+  workflow: Workflow,
+  bot: Bot,
+  chart: BarChart3,
   BrainCircuit,
   Workflow,
   Bot,

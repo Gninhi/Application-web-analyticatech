@@ -18,6 +18,7 @@ import { Orbit3DMethod } from "@/components/ui/orbit-3d-method";
 import { SectionErrorBoundary } from "@/components/system/SectionErrorBoundary";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils/cn";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 export interface MethodStep {
   number: string;
@@ -426,7 +427,7 @@ export function AgentoryMethod({ onNavigateContact }: AgentoryMethodProps) {
 
                     {/* Pill de résultat explicite (Exigence Blueprint) */}
                     <div className="p-4 rounded-2xl border border-link/30 bg-link/10 flex items-start gap-3 mb-6">
-                      <ShieldCheck className="h-5 w-5 text-link shrink-0 mt-0.5" aria-hidden />
+                      <IconBadge icon={ShieldCheck} size="sm" tone="link" />
                       <div>
                         <span className="font-mono text-[10px] uppercase tracking-widest text-link font-semibold block">
                           {t("method.result")}

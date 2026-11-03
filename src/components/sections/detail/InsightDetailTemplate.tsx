@@ -21,6 +21,7 @@ import { useI18n } from "@/lib/i18n/provider";
 import { Button } from "@/components/ui/button";
 import { ContactCta } from "@/components/ui/ContactCta";
 import { VerticalSectionNav, type VerticalNavItem } from "@/components/ui/VerticalSectionNav";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 /** Libellés fixes du gabarit (le contenu des articles vient du registre FR ou EN). */
 const LABELS = {
@@ -467,7 +468,7 @@ export function InsightDetailTemplate({
           className="rounded-3xl border border-[#F26D3D]/40 bg-transparent p-6 sm:p-10 shadow-sm space-y-6"
         >
           <div className="flex items-center gap-2">
-            <ShieldAlert className="h-5 w-5 text-accent-ink" aria-hidden />
+            <IconBadge icon={ShieldAlert} size="sm" />
             <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink">
               {L.tradeoffsEyebrow}
             </span>

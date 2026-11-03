@@ -14,6 +14,7 @@ qui a été réuni dans un composant partagé, et ce qui reste volontairement sp
 | `FaqAccordion` | `src/components/ui/FaqAccordion.tsx` | Accordéon de questions (accueil, contact, fiches service). |
 | `ContactCta` | `src/components/ui/ContactCta.tsx` | Encart d'appel au premier échange en bas de page. |
 | `BrandLogo` | `src/components/branding/BrandLogo.tsx` | Logotype officiel (`flux`, `signature`, `mot`). |
+| `IconBadge` | `src/components/ui/IconBadge.tsx` | Pastille d'icône commune : cercle, anneaux au trait fin, voile d'accent, pictogramme 1,5 px, balayage au survol. Tailles `sm` (36 px), `md` (44), `lg` (56), `xl` (72) ; tons `accent`, `link`, `danger`, `neutral` ou `color` propre. |
 
 ## Regroupements effectués
 
@@ -30,6 +31,23 @@ qui a été réuni dans un composant partagé, et ce qui reste volontairement sp
 | Deux accordéons FAQ (accueil/contact et fiche service) de structures différentes | `FaqAccordion` |
 | `ButtonBorder` (enveloppe redondante de `Button`) | supprimé |
 | Ancien logo « A Tour Eiffel » + logotype écrit en texte | `BrandLogo` |
+
+## Iconographie (3 novembre 2026)
+
+Inspirée des puces des cartes services et des systèmes d'icônes primés (Awwwards,
+catégorie Icons) : un seul trait fin, monochrome d'accent, cadre circulaire au trait
+fin, animation discrète au survol, sans 3D, verre ni dégradé.
+
+- Icônes « de repère » (en tête de carte, de section, d'état) : toujours `IconBadge`.
+  Remplacées : contact (moyens de contact, e-mail, téléphone, adresse, confidentialité),
+  bandeau cookies, page 404, en-têtes de page, valeurs (À propos), étapes et fiches
+  Services, solutions, problèmes métiers, système vivant, ligne éditoriale Insights,
+  fiches service, article et solution, états d'erreur et de succès du formulaire,
+  capsules de la sphère Méthode (dont l'ancien dégradé est retiré).
+- Icônes fonctionnelles (flèches, chevrons, fermer, coches, 12–16 px) : Lucide nu,
+  même trait 1,5 px (règle `svg.lucide` dans globals.css).
+- Correctif : les 4 services affichaient le même pictogramme (clés `brain`/`workflow`/
+  `bot`/`chart` absentes de `SERVICE_ICONS`).
 
 ## Contrôles volontairement spécifiques
 

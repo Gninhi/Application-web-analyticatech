@@ -13,6 +13,7 @@ import {
 import { SectionContainer } from "@/components/ui/SectionContainer";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 export default function NotFoundPage() {
   const { t, locale } = useI18n();
@@ -168,9 +169,7 @@ export default function NotFoundPage() {
                     <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#F26D3D] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
                     <div className="flex items-start gap-3.5">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#F26D3D]/30 bg-[#F26D3D]/10 text-accent-ink group-hover:scale-105 group-hover:bg-[#F26D3D]/20 transition-all duration-200">
-                        <Icon className="h-5 w-5" aria-hidden="true" />
-                      </span>
+                      <IconBadge icon={Icon} size="sm" />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
                           <p className="font-display font-bold text-slate-800 dark:text-slate-100 group-hover:text-accent-ink transition-colors text-sm sm:text-base">

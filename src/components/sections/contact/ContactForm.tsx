@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { TerminalField } from "./TerminalField";
 import { useContactForm } from "@/lib/hooks/useContactForm";
 import { cn } from "@/lib/utils/cn";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 const DOMAIN_SUGGESTIONS = [
   {
@@ -132,9 +133,7 @@ export function ContactForm() {
               className="p-8 sm:p-12 text-center space-y-6"
             >
               {/* Badge animé de succès */}
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl border border-link/40 bg-link/10 text-link shadow-[0_0_30px_rgba(76,175,80,0.25)]">
-                <CheckCircle2 className="h-10 w-10" aria-hidden="true" />
-              </div>
+              <IconBadge icon={CheckCircle2} size="xl" tone="link" className="mx-auto" />
 
               <div className="max-w-md mx-auto space-y-2">
                 <span className="font-mono text-xs uppercase tracking-[0.25em] text-link font-semibold">

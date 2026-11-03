@@ -3,6 +3,7 @@
 import { type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { ParticleTypography } from "@/components/interactive/ParticleTypography";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 interface PageHeaderProps {
   /** Kicker mono orange (rendu avec le préfixe "// " sauf en mode icône). */
@@ -53,9 +54,7 @@ export function PageHeader({
     <div className={cn(centered && "text-center", className)}>
       {Icon ? (
         <div className="flex items-center gap-3 mb-4 text-left">
-          <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-[#F26D3D]/40 bg-[#F26D3D]/10 shrink-0">
-            <Icon className="h-6 w-6 text-accent-ink" aria-hidden />
-          </span>
+          <IconBadge icon={Icon} size="md" />
           <div>
             {kicker && (
               <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent-ink mb-1">

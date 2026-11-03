@@ -13,6 +13,7 @@ import {
   Lock,
   Headphones,
 } from "lucide-react";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 export function ContactView() {
   const { t, locale } = useI18n();
@@ -89,9 +90,7 @@ export function ContactView() {
                   key={idx}
                   className="glass-card rounded-2xl p-4 border border-black/10 dark:border-white/10 hover:border-[#F26D3D]/40 transition-colors flex items-center gap-3.5"
                 >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#F26D3D]/10 border border-[#F26D3D]/25 text-accent-ink">
-                    <Icon className="h-5 w-5" aria-hidden="true" />
-                  </span>
+                  <IconBadge icon={Icon} size="md" />
                   <div className="min-w-0">
                     <p className="font-mono text-[10px] uppercase tracking-wider text-slate-600 dark:text-slate-400">
                       {isEn ? metric.labelEn : metric.labelFr}

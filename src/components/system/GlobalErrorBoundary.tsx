@@ -4,6 +4,7 @@ import React from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { trackClientException } from "@/instrumentation-client";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 interface Props {
   children: React.ReactNode;
@@ -50,9 +51,7 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
       return (
         <div className="min-h-screen flex flex-col items-center justify-center px-6 grid-military bg-background">
           <div className="glass-card rounded-2xl p-8 md:p-12 max-w-lg w-full text-center">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10">
-              <AlertTriangle className="h-8 w-8 text-accent-ink" aria-hidden />
-            </div>
+            <IconBadge icon={AlertTriangle} size="xl" className="mx-auto mb-6" />
             <p
               className="font-mono text-xs uppercase tracking-[0.3em] text-accent-ink mb-3"
             >

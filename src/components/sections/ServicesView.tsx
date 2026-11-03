@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { FilterPill } from "@/components/interactive/FilterPill";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SectionContainer } from "@/components/ui/SectionContainer";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 interface ServicesViewProps {
   onNavigate: (view: ViewKey) => void;
@@ -252,8 +253,8 @@ export function ServicesView({ onNavigate, onNavigateDetail }: ServicesViewProps
                       key={step.id}
                       className="glass-card relative flex items-start gap-4 rounded-xl p-4 transition-colors duration-300 hover:border-accent/40"
                     >
-                      <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-accent/40 bg-accent/10">
-                        <StepIcon className="h-5 w-5 text-accent-ink" aria-hidden />
+                      <span className="relative shrink-0">
+                    <IconBadge icon={StepIcon} size="md" />
                         <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-foreground font-mono text-[9px] font-semibold text-background">
                           {String(i + 1).padStart(2, "0")}
                         </span>
@@ -353,12 +354,6 @@ function ServiceDeckCard({
     if (!el) return;
     el.style.setProperty("--mx", "-200px");
     el.style.setProperty("--my", "-200px");
-  };
-
-  const chipStyle: CSSProperties = {
-    borderColor: `color-mix(in srgb, ${accent} 45%, transparent)`,
-    background: `color-mix(in srgb, ${accent} 12%, transparent)`,
-    color: accent,
   };
 
   return (
@@ -477,12 +472,7 @@ function ServiceDeckCard({
                 >
                   {service.index}
                 </span>
-                <span
-                  className="flex h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16 items-center justify-center rounded-2xl backdrop-blur-sm"
-                  style={chipStyle}
-                >
-                  <IconComponent className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8" aria-hidden />
-                </span>
+                <IconBadge icon={IconComponent} size="xl" color={accent} />
               </div>
               <div>
                 <p

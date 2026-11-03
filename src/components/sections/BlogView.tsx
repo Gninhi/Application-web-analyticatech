@@ -14,6 +14,7 @@ import { getCategoryAccent } from "@/lib/utils/colors";
 import { viewToPath } from "@/lib/navigation/routes";
 import { HeroCard } from "./blog/HeroCard";
 import { ReportCard } from "./blog/ReportCard";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 type Filter = string;
 
@@ -208,7 +209,7 @@ export function BlogView({ onNavigateDetail }: BlogViewProps) {
                 { icon: Hammer, key: "p3" },
               ].map(({ icon: Icon, key }) => (
                 <li key={key} className="space-y-2">
-                  <Icon className="h-5 w-5 text-accent-ink" aria-hidden="true" />
+                  <IconBadge icon={Icon} size="md" />
                   <h3 className="font-display text-base font-bold text-foreground">{t(`blog.line.${key}.title`)}</h3>
                   <p className="text-sm leading-relaxed text-muted-foreground">{t(`blog.line.${key}.desc`)}</p>
                 </li>

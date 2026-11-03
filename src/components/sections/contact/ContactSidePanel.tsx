@@ -17,6 +17,7 @@ import {
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
 import { getSlaList, SLA_COMMITMENTS } from "@/data/commitments";
+import { IconBadge } from "@/components/ui/IconBadge";
 
 export function ContactSidePanel() {
   const { t, locale } = useI18n();
@@ -77,9 +78,7 @@ export function ContactSidePanel() {
           {/* Email officiel */}
           <li className="flex items-start justify-between gap-3 group">
             <div className="flex items-start gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/10 text-accent-ink group-hover:scale-105 transition-transform">
-                <Mail className="h-4 w-4" aria-hidden="true" />
-              </span>
+              <IconBadge icon={Mail} size="sm" />
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-widest text-slate-600 dark:text-slate-400">
                   {t("contact.channel.email")}
@@ -111,9 +110,7 @@ export function ContactSidePanel() {
           {/* Téléphone direct */}
           <li className="flex items-start justify-between gap-3 group">
             <div className="flex items-start gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/10 text-accent-ink group-hover:scale-105 transition-transform">
-                <Phone className="h-4 w-4" aria-hidden="true" />
-              </span>
+              <IconBadge icon={Phone} size="sm" />
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-widest text-slate-600 dark:text-slate-400">
                   {t("contact.channel.phone")}
@@ -144,9 +141,7 @@ export function ContactSidePanel() {
 
           {/* Siège social */}
           <li className="flex items-start gap-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/10 text-accent-ink">
-              <MapPin className="h-4 w-4" aria-hidden="true" />
-            </span>
+            <IconBadge icon={MapPin} size="sm" />
             <div>
               <p className="font-mono text-[10px] uppercase tracking-widest text-slate-600 dark:text-slate-400">
                 {t("contact.channel.hq")}
@@ -217,7 +212,7 @@ export function ContactSidePanel() {
       {/* 4. Encart Confidentialité & Secret Professionnel */}
       <div className="glass-card rounded-3xl p-6 border border-black/10 dark:border-white/10 bg-gradient-to-br from-[#011C40]/30 to-[#022859]/20">
         <div className="flex items-center gap-2 mb-2">
-          <ShieldCheck className="h-5 w-5 text-link" aria-hidden="true" />
+          <IconBadge icon={ShieldCheck} size="sm" tone="link" />
           <h3 className="font-display text-sm font-bold text-slate-900 dark:text-slate-50">
             {t("contact.confidentiality.title")}
           </h3>
