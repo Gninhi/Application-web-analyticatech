@@ -185,7 +185,7 @@ export function VerticalSectionNav({
         )}
       >
         <div className="flex flex-col space-y-1">
-          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500 mb-4 px-2">
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.25em] text-slate-600 dark:text-slate-400 mb-4 px-2">
             {`${tocLabel.toUpperCase()} //`}
           </p>
 
@@ -259,7 +259,7 @@ export function VerticalSectionNav({
                             ? "text-accent-ink"
                             : isCompleted || isPassed
                             ? "text-slate-700 dark:text-slate-300"
-                            : "text-slate-400 dark:text-slate-600"
+                            : "text-slate-600 dark:text-slate-400"
                         )}
                         style={{
                           color: isCurrent ? accentColor : undefined,
@@ -267,16 +267,17 @@ export function VerticalSectionNav({
                       >
                         {item.number}
                       </span>
-                      <h4
+                      {/* Libellé de lien, pas un titre : ne casse pas la hiérarchie h1 → h3 de la page */}
+                      <span
                         className={cn(
-                          "text-xs font-semibold tracking-tight transition-colors duration-200 truncate",
+                          "block font-display text-xs font-semibold tracking-tight transition-colors duration-200 truncate",
                           isCurrent
                             ? "font-semibold text-slate-900 dark:text-white"
-                            : "text-slate-500 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200"
+                            : "text-slate-600 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200"
                         )}
                       >
                         {item.title}
-                      </h4>
+                      </span>
                     </div>
 
                     {item.subtitle && (
@@ -285,7 +286,7 @@ export function VerticalSectionNav({
                           "text-[10px] font-mono tracking-tight mt-0.5 truncate transition-opacity duration-200",
                           isCurrent
                             ? "text-slate-600 dark:text-slate-400 opacity-100"
-                            : "text-slate-400 dark:text-slate-500 opacity-60 group-hover:opacity-100"
+                            : "text-slate-600 dark:text-slate-400"
                         )}
                       >
                         {item.subtitle}
@@ -305,7 +306,7 @@ export function VerticalSectionNav({
           {/* Menu déroulant compact */}
           {mobileOpen && (
             <div className="absolute bottom-14 right-0 w-64 rounded-2xl border border-slate-200 dark:border-white/10 bg-white/95 dark:bg-background/95 backdrop-blur-xl p-3 shadow-2xl space-y-1 animate-in fade-in slide-in-from-bottom-2 duration-200">
-              <p className="font-mono text-[9px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-2 py-1">
+              <p className="font-mono text-[9px] font-semibold uppercase tracking-widest text-slate-600 dark:text-slate-400 px-2 py-1">
                 SECTIONS //
               </p>
               {items.map((item) => {
@@ -322,7 +323,7 @@ export function VerticalSectionNav({
                     )}
                   >
                     <span className="truncate">
-                      <span className="mr-2 text-slate-400 dark:text-slate-500 font-normal">
+                      <span className="mr-2 text-slate-600 dark:text-slate-400 font-normal">
                         {item.number}.
                       </span>
                       {item.title}

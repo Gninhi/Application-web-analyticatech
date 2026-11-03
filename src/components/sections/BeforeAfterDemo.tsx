@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { ArrowRight, XCircle, CheckCircle2, AlertOctagon, Sparkles, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/provider";
@@ -96,7 +96,7 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
         {(["before", "after"] as const).map((mode) => {
           const isActive = viewMode === mode;
           return (
-            <motion.div
+            <m.div
               key={mode}
               initial={false}
               animate={{ opacity: isActive ? 1 : 0 }}
@@ -140,9 +140,9 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
                   </div>
 
                   <div className="lg:col-span-5 w-full rounded-xl sm:rounded-2xl border border-red-500/20 bg-red-500/5 p-4 sm:p-6 backdrop-blur-md text-center">
-                    <span className="font-mono text-[10px] sm:text-xs uppercase text-slate-500 dark:text-slate-400 block mb-1.5 sm:mb-2">{t("demo.before.score")}</span>
+                    <span className="font-mono text-[10px] sm:text-xs uppercase text-slate-600 dark:text-slate-400 block mb-1.5 sm:mb-2">{t("demo.before.score")}</span>
                     <div className="font-display text-3xl sm:text-4xl font-bold text-red-500 my-1.5 sm:my-2">{t("demo.before.verdict")}</div>
-                    <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                    <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                       {t("demo.before.verdict.desc")}
                     </p>
                   </div>
@@ -208,10 +208,10 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
                       <div className="col-span-2 rounded-xl sm:rounded-2xl border border-black/10 dark:border-white/20 bg-black/5 dark:bg-white/5 p-3.5 sm:p-5 text-center transition-transform duration-300 hover:scale-[1.01]">
                         <div className="inline-flex items-center gap-1.5 mb-1">
                           <TrendingUp className="h-3.5 w-3.5 text-accent-ink shrink-0" aria-hidden />
-                          <span className="font-mono text-[9px] sm:text-[10px] uppercase text-slate-500 dark:text-slate-400">{t("demo.after.m3.label")}</span>
+                          <span className="font-mono text-[9px] sm:text-[10px] uppercase text-slate-600 dark:text-slate-400">{t("demo.after.m3.label")}</span>
                         </div>
                         <span className="font-display text-3xl sm:text-4xl font-bold text-accent-ink block">{t("demo.after.m3.value")}</span>
-                        <span className="font-mono text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 sm:mt-1 block">{t("demo.after.m3.sub")}</span>
+                        <span className="font-mono text-[9px] sm:text-[10px] text-slate-600 dark:text-slate-400 mt-0.5 sm:mt-1 block">{t("demo.after.m3.sub")}</span>
                       </div>
                     </div>
 
@@ -233,7 +233,7 @@ export function BeforeAfterDemo({ onNavigateContact }: BeforeAfterDemoProps) {
                   </div>
                 </>
               )}
-            </motion.div>
+            </m.div>
           );
         })}
       </div>

@@ -2,7 +2,7 @@
 
 import { ArrowUpRight } from "lucide-react";
 import { useRef, type CSSProperties } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { ServiceCardHeader } from "./ServiceCardHeader";
 import { ServiceCardMeta } from "./ServiceCardMeta";
 import { ServiceCardAction } from "./ServiceCardAction";
@@ -75,7 +75,7 @@ export function ServiceCard({
   };
 
   return (
-    <motion.article
+    <m.article
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.08 }}
@@ -168,6 +168,6 @@ export function ServiceCard({
         </div>
 
       </div>
-    </motion.article>
+    </m.article>
   );
 }

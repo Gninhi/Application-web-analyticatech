@@ -52,7 +52,11 @@ export function BrandLogo({
 }: BrandLogoProps) {
   const files = VARIANTS[variant ?? (signature ? "signature" : "flux")];
   const width = Math.round(height * files.ratio);
-  const loading = priority ? "eager" : "lazy";
+  // Toujours « lazy » : le navigateur ne télécharge pas les versions masquées
+  // (thème inactif, autre point de rupture), une seule requête par logotype visible.
+  // `priority` ne demande que la priorité réseau haute pour la version affichée.
+  const loading = "lazy";
+  const fetchPriority = priority ? "high" : undefined;
 
   return (
     <span className={cn("inline-flex shrink-0", className)} style={{ height }}>
@@ -62,6 +66,8 @@ export function BrandLogo({
         width={width}
         height={height}
         loading={loading}
+        decoding="async"
+        fetchPriority={fetchPriority}
         className="block h-full w-auto dark:hidden"
       />
       <img
@@ -70,6 +76,8 @@ export function BrandLogo({
         width={width}
         height={height}
         loading={loading}
+        decoding="async"
+        fetchPriority={fetchPriority}
         className="hidden h-full w-auto dark:block"
       />
     </span>

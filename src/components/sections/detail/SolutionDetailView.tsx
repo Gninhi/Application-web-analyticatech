@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import type { ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
@@ -82,7 +82,7 @@ export function SolutionDetailView({
           {`${t("common.back")} ${t("nav.solutions")}`}
         </Button>
 
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -98,12 +98,12 @@ export function SolutionDetailView({
           />
 
           <div className="rounded-xl border border-[#F26D3D]/25 bg-[#F26D3D]/5 p-4 mb-6">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-1">
               {t("common.impact")}
             </p>
             <p className="font-display text-xl font-bold text-accent-ink">{solution.impact}</p>
             {solution.methodology && (
-              <p className="mt-1.5 font-mono text-xs text-slate-500 dark:text-slate-400">
+              <p className="mt-1.5 font-mono text-xs text-slate-600 dark:text-slate-400">
                 {solution.methodology}
               </p>
             )}
@@ -119,7 +119,7 @@ export function SolutionDetailView({
               </span>
             ))}
           </div>
-        </motion.div>
+        </m.div>
 
         <ContactCta question={t("detail.solution.cta")} cta={t("common.contact")} onNavigate={onNavigate} />
       </div>

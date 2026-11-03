@@ -13,14 +13,13 @@ describe("Charte typographique", () => {
   it("le layout ne charge que les fichiers Manrope et Inter du design system", () => {
     const layout = read("src/app/layout.tsx");
     expect(layout).not.toContain("next/font/google");
-    expect(layout).toMatch(/Manrope-(SemiBold|Bold|ExtraBold)\.woff2/);
+    expect(layout).toMatch(/Manrope-(SemiBold|Bold)\.woff2/);
     expect(layout).toMatch(/Inter-(Regular|Medium|SemiBold)\.woff2/);
     expect(readdirSync(path.join(ROOT, "src/app/fonts")).sort()).toEqual([
       "Inter-Medium.woff2",
       "Inter-Regular.woff2",
       "Inter-SemiBold.woff2",
       "Manrope-Bold.woff2",
-      "Manrope-ExtraBold.woff2",
       "Manrope-SemiBold.woff2",
     ]);
   });

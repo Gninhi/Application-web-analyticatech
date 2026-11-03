@@ -1,9 +1,8 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Button, type ButtonProps } from "@/components/ui/button";
 
 export interface AnimatedButtonBorderProps {
   /** Rayon de courbure en pixels ou chaîne CSS pour l'offsetPath rect(). Défaut : 14 */
@@ -49,7 +48,7 @@ export function AnimatedButtonBorder({
         className
       )}
     >
-      <motion.div
+      <m.div
         className={cn(
           "absolute aspect-square bg-gradient-to-r",
           !beamGradient &&
@@ -73,56 +72,3 @@ export function AnimatedButtonBorder({
     </div>
   );
 }
-
-export interface ButtonBorderProps extends ButtonProps {
-  borderRadius?: number | string;
-  duration?: number;
-  beamWidth?: number;
-  beamSize?: number;
-  gradientClassName?: string;
-  beamGradient?: string;
-  borderClassName?: string;
-  showAnimatedBorder?: boolean;
-}
-
-/**
- * ButtonBorder — Composant bouton officiel intégrant directement la bordure animée.
- */
-export const ButtonBorder = React.forwardRef<HTMLButtonElement, ButtonBorderProps>(
-  (
-    {
-      children,
-      className,
-      variant = "outline",
-      borderRadius = 14,
-      duration = 4,
-      beamWidth,
-      beamSize,
-      gradientClassName,
-      beamGradient,
-      borderClassName: _borderClassName,
-      showAnimatedBorder = true,
-      ...props
-    },
-    ref
-  ) => {
-    return (
-      <Button
-        ref={ref}
-        variant={variant}
-        borderRadius={borderRadius}
-        duration={duration}
-        beamWidth={beamWidth}
-        beamSize={beamSize}
-        gradientClassName={gradientClassName}
-        beamGradient={beamGradient}
-        showBorderAnimation={showAnimatedBorder}
-        className={className}
-        {...props}
-      >
-        {children}
-      </Button>
-    );
-  }
-);
-ButtonBorder.displayName = "ButtonBorder";

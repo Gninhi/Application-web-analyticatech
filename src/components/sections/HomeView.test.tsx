@@ -106,4 +106,12 @@ describe("HomeView — Rendu SSR initial (crawl sans JS & robots IA)", () => {
     expect(extractedHeadings.some((h) => h.includes("Quatre services complémentaires"))).toBe(true); // 03 - Services
     expect(extractedHeadings.some((h) => h.includes("Une démarche structurée"))).toBe(true); // 07 - Méthode
   });
+
+  it("la carte « Premier échange » (section 10) reste lisible en thème clair", () => {
+    const html = renderWithProviders(<HomeView onNavigate={() => {}} onNavigateDetail={() => {}} />);
+    const title = html.match(/<h2[^>]*>Prenons 20 minutes pour cadrer votre besoin\.<\/h2>/)?.[0] ?? "";
+    expect(title).toContain("text-slate-900");
+    expect(title).toContain("dark:text-white");
+    expect(title).not.toMatch(/class="[^"]*(?<!dark:)text-white/);
+  });
 });

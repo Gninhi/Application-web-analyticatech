@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { ArrowLeft, Target, Eye, Heart, Users, type LucideIcon } from "lucide-react";
 import type { ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
@@ -67,7 +67,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
 
         {/* Mission & Vision */}
         <div className="grid md:grid-cols-2 gap-6 mb-16">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -80,9 +80,9 @@ export function AboutView({ onNavigate }: AboutViewProps) {
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               {t("about.mission.body")}
             </p>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -95,11 +95,11 @@ export function AboutView({ onNavigate }: AboutViewProps) {
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               {t("about.vision.body")}
             </p>
-          </motion.div>
+          </m.div>
         </div>
 
         {/* Valeurs */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -111,7 +111,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {VALUES.map((value, i) => (
-              <motion.div
+              <m.div
                 key={value.title}
                 initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -128,13 +128,13 @@ export function AboutView({ onNavigate }: AboutViewProps) {
                 <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                   {value.description}
                 </p>
-              </motion.div>
+              </m.div>
             ))}
           </div>
-        </motion.div>
+        </m.div>
 
         {/* Stats */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -147,16 +147,16 @@ export function AboutView({ onNavigate }: AboutViewProps) {
                 <p className="font-display text-3xl md:text-4xl font-bold text-accent-ink">
                   {stat.v}
                 </p>
-                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 mt-2">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-600 dark:text-slate-400 mt-2">
                   {stat.l}
                 </p>
               </div>
             ))}
           </div>
-        </motion.div>
+        </m.div>
 
         {/* CTA */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -171,7 +171,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
           >
             {t("about.cta")}
           </Button>
-        </motion.div>
+        </m.div>
       </SectionContainer>
     </div>
   );

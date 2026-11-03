@@ -105,7 +105,7 @@ export function ParticleTypography({
 
       {/* Sous-titre explicatif avec espacement proportionnel */}
       {subtitle && (
-        <p className="mt-4 md:mt-6 font-mono text-xs md:text-sm uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 max-w-xl">
+        <p className="mt-4 md:mt-6 font-mono text-xs md:text-sm uppercase tracking-[0.2em] text-slate-600 dark:text-slate-400 max-w-xl">
           {subtitle}
         </p>
       )}

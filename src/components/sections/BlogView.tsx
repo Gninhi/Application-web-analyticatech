@@ -1,13 +1,13 @@
 "use client";
 
 import { useCallback, useMemo, useState, useTransition } from "react";
-import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { ArrowRight, Compass, FlaskConical, Hammer } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
 import { FilterPill } from "@/components/interactive/FilterPill";
+import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SectionContainer } from "@/components/ui/SectionContainer";
 import { getCategoryAccent } from "@/lib/utils/colors";
@@ -128,7 +128,7 @@ export function BlogView({ onNavigateDetail }: BlogViewProps) {
                 {cat.label}
               </FilterPill>
             ))}
-            <span className="ml-auto font-mono text-[11px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
+            <span className="ml-auto font-mono text-[11px] uppercase tracking-widest text-slate-600 dark:text-slate-400">
               {filtered.length} {filtered.length > 1 ? t("blog.filter.entries.other") : t("blog.filter.entries.one")}
             </span>
           </div>
@@ -141,7 +141,7 @@ export function BlogView({ onNavigateDetail }: BlogViewProps) {
           <div className="mx-auto max-w-7xl px-4 md:px-6">
             {/* Article à la une — hero pleine largeur */}
             {featured && (
-              <motion.div
+              <m.div
                 key={featured.id}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -153,15 +153,15 @@ export function BlogView({ onNavigateDetail }: BlogViewProps) {
                   total={filtered.length}
                   onNavigateDetail={onNavigateDetail}
                 />
-              </motion.div>
+              </m.div>
             )}
 
             {/* Grille d'articles */}
             {rest.length > 0 && (
-              <motion.div layout className="mt-5 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              <m.div layout className="mt-5 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
                 <AnimatePresence mode="popLayout">
                   {rest.map((post, i) => (
-                    <motion.div
+                    <m.div
                       key={post.id}
                       layout
                       initial={{ opacity: 0, scale: 0.96 }}
@@ -176,15 +176,15 @@ export function BlogView({ onNavigateDetail }: BlogViewProps) {
                         total={filtered.length}
                         onNavigateDetail={onNavigateDetail}
                       />
-                    </motion.div>
+                    </m.div>
                   ))}
                 </AnimatePresence>
-              </motion.div>
+              </m.div>
             )}
 
             {filtered.length === 0 && (
               <div className="text-center py-20">
-                <p className="font-mono text-sm text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+                <p className="font-mono text-sm text-slate-600 dark:text-slate-400 uppercase tracking-widest">
                   {t("blog.empty")}
                 </p>
               </div>
@@ -215,21 +215,25 @@ export function BlogView({ onNavigateDetail }: BlogViewProps) {
               ))}
             </ul>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link
+              <Button
                 href={viewToPath("solutions", undefined, locale)}
-                className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 font-mono text-xs uppercase tracking-wider text-foreground hover:border-[#F26D3D] hover:text-accent-ink transition-colors"
+                variant="outline"
+                size="md"
+                icon={<ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />}
+                iconPosition="right"
               >
                 {t("blog.line.cta.projects")}
-                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-              </Link>
-              <Link
+              </Button>
+              <Button
                 href={viewToPath("contact", undefined, locale)}
+                variant="primary"
+                size="md"
                 data-cta="blog_line_contact"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#F26D3D] px-4 py-2.5 font-mono text-xs font-semibold uppercase tracking-wider text-slate-950 hover:bg-[#ff7b4b] transition-colors"
+                icon={<ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />}
+                iconPosition="right"
               >
                 {t("blog.line.cta.contact")}
-                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-              </Link>
+              </Button>
             </div>
           </div>
         </div>

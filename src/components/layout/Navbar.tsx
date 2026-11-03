@@ -4,14 +4,14 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { ArrowUpRight, Menu, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { type ViewKey } from "@/types/content";
 import { viewToPath, pathToView, getLocaleFromPath } from "@/lib/navigation/routes";
 import { RandomLetterSwap, type RandomLetterSwapHandle } from "@/components/ui/random-letter-swap";
 import { BrandLogo } from "@/components/branding/BrandLogo";
 import { ThemeToggle } from "@/components/branding/ThemeToggle";
 import { LanguageToggle } from "@/components/branding/LanguageToggle";
-import { ButtonBorder } from "@/components/ui/button-border";
+import { Button } from "@/components/ui/button";
 import { useScrollState } from "@/hooks/useScrollState";
 import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
@@ -46,7 +46,7 @@ function NavbarLinkItem({ itemKey, label, href, isActive }: NavbarLinkItemProps)
     >
       {/* Pilule active animée (Framer Motion layoutId) */}
       {isActive && (
-        <motion.span
+        <m.span
           layoutId="navbar-active-pill"
           transition={{ type: "spring", stiffness: 420, damping: 32 }}
           className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#F26D3D]/12 via-[#F26D3D]/8 to-[#F26D3D]/12 dark:from-[#F26D3D]/18 dark:via-[#F26D3D]/10 dark:to-[#F26D3D]/18 border border-[#F26D3D]/30 dark:border-[#F26D3D]/35 shadow-[0_2px_10px_rgba(242,109,61,0.10)] dark:shadow-[0_0_14px_rgba(242,109,61,0.22)]"
@@ -269,22 +269,18 @@ export function Navbar() {
                 <ThemeToggle />
               </div>
 
-              {/* Bouton CTA haute visibilité avec bordure animée pure */}
-              <ButtonBorder
+              {/* CTA : même composant et même forme que les boutons du site */}
+              <Button
                 onClick={handleCta}
-                variant="outline"
+                variant="primary"
                 size="sm"
-                borderRadius={12}
-                duration={4}
-                beamSize={24}
-                gradientClassName="from-transparent via-[#F26D3D] to-[#F26D3D] dark:via-[#F26D3D] dark:to-[#F26D3D]"
                 data-cta="navbar_demander_audit"
-                icon={<ArrowUpRight className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden="true" />}
+                icon={<ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />}
                 iconPosition="right"
-                className="ml-1 shrink-0 font-mono text-xs font-semibold uppercase tracking-wider text-slate-900 dark:text-white hover:text-[#F26D3D] hover:border-[#F26D3D]/40"
+                className="ml-1 shrink-0"
               >
-                <span>{t("nav.cta")}</span>
-              </ButtonBorder>
+                {t("nav.cta")}
+              </Button>
             </nav>
 
             {/* Bouton Burger Mobile / Tablette (< 1024px) */}
@@ -319,7 +315,7 @@ export function Navbar() {
       {/* Panneau Mobile / Tablette Plein Écran (Drawer) */}
       <AnimatePresence>
         {isDrawerOpen && (
-          <motion.div
+          <m.div
             ref={drawerRef}
             id="mobile-nav-drawer"
             role="dialog"
@@ -350,14 +346,15 @@ export function Navbar() {
               >
                 <BrandLogo variant="flux" height={40} alt="Analyticatech" />
               </Link>
-              <button
-                type="button"
+              <Button
+                variant="secondary"
+                iconOnly
                 onClick={closeMenu}
                 aria-label={locale === "en" ? "Close menu" : "Fermer le menu"}
-                className="flex items-center justify-center min-w-[44px] min-h-[44px] h-11 w-11 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-white hover:text-[#F26D3D] hover:border-[#F26D3D]/40 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-[#F26D3D]"
+                className="h-11 w-11"
               >
                 <X className="h-5 w-5" aria-hidden="true" />
-              </button>
+              </Button>
             </div>
 
             {/* Corps du panneau : Liens de navigation */}
@@ -407,7 +404,7 @@ export function Navbar() {
             {/* Bas du panneau : Bascule FR/EN & Thème + CTA Orange */}
             <div className="relative z-10 space-y-4 pt-4 border-t border-slate-200/80 dark:border-white/10">
               <div className="flex items-center justify-between">
-                <span className="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <span className="font-mono text-xs uppercase tracking-wider text-slate-600 dark:text-slate-400">
                   {locale === "en" ? "Preferences" : "Préférences"}
                 </span>
                 <div className="flex items-center gap-2">
@@ -416,21 +413,22 @@ export function Navbar() {
                 </div>
               </div>
 
-              {/* CTA orange #F26D3D, texte #1A2332 */}
-              <button
-                type="button"
+              <Button
                 onClick={() => {
                   closeMenu();
                   handleCta();
                 }}
+                variant="primary"
+                size="lg"
                 data-cta="navbar_demander_audit_mobile"
-                className="w-full min-h-[48px] py-3.5 px-6 rounded-xl bg-[#F26D3D] text-[#1A2332] font-mono text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-[#F26D3D]/25 hover:brightness-105 active:scale-[0.98] transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F26D3D]"
+                icon={<ArrowUpRight className="h-4 w-4" aria-hidden="true" />}
+                iconPosition="right"
+                className="w-full"
               >
-                <span>{t("nav.cta")}</span>
-                <ArrowUpRight className="h-4 w-4 text-[#1A2332]" aria-hidden="true" />
-              </button>
+                {t("nav.cta")}
+              </Button>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>

@@ -94,7 +94,7 @@ export function PageHeader({
       {description && (
         <p
           className={cn(
-            "mt-5 text-lg text-slate-500 dark:text-slate-300 leading-relaxed",
+            "mt-5 text-lg text-slate-600 dark:text-slate-300 leading-relaxed",
             centered && "mx-auto max-w-2xl"
           )}
         >

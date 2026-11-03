@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -109,7 +109,7 @@ export function SolutionDetailTemplate({
         </div>
 
         {/* ================= HERO PANEL ================= */}
-        <motion.header
+        <m.header
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
@@ -154,7 +154,7 @@ export function SolutionDetailTemplate({
               ))}
             </div>
           </div>
-        </motion.header>
+        </m.header>
 
         {/* ================= CONTENU AVEC NAVIGATION VERTICALE ================= */}
         <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] xl:grid-cols-[260px_1fr] gap-8 xl:gap-12 items-start">
@@ -268,7 +268,7 @@ export function SolutionDetailTemplate({
 
                 {stage.keyPattern && (
                   <div className="pt-2 border-t border-slate-200/50 dark:border-white/5">
-                    <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400">
+                    <span className="font-mono text-[10px] text-slate-600 dark:text-slate-400">
                       {t("solutions.detail.pattern")} <code className="font-code text-slate-800 dark:text-slate-200 font-semibold">{stage.keyPattern}</code>
                     </span>
                   </div>
@@ -319,7 +319,7 @@ export function SolutionDetailTemplate({
                 className="rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50/80 dark:bg-white/[0.03] p-6 flex flex-col justify-between"
               >
                 <div>
-                  <span className="font-mono text-[11px] text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                  <span className="font-mono text-[11px] text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                     {metric.label}
                   </span>
                   <p className="font-display text-xl font-bold text-foreground my-2">
@@ -361,7 +361,7 @@ export function SolutionDetailTemplate({
               </div>
             </div>
 
-            <p className="pt-2 border-t border-slate-200/50 dark:border-white/5 text-[11px] font-mono text-slate-500 dark:text-slate-400">
+            <p className="pt-2 border-t border-slate-200/50 dark:border-white/5 text-[11px] font-mono text-slate-600 dark:text-slate-400">
               {t("solutions.detail.frame.transparency")} {data.metrics.methodology.rigorDisclaimer}
             </p>
           </div>

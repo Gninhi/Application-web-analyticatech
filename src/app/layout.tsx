@@ -12,13 +12,14 @@ import type { Locale } from "@/types/content";
 /* === Typographie (design system Analyticatech) ===
  * Manrope pour les titres, Inter pour le texte, étiquettes comprises : ce sont
  * les deux seules polices de la charte. Fichiers fournis par le design system,
- * auto-hébergés (src/app/fonts). display swap + adjustFontFallback : pas de CLS. */
+ * auto-hébergés (src/app/fonts), réduits aux plages latines utilisées par le
+ * site (mêmes dessins, glyphes inutilisés retirés). Manrope 800 n'est pas chargée :
+ * aucun texte du site ne l'emploie. display swap + adjustFontFallback : pas de CLS. */
 const manrope = localFont({
   variable: "--font-manrope",
   src: [
     { path: "./fonts/Manrope-SemiBold.woff2", weight: "600", style: "normal" },
     { path: "./fonts/Manrope-Bold.woff2", weight: "700", style: "normal" },
-    { path: "./fonts/Manrope-ExtraBold.woff2", weight: "800", style: "normal" },
   ],
   display: "swap",
   preload: true,

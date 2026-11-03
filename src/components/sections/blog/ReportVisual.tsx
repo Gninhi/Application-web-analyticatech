@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 
 export interface ReportVisualProps {
@@ -36,7 +36,7 @@ export function ReportVisual({ accent, className, children }: ReportVisualProps)
       <div className="absolute inset-0" style={{ background: glow }} aria-hidden />
 
       {/* Balayage lumineux — géré par Framer Motion et neutralisé en CSS sous prefers-reduced-motion */}
-      <motion.div
+      <m.div
         initial={{ x: "-140%" }}
         animate={{ x: "140%" }}
         transition={{ repeat: Infinity, duration: 5, ease: "linear" }}

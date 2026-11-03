@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import {
   Layers,
   BarChart3,
@@ -76,7 +76,7 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
             const isSelected = activePainId === item.id;
             const Icon = item.icon;
             return (
-              <motion.button
+              <m.button
                 key={item.id}
                 type="button"
                 role="tab"
@@ -124,7 +124,7 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2 mb-1">
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-slate-600 dark:text-slate-400">
                       {t("painpoint.observe")} #0{idx + 1} · {item.sector}
                     </span>
                   </div>
@@ -132,7 +132,7 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
                     {item.problem}
                   </p>
                 </div>
-              </motion.button>
+              </m.button>
             );
           })}
         </div>
@@ -144,7 +144,7 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
               const isSelected = activePainId === item.id;
               const Icon = item.icon;
               return (
-                <motion.div
+                <m.div
                   key={item.id}
                   initial={false}
                   animate={{ opacity: isSelected ? 1 : 0 }}
@@ -199,7 +199,7 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
                     <div className="p-4 rounded-2xl bg-white/80 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
                         <CheckCircle2 className="h-5 w-5 text-link" aria-hidden />
-                        <span className="font-mono text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                        <span className="font-mono text-xs text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                           {t("painpoint.impact")}
                         </span>
                       </div>
@@ -214,7 +214,7 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
 
                   {onNavigateContact && (
                     <div className="mt-8 pt-6 border-t border-black/10 dark:border-white/10 flex items-center justify-between">
-                      <span className="font-mono text-xs text-slate-500 dark:text-slate-400">
+                      <span className="font-mono text-xs text-slate-600 dark:text-slate-400">
                         {t("painpoint.cta.hint")}
                       </span>
                       <Button
@@ -229,7 +229,7 @@ export function BusinessPainPointsSection({ onNavigateContact }: BusinessPainPoi
                       </Button>
                     </div>
                   )}
-                </motion.div>
+                </m.div>
               );
             })}
           </div>

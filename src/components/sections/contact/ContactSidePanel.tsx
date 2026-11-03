@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import {
   ShieldCheck,
@@ -80,7 +81,7 @@ export function ContactSidePanel() {
                 <Mail className="h-4 w-4" aria-hidden="true" />
               </span>
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-600 dark:text-slate-400">
                   {t("contact.channel.email")}
                 </p>
                 <a
@@ -91,10 +92,11 @@ export function ContactSidePanel() {
                 </a>
               </div>
             </div>
-            <button
-              type="button"
+            <Button
               onClick={() => copyToClipboard(siteConfig.email, "email")}
-              className="p-2 rounded-lg text-slate-400 hover:text-accent-ink hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+              variant="ghost"
+              iconOnly
+              className="h-9 w-9 text-slate-600 dark:text-slate-400"
               title={isEn ? "Copy email" : "Copier l'email"}
               aria-label={isEn ? "Copy email" : "Copier l'email"}
             >
@@ -103,7 +105,7 @@ export function ContactSidePanel() {
               ) : (
                 <Copy className="h-4 w-4" />
               )}
-            </button>
+            </Button>
           </li>
 
           {/* Téléphone direct */}
@@ -113,7 +115,7 @@ export function ContactSidePanel() {
                 <Phone className="h-4 w-4" aria-hidden="true" />
               </span>
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-slate-600 dark:text-slate-400">
                   {t("contact.channel.phone")}
                 </p>
                 <a
@@ -124,10 +126,11 @@ export function ContactSidePanel() {
                 </a>
               </div>
             </div>
-            <button
-              type="button"
+            <Button
               onClick={() => copyToClipboard(siteConfig.phone, "phone")}
-              className="p-2 rounded-lg text-slate-400 hover:text-accent-ink hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+              variant="ghost"
+              iconOnly
+              className="h-9 w-9 text-slate-600 dark:text-slate-400"
               title={isEn ? "Copy phone number" : "Copier le téléphone"}
               aria-label={isEn ? "Copy phone number" : "Copier le téléphone"}
             >
@@ -136,7 +139,7 @@ export function ContactSidePanel() {
               ) : (
                 <Copy className="h-4 w-4" />
               )}
-            </button>
+            </Button>
           </li>
 
           {/* Siège social */}
@@ -145,7 +148,7 @@ export function ContactSidePanel() {
               <MapPin className="h-4 w-4" aria-hidden="true" />
             </span>
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-slate-600 dark:text-slate-400">
                 {t("contact.channel.hq")}
               </p>
               <p className="text-sm text-slate-700 dark:text-slate-300">
@@ -178,7 +181,7 @@ export function ContactSidePanel() {
                     <Icon className="h-3.5 w-3.5 text-accent-ink shrink-0" aria-hidden />
                     <span>{isEn ? item.titleEn : item.titleFr}</span>
                   </p>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed mt-0.5">
+                  <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed mt-0.5">
                     {isEn ? item.descEn : item.descFr}
                   </p>
                 </div>

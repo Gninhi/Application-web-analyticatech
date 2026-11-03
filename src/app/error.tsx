@@ -63,7 +63,7 @@ export default function ErrorPage({ error, reset }: ErrorProps) {
                 {error.message || "Runtime exception without description"}
               </p>
               {error.digest && (
-                <p className="font-mono text-[10px] text-slate-500 mt-1">
+                <p className="font-mono text-[10px] text-slate-600 mt-1">
                   Digest : {error.digest}
                 </p>
               )}

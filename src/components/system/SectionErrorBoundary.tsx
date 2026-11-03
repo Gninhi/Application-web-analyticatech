@@ -3,6 +3,7 @@
 import React from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { trackClientException } from "@/instrumentation-client";
+import { Button } from "@/components/ui/button";
 
 interface SectionErrorBoundaryProps {
   children: React.ReactNode;
@@ -71,14 +72,15 @@ export class SectionErrorBoundary extends React.Component<
             Cette partie de la page n&apos;a pas pu s&apos;afficher. Le reste de la page fonctionne
             normalement.
           </p>
-          <button
-            type="button"
+          <Button
             onClick={this.handleRetry}
-            className="mt-4 inline-flex items-center gap-2 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 px-4 py-2 font-mono text-xs text-slate-800 dark:text-slate-200 transition-colors hover:border-[#F26D3D] hover:text-accent-ink"
+            variant="outline"
+            size="sm"
+            icon={<RefreshCw className="h-3.5 w-3.5" aria-hidden />}
+            className="mt-4"
           >
-            <RefreshCw className="h-3.5 w-3.5" aria-hidden />
-            <span>Réessayer</span>
-          </button>
+            Réessayer
+          </Button>
         </div>
       );
     }

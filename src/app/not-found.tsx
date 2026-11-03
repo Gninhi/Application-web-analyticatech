@@ -92,7 +92,7 @@ export default function NotFoundPage() {
             {/* Monumental 404 */}
             <div className="relative z-10 select-none">
               <p
-                className="font-display text-7xl sm:text-8xl md:text-9xl font-extrabold tracking-tighter leading-none"
+                className="font-display text-7xl sm:text-8xl md:text-9xl font-bold tracking-tighter leading-none"
                 style={{
                   background:
                     "linear-gradient(135deg, #F26D3D 0%, #F5F7FA 45%, #03318C 100%)",
@@ -181,7 +181,7 @@ export default function NotFoundPage() {
                             aria-hidden="true"
                           />
                         </div>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                        <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">
                           {route.desc}
                         </p>
                         <div className="mt-2.5 flex items-center gap-2">

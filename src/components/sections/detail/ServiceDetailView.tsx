@@ -1,12 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m } from "framer-motion";
 import {
   ArrowLeft,
   ArrowRight,
   BrainCircuit,
-  ChevronDown,
   Sparkles,
   Building2,
   Clock,
@@ -17,7 +15,7 @@ import { useI18n } from "@/lib/i18n/provider";
 import { useAppContentOptional } from "@/components/providers/ContentProvider";
 import { Button } from "@/components/ui/button";
 import { getServiceDetailData, SERVICES_DETAIL_REGISTRY } from "@/lib/content/services-detail-data";
-import { cn } from "@/lib/utils/cn";
+import { FaqAccordion } from "@/components/ui/FaqAccordion";
 import { DetailNotFound } from "./DetailNotFound";
 
 export interface ServiceDetailViewProps {
@@ -52,11 +50,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
     SERVICES_DETAIL_REGISTRY["01"];
 
   // État de l'accordéon FAQ
-  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
-  const toggleFaq = (idx: number) => {
-    setOpenFaqIndex(openFaqIndex === idx ? null : idx);
-  };
 
   if (!service && !detailData) {
     return (
@@ -104,7 +98,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
         </div>
 
         {/* ================= 01 — HERO PANEL ================= */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
@@ -141,7 +135,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
               {detailData.heroSubtitle}
             </p>
           </div>
-        </motion.div>
+        </m.div>
 
         {/* ================= 03 — LE PROBLÈME MÉTIER ================= */}
         <section className="pt-4">
@@ -211,7 +205,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
                 </div>
 
                 <div className="pt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between text-xs font-mono">
-                  <span className="text-slate-500 dark:text-slate-400">{t("detail.service.deliverable.output")}</span>
+                  <span className="text-slate-600 dark:text-slate-400">{t("detail.service.deliverable.output")}</span>
                   <span className="text-accent-ink font-medium text-right">{deliv.output}</span>
                 </div>
               </div>
@@ -241,7 +235,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
                     <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 font-mono text-xs font-semibold text-accent-ink">
                       {step.step}
                     </span>
-                    <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                    <span className="font-mono text-[10px] text-slate-600 dark:text-slate-400 flex items-center gap-1">
                       <Clock className="h-3 w-3" aria-hidden />
                       {step.duration}
                     </span>
@@ -255,7 +249,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
                   </p>
                 </div>
 
-                <div className="pt-3 border-t border-black/5 dark:border-white/5 text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                <div className="pt-3 border-t border-black/5 dark:border-white/5 text-[11px] font-mono text-slate-600 dark:text-slate-400">
                   <span className="text-accent-ink block font-semibold mb-0.5">{t("detail.service.method.milestone")}</span>
                   {step.deliverable}
                 </div>
@@ -284,7 +278,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
                 <div>
                   <div className="flex items-center gap-2 mb-3">
                     <Building2 className="h-3.5 w-3.5 text-accent-ink" aria-hidden />
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-semibold">
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-slate-600 dark:text-slate-400 font-semibold">
                       {sc.sector}
                     </span>
                   </div>
@@ -322,7 +316,7 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {detailData.techStackGroups.map((group, idx) => (
               <div key={idx} className="glass-card rounded-2xl p-5 border border-black/10 dark:border-white/10">
-                <h3 className="font-mono text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400 font-semibold mb-4 pb-2 border-b border-black/5 dark:border-white/5">
+                <h3 className="font-mono text-xs uppercase tracking-widest text-slate-600 dark:text-slate-400 font-semibold mb-4 pb-2 border-b border-black/5 dark:border-white/5">
                   {group.category}
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -352,48 +346,10 @@ export function ServiceDetailView({ serviceIndex, onNavigate, onNavigateDetail }
               </h2>
             </div>
 
-            <div className="space-y-3">
-              {detailData.faqs.map((faq, idx) => {
-                const isOpen = openFaqIndex === idx;
-                return (
-                  <div
-                    key={idx}
-                    className="glass-card rounded-2xl border border-black/10 dark:border-white/10 overflow-hidden transition-all duration-200"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => toggleFaq(idx)}
-                      className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-display font-bold text-base sm:text-lg text-slate-900 dark:text-white hover:text-accent-ink transition-colors"
-                      aria-expanded={isOpen}
-                    >
-                      <span>{faq.question}</span>
-                      <ChevronDown
-                        className={cn(
-                          "h-5 w-5 text-accent-ink shrink-0 transition-transform duration-300",
-                          isOpen && "rotate-180"
-                        )}
-                        aria-hidden
-                      />
-                    </button>
-
-                    <AnimatePresence initial={false}>
-                      {isOpen && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.25, ease: "easeInOut" }}
-                        >
-                          <div className="px-5 sm:px-6 pb-5 sm:pb-6 text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-black/5 dark:border-white/5 pt-4">
-                            {faq.answer}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                );
-              })}
-            </div>
+            <FaqAccordion
+              idPrefix="service-faq"
+              items={detailData.faqs.map((faq) => ({ question: faq.question, answer: faq.answer }))}
+            />
           </div>
         </section>
 

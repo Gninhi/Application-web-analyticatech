@@ -1,7 +1,7 @@
 "use client";
 
 import { type CSSProperties, useRef } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { ArrowRight, ArrowUpRight, TrendingUp } from "lucide-react";
 import { type SolutionDTO, type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
@@ -149,7 +149,7 @@ export function SolutionCard({
 
           {/* Balayage lumineux (gelé si carte hors champ) */}
           {isVisible && (
-            <motion.div
+            <m.div
               initial={{ x: "-140%" }}
               animate={{ x: "140%" }}
               transition={{ repeat: Infinity, duration: 5, ease: "linear" }}

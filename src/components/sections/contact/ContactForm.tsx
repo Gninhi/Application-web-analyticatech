@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { SLA_COMMITMENTS } from "@/data/commitments";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import {
   ShieldCheck,
   Lock,
@@ -112,7 +112,7 @@ export function ContactForm() {
             </span>
           </div>
 
-          <div className="flex items-center gap-2 font-mono text-[10px] text-slate-500 dark:text-slate-400 bg-black/5 dark:bg-white/5 px-2.5 py-1 rounded-full border border-black/5 dark:border-white/5">
+          <div className="flex items-center gap-2 font-mono text-[10px] text-slate-600 dark:text-slate-400 bg-black/5 dark:bg-white/5 px-2.5 py-1 rounded-full border border-black/5 dark:border-white/5">
             <span className="h-2 w-2 rounded-full bg-link animate-pulse" aria-hidden="true" />
             <span className="uppercase tracking-wider">
               {isEn ? "ENCRYPTED CONNECTION" : "CONNEXION CHIFFRÉE"}
@@ -123,7 +123,7 @@ export function ContactForm() {
         {/* Formulaire ou Écran de confirmation de succès */}
         <AnimatePresence mode="wait">
           {status === "success" ? (
-            <motion.div
+            <m.div
               key="success-card"
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -152,7 +152,7 @@ export function ContactForm() {
               {reference && (
                 <div className="max-w-md mx-auto rounded-2xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 p-4 flex items-center justify-between gap-4">
                   <div className="text-left min-w-0">
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-slate-600 dark:text-slate-400">
                       {t("contact.reference")}
                     </p>
                     <p className="font-mono text-base font-semibold text-accent-ink truncate">
@@ -213,7 +213,7 @@ export function ContactForm() {
                   <span>{isEn ? "Send another request" : "Envoyer une autre demande"}</span>
                 </Button>
               </div>
-            </motion.div>
+            </m.div>
           ) : (
             <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-6" noValidate>
 
@@ -479,7 +479,7 @@ export function ContactForm() {
 
                 {/* Message d'erreur serveur si applicable */}
                 {status === "error" && serverMsg && (
-                  <motion.div
+                  <m.div
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     role="alert"
@@ -487,7 +487,7 @@ export function ContactForm() {
                   >
                     <AlertTriangle className="h-4 w-4 shrink-0" />
                     <span>{serverMsg}</span>
-                  </motion.div>
+                  </m.div>
                 )}
               </div>
             </form>

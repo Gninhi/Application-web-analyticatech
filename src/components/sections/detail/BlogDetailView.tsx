@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { ArrowLeft, Check } from "lucide-react";
 import type { ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
@@ -82,7 +82,7 @@ export function BlogDetailView({
           {`${t("common.back")} ${t("nav.blog")}`}
         </Button>
 
-        <motion.article
+        <m.article
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -93,7 +93,7 @@ export function BlogDetailView({
               <span className="rounded-full border border-[#F26D3D]/40 bg-[#F26D3D]/10 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-accent-ink">
                 {post.categoryLabel}
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-slate-600 dark:text-slate-400">
                 {formatPostDate(post.date, locale)} ·{" "}
                 {post.readingTime.includes("lecture") || post.readingTime.includes("read")
                   ? post.readingTime
@@ -106,7 +106,7 @@ export function BlogDetailView({
             <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
               {post.excerpt}
             </p>
-            <p className="mt-4 font-mono text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400">
+            <p className="mt-4 font-mono text-[10px] uppercase tracking-widest text-slate-600 dark:text-slate-400">
               Par {post.author}
             </p>
           </div>
@@ -150,7 +150,7 @@ export function BlogDetailView({
 
           {/* CTA */}
           <ContactCta question={t("detail.article.cta")} cta={t("common.contact")} onNavigate={onNavigate} />
-        </motion.article>
+        </m.article>
       </div>
     </div>
   );

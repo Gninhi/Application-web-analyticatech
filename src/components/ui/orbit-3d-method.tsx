@@ -629,7 +629,7 @@ export function Orbit3DMethod({
                 "group relative flex h-8 items-center gap-2 rounded-xl px-3 font-mono text-[11px] font-semibold uppercase transition-all duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2",
                 isActive
                   ? "shadow-md text-slate-900 dark:text-white"
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-black/5 dark:hover:bg-white/5"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-black/5 dark:hover:bg-white/5"
               )}
               style={{
                 backgroundColor: isActive

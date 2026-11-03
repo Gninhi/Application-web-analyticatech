@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useTransform, type MotionValue } from "framer-motion";
+import { m, useTransform, type MotionValue } from "framer-motion";
 import { useI18n } from "@/lib/i18n/provider";
 
 export interface PhaseIndicatorProps {
@@ -18,26 +18,26 @@ export function PhaseIndicator({ progress }: PhaseIndicatorProps) {
 
   return (
     <div className="hidden lg:flex absolute top-6 left-1/2 -translate-x-1/2 items-center gap-2 z-20 pointer-events-none">
-      <motion.span
+      <m.span
         style={{ opacity: leadIn }}
-        className="font-mono text-[9px] uppercase tracking-widest text-slate-500 dark:text-slate-400"
+        className="font-mono text-[9px] uppercase tracking-widest text-slate-600 dark:text-slate-400"
       >
         {t("solutions.phase.lead")}
-      </motion.span>
+      </m.span>
       <span className="h-px w-4 bg-black/15 dark:bg-white/20" aria-hidden />
-      <motion.span
+      <m.span
         style={{ opacity: drift }}
         className="font-mono text-[9px] uppercase tracking-widest text-accent-ink"
       >
         {t("solutions.phase.drift")}
-      </motion.span>
+      </m.span>
       <span className="h-px w-4 bg-black/15 dark:bg-white/20" aria-hidden />
-      <motion.span
+      <m.span
         style={{ opacity: leadOut }}
-        className="font-mono text-[9px] uppercase tracking-widest text-slate-500 dark:text-slate-400"
+        className="font-mono text-[9px] uppercase tracking-widest text-slate-600 dark:text-slate-400"
       >
         {t("solutions.phase.release")}
-      </motion.span>
+      </m.span>
     </div>
   );
 }

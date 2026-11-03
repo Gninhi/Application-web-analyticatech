@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { MoveRight, ArrowRight, ShieldCheck, Sparkles, Server } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
@@ -91,7 +91,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               <span className="relative flex w-full justify-center overflow-hidden h-[1.18em] my-1 sm:my-2">
                 <span className="invisible select-none">{rotatingWords[0]}</span>
                 <AnimatePresence mode="popLayout" initial={false}>
-                  <motion.span
+                  <m.span
                     key={wordIndex}
                     initial={{ opacity: 0, y: 50, filter: "blur(6px)" }}
                     animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -105,7 +105,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
                     className="absolute font-display font-bold text-shimmer tracking-tight"
                   >
                     {rotatingWords[wordIndex]}
-                  </motion.span>
+                  </m.span>
                 </AnimatePresence>
               </span>
 
@@ -197,7 +197,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
           </div>
 
           {/* Barre de réassurance : faits vérifiables uniquement */}
-          <ul className="mt-12 pt-6 border-t border-black/5 dark:border-white/5 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-mono uppercase tracking-wider">
+          <ul className="mt-12 pt-6 border-t border-black/5 dark:border-white/5 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-mono uppercase tracking-wider">
             <li className="flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-[#F26D3D]" aria-hidden="true" />
               {t("home.hero.fact1")}
