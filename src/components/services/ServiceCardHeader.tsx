@@ -2,62 +2,22 @@
 
 interface ServiceCardHeaderProps {
   tagline: string;
-  badge?: string;
   title: string;
   promise: string;
-  accentColor?: string;
 }
 
 /**
- * ServiceCardHeader — éditorial bento : capsule meta + titre + promesse.
- * Le numéro de service et l'icône animée sont rendus en colonnes latérales
- * par ServiceCard (structure « flows » : id | contenu | icône).
+ * ServiceCardHeader — accroche (phrase en couleur d'accent, casse normale),
+ * titre orienté valeur et description du service, limitée à trois lignes.
  */
-export function ServiceCardHeader({
-  tagline,
-  badge,
-  title,
-  promise,
-  accentColor = "var(--accent-ink)",
-}: ServiceCardHeaderProps) {
+export function ServiceCardHeader({ tagline, title, promise }: ServiceCardHeaderProps) {
   return (
-    <header className="flex flex-col gap-3">
-      {/* 1. Capsule meta façon bento + badge d'impact */}
-      <div className="flex flex-wrap items-center gap-2">
-        <span
-          className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.25em] font-semibold backdrop-blur-sm"
-          style={{
-            borderColor: "var(--glass-card-border)",
-            background: "var(--glass-card-bg)",
-            color: accentColor,
-          }}
-        >
-          {tagline}
-        </span>
-
-        {badge && (
-          <span
-            className="inline-flex items-center rounded-md border px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider font-semibold"
-            style={{
-              borderColor: `color-mix(in srgb, ${accentColor} 30%, transparent)`,
-              background: `color-mix(in srgb, ${accentColor} 14%, transparent)`,
-              color: accentColor,
-            }}
-          >
-            {badge}
-          </span>
-        )}
-      </div>
-
-      {/* 2. Titre orienté valeur */}
+    <header className="flex flex-col gap-2">
+      <p className="text-sm font-semibold leading-snug text-accent-ink first-letter:uppercase">{tagline}</p>
       <h3 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
         {title}
       </h3>
-
-      {/* 3. Promesse client claire */}
-      <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300 font-medium">
-        {promise}
-      </p>
+      <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300 line-clamp-3">{promise}</p>
     </header>
   );
 }

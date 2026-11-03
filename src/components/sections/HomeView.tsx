@@ -1,9 +1,10 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Clock, MapPin, ShieldCheck, UserRound, type LucideIcon } from "lucide-react";
 import { type ViewKey } from "@/types/content";
 import { useI18n } from "@/lib/i18n/provider";
 import { Button } from "@/components/ui/button";
+import { IconBadge } from "@/components/ui/IconBadge";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { LazySection } from "@/components/ui/LazySection";
 
@@ -18,7 +19,7 @@ import { LazySection } from "@/components/ui/LazySection";
  * sert à la fois au placeholder de LazySection et au fallback `loading` des
  * chunks dynamiques → aucune variation de hauteur entre les deux phases. */
 const SECTION_SKELETONS = {
-  services: { minHeight: 960, mobileMinHeight: 2100 },
+  services: { minHeight: 1100, mobileMinHeight: 2050 },
   pains: { minHeight: 640, mobileMinHeight: 850 },
   graph: { minHeight: 900, mobileMinHeight: 1700 },
   bento: { minHeight: 640, mobileMinHeight: 1300 },
@@ -35,7 +36,15 @@ import { BeforeAfterDemo } from "@/components/sections/BeforeAfterDemo";
 import { HomeSocialProof } from "@/components/sections/HomeSocialProof";
 import { SectionErrorBoundary } from "@/components/system/SectionErrorBoundary";
 
-import { getKeyStats } from "@/data/stats";
+import { getKeyStats, type KeyFact } from "@/data/stats";
+
+/** Pictogramme de chaque engagement (section 02). */
+const FACT_ICONS: Record<KeyFact["key"], LucideIcon> = {
+  first_call: Clock,
+  single_contact: UserRound,
+  compliance: ShieldCheck,
+  locations: MapPin,
+};
 
 interface HomeViewProps {
   onNavigate: (view: ViewKey) => void;
@@ -71,16 +80,22 @@ export function HomeView({ onNavigate, onNavigateDetail }: HomeViewProps) {
               </p>
             </div>
 
-            <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {displayStats.map((s) => (
-                <li key={s.key} className="rounded-lg border border-border bg-background p-5">
-                  <p className="font-display text-[28px] leading-[34px] font-bold text-[#011C40] dark:text-white">
+            {/* Colonnes séparées par des filets : pas de sous-cartes, le verre reste continu */}
+            <ul className="mt-8 grid grid-cols-1 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-y-0">
+              {displayStats.map((s, i) => (
+                <li
+                  key={s.key}
+                  className={`flex flex-col gap-3 sm:px-6 lg:px-7 ${
+                    i % 2 === 0 ? "sm:pl-0" : "sm:border-l sm:border-border"
+                  } ${i === 0 ? "lg:pl-0" : "lg:border-l lg:border-border lg:pl-7"} ${
+                    i === displayStats.length - 1 ? "lg:pr-0" : ""
+                  } ${i > 0 ? "border-t border-border pt-8 sm:border-t-0 sm:pt-0" : ""}`}
+                >
+                  <IconBadge icon={FACT_ICONS[s.key]} size="md" />
+                  <p className="font-display text-[28px] leading-[34px] md:text-[36px] md:leading-[42px] font-bold tracking-tight text-[#011C40] dark:text-white">
                     {s.v}
                   </p>
-                  <span className="mt-3 block h-[3px] w-8 rounded-full bg-[#F26D3D]" aria-hidden="true" />
-                  <p className="text-sm leading-[22px] text-slate-600 dark:text-[#B6C2D6] mt-3">
-                    {s.l}
-                  </p>
+                  <p className="text-sm leading-[22px] text-slate-600 dark:text-[#B6C2D6]">{s.l}</p>
                 </li>
               ))}
             </ul>

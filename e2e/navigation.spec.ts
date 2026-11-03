@@ -189,7 +189,7 @@ test.describe("erreurs & sécurité", () => {
     });
     await page.waitForTimeout(400);
 
-    const card = page.locator("article", { hasText: "/01" }).first();
+    const card = page.locator("#home-services-panel article", { hasText: "01 / 04" }).first();
     await card.scrollIntoViewIfNeeded();
     await expect(card).toBeVisible({ timeout: 15_000 });
     await card.click();

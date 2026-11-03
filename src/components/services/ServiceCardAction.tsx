@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 interface ServiceCardActionProps {
   label: string;
   onClick: (e: React.MouseEvent) => void;
-  accentColor?: string;
 }
 
 /**

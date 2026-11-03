@@ -70,6 +70,28 @@ describe("Dynamic Home Components", () => {
     expect(html).not.toContain("65%");
   });
 
+  it("HomeServicesGrid : commutateur segmenté à libellés courts et pastilles IconBadge", () => {
+    const html = renderWithProviders(
+      <HomeServicesGrid onNavigate={() => {}} onNavigateDetail={() => {}} />
+    );
+
+    // Une seule liste d'onglets, cinq segments courts (« Tous » actif)
+    expect(html.match(/role="tablist"/g)).toHaveLength(1);
+    expect(html.match(/role="tab"/g)).toHaveLength(5);
+    for (const label of ["Tous", "Assistant IA", "Automatisation", "Multi-agents", "Data & BI"]) {
+      expect(html).toContain(`>${label}</button>`);
+    }
+    expect(html).toMatch(/aria-selected="true"[^>]*>Tous</);
+
+    // Icônes alignées sur le reste du site : une IconBadge par carte, plus de puce animée
+    expect(html.match(/class="icon-badge"/g)).toHaveLength(4);
+    expect(html).not.toContain("svc-icon");
+    // Un seul repère par carte, outils sur une ligne
+    expect(html).toContain("01 / 04");
+    expect(html).not.toContain("Fiche #");
+    expect(html).toContain("Outils · ");
+  });
+
   it("AiRunTrace montre une demande traitée de bout en bout, texte complet dès le premier rendu", () => {
     const html = renderWithProviders(<AiRunTrace />);
 
