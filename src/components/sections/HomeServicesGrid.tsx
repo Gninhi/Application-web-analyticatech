@@ -7,23 +7,19 @@ import { useI18n } from "@/lib/i18n/provider";
 import { useAppContent } from "@/components/providers/ContentProvider";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { SectionContainer } from "@/components/ui/SectionContainer";
-import { FilterPill } from "@/components/interactive/FilterPill";
+import { FilterPill, FilterSegmentGroup } from "@/components/interactive/FilterPill";
 import { ServiceCard, type ServiceCardData, type BentoVariant } from "@/components/services/ServiceCard";
-import type { ServiceIconVariant } from "@/components/services/ServiceAnimatedIcon";
 
 interface HomeServicesGridProps {
   onNavigate: (view: ViewKey) => void;
   onNavigateDetail: (view: ViewKey, id: string) => void;
 }
 
-const SERVICE_CONFIGS: Record<
-  string,
-  { id: string; badge: string; iconVariant: ServiceIconVariant; accentColor: string; variant: BentoVariant }
-> = {
-  "01": { id: "ai", badge: "ASSISTANT IA", iconVariant: "orbit", accentColor: "var(--accent-ink)", variant: "hero" },
-  "02": { id: "automation", badge: "AUTOMATISATION", iconVariant: "wave", accentColor: "var(--accent-ink)", variant: "counterpart" },
-  "03": { id: "agents", badge: "MULTI-AGENTS", iconVariant: "spark", accentColor: "var(--accent-ink)", variant: "counterpart" },
-  "04": { id: "bi", badge: "DATA & BI", iconVariant: "loop", accentColor: "var(--accent-ink)", variant: "hero" },
+const SERVICE_CONFIGS: Record<string, { id: string; variant: BentoVariant }> = {
+  "01": { id: "ai", variant: "hero" },
+  "02": { id: "automation", variant: "counterpart" },
+  "03": { id: "agents", variant: "counterpart" },
+  "04": { id: "bi", variant: "hero" },
 };
 
 /**
@@ -41,9 +37,6 @@ export function HomeServicesGrid({ onNavigate: _onNavigate, onNavigateDetail }: 
     return services.map((s, i) => {
       const cfg = SERVICE_CONFIGS[s.index] || {
         id: `service-${s.index}`,
-        badge: "EXPERT",
-        iconVariant: "orbit" as ServiceIconVariant,
-        accentColor: "var(--accent-ink)",
         variant: (i % 3 === 0 ? "hero" : "counterpart") as BentoVariant,
       };
 
@@ -55,25 +48,22 @@ export function HomeServicesGrid({ onNavigate: _onNavigate, onNavigateDetail }: 
           title: s.title,
           promise: s.description,
           tagline: s.tagline,
-          badge: cfg.badge,
-          iconVariant: cfg.iconVariant,
-          accentColor: cfg.accentColor,
+          iconKey: s.iconKey,
           technologies: s.technologies,
         },
       };
     });
   }, [services]);
 
-  // Filtres d'onglets dynamiques issus des services
+  // Onglets du commutateur : libellés courts (le titre complet reste sur la carte)
   const FOCUS_TABS = useMemo(() => {
-    const allTab = { id: "all", label: t("home.section.services.all") || "Tous les piliers", index: "00", color: "var(--accent-ink)" };
+    const allTab = { id: "all", label: t("home.section.services.all") };
     const serviceTabs = services.map((s) => {
-      const cfg = SERVICE_CONFIGS[s.index];
+      const shortKey = `home.section.services.short.${s.index}`;
+      const short = t(shortKey);
       return {
-        id: cfg?.id || `service-${s.index}`,
-        label: `${s.index} · ${s.title}`,
-        index: s.index,
-        color: cfg?.accentColor || "var(--accent-ink)",
+        id: SERVICE_CONFIGS[s.index]?.id || `service-${s.index}`,
+        label: short && short !== shortKey ? short : s.title,
       };
     });
     return [allTab, ...serviceTabs];
@@ -94,23 +84,24 @@ export function HomeServicesGrid({ onNavigate: _onNavigate, onNavigateDetail }: 
           description={t("home.section.services.desc")}
         />
 
-        {/* Filtre : une pilule affiche son seul service, en pleine largeur ; « Tous » rétablit la grille */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-2" role="tablist" aria-label={t("home.section.services")}>
+        {/* Filtre : commutateur segmenté sur une ligne ; un segment affiche son seul service, « Tous » rétablit la grille */}
+        <FilterSegmentGroup label={t("home.section.services")} className="mt-8">
           {FOCUS_TABS.map((tab) => {
             const isSelected = tab.id === "all" ? activeFocus === null : activeFocus === tab.id;
             return (
               <FilterPill
                 key={tab.id}
+                variant="segment"
                 active={isSelected}
                 aria-controls="home-services-panel"
-                dotColor={tab.id === "all" ? undefined : tab.color}
+                dotColor={tab.id === "all" ? undefined : "#F26D3D"}
                 onClick={() => setActiveFocus(tab.id === "all" || isSelected ? null : tab.id)}
               >
                 {tab.label}
               </FilterPill>
             );
           })}
-        </div>
+        </FilterSegmentGroup>
 
         <div
           id="home-services-panel"
@@ -137,8 +128,10 @@ export function HomeServicesGrid({ onNavigate: _onNavigate, onNavigateDetail }: 
                 <ServiceCard
                   service={data}
                   index={position}
+                  total={SERVICE_CARDS.length}
                   variant={activeFocus !== null ? "hero" : variant}
                   actionLabel={t("home.section.services.explore")}
+                  toolsLabel={t("home.section.services.tools")}
                   onNavigateDetail={(idx) => onNavigateDetail("service-detail", idx)}
                 />
               </m.div>

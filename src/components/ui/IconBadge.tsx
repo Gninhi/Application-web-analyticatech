@@ -27,7 +27,7 @@ interface IconBadgeProps {
 /**
  * IconBadge — pastille d'icône commune à tout le site.
  *
- * Même langage que les puces des cartes services : cercle, anneaux au trait fin,
+ * Cercle, anneaux au trait fin,
  * voile d'accent et pictogramme au trait 1,5 px ; au survol (de la pastille ou
  * d'un parent `group`), l'anneau s'ouvre et un balayage fait un tour (CSS seul,
  * figé sous prefers-reduced-motion). Styles : `.icon-badge` dans globals.css.

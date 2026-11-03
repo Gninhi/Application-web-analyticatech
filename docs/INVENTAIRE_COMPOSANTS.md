@@ -10,7 +10,7 @@ qui a été réuni dans un composant partagé, et ce qui reste volontairement sp
 | --- | --- | --- |
 | `Button` | `src/components/ui/button.tsx` | Tous les boutons d'action et liens-boutons. Variantes `primary`, `outline`, `secondary`, `ghost`, `link`, `terminal`, `subtle`, `destructive` ; tailles `sm`, `md`, `lg`, `icon` (`iconOnly`). `href` rend un lien Next avec les mêmes attributs (`data-cta`, `aria-*`). |
 | `AnimatedButtonBorder` | `src/components/ui/button-border.tsx` | Liseré animé, utilisé uniquement par `Button`. |
-| `FilterPill` | `src/components/interactive/FilterPill.tsx` | Pilules de filtre et de sélection (`role="tab"`), avec pastille de couleur optionnelle. |
+| `FilterPill` | `src/components/interactive/FilterPill.tsx` | Pilules de filtre et de sélection (`role="tab"`), avec pastille de couleur optionnelle. Variante `segment` : segment d'un commutateur compact sur une ligne, dans la piste de verre `FilterSegmentGroup` (même fichier), qui défile latéralement sur mobile. |
 | `FaqAccordion` | `src/components/ui/FaqAccordion.tsx` | Accordéon de questions (accueil, contact, fiches service). |
 | `ContactCta` | `src/components/ui/ContactCta.tsx` | Encart d'appel au premier échange en bas de page. |
 | `BrandLogo` | `src/components/branding/BrandLogo.tsx` | Logotype officiel (`flux`, `signature`, `mot`). |
@@ -26,7 +26,7 @@ qui a été réuni dans un composant partagé, et ce qui reste volontairement sp
 | Page Insights : deux `<Link>` stylés à la main | `Button` `outline` et `primary` |
 | Bouton « Réessayer » des sections en erreur | `Button variant="outline" size="sm"` |
 | Fermeture du menu mobile et du bandeau cookies, copie e-mail / téléphone | `Button iconOnly` (`secondary` ou `ghost`) |
-| Pilules de la section Services (accueil) : boutons à styles en ligne | `FilterPill` + filtrage réel des cartes |
+| Pilules de la section Services (accueil) : boutons à styles en ligne, puis pilules mono capitales sur deux lignes | `FilterSegmentGroup` + `FilterPill variant="segment"` (libellés courts) + filtrage réel des cartes |
 | Pilules « persona » de la page Services | `FilterPill` |
 | Deux accordéons FAQ (accueil/contact et fiche service) de structures différentes | `FaqAccordion` |
 | `ButtonBorder` (enveloppe redondante de `Button`) | supprimé |
@@ -51,6 +51,13 @@ fin, animation discrète au survol, sans 3D, verre ni dégradé.
   pictogramme et le schéma de ses étapes (tirées du texte publié) ; chaque catégorie
   d'article a son motif (réseau, flux, courbes sans valeurs, blocs). Aucune zone ne
   défile à l'intérieur d'une carte (test e2e `cards-wheel-scroll.spec.ts`).
+- Cartes Services de l'accueil (3 novembre 2026) : les puces animées propres à la
+  section (`ServiceAnimatedIcon`, CSS `.svc-icon`) sont remplacées par `IconBadge` avec
+  l'icône de chaque service ; un seul repère « 01 / 04 » (plus de numéro géant en fond
+  ni de « Fiche #01 ») ; accroche en phrase, outils sur une ligne au lieu de pastilles.
+- Engagements (section 02 de l'accueil) : plus de sous-cartes au fond de page (noir
+  sidéral en thème sombre) ; quatre colonnes séparées par des filets dans la carte de
+  verre, chacune avec son `IconBadge`.
 - Correctif : les 4 services affichaient le même pictogramme (clés `brain`/`workflow`/
   `bot`/`chart` absentes de `SERVICE_ICONS`).
 

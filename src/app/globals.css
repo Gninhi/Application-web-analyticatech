@@ -687,124 +687,8 @@
       0 24px 80px -24px rgba(0, 0, 0, 0.5);
   }
 
-  /* === ICÔNES ANIMÉES DES CARTES SERVICES (bento, CSS-only) ===
-     Chip circulaire décoratif : anneaux concentriques + micro-animation par
-     variante (orbit / relay / wave / spark / loop). La couleur est pilotée par
-     --svc-stroke posée sur la carte (accent du pilier). Pas de JS : tout est
-     en keyframes, gelées automatiquement par la règle prefers-reduced-motion
-     globale (animation-duration: 0.01ms). */
-  .svc-icon {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 9999px;
-    isolation: isolate;
-  }
-  .svc-icon::before,
-  .svc-icon::after {
-    content: "";
-    position: absolute;
-    border-radius: inherit;
-    border: 1px solid var(--svc-stroke, var(--accent));
-  }
-  .svc-icon::before {
-    inset: 4px;
-    opacity: 0.4;
-  }
-  .svc-icon::after {
-    inset: 10px;
-    opacity: 0.18;
-  }
-  /* orbit — balayage rotatif façon radar */
-  .svc-icon[data-variant="orbit"] span {
-    position: absolute;
-    height: 140%;
-    width: 2px;
-    background: linear-gradient(180deg, transparent, var(--svc-stroke, var(--accent)) 55%, transparent);
-    transform-origin: center;
-    animation: svc-flare 8s linear infinite;
-  }
-  /* relay — doubles lignes relais traversées par des impulsions */
-  .svc-icon[data-variant="relay"] span {
-    position: absolute;
-    inset: 18px;
-    border-top: 1px solid var(--svc-stroke, var(--accent));
-    border-bottom: 1px solid var(--svc-stroke, var(--accent));
-    transform: skewX(-15deg);
-  }
-  .svc-icon[data-variant="relay"] span::before,
-  .svc-icon[data-variant="relay"] span::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    height: 1px;
-    width: 120%;
-    left: -10%;
-    background: linear-gradient(90deg, transparent, var(--svc-stroke, var(--accent)), transparent);
-    animation: svc-dash 2.6s ease-in-out infinite;
-  }
-  .svc-icon[data-variant="relay"] span::after {
-    top: 70%;
-    animation-delay: 0.9s;
-  }
-  /* wave — lame de fond ondulante (flux de workflow) */
-  .svc-icon[data-variant="wave"] span {
-    position: absolute;
-    inset: 12px;
-    border-radius: 999px;
-    overflow: hidden;
-  }
-  .svc-icon[data-variant="wave"] span::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent 5%, var(--svc-stroke, var(--accent)) 50%, transparent 95%);
-    transform: translateX(-45%);
-    animation: svc-wave 2.8s ease-in-out infinite alternate;
-  }
-  /* spark — ondes pulsantes (autonomie des agents) */
-  .svc-icon[data-variant="spark"] span {
-    position: absolute;
-    inset: 0;
-  }
-  .svc-icon[data-variant="spark"] span::before,
-  .svc-icon[data-variant="spark"] span::after {
-    content: "";
-    position: absolute;
-    inset: 12px;
-    border-radius: 9999px;
-    border: 1px solid var(--svc-stroke, var(--accent));
-    opacity: 0.28;
-    animation: svc-pulse 2.8s ease-out infinite;
-  }
-  .svc-icon[data-variant="spark"] span::after {
-    animation-delay: 0.9s;
-  }
-  /* loop — croix de boucle continue (feedback data) */
-  .svc-icon[data-variant="loop"] span {
-    position: absolute;
-    inset: 12px;
-  }
-  .svc-icon[data-variant="loop"] span::before,
-  .svc-icon[data-variant="loop"] span::after {
-    content: "";
-    position: absolute;
-    height: 1px;
-    width: 100%;
-    top: 50%;
-    left: 0;
-    background: linear-gradient(90deg, transparent, var(--svc-stroke, var(--accent)), transparent);
-  }
-  .svc-icon[data-variant="loop"] span::before {
-    transform: rotate(90deg);
-  }
-  .svc-icon[data-variant="loop"] span::after {
-    opacity: 0.4;
-  }
-
   /* === ICON BADGE — pastille d'icône commune (IconBadge) ===
-     Même langage que les puces des cartes services : cercle, deux anneaux au
+     Cercle, deux anneaux au
      trait fin, voile de couleur d'accent, pictogramme au trait 1,5 px.
      Survol (sur la pastille ou un parent .group) : l'anneau extérieur s'ouvre
      et un balayage fait un tour. Mouvement réduit : statique (règle globale). */
@@ -1101,27 +985,6 @@
 @keyframes icon-badge-sweep {
   from { transform: rotate(-90deg); }
   to { transform: rotate(270deg); opacity: 0; }
-}
-
-/* Keyframes des icônes animées des cartes services (.svc-icon) */
-@keyframes svc-flare {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-@keyframes svc-dash {
-  0% { transform: translateX(-25%); opacity: 0; }
-  30% { opacity: 1; }
-  70% { opacity: 1; }
-  100% { transform: translateX(25%); opacity: 0; }
-}
-@keyframes svc-wave {
-  from { transform: translateX(-45%); }
-  to { transform: translateX(45%); }
-}
-@keyframes svc-pulse {
-  0% { transform: scale(0.8); opacity: 0.6; }
-  70% { opacity: 0.05; }
-  100% { transform: scale(1.35); opacity: 0; }
 }
 
 /* Rotation continue de la piste orbitale (méthode) — la contre-rotation
